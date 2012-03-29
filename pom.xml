@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <name>motech-contrib</name>
+  <artifactId>motech-contrib</artifactId>
+  <groupId>org.motechproject</groupId>
+  <version>1.0</version>
+
+  <packaging>pom</packaging>
+
+  <modules>
+    <module>event-aggregator</module>
+    <module>test-aggregator</module>
+  </modules>
+
+  <repositories>
+    <repository>
+      <id>sonatype-repo</id>
+      <url>https://repository.sonatype.org/content/groups/forge/</url>
+    </repository>
+    <repository>
+      <id>motech.nexus</id>
+      <name>Motech Snapshots Repository</name>
+      <url>http://nexus.motechproject.org/content/repositories/snapshots</url>
+    </repository>
+    <repository>
+      <id>motech-repo</id>
+      <name>Motech Maven Repository</name>
+      <url>http://nexus.motechproject.org/content/repositories/public</url>
+    </repository>
+  </repositories>
+
+</project>
