@@ -13,6 +13,7 @@
   <modules>
     <module>event-aggregator</module>
     <module>test-aggregator</module>
+    <module>commcare-integration</module>
   </modules>
 
   <distributionManagement>
