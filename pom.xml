@@ -11,7 +11,7 @@
   <packaging>pom</packaging>
 
   <modules>
-    <module>event-aggregator</module>
+    <module>message-aggregator</module>
     <module>test-aggregator</module>
     <module>commcare-integration</module>
   </modules>
