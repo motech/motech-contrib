@@ -6,7 +6,7 @@ public class CaseTask {
     private String caseName;
     private String ownerId;
     private String caseId;
-    private String userId;
+    private String motechUserId;
     private String currentTime;
     private String taskId;
     private String dateEligible;
@@ -63,12 +63,12 @@ public class CaseTask {
         this.caseId = caseId;
     }
 
-    public String getUserId() {
-        return userId;
+    public String getMotechUserId() {
+        return motechUserId;
     }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
+    public void setMotechUserId(String motechUserId) {
+        this.motechUserId = motechUserId;
     }
 
     public String getCurrentTime() {

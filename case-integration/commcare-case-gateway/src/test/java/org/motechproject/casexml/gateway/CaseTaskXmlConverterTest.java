@@ -31,7 +31,8 @@ public class CaseTaskXmlConverterTest {
         String dateExpires = DateUtil.today().plusDays(5).toString();
         String dateEligible = DateUtil.today().toString();
         String currentTime = DateUtil.now().toDateTime(DateTimeZone.UTC).toString();
-        CaseTask task = createCaseTask(randomGeneratedCaseId, motherCaseId, taskId, dateEligible,  dateExpires, currentTime);
+        String motechUserId = "motechId";
+        CaseTask task = createCaseTask(randomGeneratedCaseId, motherCaseId, taskId, dateEligible,  dateExpires, currentTime, motechUserId);
 
         String caseXmlWithEnvelope = new CaseTaskXmlConverter().convertToCaseXmlWithEnvelope(task);
 
@@ -45,13 +46,13 @@ public class CaseTaskXmlConverterTest {
         assertEquals("http://openrosa.org/jr/xforms", meta.getAttribute("xmlns"));
         assertEquals(currentTime , meta.getElementsByTagName("timeStart").item(0).getTextContent());
         assertEquals(currentTime, meta.getElementsByTagName("timeEnd").item(0).getTextContent());
-        assertEquals(CaseTaskXmlConverter.motechUserId, meta.getElementsByTagName("userID").item(0).getTextContent());
+        assertEquals(motechUserId, meta.getElementsByTagName("userID").item(0).getTextContent());
         assertNotNull(meta.getElementsByTagName("instanceID").item(0).getTextContent());
 
         Element caseEle = (Element)doc.getElementsByTagName("case").item(0);
         assertEquals(randomGeneratedCaseId, caseEle.getAttribute("case_id"));
         assertEquals(currentTime, caseEle.getAttribute("date_modified"));
-        assertEquals(CaseTaskXmlConverter.motechUserId, caseEle.getAttribute("user_id"));
+        assertEquals(motechUserId, caseEle.getAttribute("user_id"));
         assertEquals("http://commcarehq.org/case/transaction/v2", caseEle.getAttribute("xmlns"));
 
         Element createEle = (Element)caseEle.getElementsByTagName("create").item(0);
@@ -70,14 +71,14 @@ public class CaseTaskXmlConverterTest {
         assertEquals(pregnancyCaseType, motherEle.getAttribute("case_type"));
     }
 
-    private CaseTask createCaseTask(String caseId, String motherCaseId, String taskId, String dateEligible, String dateExpires, String currentTime) {
+    private CaseTask createCaseTask(String caseId, String motherCaseId, String taskId, String dateEligible, String dateExpires, String currentTime, String motechUserId) {
         CaseTask caseTask = new CaseTask();
         caseTask.setCaseId(caseId);
         caseTask.setCaseType("task");
         caseTask.setCaseName("TT 2");
         caseTask.setOwnerId(ownerId);
         caseTask.setCurrentTime(currentTime);
-        caseTask.setUserId(CaseTaskXmlConverter.motechUserId);
+        caseTask.setMotechUserId(motechUserId);
         caseTask.setTaskId(taskId);
         caseTask.setClientCaseId(motherCaseId);
         caseTask.setClientCaseType(pregnancyCaseType);

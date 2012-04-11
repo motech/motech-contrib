@@ -13,8 +13,6 @@ import java.util.UUID;
 @Component
 public class CaseTaskXmlConverter {
 
-    public static String motechUserId = "ananya-care";
-
     public CaseTaskXmlConverter() {
     }
 
@@ -40,7 +38,7 @@ public class CaseTaskXmlConverter {
     }
 
     private CaseRequest createCase(CaseTask task) {
-        return new CaseRequest(task.getCaseId(),task.getUserId(),task.getCurrentTime());
+        return new CaseRequest(task.getCaseId(),task.getMotechUserId(),task.getCurrentTime());
     }
 
     private String convertToXml(CommcareRequestData request) {
@@ -69,12 +67,7 @@ public class CaseTaskXmlConverter {
     }
 
     private CommcareRequestData createRequestWithEnvelope(CaseRequest caseRequest) {
-
-        return new CommcareRequestData("http://bihar.commcarehq.org/pregnancy/task", createMetaElement(caseRequest.getDate_modified()),caseRequest);
-    }
-
-    private MetaElement createMetaElement(String currentTime) {
-        return new MetaElement("http://openrosa.org/jr/xforms", UUID.randomUUID().toString(), currentTime, currentTime, motechUserId);
-    }
+        MetaElement metaElement = new MetaElement("http://openrosa.org/jr/xforms", UUID.randomUUID().toString(), caseRequest.getDate_modified(), caseRequest.getDate_modified(), caseRequest.getUser_id());
+        return new CommcareRequestData("http://bihar.commcarehq.org/pregnancy/task", metaElement,caseRequest);    }
 
 }
