@@ -15,7 +15,7 @@
 
 
     <context:component-scan base-package="org.motechproject.casexml.gateway"/>
-
+    <util:properties id="commcareProperties" location="classpath:/commcare.properties"/>
 
 
 </beans>
