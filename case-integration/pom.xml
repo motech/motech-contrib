@@ -3,10 +3,10 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.motechproject</groupId>
-    <artifactId>commcare-integration</artifactId>
+    <artifactId>case-integration</artifactId>
     <packaging>pom</packaging>
     <version>0.1-SNAPSHOT</version>
-    <name>commcare-integration</name>
+    <name>case-integration</name>
 
     <properties>
         <motech.version>0.10-SNAPSHOT</motech.version>

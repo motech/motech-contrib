@@ -13,7 +13,7 @@
     <modules>
         <module>message-aggregator</module>
         <module>test-aggregator</module>
-        <module>commcare-integration</module>
+        <module>case-integration</module>
         <module>motech-adherence</module>
         <module>commcare-api</module>
         <module>commcare-listener</module>
