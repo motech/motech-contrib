@@ -20,7 +20,7 @@
     </properties>
 
     <parent>
-        <artifactId>commcare-integration</artifactId>
+        <artifactId>case-integration</artifactId>
         <groupId>org.motechproject</groupId>
         <version>0.1-SNAPSHOT</version>
     </parent>
