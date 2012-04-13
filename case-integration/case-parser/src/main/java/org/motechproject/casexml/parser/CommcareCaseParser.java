@@ -4,7 +4,6 @@ import com.sun.org.apache.xerces.internal.parsers.DOMParser;
 import org.motechproject.casexml.domain.Case;
 import org.motechproject.casexml.exception.ParserException;
 import org.motechproject.casexml.utils.CaseMapper;
-import org.motechproject.util.StringUtil;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -55,9 +54,9 @@ public class CommcareCaseParser<T> {
     private Case createCase(Element item) {
         Case ccCase = new Case();
 
-        ccCase.setCase_id(getMandatoryAttribute(item, "case_id"));
+        ccCase.setCase_id(item.getAttribute("case_id"));
         ccCase.setDate_modified(item.getAttribute("date_modified"));
-        ccCase.setUser_id(getMandatoryAttribute(item, "user_id"));
+        ccCase.setUser_id(item.getAttribute("user_id"));
         return ccCase;
     }
 
@@ -89,9 +88,9 @@ public class CommcareCaseParser<T> {
     }
 
     private void populateValuesForCreation(Case ccCase, Element item) {
-        ccCase.setCase_type(getMandatoryTextValue(item, "case_type"));
+        ccCase.setCase_type(getTextValue(item, "case_type"));
         ccCase.setCase_name(getTextValue(item, "case_name"));
-        ccCase.setOwner_id(getMandatoryTextValue(item, "owner_id"));
+        ccCase.setOwner_id(getTextValue(item, "owner_id"));
     }
 
     private void populateValuesForUpdation(Case ccCase, Element item) {
@@ -116,20 +115,6 @@ public class CommcareCaseParser<T> {
                 textVal = textNode.getNodeValue();
         }
         return textVal;
-    }
-
-    private String getMandatoryAttribute(Element element, String name){
-        String value = element.getAttribute(name);
-        if (StringUtil.isNullOrEmpty(value))
-            throw new ParserException(String.format("Mandatory field %s is missing",name));
-        return value;
-    }
-
-    private String getMandatoryTextValue(Element element, String name){
-        String value = getTextValue(element, name);
-        if (StringUtil.isNullOrEmpty(value))
-            throw new ParserException(String.format("Mandatory field %s is missing",name));
-        return value;
     }
 
     private Node getMatchingChildNode(Element ele, String tagName) {
