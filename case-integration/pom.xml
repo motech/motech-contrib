@@ -15,6 +15,7 @@
         <module>case-parser</module>
         <module>case-service</module>
         <module>commcare-case-gateway</module>
+        <module>openrosa-registration-service</module>
     </modules>
 
     <parent>
