@@ -10,17 +10,17 @@ import org.junit.Test;
  * Time: 3:25 AM
  * To change this template use File | Settings | File Templates.
  */
-public class RegistrationParserTest extends TestCase{
-    
+public class RegistrationParserTest extends TestCase {
+
     @Test
-    public void testshouldParseProviderInfoCorrectly(){
-        RegistrationParser<TestProvider> parser = new RegistrationParser<TestProvider>(TestProvider.class,xmlDocument());
+    public void testshouldParseProviderInfoCorrectly() {
+        RegistrationParser<TestProvider> parser = new RegistrationParser<TestProvider>(TestProvider.class, xmlDocument());
         TestProvider testProvider = parser.parseProvider();
-        assertEquals("984657764",testProvider.getPrimary_mobile());
-        assertEquals("984658864",testProvider.getSecondary_mobile());
-        assertEquals("984659964",testProvider.getTertiary_mobile());
-        assertEquals("cha011",testProvider.getProvider_id());
-        assertEquals("Muzaffarpur",testProvider.getDistrict());
+        assertEquals("984657764", testProvider.getPrimary_mobile());
+        assertEquals("984658864", testProvider.getSecondary_mobile());
+        assertEquals("984659964", testProvider.getTertiary_mobile());
+        assertEquals("cha011", testProvider.getProvider_id());
+        assertEquals("Muzaffarpur", testProvider.getDistrict());
 
     }
 

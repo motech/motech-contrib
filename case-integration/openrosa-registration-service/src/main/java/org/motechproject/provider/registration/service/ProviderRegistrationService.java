@@ -8,20 +8,20 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import java.io.Writer;
 
 public abstract class ProviderRegistrationService<T> {
+
     private Class<T> clazz;
 
-    public ProviderRegistrationService(Class<T> clazz){
+    public ProviderRegistrationService(Class<T> clazz) {
         this.clazz = clazz;
-   }
+    }
 
-    @RequestMapping(value="/process",method= RequestMethod.POST)
-    public void ProcessCase(@RequestBody String xmlDocument,Writer writer){
-        RegistrationParser<T> parser = new RegistrationParser<T>(clazz,xmlDocument);
+    @RequestMapping(value = "/process", method = RequestMethod.POST)
+    public void ProcessCase(@RequestBody String xmlDocument, Writer writer) {
+        RegistrationParser<T> parser = new RegistrationParser<T>(clazz, xmlDocument);
         T provider = parser.parseProvider();
         createOrUpdate(provider);
 
     }
 
-    public  abstract void createOrUpdate(T registration);
-
+    public abstract void createOrUpdate(T registration);
 }

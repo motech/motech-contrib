@@ -24,7 +24,7 @@ public class RegistrationParser<T> {
     private String xmlDocument;
 
     public RegistrationParser(Class<T> clazz, String xmlDocument) {
-        domainMapper = new  RegistrationMapper<T>(clazz);
+        domainMapper = new RegistrationMapper<T>(clazz);
         this.xmlDocument = xmlDocument;
     }
 
@@ -45,22 +45,22 @@ public class RegistrationParser<T> {
 
     }
 
-    private Provider parseProvider(Document document){
-        Element item = (Element)document.getElementsByTagName("Registration").item(0);
+    private Provider parseProvider(Document document) {
+        Element item = (Element) document.getElementsByTagName("Registration").item(0);
         Provider provider = createProvider(item);
         return provider;
     }
 
     private Provider createProvider(Element item) {
         Provider provider = new Provider();
-        Element element = (Element) getMatchingNode(item,"user_data");
+        Element element = (Element) getMatchingNode(item, "user_data");
         NodeList childNodes = element.getElementsByTagName("data");
 
-        for(int i = 0;i<childNodes.getLength();i++){
+        for (int i = 0; i < childNodes.getLength(); i++) {
             Node childNode = childNodes.item(i);
-            if(childNode.getNodeName().equals("data")){
+            if (childNode.getNodeName().equals("data")) {
                 String key = childNode.getAttributes().getNamedItem("key").getNodeValue();
-                provider.AddFieldvalue(key,childNode.getTextContent());
+                provider.AddFieldvalue(key, childNode.getTextContent());
             }
 
 
@@ -71,7 +71,7 @@ public class RegistrationParser<T> {
     private Node getMatchingNode(Element ele, String tagName) {
         Node element = null;
         NodeList nl = ele.getElementsByTagName(tagName);
-        if(nl != null && nl.getLength() > 0) {
+        if (nl != null && nl.getLength() > 0) {
             element = nl.item(0);
         }
         return element;
