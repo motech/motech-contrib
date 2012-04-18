@@ -5,7 +5,7 @@ import com.thoughtworks.xstream.io.naming.NoNameCoder;
 import com.thoughtworks.xstream.io.xml.DomDriver;
 import org.motechproject.casexml.domain.CaseTask;
 import org.motechproject.casexml.request.*;
-import org.motechproject.casexml.request.converter.PregnancyConverter;
+import org.motechproject.casexml.request.converter.PatientConverter;
 import org.springframework.stereotype.Component;
 
 import java.util.UUID;
@@ -31,7 +31,8 @@ public class CaseTaskXmlConverter {
         UpdateElement update = new UpdateElement(task.getTaskId(), task.getDateEligible(), task.getDateExpires());
         ccCase.setUpdateElement(update);
 
-        Index index = new Index(new Pregnancy(task.getClientCaseId(), task.getClientCaseType()));
+        Patient patient = new Patient(task.getClientCaseId(), task.getClientCaseType());
+        Index index = new Index(patient, task.getClientElementTag());
         ccCase.setIndex(index);
 
         return ccCase;
@@ -47,21 +48,25 @@ public class CaseTaskXmlConverter {
 
         xstream.alias("data", CommcareRequestData.class);
         xstream.useAttributeFor(CommcareRequestData.class, "xmlns");
+        xstream.aliasField("case", CommcareRequestData.class, "ccCase");
 
         xstream.alias("meta", MetaElement.class);
         xstream.useAttributeFor(MetaElement.class, "xmlns");
 
-        xstream.aliasField("case", CommcareRequestData.class, "ccCase");
         xstream.aliasField("create", CaseRequest.class, "createElement");
         xstream.aliasField("update", CaseRequest.class, "updateElement");
-
-        xstream.registerConverter(new PregnancyConverter());
-        xstream.alias("index", Index.class);
-
         xstream.useAttributeFor(CaseRequest.class, "case_id");
         xstream.useAttributeFor(CaseRequest.class, "user_id");
         xstream.useAttributeFor(CaseRequest.class, "xmlns");
         xstream.useAttributeFor(CaseRequest.class, "date_modified");
+
+        xstream.alias("index", Index.class);
+        xstream.omitField(Index.class, "patientTagName");
+
+        String patient_case_type = request.getCcCase().getIndex().getPatient().getCase_type();
+        String patient_tag_name = request.getCcCase().getIndex().getPatientTagName();
+        xstream.registerConverter(new PatientConverter(patient_case_type));
+        xstream.aliasField(patient_tag_name, Index.class, "patient");
 
         return xstream.toXML(request);
     }

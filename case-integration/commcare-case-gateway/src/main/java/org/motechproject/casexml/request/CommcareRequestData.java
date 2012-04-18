@@ -4,7 +4,6 @@ package org.motechproject.casexml.request;
 public class CommcareRequestData {
     String xmlns;
     MetaElement meta;
-
     CaseRequest ccCase;
 
     public CommcareRequestData(String xmlns, MetaElement meta, CaseRequest ccCase) {
@@ -21,15 +20,8 @@ public class CommcareRequestData {
         return meta;
     }
 
-    public void setMeta(MetaElement meta) {
-        this.meta = meta;
-    }
-
     public String getXmlns() {
         return xmlns;
     }
 
-    public void setXmlns(String xmlns) {
-        this.xmlns = xmlns;
-    }
 }
