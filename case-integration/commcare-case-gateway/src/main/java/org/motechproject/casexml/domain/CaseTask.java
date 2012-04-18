@@ -13,6 +13,7 @@ public class CaseTask {
     private String dateExpires;
     private String clientCaseId;
     private String clientCaseType;
+    private String clientElementTag;
 
     public String getClientCaseId() {
         return clientCaseId;
@@ -102,4 +103,13 @@ public class CaseTask {
     public void setDateExpires(String dateExpires) {
         this.dateExpires = dateExpires;
     }
+
+    public String getClientElementTag() {
+        return clientElementTag;
+    }
+
+    public void setClientElementTag(String clientElementTag) {
+        this.clientElementTag = clientElementTag;
+    }
+
 }

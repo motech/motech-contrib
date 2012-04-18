@@ -17,6 +17,7 @@
         <module>motech-adherence</module>
         <module>commcare-api</module>
         <module>commcare-listener</module>
+        <module>motech-http-client</module>
     </modules>
 
     <distributionManagement>

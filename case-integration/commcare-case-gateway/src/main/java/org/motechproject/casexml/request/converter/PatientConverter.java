@@ -5,14 +5,19 @@ import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
-import org.motechproject.casexml.request.Pregnancy;
+import org.motechproject.casexml.request.Patient;
 
-public class PregnancyConverter implements Converter{
+public class PatientConverter implements Converter{
+    private String case_type;
+    public PatientConverter(String case_type) {
+        this.case_type = case_type;
+    }
+
     @Override
     public void marshal(Object o, HierarchicalStreamWriter writer, MarshallingContext marshallingContext) {
-        Pregnancy pregnancy = (Pregnancy) o;
-        writer.addAttribute("case_type","pregnancy");
-        writer.setValue(pregnancy.getPregnancy_id());
+        Patient patient = (Patient) o;
+        writer.addAttribute("case_type",case_type);
+        writer.setValue(patient.getCase_id());
     }
 
     @Override
@@ -22,6 +27,6 @@ public class PregnancyConverter implements Converter{
 
     @Override
     public boolean canConvert(Class aClass) {
-        return aClass.equals(Pregnancy.class);
+        return aClass.equals(Patient.class);
     }
 }

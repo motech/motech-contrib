@@ -1,17 +1,19 @@
 package org.motechproject.casexml.request;
 
 public class Index {
-    public Index(Pregnancy pregnancy) {
-        this.mother_id = pregnancy;
+    private Patient patient;
+    private String patientTagName;
+
+    public Index(Patient patient, String patientTagName) {
+        this.patient = patient;
+        this.patientTagName = patientTagName;
     }
 
-    public Pregnancy getMother_id() {
-        return mother_id;
+    public Patient getPatient() {
+        return patient;
     }
 
-    public void setMother_id(Pregnancy mother_id) {
-        this.mother_id = mother_id;
+    public String getPatientTagName() {
+        return patientTagName;
     }
-
-    private  Pregnancy mother_id;
 }

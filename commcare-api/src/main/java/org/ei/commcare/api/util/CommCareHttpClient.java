@@ -21,6 +21,9 @@ public class CommCareHttpClient {
     private final ReentrantLock lock = new ReentrantLock();
     private static Logger logger = LoggerFactory.getLogger(CommCareHttpClient.class.toString());
 
+    public CommCareHttpClient() {
+    }
+
     public CommCareHttpClient(DefaultHttpClient httpClient) {
         this.httpClient = httpClient;
     }
