@@ -13,29 +13,39 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.util.concurrent.locks.ReentrantLock;
 
 @Component
 public class CommCareHttpClient {
     private DefaultHttpClient httpClient;
+    private final ReentrantLock lock = new ReentrantLock();
     private static Logger logger = LoggerFactory.getLogger(CommCareHttpClient.class.toString());
 
-    public CommCareHttpClient() {
-        this.httpClient = new DefaultHttpClient();
+    public CommCareHttpClient(DefaultHttpClient httpClient) {
+        this.httpClient = httpClient;
     }
 
     public CommCareHttpResponse get(String url, String userName, String password) throws IOException {
         logger.debug("Fetching URL: " + url + " with username: " + userName);
 
-        httpClient.getCredentialsProvider().setCredentials(
-                new AuthScope("www.commcarehq.org", 443, "DJANGO", "digest"),
-                new UsernamePasswordCredentials(userName, password));
-        HttpResponse response = httpClient.execute(new HttpGet(url));
-        Header[] headers = response.getAllHeaders();
+        CommCareHttpResponse commCareHttpResponse = null;
 
-        CommCareHttpResponse commCareHttpResponse = new CommCareHttpResponse(response.getStatusLine().getStatusCode(), headers, new byte[0]);
-        HttpEntity entity = response.getEntity();
-        if (entity != null) {
-            commCareHttpResponse = new CommCareHttpResponse(response.getStatusLine().getStatusCode(), headers, IOUtils.toByteArray(entity.getContent()));
+        lock.lock();
+        try {
+            httpClient.getCredentialsProvider().setCredentials(
+                    new AuthScope("www.commcarehq.org", 443, "DJANGO", "digest"),
+                    new UsernamePasswordCredentials(userName, password));
+
+            HttpResponse response = httpClient.execute(new HttpGet(url));
+            Header[] headers = response.getAllHeaders();
+
+            commCareHttpResponse = new CommCareHttpResponse(response.getStatusLine().getStatusCode(), headers, new byte[0]);
+            HttpEntity entity = response.getEntity();
+            if (entity != null) {
+                commCareHttpResponse = new CommCareHttpResponse(response.getStatusLine().getStatusCode(), headers, IOUtils.toByteArray(entity.getContent()));
+            }
+        } finally {
+            lock.unlock();
         }
 
         if (logger.isDebugEnabled()) {
