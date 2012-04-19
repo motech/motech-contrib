@@ -3,7 +3,9 @@ package org.motechproject.provider.registration.parser;
 import com.sun.org.apache.xerces.internal.parsers.DOMParser;
 import org.motechproject.provider.registration.domain.Provider;
 import org.motechproject.provider.registration.parser.exception.ParserException;
+import org.motechproject.provider.registration.service.exception.OpenRosaRegistrationException;
 import org.motechproject.provider.registration.utils.RegistrationMapper;
+import org.springframework.http.HttpStatus;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -12,13 +14,6 @@ import org.xml.sax.InputSource;
 
 import java.io.StringReader;
 
-/**
- * Created by IntelliJ IDEA.
- * User: pchandra
- * Date: 4/15/12
- * Time: 3:20 AM
- * To change this template use File | Settings | File Templates.
- */
 public class RegistrationParser<T> {
     RegistrationMapper<T> domainMapper;
     private String xmlDocument;
@@ -28,7 +23,7 @@ public class RegistrationParser<T> {
         this.xmlDocument = xmlDocument;
     }
 
-    public T parseProvider() {
+    public T parseProvider() throws OpenRosaRegistrationException {
         DOMParser parser = new DOMParser();
 
         InputSource inputSource = new InputSource();
@@ -38,7 +33,7 @@ public class RegistrationParser<T> {
             parser.parse(inputSource);
             provider = parseProvider(parser.getDocument());
         } catch (Exception ex) {
-            throw new ParserException(ex, "Exception while trying to parse caseXml");
+            throw new OpenRosaRegistrationException(new ParserException(ex, "Exception while trying to parse caseXml"), HttpStatus.BAD_REQUEST);
         }
 
         return domainMapper.mapToDomainObject(provider);
