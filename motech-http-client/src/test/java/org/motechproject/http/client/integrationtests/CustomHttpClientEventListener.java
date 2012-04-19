@@ -14,21 +14,24 @@ import java.util.Map;
 public class CustomHttpClientEventListener {
 
     private RestTemplate restTemplate;
-    private int counter;
+    private int numberOfRetries;
+    private final int maxNumberOfRetries = 2;
 
     public CustomHttpClientEventListener() {
-        counter = 0;
+        numberOfRetries = -1;
         restTemplate = new RestTemplate();
     }
 
     @MotechListener(subjects = EventSubjects.HTTP_REQUEST)
     public void handle(MotechEvent motechEvent) {
-        counter++;
+        numberOfRetries++;
+        if (numberOfRetries < maxNumberOfRetries){
         Map<String,Object> parameters = motechEvent.getParameters();
         restTemplate.postForLocation(String.valueOf(parameters.get(EventDataKeys.URL)),parameters.get(EventDataKeys.DATA));
+        }
     }
 
     public boolean hasTriedMultipleTimes() {
-        return counter > 1;
+        return numberOfRetries > 0;
     }
 }

@@ -3,7 +3,6 @@ package org.motechproject.http.client.integrationtests;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.motechproject.event.EventRelay;
 import org.motechproject.http.client.service.HttpClientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -18,7 +17,6 @@ public class RetryHttpPostTest {
 
     @Autowired
     CustomHttpClientEventListener customHttpClientEventListener;
-    EventRelay eventRelay;
 
     @Test
     public void shouldRetryPostingInCaseOfHttpError() {

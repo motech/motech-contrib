@@ -6,7 +6,13 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.motechproject.casexml.domain.CaseTask;
-import org.springframework.web.client.RestTemplate;
+import org.motechproject.event.EventRelay;
+import org.motechproject.http.client.constants.EventDataKeys;
+import org.motechproject.http.client.constants.EventSubjects;
+import org.motechproject.http.client.service.HttpClientServiceImpl;
+import org.motechproject.model.MotechEvent;
+
+import java.util.HashMap;
 
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -18,21 +24,26 @@ public class CommcareCaseGatewayTest  {
     private CaseTaskXmlConverter caseTaskXmlConverter;
 
     @Mock
-    protected RestTemplate restTemplate;
+    private EventRelay eventRelay;
 
     private CommcareCaseGateway commcareCaseGateway;
 
     @Before
     public void before(){
-        commcareCaseGateway = new CommcareCaseGateway(caseTaskXmlConverter, restTemplate );
+        commcareCaseGateway = new CommcareCaseGateway(caseTaskXmlConverter, new HttpClientServiceImpl(eventRelay) );
     }
 
     @Test
     public void shouldFormXmlRequestAndPostItToCommCare(){
         CaseTask task = new CaseTask();
-        when(caseTaskXmlConverter.convertToCaseXmlWithEnvelope(task)).thenReturn("request");
-        commcareCaseGateway.submitCase("someUrl", task);
+        String data = "request";
+        String url = "someUrl";
+        when(caseTaskXmlConverter.convertToCaseXmlWithEnvelope(task)).thenReturn(data);
+        commcareCaseGateway.submitCase(url, task);
         verify(caseTaskXmlConverter).convertToCaseXmlWithEnvelope(task);
-        verify(restTemplate).postForLocation("someUrl", "request");
+        HashMap<String, Object> parameters = new HashMap<String, Object>();
+        parameters.put(EventDataKeys.URL, url);
+        parameters.put(EventDataKeys.DATA, data);
+        verify(eventRelay).sendEventMessage(new MotechEvent(EventSubjects.HTTP_REQUEST,parameters));
     }
 }
