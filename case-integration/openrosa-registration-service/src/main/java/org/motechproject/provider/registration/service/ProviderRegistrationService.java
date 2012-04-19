@@ -16,11 +16,10 @@ public abstract class ProviderRegistrationService<T> {
     }
 
     @RequestMapping(value = "/process", method = RequestMethod.POST)
-    public void ProcessCase(@RequestBody String xmlDocument, Writer writer) {
+    public void processCase(@RequestBody String xmlDocument, Writer writer) {
         RegistrationParser<T> parser = new RegistrationParser<T>(clazz, xmlDocument);
         T provider = parser.parseProvider();
         createOrUpdate(provider);
-
     }
 
     public abstract void createOrUpdate(T registration);
