@@ -4,7 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonParseException;
 import com.google.gson.annotations.SerializedName;
 import org.ei.commcare.api.contract.CommCareFormDefinition;
-import org.ei.commcare.api.contract.CommCareFormDefinitions;
+import org.ei.commcare.api.contract.CommCareModuleDefinitions;
 import org.ei.commcare.api.domain.CommCareFormContent;
 import org.ei.commcare.api.domain.CommcareFormInstance;
 import org.ei.commcare.api.repository.AllExportTokens;
@@ -23,7 +23,7 @@ import java.util.List;
 @Service
 public class CommCareFormImportService {
     private final CommCareHttpClient httpClient;
-    private CommCareFormDefinitions formDefinitions;
+    private CommCareModuleDefinitions moduleDefinitions;
     private AllExportTokens allExportTokens;
     private static Logger logger = LoggerFactory.getLogger(CommCareFormImportService.class.toString());
 
@@ -32,7 +32,7 @@ public class CommCareFormImportService {
         this.httpClient = httpClient;
         this.allExportTokens = allExportTokens;
 
-        this.formDefinitions = properties.definitions();
+        this.moduleDefinitions = properties.definitions();
     }
 
     public List<CommcareFormInstance> fetchForms() throws IOException {
@@ -44,9 +44,9 @@ public class CommCareFormImportService {
     private List<CommCareFormWithResponse> fetchAllForms() throws IOException {
         List<CommCareFormWithResponse> formWithResponses = new ArrayList<CommCareFormWithResponse>();
 
-        for (CommCareFormDefinition formDefinition : formDefinitions.definitions()) {
+        for (CommCareFormDefinition formDefinition : moduleDefinitions.definitions()) {
             String previousToken = allExportTokens.findByNameSpace(formDefinition.nameSpace()).value();
-            CommCareHttpResponse responseFromCommCareHQ = httpClient.get(formDefinition.url(previousToken), formDefinitions.userName(), formDefinitions.password());
+            CommCareHttpResponse responseFromCommCareHQ = httpClient.get(formDefinition.url(previousToken), moduleDefinitions.userName(), moduleDefinitions.password());
 
             if (responseFromCommCareHQ.hasValidExportToken()) {
                 allExportTokens.updateToken(formDefinition.nameSpace(), responseFromCommCareHQ.tokenForNextExport());

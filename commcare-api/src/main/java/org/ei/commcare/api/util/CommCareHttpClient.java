@@ -22,10 +22,7 @@ public class CommCareHttpClient {
     private static Logger logger = LoggerFactory.getLogger(CommCareHttpClient.class.toString());
 
     public CommCareHttpClient() {
-    }
-
-    public CommCareHttpClient(DefaultHttpClient httpClient) {
-        this.httpClient = httpClient;
+        this.httpClient = new DefaultHttpClient();
     }
 
     public CommCareHttpResponse get(String url, String userName, String password) throws IOException {
