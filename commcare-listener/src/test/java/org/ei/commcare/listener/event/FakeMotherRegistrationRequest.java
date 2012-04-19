@@ -1,5 +1,9 @@
 package org.ei.commcare.listener.event;
 
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
+import org.apache.commons.lang.builder.ToStringBuilder;
+
 public class FakeMotherRegistrationRequest {
     private String name;
     private int age;
@@ -11,21 +15,16 @@ public class FakeMotherRegistrationRequest {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        FakeMotherRegistrationRequest that = (FakeMotherRegistrationRequest) o;
-
-        if (age != that.age) return false;
-        if (name != null ? !name.equals(that.name) : that.name != null) return false;
-
-        return true;
+        return EqualsBuilder.reflectionEquals(o, this);
     }
 
     @Override
     public int hashCode() {
-        int result = name != null ? name.hashCode() : 0;
-        result = 31 * result + age;
-        return result;
+        return HashCodeBuilder.reflectionHashCode(this);
+    }
+
+    @Override
+    public String toString() {
+        return ToStringBuilder.reflectionToString(this);
     }
 }

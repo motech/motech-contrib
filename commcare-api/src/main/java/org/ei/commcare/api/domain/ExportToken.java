@@ -26,4 +26,8 @@ public class ExportToken extends MotechBaseDataObject {
     private String getNameSpace() {
         return nameSpace;
     }
+
+    public String nameSpace() {
+        return nameSpace;
+    }
 }

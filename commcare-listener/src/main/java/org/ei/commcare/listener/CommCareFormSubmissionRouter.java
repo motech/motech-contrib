@@ -1,6 +1,8 @@
 package org.ei.commcare.listener;
 
+import com.google.gson.Gson;
 import com.google.gson.JsonParseException;
+import org.ei.commcare.api.domain.CommCareFormInstance;
 import org.ei.commcare.listener.event.CommCareFormEvent;
 import org.ei.drishti.common.audit.Auditor;
 import org.motechproject.dao.MotechJsonReader;
@@ -12,8 +14,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Method;
+import java.util.List;
 
-import static org.ei.commcare.listener.event.CommCareFormEvent.*;
+import static org.ei.commcare.listener.event.CommCareFormEvent.FORM_INSTANCES_PARAMETER;
 import static org.ei.drishti.common.audit.AuditMessageType.FORM_SUBMISSION;
 
 @Component
@@ -37,10 +40,15 @@ public class CommCareFormSubmissionRouter {
             return;
         }
 
-        String methodName = event.getParameters().get(FORM_NAME_PARAMETER).toString();
-        String parameterJson = event.getParameters().get(FORM_DATA_PARAMETER).toString();
-        String formId = event.getParameters().get(FORM_ID_PARAMETER).toString();
-        dispatch(formId, methodName, parameterJson);
+        List<CommCareFormInstance> instances = (List<CommCareFormInstance>) event.getParameters().get(FORM_INSTANCES_PARAMETER);
+        Gson gson = new Gson();
+
+        for (CommCareFormInstance instance : instances) {
+            String methodName = instance.formName();
+            String parameterJson = gson.toJson(instance.fields());
+            String formId = instance.formId();
+            dispatch(formId, methodName, parameterJson);
+        }
     }
 
     public void dispatch(String formId, String methodName, String parameterJson) throws Exception {

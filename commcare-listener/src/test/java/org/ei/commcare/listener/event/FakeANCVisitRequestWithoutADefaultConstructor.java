@@ -1,5 +1,9 @@
 package org.ei.commcare.listener.event;
 
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
+import org.apache.commons.lang.builder.ToStringBuilder;
+
 public class FakeANCVisitRequestWithoutADefaultConstructor {
     private final int something;
 
@@ -9,18 +13,16 @@ public class FakeANCVisitRequestWithoutADefaultConstructor {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        FakeANCVisitRequestWithoutADefaultConstructor that = (FakeANCVisitRequestWithoutADefaultConstructor) o;
-
-        if (something != that.something) return false;
-
-        return true;
+        return EqualsBuilder.reflectionEquals(this, o);
     }
 
     @Override
     public int hashCode() {
-        return something;
+        return HashCodeBuilder.reflectionHashCode(this);
+    }
+
+    @Override
+    public String toString() {
+        return ToStringBuilder.reflectionToString(this);
     }
 }

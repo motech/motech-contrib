@@ -5,29 +5,33 @@ import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.CredentialsProvider;
 import org.apache.http.message.BasicHeader;
-import org.ei.commcare.api.domain.CommcareFormInstance;
+import org.ei.commcare.api.contract.CommCareFormDefinition;
+import org.ei.commcare.api.domain.CommCareFormInstance;
 import org.ei.commcare.api.domain.ExportToken;
 import org.ei.commcare.api.repository.AllExportTokens;
 import org.ei.commcare.api.util.CommCareHttpClient;
 import org.ei.commcare.api.util.CommCareHttpResponse;
-import org.ei.commcare.api.util.CommCareImportProperties;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Matchers;
 import org.mockito.Mock;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
+import static java.util.Arrays.asList;
 import static junit.framework.Assert.assertEquals;
-import static org.ei.commcare.api.util.CommCareImportProperties.COMMCARE_IMPORT_DEFINITION_FILE;
+import static org.ei.commcare.api.util.CommCareFormDefinitionBuilder.createForm;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
 import static org.powermock.api.mockito.PowerMockito.when;
 
 public class CommCareFormImportServiceTest {
+    public static final String NAMESPACE2 = "http://harshit.com";
     @Mock
     private CommCareHttpClient httpClient;
     @Mock
@@ -36,126 +40,121 @@ public class CommCareFormImportServiceTest {
     private HttpResponse response;
     @Mock
     private AllExportTokens allExportTokens;
+    private CommCareFormImportService formImportService;
+    public static final String NAMESPACE = "http://openrosa.org/formdesigner/4FBE07FF-2434-40B3-B151-D2EBE2F4FB4F";
 
     @Before
     public void setUp() throws Exception {
         initMocks(this);
+        formImportService = new CommCareFormImportService(allExportTokens, httpClient);
     }
 
     @Test
     public void shouldFetchOneFormWithTwoInstancesFromCommCare() throws Exception {
-        String nameSpace = "http://openrosa.org/formdesigner/4FBE07FF-2434-40B3-B151-D2EBE2F4FB4F";
-        String urlOfExport = "https://www.commcarehq.org/a/abhilasha/reports/export/?export_tag=%22" + nameSpace + "%22&format=json&previous_export=";
-        Properties properties = new Properties();
-        properties.setProperty(COMMCARE_IMPORT_DEFINITION_FILE, "/test-data/commcare-export-with-one-url.json");
+        String urlOfExport = "http://baseURL__FORM__?export_tag=%22" + NAMESPACE2 + "%22&format=json&previous_export=";
+        CommCareFormDefinition formDefinition = setupForm("__FORM__", "", formResponse(200, "/test-data/form.1.dump.json", "NEW-TOKEN"));
 
-        when(allExportTokens.findByNameSpace(nameSpace)).thenReturn(new ExportToken(nameSpace, ""));
-        when(httpClient.get(urlOfExport, "someUser@gmail.com", "somePassword")).thenReturn(formResponse(200, "/test-data/form.1.dump.json", "NEW-TOKEN"));
+        List<CommCareFormInstance> formInstances = formImportService.fetchForms(asList(formDefinition), "user", "password");
 
-        CommCareFormImportService formImportService = new CommCareFormImportService(allExportTokens, httpClient, new CommCareImportProperties(properties));
-        List<CommcareFormInstance> formInstances = formImportService.fetchForms();
-
-        verify(httpClient).get(urlOfExport, "someUser@gmail.com", "somePassword");
+        verify(httpClient).get(urlOfExport, "user", "password");
         assertEquals(2, formInstances.size());
-        assertForm(formInstances.get(0), new String[]{"form-1-instance-1-value-1", "form-1-instance-1-value-2"}, "Registration");
-        assertForm(formInstances.get(1), new String[]{"form-1-instance-2-value-1", "form-1-instance-2-value-2"}, "Registration");
+        assertForm(formInstances.get(0), new String[]{"form-1-instance-1-value-1", "form-1-instance-1-value-2"}, "__FORM__");
+        assertForm(formInstances.get(1), new String[]{"form-1-instance-2-value-1", "form-1-instance-2-value-2"}, "__FORM__");
     }
 
     @Test
     public void shouldFetchMultipleFormsWithMultipleInstancesFromCommCare() throws Exception {
-        String nameSpaceOfFirstExport = "http://openrosa.org/formdesigner/UUID-OF-FIRST-FORM";
-        String nameSpaceOfSecondExport = "http://openrosa.org/formdesigner/UUID-OF-SECOND-FORM";
+        String urlOfFirstExport = "http://baseURL__FORM1__?export_tag=%22" + NAMESPACE + "%22&format=json&previous_export=OLD-TOKEN";
+        String urlOfSecondExport = "http://baseURL__FORM2__?export_tag=%22" + NAMESPACE2 + "%22&format=json&previous_export=OLD-TOKEN";
 
-        String urlOfFirstExport = "https://www.commcarehq.org/a/abhilasha/reports/export/?export_tag=%22" + nameSpaceOfFirstExport + "%22&format=json&previous_export=";
-        String urlOfSecondExport = "https://www.commcarehq.org/a/abhilasha/reports/export/?export_tag=%22" + nameSpaceOfSecondExport + "%22&format=json&previous_export=";
+        CommCareFormDefinition firstFormDefinition = setupForm("__FORM1__", NAMESPACE, "OLD-TOKEN", formResponse(200, "/test-data/form.1.dump.json", "NEW-TOKEN"));
+        CommCareFormDefinition secondFormDefinition = setupForm("__FORM2__", NAMESPACE2, "OLD-TOKEN", formResponse(200, "/test-data/form.2.dump.json", "NEW-TOKEN"));
 
-        Properties properties = new Properties();
-        properties.setProperty(COMMCARE_IMPORT_DEFINITION_FILE, "/test-data/commcare-export-with-two-urls.json");
-        when(allExportTokens.findByNameSpace(nameSpaceOfFirstExport)).thenReturn(new ExportToken(nameSpaceOfFirstExport, ""));
-        when(httpClient.get(urlOfFirstExport, "someUser@gmail.com", "somePassword")).thenReturn(formResponse(200, "/test-data/form.1.dump.json", "NEW-TOKEN"));
+        List<CommCareFormInstance> formInstances = formImportService.fetchForms(asList(firstFormDefinition, secondFormDefinition), "user", "password");
 
-        when(allExportTokens.findByNameSpace(nameSpaceOfSecondExport)).thenReturn(new ExportToken(nameSpaceOfSecondExport, ""));
-        when(httpClient.get(urlOfSecondExport, "someUser@gmail.com", "somePassword")).thenReturn(formResponse(200, "/test-data/form.2.dump.json", "NEW-TOKEN"));
-
-        CommCareFormImportService formImportService = new CommCareFormImportService(allExportTokens, httpClient, new CommCareImportProperties(properties));
-        List<CommcareFormInstance> formInstances = formImportService.fetchForms();
-
-        verify(httpClient).get(urlOfFirstExport, "someUser@gmail.com", "somePassword");
-        verify(httpClient).get(urlOfSecondExport, "someUser@gmail.com", "somePassword");
-        verify(allExportTokens).updateToken(nameSpaceOfFirstExport, "NEW-TOKEN");
-        verify(allExportTokens).updateToken(nameSpaceOfSecondExport, "NEW-TOKEN");
+        verify(httpClient).get(urlOfFirstExport, "user", "password");
+        verify(httpClient).get(urlOfSecondExport, "user", "password");
+        verify(allExportTokens).updateToken(NAMESPACE, "NEW-TOKEN");
+        verify(allExportTokens).updateToken(NAMESPACE2, "NEW-TOKEN");
 
         assertEquals(4, formInstances.size());
-        assertForm(formInstances.get(0), new String[]{"form-1-instance-1-value-1", "form-1-instance-1-value-2"}, "Registration");
-        assertForm(formInstances.get(1), new String[]{"form-1-instance-2-value-1", "form-1-instance-2-value-2"}, "Registration");
-        assertForm(formInstances.get(2), new String[]{"form-2-instance-1-value-1", "form-2-instance-1-value-2"}, "SomeOtherForm");
-        assertForm(formInstances.get(3), new String[]{"form-2-instance-2-value-1", "form-2-instance-2-value-2"}, "SomeOtherForm");
+        assertForm(formInstances.get(0), new String[]{"form-1-instance-1-value-1", "form-1-instance-1-value-2"}, "__FORM1__");
+        assertForm(formInstances.get(1), new String[]{"form-1-instance-2-value-1", "form-1-instance-2-value-2"}, "__FORM1__");
+        assertForm(formInstances.get(2), new String[]{"form-2-instance-1-value-1", "form-2-instance-1-value-2"}, "__FORM2__");
+        assertForm(formInstances.get(3), new String[]{"form-2-instance-2-value-1", "form-2-instance-2-value-2"}, "__FORM2__");
     }
 
     @Test
     public void shouldUseURLWithoutPreviousTokenWhenThereIsNoToken() throws Exception {
-        String nameSpace = "http://openrosa.org/formdesigner/4FBE07FF-2434-40B3-B151-D2EBE2F4FB4F";
-        String urlOfExport = "https://www.commcarehq.org/a/abhilasha/reports/export/?export_tag=%22" + nameSpace + "%22&format=json&previous_export=";
-        Properties properties = new Properties();
-        properties.setProperty(COMMCARE_IMPORT_DEFINITION_FILE, "/test-data/commcare-export-with-one-url.json");
+        String urlOfExport = "http://baseURL?export_tag=%22" + NAMESPACE2 + "%22&format=json&previous_export=";
+        CommCareFormDefinition form = setupForm("", "", formResponse(200, "/test-data/form.1.dump.json", "NEW-TOKEN"));
 
-        when(allExportTokens.findByNameSpace(nameSpace)).thenReturn(new ExportToken(nameSpace, ""));
-        when(httpClient.get(urlOfExport, "someUser@gmail.com", "somePassword")).thenReturn(formResponse(200, "/test-data/form.1.dump.json", "NEW-TOKEN"));
+        formImportService.fetchForms(asList(form), "user", "password");
 
-        CommCareFormImportService formImportService = new CommCareFormImportService(allExportTokens, httpClient, new CommCareImportProperties(properties));
-        formImportService.fetchForms();
-
-        verify(httpClient).get(urlOfExport, "someUser@gmail.com", "somePassword");
+        verify(httpClient).get(urlOfExport, "user", "password");
     }
 
     @Test
     public void shouldUseURLWithPreviousTokenWhenThereIsAToken() throws Exception {
-        String nameSpace = "http://openrosa.org/formdesigner/4FBE07FF-2434-40B3-B151-D2EBE2F4FB4F";
-        String urlOfExport = "https://www.commcarehq.org/a/abhilasha/reports/export/?export_tag=%22" + nameSpace + "%22&format=json&previous_export=OLD-TOKEN";
-        Properties properties = new Properties();
-        properties.setProperty(COMMCARE_IMPORT_DEFINITION_FILE, "/test-data/commcare-export-with-one-url.json");
+        String urlOfExport = "http://baseURL?export_tag=%22" + NAMESPACE2 + "%22&format=json&previous_export=OLD-TOKEN";
+        CommCareFormDefinition form = setupForm("", "OLD-TOKEN", formResponse(200, "/test-data/form.1.dump.json", "NEW-TOKEN"));
 
-        when(allExportTokens.findByNameSpace(nameSpace)).thenReturn(new ExportToken(nameSpace, "OLD-TOKEN"));
-        when(httpClient.get(urlOfExport, "someUser@gmail.com", "somePassword")).thenReturn(formResponse(200, "/test-data/form.1.dump.json", "NEW-TOKEN"));
+        formImportService.fetchForms(asList(form), "user", "password");
 
-        CommCareFormImportService formImportService = new CommCareFormImportService(allExportTokens, httpClient, new CommCareImportProperties(properties));
-        formImportService.fetchForms();
-
-        verify(httpClient).get(urlOfExport, "someUser@gmail.com", "somePassword");
+        verify(httpClient).get(urlOfExport, "user", "password");
     }
 
     @Test
     public void shouldSaveTheExportTokenAfterFetchingData() throws Exception {
-        String nameSpace = "http://openrosa.org/formdesigner/4FBE07FF-2434-40B3-B151-D2EBE2F4FB4F";
-        String urlOfExport = "https://www.commcarehq.org/a/abhilasha/reports/export/?export_tag=%22" + nameSpace + "%22&format=json&previous_export=OLD-TOKEN";
-        Properties properties = new Properties();
-        properties.setProperty(COMMCARE_IMPORT_DEFINITION_FILE, "/test-data/commcare-export-with-one-url.json");
+        CommCareFormDefinition form = setupForm("", "OLD-TOKEN", formResponse(200, "/test-data/form.1.dump.json", "NEW-TOKEN"));
 
-        when(allExportTokens.findByNameSpace(nameSpace)).thenReturn(new ExportToken(nameSpace, "OLD-TOKEN"));
-        when(httpClient.get(urlOfExport, "someUser@gmail.com", "somePassword")).thenReturn(formResponse(200, "/test-data/form.1.dump.json", "NEW-TOKEN"));
+        formImportService.fetchForms(asList(form), "user", "password");
 
-        CommCareFormImportService formImportService = new CommCareFormImportService(allExportTokens, httpClient, new CommCareImportProperties(properties));
-        formImportService.fetchForms();
-
-        verify(allExportTokens).updateToken(nameSpace, "NEW-TOKEN");
+        verify(allExportTokens).updateToken(NAMESPACE2, "NEW-TOKEN");
     }
 
     @Test
     public void shouldNotProcessFormOrUpdateTokenWhenResponseSaysThatThereIsNoNewData() throws Exception {
-        String nameSpace = "http://openrosa.org/formdesigner/4FBE07FF-2434-40B3-B151-D2EBE2F4FB4F";
-        String urlOfExport = "https://www.commcarehq.org/a/abhilasha/reports/export/?export_tag=%22" + nameSpace + "%22&format=json&previous_export=OLD-TOKEN";
-        Properties properties = new Properties();
-        properties.setProperty(COMMCARE_IMPORT_DEFINITION_FILE, "/test-data/commcare-export-with-one-url.json");
+        CommCareFormDefinition formWithEmptyData = setupForm("", "OLD-TOKEN", formResponse(302, "/test-data/form.1.dump.json", null));
 
-        when(allExportTokens.findByNameSpace(nameSpace)).thenReturn(new ExportToken(nameSpace, "OLD-TOKEN"));
-        when(httpClient.get(urlOfExport, "someUser@gmail.com", "somePassword")).thenReturn(formResponse(302, "/test-data/form.with.empty.data.json", null));
-
-        CommCareFormImportService formImportService = new CommCareFormImportService(allExportTokens, httpClient, new CommCareImportProperties(properties));
-        List<CommcareFormInstance> formInstances = formImportService.fetchForms();
+        List<CommCareFormInstance> formInstances = formImportService.fetchForms(asList(formWithEmptyData), "user", "password");
 
         assertThat(formInstances.size(), is(0));
-        verify(allExportTokens).findByNameSpace(nameSpace);
+        verify(allExportTokens).findByNameSpace(NAMESPACE2);
         verifyNoMoreInteractions(allExportTokens);
+    }
+
+    @Test
+    public void shouldFetchNoFormInstancesWhenItFailsToFetchAtLeastOneFormDefinition() throws Exception {
+        CommCareFormDefinition form1 = setupForm("", "OLD-TOKEN", formResponse(200, "/test-data/form.1.dump.json", "NEW-TOKEN"));
+        CommCareFormDefinition form2 = setupForm("", "OLD-TOKEN", formResponse(302, "/test-data/form.1.dump.json", null));
+
+        List<CommCareFormInstance> instances = formImportService.fetchForms(asList(form1, form2), "user", "password");
+
+        assertEquals(new ArrayList<CommCareFormInstance>(), instances);
+    }
+
+    @Test
+    public void shouldNotUpdateAnyTokensWhenItFailsToFetchAtLeastOneFormDefinition() throws Exception {
+        CommCareFormDefinition form1 = setupForm("FORM1", "OLD-TOKEN", formResponse(200, "/test-data/form.1.dump.json", "NEW-TOKEN"));
+        CommCareFormDefinition form2 = setupForm("FORM2", "OLD-TOKEN", formResponse(302, "/test-data/form.1.dump.json", null));
+        CommCareFormDefinition form3 = setupForm("FORM3", "OLD-TOKEN", formResponse(302, "/test-data/form.1.dump.json", null));
+
+        formImportService.fetchForms(asList(form1, form2, form3), "user", "password");
+
+        verify(allExportTokens, times(0)).updateToken(Matchers.<String>any(), Matchers.<String>any());
+    }
+
+    private CommCareFormDefinition setupForm(String formPrefix, String oldToken, CommCareHttpResponse httpResponse) throws IOException {
+        return setupForm(formPrefix, NAMESPACE2, oldToken, httpResponse);
+    }
+
+    private CommCareFormDefinition setupForm(String formPrefix, String nameSpace, String oldToken, CommCareHttpResponse httpResponse) {
+        CommCareFormDefinition formDefinition = createForm(formPrefix, nameSpace);
+
+        when(allExportTokens.findByNameSpace(nameSpace)).thenReturn(new ExportToken(nameSpace, oldToken));
+        when(httpClient.get(formDefinition.url(oldToken), "user", "password")).thenReturn(httpResponse);
+        return formDefinition;
     }
 
     private CommCareHttpResponse formResponse(int statusCode, String jsonDump, String newTokenValue) throws IOException {
@@ -169,10 +168,10 @@ public class CommCareFormImportServiceTest {
         return new CommCareHttpResponse(statusCode, headers.toArray(new Header[0]), IOUtils.toByteArray(getClass().getResourceAsStream(jsonDump)));
     }
 
-    private void assertForm(CommcareFormInstance actualFormInstance, String[] expectedValuesOfForm, String formName) {
-        assertEquals(actualFormInstance.definition().name(), formName);
+    private void assertForm(CommCareFormInstance actualFormInstance, String[] expectedValuesOfForm, String formName) {
+        assertEquals(actualFormInstance.formName(), formName);
 
-        Map<String,String> data = actualFormInstance.content();
+        Map<String,String> data = actualFormInstance.fields();
 
         assertEquals(2, data.size());
         assertThat(data.get("FieldInOutput"), is(expectedValuesOfForm[0]));

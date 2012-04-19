@@ -1,7 +1,6 @@
 package org.ei.commcare.api.util;
 
 import org.ei.commcare.api.contract.CommCareModuleDefinitions;
-import org.ei.commcare.api.contract.CommCareModuleDefinitions;
 import org.motechproject.dao.MotechJsonReader;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -19,7 +18,7 @@ public class CommCareImportProperties {
         this.properties = properties;
     }
 
-    public CommCareModuleDefinitions definitions() {
+    public CommCareModuleDefinitions moduleDefinitions() {
         String jsonPath = properties.getProperty(COMMCARE_IMPORT_DEFINITION_FILE);
         return (CommCareModuleDefinitions) new MotechJsonReader().readFromFile(jsonPath, CommCareModuleDefinitions.class);
     }

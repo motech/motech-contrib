@@ -6,59 +6,62 @@ import com.google.gson.annotations.SerializedName;
 import org.ei.commcare.api.contract.CommCareFormDefinition;
 import org.ei.commcare.api.contract.CommCareModuleDefinitions;
 import org.ei.commcare.api.domain.CommCareFormContent;
-import org.ei.commcare.api.domain.CommcareFormInstance;
+import org.ei.commcare.api.domain.CommCareFormInstance;
+import org.ei.commcare.api.domain.ExportToken;
 import org.ei.commcare.api.repository.AllExportTokens;
 import org.ei.commcare.api.util.CommCareHttpClient;
 import org.ei.commcare.api.util.CommCareHttpResponse;
-import org.ei.commcare.api.util.CommCareImportProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class CommCareFormImportService {
     private final CommCareHttpClient httpClient;
-    private CommCareModuleDefinitions moduleDefinitions;
     private AllExportTokens allExportTokens;
     private static Logger logger = LoggerFactory.getLogger(CommCareFormImportService.class.toString());
+    public CommCareModuleDefinitions moduleDefinitions;
 
     @Autowired
-    public CommCareFormImportService(AllExportTokens allExportTokens, CommCareHttpClient httpClient, CommCareImportProperties properties) {
+    public CommCareFormImportService(AllExportTokens allExportTokens, CommCareHttpClient httpClient) {
         this.httpClient = httpClient;
         this.allExportTokens = allExportTokens;
-
-        this.moduleDefinitions = properties.definitions();
     }
 
-    public List<CommcareFormInstance> fetchForms() throws IOException {
-        List<CommcareFormInstance> formInstances = processAllForms(fetchAllForms());
+    public List<CommCareFormInstance> fetchForms(List<CommCareFormDefinition> definitions, String userName, String password) {
+        List<CommCareFormInstance> formInstances = processAllForms(fetchAllForms(definitions, userName, password));
         logger.info("Fetched " + formInstances.size() + " formInstances.");
         return formInstances;
     }
 
-    private List<CommCareFormWithResponse> fetchAllForms() throws IOException {
+    private List<CommCareFormWithResponse> fetchAllForms(List<CommCareFormDefinition> definitions, String userName, String password) {
         List<CommCareFormWithResponse> formWithResponses = new ArrayList<CommCareFormWithResponse>();
+        ArrayList<ExportToken> exportTokens = new ArrayList<ExportToken>();
 
-        for (CommCareFormDefinition formDefinition : moduleDefinitions.definitions()) {
+        for (CommCareFormDefinition formDefinition : definitions) {
             String previousToken = allExportTokens.findByNameSpace(formDefinition.nameSpace()).value();
-            CommCareHttpResponse responseFromCommCareHQ = httpClient.get(formDefinition.url(previousToken), moduleDefinitions.userName(), moduleDefinitions.password());
+            CommCareHttpResponse responseFromCommCareHQ = httpClient.get(formDefinition.url(previousToken), userName, password);
 
-            if (responseFromCommCareHQ.hasValidExportToken()) {
-                allExportTokens.updateToken(formDefinition.nameSpace(), responseFromCommCareHQ.tokenForNextExport());
-                formWithResponses.add(new CommCareFormWithResponse(formDefinition, responseFromCommCareHQ));
+            if (!responseFromCommCareHQ.hasValidExportToken()) {
+                return new ArrayList<CommCareFormWithResponse>();
             }
+            exportTokens.add(new ExportToken(formDefinition.nameSpace(), responseFromCommCareHQ.tokenForNextExport()));
+            formWithResponses.add(new CommCareFormWithResponse(formDefinition, responseFromCommCareHQ));
+        }
+
+        for (ExportToken exportToken : exportTokens) {
+            allExportTokens.updateToken(exportToken.nameSpace(), exportToken.value());
         }
 
         return formWithResponses;
     }
 
-    private List<CommcareFormInstance> processAllForms(List<CommCareFormWithResponse> careFormWithResponses) {
-        List<CommcareFormInstance> formInstances = new ArrayList<CommcareFormInstance>();
+    private List<CommCareFormInstance> processAllForms(List<CommCareFormWithResponse> careFormWithResponses) {
+        List<CommCareFormInstance> formInstances = new ArrayList<CommCareFormInstance>();
         for (CommCareFormWithResponse formWithResponse : careFormWithResponses) {
             CommCareFormDefinition definition = formWithResponse.formDefinition;
             CommCareHttpResponse response = formWithResponse.response;
@@ -70,7 +73,7 @@ public class CommCareFormImportService {
                 throw new RuntimeException(response.contentAsString() + e);
             }
             for (List<String> formData : exportedFormData.formContents()) {
-                formInstances.add(new CommcareFormInstance(definition, new CommCareFormContent(exportedFormData.headers(), formData)));
+                formInstances.add(new CommCareFormInstance(definition, new CommCareFormContent(exportedFormData.headers(), formData)));
             }
         }
 

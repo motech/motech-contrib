@@ -3,7 +3,7 @@ package org.ei.commcare.listener;
 import org.ei.commcare.api.contract.CommCareExportUrl;
 import org.ei.commcare.api.contract.CommCareFormDefinition;
 import org.ei.commcare.api.domain.CommCareFormContent;
-import org.ei.commcare.api.domain.CommcareFormInstance;
+import org.ei.commcare.api.domain.CommCareFormInstance;
 
 import java.util.HashMap;
 
@@ -31,10 +31,10 @@ public class CommCareFormBuilder {
         return this;
     }
 
-    public CommcareFormInstance build() {
+    public CommCareFormInstance build() {
         HashMap<String, String> params = new HashMap<String, String>();
         params.put("nameSpace", "http://some.name/space");
         CommCareExportUrl url = new CommCareExportUrl("http://some.url", params);
-        return new CommcareFormInstance(new CommCareFormDefinition(formName, url, mappings), content);
+        return new CommCareFormInstance(new CommCareFormDefinition(formName, url, mappings), content);
     }
 }

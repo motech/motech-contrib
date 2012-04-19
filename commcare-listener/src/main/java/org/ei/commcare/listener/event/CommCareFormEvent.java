@@ -1,31 +1,24 @@
 package org.ei.commcare.listener.event;
 
-import com.google.gson.Gson;
-import org.ei.commcare.api.domain.CommcareFormInstance;
+import org.ei.commcare.api.domain.CommCareFormInstance;
 import org.motechproject.model.MotechEvent;
 
 import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 
 public class CommCareFormEvent {
-    public static final String EVENT_SUBJECT = "FORM_SUBMITTED_EVENT";
-    public static final String FORM_NAME_PARAMETER = "FormName";
-    public static final String FORM_DATA_PARAMETER = "FormData";
-    public static final String FORM_ID_PARAMETER = "FormID";
+    public static final String EVENT_SUBJECT = "FORMS_FOR_MODULE_EVENT";
+    public static final String FORM_INSTANCES_PARAMETER = "FormInstances";
 
-    private final CommcareFormInstance formInstance;
-    private final Map<String, String> fieldsWeCareAbout;
+    private List<CommCareFormInstance> formInstances;
 
-    public CommCareFormEvent(CommcareFormInstance formInstance, Map<String, String> fieldsWeCareAbout) {
-        this.formInstance = formInstance;
-        this.fieldsWeCareAbout = fieldsWeCareAbout;
+    public CommCareFormEvent(List<CommCareFormInstance> formInstances) {
+        this.formInstances = formInstances;
     }
 
     public MotechEvent toMotechEvent() {
         HashMap<String, Object> parameters = new HashMap<String, Object>();
-        parameters.put(FORM_NAME_PARAMETER, formInstance.definition().name());
-        parameters.put(FORM_DATA_PARAMETER, new Gson().toJson(fieldsWeCareAbout));
-        parameters.put(FORM_ID_PARAMETER, formInstance.formId());
+        parameters.put(FORM_INSTANCES_PARAMETER, formInstances);
         return new MotechEvent(EVENT_SUBJECT, parameters);
     }
 }

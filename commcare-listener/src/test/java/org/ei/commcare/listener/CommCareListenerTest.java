@@ -1,11 +1,8 @@
 package org.ei.commcare.listener;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import org.ei.commcare.api.domain.CommCareFormContent;
-import org.ei.commcare.api.domain.CommcareFormInstance;
-import org.ei.commcare.listener.event.CommCareFormEvent;
-import org.ei.commcare.api.service.CommCareFormImportService;
+import org.ei.commcare.api.domain.CommCareFormInstance;
+import org.ei.commcare.api.service.CommCareModuleImportService;
 import org.hamcrest.Description;
 import org.junit.Before;
 import org.junit.Test;
@@ -13,24 +10,23 @@ import org.mockito.ArgumentMatcher;
 import org.mockito.Mock;
 import org.motechproject.gateway.OutboundEventGateway;
 import org.motechproject.model.MotechEvent;
-import org.powermock.api.mockito.PowerMockito;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import static java.util.Arrays.asList;
 import static org.ei.commcare.api.domain.CommCareFormContent.FORM_ID_FIELD;
-import static org.ei.commcare.listener.event.CommCareFormEvent.FORM_DATA_PARAMETER;
-import static org.ei.commcare.listener.event.CommCareFormEvent.FORM_NAME_PARAMETER;
+import static org.ei.commcare.listener.event.CommCareFormEvent.EVENT_SUBJECT;
+import static org.ei.commcare.listener.event.CommCareFormEvent.FORM_INSTANCES_PARAMETER;
 import static org.mockito.Matchers.argThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.MockitoAnnotations.initMocks;
+import static org.powermock.api.mockito.PowerMockito.verifyNoMoreInteractions;
+import static org.powermock.api.mockito.PowerMockito.when;
 
 public class CommCareListenerTest {
     @Mock
-    CommCareFormImportService formImportService;
+    CommCareModuleImportService moduleImportService;
 
     @Mock
     OutboundEventGateway outboundEventGateway;
@@ -41,58 +37,33 @@ public class CommCareListenerTest {
     @Before
     public void setUp() throws Exception {
         initMocks(this);
-        listener = new CommCareListener(formImportService, outboundEventGateway);
+        listener = new CommCareListener(outboundEventGateway, moduleImportService);
     }
 
     @Test
-    public void shouldSendAnEventWithTheFormNameAsTheOnlyParameterWhenTheFieldsWeCareAboutAreEmpty() throws Exception {
-        CommcareFormInstance formInstance = form().withName("FormName").withContent(content(asList("something"), asList("something-else"))).build();
-        PowerMockito.when(formImportService.fetchForms()).thenReturn(asList(formInstance));
+    public void shouldSendAndEventForAModule() throws Exception {
+        CommCareFormInstance formInstance = form().withName("FormName").withContent(content(asList("something"), asList("something-else"))).build();
+        List<List<CommCareFormInstance>> instances = asList(asList(formInstance));
+        when(moduleImportService.fetchFormsForAllModules()).thenReturn(instances);
 
         listener.fetchFromServer();
 
-        verify(outboundEventGateway).sendEventMessage(eventWhichMatches("FormName", "{}"));
+        verify(outboundEventGateway).sendEventMessage(eventWhichMatches(instances.get(0)));
+        verifyNoMoreInteractions(outboundEventGateway);
     }
 
     @Test
-    public void shouldSendAnEventWithFormNameAndFormDataAsParametersWhichAreTheFieldsSpecifiedInTheFormDefinition() throws Exception {
-        CommCareFormContent content = content(asList("formInstance.Patient_Name"), asList("Abu"));
-        CommcareFormInstance formInstance = form().withName("FormName").withMapping("formInstance.Patient_Name", "Patient").withContent(content).build();
-        PowerMockito.when(formImportService.fetchForms()).thenReturn(asList(formInstance));
+    public void shouldSendOneEventForEachModule() throws Exception {
+        CommCareFormInstance formInstanceForFirstModule = form().withName("FormName 1").withContent(content(asList("something"), asList("something-else"))).build();
+        CommCareFormInstance formInstanceForSecondModule = form().withName("FormName 2").withContent(content(asList("something"), asList("something-else"))).build();
+        List<List<CommCareFormInstance>> instances = asList(asList(formInstanceForFirstModule), asList(formInstanceForSecondModule));
+        when(moduleImportService.fetchFormsForAllModules()).thenReturn(instances);
 
         listener.fetchFromServer();
 
-        verify(outboundEventGateway).sendEventMessage(eventWhichMatches("FormName", "{\"Patient\" : \"Abu\"}"));
-    }
-
-    @Test
-    public void shouldSendAnEventWithMultipleFieldsInFormDataWhenThereAreMultipleFieldsSpecified() throws Exception {
-        CommCareFormContent content = content(asList("formInstance.Patient_Name", "formInstance.Patient_Age"), asList("Abu", "23"));
-
-        CommcareFormInstance formInstance = form().withName("FormName").withContent(content)
-                .withMapping("formInstance.Patient_Name", "Patient")
-                .withMapping("formInstance.Patient_Age", "Age").build();
-        PowerMockito.when(formImportService.fetchForms()).thenReturn(asList(formInstance));
-
-        listener.fetchFromServer();
-
-        verify(outboundEventGateway).sendEventMessage(eventWhichMatches("FormName", "{\"Patient\" : \"Abu\", \"Age\" : \"23\"}"));
-    }
-
-    @Test
-    public void shouldSendOneEventForEachFormFound() throws Exception {
-        CommCareFormContent content1 = content(asList("form.Patient_Name"), asList("Abu"));
-        CommcareFormInstance formInstance1 = form().withName("PatientForm").withMapping("form.Patient_Name", "Patient").withContent(content1).build();
-
-        CommCareFormContent content2 = content(asList("form.MermaidName"), asList("Ariel"));
-
-        CommcareFormInstance formInstance2 = form().withName("MermaidForm").withMapping("form.MermaidName", "Mermaid").withContent(content2).build();
-        PowerMockito.when(formImportService.fetchForms()).thenReturn(asList(formInstance1, formInstance2));
-
-        listener.fetchFromServer();
-
-        verify(outboundEventGateway).sendEventMessage(eventWhichMatches("PatientForm", "{\"Patient\" : \"Abu\"}"));
-        verify(outboundEventGateway).sendEventMessage(eventWhichMatches("MermaidForm", "{\"Mermaid\" : \"Ariel\"}"));
+        verify(outboundEventGateway).sendEventMessage(eventWhichMatches(instances.get(0)));
+        verify(outboundEventGateway).sendEventMessage(eventWhichMatches(instances.get(1)));
+        verifyNoMoreInteractions(outboundEventGateway);
     }
 
     private CommCareFormContent content(List<String> headers, List<String> values) {
@@ -109,24 +80,18 @@ public class CommCareListenerTest {
         return new CommCareFormBuilder();
     }
 
-    private MotechEvent eventWhichMatches(final String expectedFormName, final String expectedFormDataJson) {
+    private MotechEvent eventWhichMatches(final List<CommCareFormInstance> commCareFormInstances) {
         return argThat(new ArgumentMatcher<MotechEvent>() {
             @Override
             public boolean matches(Object actualEvent) {
                 MotechEvent event = (MotechEvent) actualEvent;
 
-                Type mapType = new TypeToken<Map<String, String>>() { }.getType();
-                Map actualFormData = new Gson().fromJson(event.getParameters().get(FORM_DATA_PARAMETER).toString(), mapType);
-                Map expectedFormData = new Gson().fromJson(expectedFormDataJson, mapType);
-
-                return expectedFormName.equals(event.getParameters().get(FORM_NAME_PARAMETER)) &&
-                        expectedFormData.equals(actualFormData) &&
-                        FORM_ID.equals(event.getParameters().get(CommCareFormEvent.FORM_ID_PARAMETER));
+                return EVENT_SUBJECT.equals(event.getSubject()) && event.getParameters().get(FORM_INSTANCES_PARAMETER).equals(commCareFormInstances);
             }
 
             @Override
             public void describeTo(Description description) {
-                description.appendText("FormName=" + expectedFormName + ", FormData=" + expectedFormDataJson + ", FormID=" + FORM_ID);
+                description.appendText("Subject: " + EVENT_SUBJECT + ", Forms: " + commCareFormInstances);
             }
         });
     }

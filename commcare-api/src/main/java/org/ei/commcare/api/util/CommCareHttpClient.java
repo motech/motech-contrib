@@ -12,7 +12,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
-import java.io.IOException;
 import java.util.concurrent.locks.ReentrantLock;
 
 @Component
@@ -25,7 +24,7 @@ public class CommCareHttpClient {
         this.httpClient = new DefaultHttpClient();
     }
 
-    public CommCareHttpResponse get(String url, String userName, String password) throws IOException {
+    public CommCareHttpResponse get(String url, String userName, String password) {
         logger.debug("Fetching URL: " + url + " with username: " + userName);
 
         CommCareHttpResponse commCareHttpResponse = null;
@@ -44,6 +43,8 @@ public class CommCareHttpClient {
             if (entity != null) {
                 commCareHttpResponse = new CommCareHttpResponse(response.getStatusLine().getStatusCode(), headers, IOUtils.toByteArray(entity.getContent()));
             }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         } finally {
             lock.unlock();
         }
