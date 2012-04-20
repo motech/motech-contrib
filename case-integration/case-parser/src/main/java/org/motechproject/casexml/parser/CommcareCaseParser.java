@@ -2,7 +2,7 @@ package org.motechproject.casexml.parser;
 
 import com.sun.org.apache.xerces.internal.parsers.DOMParser;
 import org.motechproject.casexml.domain.Case;
-import org.motechproject.casexml.exception.ParserException;
+import org.motechproject.casexml.exception.CaseParserException;
 import org.motechproject.casexml.utils.CaseMapper;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -24,7 +24,7 @@ public class CommcareCaseParser<T> {
         domainMapper = new CaseMapper<T>(clazz);
          this.xmlDoc = xmlDocument;
     }
-    public T parseCase(){
+    public T parseCase() throws CaseParserException {
         DOMParser parser = new DOMParser();
 
         InputSource inputSource = new InputSource();
@@ -34,10 +34,10 @@ public class CommcareCaseParser<T> {
             parser.parse(inputSource);
             ccCase = parseCase(parser.getDocument());
         } catch (IOException ex) {
-            throw new ParserException(ex, "Exception while trying to parse caseXml");
+            throw new CaseParserException(ex, "Exception while trying to parse caseXml");
         }
         catch (SAXException ex){
-            throw new ParserException(ex, "Exception while trying to parse caseXml");
+            throw new CaseParserException(ex, "Exception while trying to parse caseXml");
         }
 
         return domainMapper.mapToDomainObject(ccCase);

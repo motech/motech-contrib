@@ -1,7 +1,7 @@
 package org.motechproject.provider.registration.service;
 
+import org.motechproject.provider.registration.exception.OpenRosaRegistrationException;
 import org.motechproject.provider.registration.parser.RegistrationParser;
-import org.motechproject.provider.registration.service.exception.OpenRosaRegistrationException;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -17,12 +17,11 @@ public abstract class ProviderRegistrationService<T> {
     }
 
     @RequestMapping(value = "/process", method = RequestMethod.POST)
-    public ResponseEntity<String> ProcessCase(HttpEntity<String> requestEntity) throws IOException {
-        RegistrationParser<T> parser = new RegistrationParser<T>(clazz, requestEntity.getBody());
-
+    public ResponseEntity<String> processCase(HttpEntity<String> requestEntity) throws IOException {
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.setContentType(MediaType.TEXT_HTML);
 
+        RegistrationParser<T> parser = new RegistrationParser<T>(clazz, requestEntity.getBody());
         try {
             T provider = parser.parseProvider();
             createOrUpdate(provider);

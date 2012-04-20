@@ -2,7 +2,7 @@ package org.motechproject.provider.registration.parser;
 
 import junit.framework.TestCase;
 import org.junit.Test;
-import org.motechproject.provider.registration.service.exception.OpenRosaRegistrationException;
+import org.motechproject.provider.registration.exception.OpenRosaRegistrationException;
 
 /**
  * Created by IntelliJ IDEA.
