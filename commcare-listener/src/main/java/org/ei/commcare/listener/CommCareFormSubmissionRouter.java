@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.List;
 
@@ -42,12 +43,22 @@ public class CommCareFormSubmissionRouter {
 
         List<CommCareFormInstance> instances = (List<CommCareFormInstance>) event.getParameters().get(FORM_INSTANCES_PARAMETER);
         Gson gson = new Gson();
+        FormDispatchFailedException exception = new FormDispatchFailedException();
 
         for (CommCareFormInstance instance : instances) {
             String methodName = instance.formName();
             String parameterJson = gson.toJson(instance.fields());
             String formId = instance.formId();
-            dispatch(formId, methodName, parameterJson);
+
+            try {
+                dispatch(formId, methodName, parameterJson);
+            } catch (InvocationTargetException e) {
+                exception.add(e.getTargetException());
+            }
+        }
+
+        if (exception.hasExceptions()) {
+            throw exception;
         }
     }
 

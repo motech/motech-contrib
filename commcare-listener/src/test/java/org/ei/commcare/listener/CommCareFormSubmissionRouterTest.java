@@ -10,12 +10,17 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.motechproject.model.MotechEvent;
 
-import java.lang.reflect.InvocationTargetException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Random;
 
+import static com.ibm.icu.impl.Assert.fail;
 import static java.util.Arrays.asList;
 import static org.ei.commcare.api.domain.CommCareFormContent.FORM_ID_FIELD;
 import static org.ei.drishti.common.audit.AuditMessageType.FORM_SUBMISSION;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
 
@@ -78,7 +83,7 @@ public class CommCareFormSubmissionRouterTest {
         verifyZeroInteractions(drishtiController);
     }
 
-    @Test(expected = InvocationTargetException.class)
+    @Test(expected = FormDispatchFailedException.class)
     public void shouldFailIfTheInvokedMethodThrowsAnException() throws Exception {
         CommCareFormSubmissionRouter dispatcher = new CommCareFormSubmissionRouter(auditor);
         dispatcher.registerForDispatch(new FakeDrishtiController());
@@ -86,6 +91,32 @@ public class CommCareFormSubmissionRouterTest {
         MotechEvent event = eventFor(form("methodWhichThrowsAnException", asList("name", "age"), asList("Mom", "23")));
 
         dispatcher.handle(event);
+    }
+
+    @Test
+    public void shouldDispatchToOtherMethodsEvenIfOneDispatchFails() throws Exception {
+        CommCareFormSubmissionRouter dispatcher = new CommCareFormSubmissionRouter(auditor);
+        dispatcher.registerForDispatch(drishtiController);
+
+        drishtiController.methodWhichThrowsAnException(any(FakeMotherRegistrationRequest.class));
+        doThrow(new RuntimeException("boo")).when(drishtiController).methodWhichThrowsAnException(any(FakeMotherRegistrationRequest.class));
+
+        MotechEvent event = eventFor(
+                form("registerMother", asList("name", "age"), asList("Mom1", "23")),
+                form("methodWhichThrowsAnException", asList("name", "age"), asList("Mom", "23")),
+                form("methodWhichThrowsAnException", asList("name", "age"), asList("Mom", "23")),
+                form("registerMother", asList("name", "age"), asList("Mom1", "23")));
+
+        try {
+            dispatcher.handle(event);
+            fail("Should have thrown an exception");
+        } catch (FormDispatchFailedException e) {
+            assertThat(e.innerExceptions().size(), is(2));
+            assertThat(e.innerExceptions().get(0).getMessage(), is("boo"));
+            assertThat(e.innerExceptions().get(1).getMessage(), is("boo"));
+        }
+
+        verify(drishtiController, times(2)).registerMother(new FakeMotherRegistrationRequest("Mom1", 23));
     }
 
     @Test
