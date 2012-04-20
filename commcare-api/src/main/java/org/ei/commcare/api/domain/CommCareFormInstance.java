@@ -2,9 +2,12 @@ package org.ei.commcare.api.domain;
 
 import org.ei.commcare.api.contract.CommCareFormDefinition;
 
+import java.io.Serializable;
 import java.util.Map;
 
-public class CommCareFormInstance {
+public class CommCareFormInstance implements Serializable {
+    private static final long serialVersionUID = 42L;
+
     private String formName;
     private String formId;
     private Map<String, String> fieldsWeCareAbout;
