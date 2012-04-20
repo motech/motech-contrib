@@ -2,7 +2,7 @@ package org.motechproject.provider.registration.parser;
 
 import junit.framework.TestCase;
 import org.junit.Test;
-import org.motechproject.provider.registration.exception.OpenRosaRegistrationException;
+import org.motechproject.provider.registration.exception.OpenRosaRegistrationParserException;
 
 /**
  * Created by IntelliJ IDEA.
@@ -14,7 +14,7 @@ import org.motechproject.provider.registration.exception.OpenRosaRegistrationExc
 public class RegistrationParserTest extends TestCase {
 
     @Test
-    public void testshouldParseProviderInfoCorrectly() throws OpenRosaRegistrationException {
+    public void testshouldParseProviderInfoCorrectly() throws OpenRosaRegistrationParserException {
         RegistrationParser<TestProvider> parser = new RegistrationParser<TestProvider>(TestProvider.class, xmlDocument());
         TestProvider testProvider = parser.parseProvider();
         assertEquals("984657764", testProvider.getPrimary_mobile());

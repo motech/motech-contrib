@@ -4,13 +4,14 @@ import junit.framework.Assert;
 import junit.framework.TestCase;
 import org.junit.Test;
 import org.motechproject.casexml.domain.Case;
+import org.motechproject.casexml.exception.CaseParserException;
 
 import java.io.FileNotFoundException;
 
 public class CommcareCaseParserTest extends TestCase {
 
     @Test
-    public void testShouldParseCaseAttributesCorrectly() throws FileNotFoundException {
+    public void testShouldParseCaseAttributesCorrectly() throws FileNotFoundException, CaseParserException {
         CommcareCaseParser<Case> parser = new CommcareCaseParser<Case>(Case.class,caseXml());
         Case aCase = parser.parseCase();
         Assert.assertEquals("3F2504E04F8911D39A0C0305E82C3301",aCase.getCase_id());
@@ -21,7 +22,7 @@ public class CommcareCaseParserTest extends TestCase {
 
 
     @Test
-    public void testShouldParseCreateAttributesCorrectly() throws FileNotFoundException {
+    public void testShouldParseCreateAttributesCorrectly() throws FileNotFoundException, CaseParserException {
         CommcareCaseParser<Case> parser = new CommcareCaseParser<Case>(Case.class,caseXml());
         Case aCase = parser.parseCase();
         Assert.assertEquals("houshold_rollout_ONICAF",aCase.getCase_type());
@@ -29,7 +30,7 @@ public class CommcareCaseParserTest extends TestCase {
     }
 
     @Test
-    public void testShouldParseCloseAttributesCorrectly() throws FileNotFoundException {
+    public void testShouldParseCloseAttributesCorrectly() throws FileNotFoundException, CaseParserException {
         CommcareCaseParser<Case> parser = new CommcareCaseParser<Case>(Case.class,caseXmlForClose());
         Case aCase = parser.parseCase();
         assertEquals("CLOSE",parser.getCaseAction());
@@ -44,14 +45,14 @@ public class CommcareCaseParserTest extends TestCase {
     }
 
     @Test
-    public void testShouldSetActionCorrectly() throws FileNotFoundException {
+    public void testShouldSetActionCorrectly() throws FileNotFoundException, CaseParserException {
         CommcareCaseParser<Case> parser = new CommcareCaseParser<Case>(Case.class,caseXml());
         Case aCase = parser.parseCase();
         Assert.assertEquals("CREATE",aCase.getAction());
     }
 
     @Test
-    public void testShouldParseIndexElementCorrectly() throws FileNotFoundException {
+    public void testShouldParseIndexElementCorrectly() throws FileNotFoundException, CaseParserException {
         CommcareCaseParser<Case> parser = new CommcareCaseParser<Case>(Case.class, childXml());
         Case aCase = parser.parseCase();
         Assert.assertEquals("45134cf7-90f8-4284-8ca1-16392fc0ce57",aCase.getCase_id());

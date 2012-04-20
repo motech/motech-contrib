@@ -2,7 +2,7 @@ package org.motechproject.provider.registration.parser;
 
 import com.sun.org.apache.xerces.internal.parsers.DOMParser;
 import org.motechproject.provider.registration.domain.Provider;
-import org.motechproject.provider.registration.exception.OpenRosaRegistrationException;
+import org.motechproject.provider.registration.exception.OpenRosaRegistrationParserException;
 import org.motechproject.provider.registration.utils.RegistrationMapper;
 import org.springframework.http.HttpStatus;
 import org.w3c.dom.Document;
@@ -22,7 +22,7 @@ public class RegistrationParser<T> {
         this.xmlDocument = xmlDocument;
     }
 
-    public T parseProvider() throws OpenRosaRegistrationException {
+    public T parseProvider() throws OpenRosaRegistrationParserException {
         DOMParser parser = new DOMParser();
 
         InputSource inputSource = new InputSource();
@@ -32,7 +32,7 @@ public class RegistrationParser<T> {
             parser.parse(inputSource);
             provider = parseProvider(parser.getDocument());
         } catch (Exception ex) {
-            throw new OpenRosaRegistrationException(ex, "Exception while trying to parse caseXml", HttpStatus.BAD_REQUEST);
+            throw new OpenRosaRegistrationParserException(ex, "Exception while trying to parse caseXml", HttpStatus.BAD_REQUEST);
         }
 
         return domainMapper.mapToDomainObject(provider);
