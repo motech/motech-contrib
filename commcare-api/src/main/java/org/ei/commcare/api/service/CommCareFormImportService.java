@@ -4,7 +4,6 @@ import com.google.gson.Gson;
 import com.google.gson.JsonParseException;
 import com.google.gson.annotations.SerializedName;
 import org.ei.commcare.api.contract.CommCareFormDefinition;
-import org.ei.commcare.api.contract.CommCareModuleDefinitions;
 import org.ei.commcare.api.domain.CommCareFormContent;
 import org.ei.commcare.api.domain.CommCareFormInstance;
 import org.ei.commcare.api.domain.ExportToken;
@@ -24,7 +23,6 @@ public class CommCareFormImportService {
     private final CommCareHttpClient httpClient;
     private AllExportTokens allExportTokens;
     private static Logger logger = LoggerFactory.getLogger(CommCareFormImportService.class.toString());
-    public CommCareModuleDefinitions moduleDefinitions;
 
     @Autowired
     public CommCareFormImportService(AllExportTokens allExportTokens, CommCareHttpClient httpClient) {
@@ -46,11 +44,15 @@ public class CommCareFormImportService {
             String previousToken = allExportTokens.findByNameSpace(formDefinition.nameSpace()).value();
             CommCareHttpResponse responseFromCommCareHQ = httpClient.get(formDefinition.url(previousToken), userName, password);
 
-            if (!responseFromCommCareHQ.hasValidExportToken()) {
+            if (responseFromCommCareHQ.isFailure()) {
+                logger.warn("Fetching forms for module failed. Form which failed: " + formDefinition + ". Description: " + responseFromCommCareHQ);
                 return new ArrayList<CommCareFormWithResponse>();
             }
-            exportTokens.add(new ExportToken(formDefinition.nameSpace(), responseFromCommCareHQ.tokenForNextExport()));
-            formWithResponses.add(new CommCareFormWithResponse(formDefinition, responseFromCommCareHQ));
+
+            if (responseFromCommCareHQ.hasValidExportToken()) {
+                exportTokens.add(new ExportToken(formDefinition.nameSpace(), responseFromCommCareHQ.tokenForNextExport()));
+                formWithResponses.add(new CommCareFormWithResponse(formDefinition, responseFromCommCareHQ));
+            }
         }
 
         for (ExportToken exportToken : exportTokens) {

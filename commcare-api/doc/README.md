@@ -33,32 +33,66 @@ What do I need to do to make this work?
         {
             "userName": "someUser@gmail.com",
             "password": "somePassword",
-            "forms" : [
+            "modules": [
                 {
-                    "name": "Registration",
-                    "url": {
-                        "base": "https://www.commcarehq.org/a/abhilasha/reports/export/",
-                        "queryParams": {
-                            "nameSpace": "http://openrosa.org/formdesigner/UUID-OF-FIRST-FORM"
+                    "forms": [
+                        {
+                            "name": "Registration",
+                            "url": {
+                                "base": "https://www.commcarehq.org/a/abhilasha/reports/export/",
+                                "queryParams": {
+                                    "nameSpace": "http://openrosa.org/formdesigner/UUID-OF-FIRST-FORM"
+                                }
+                            },
+                            "mappings": {
+                                "form|path|to|field": "FieldInOutput",
+                                "form|path|to|another|field": "AnotherFieldInOutput"
+                            }
+                        },
+                        {
+                            "name": "SomeOtherForm",
+                            "url": {
+                                "base": "https://www.commcarehq.org/a/abhilasha/reports/export/",
+                                "queryParams": {
+                                    "nameSpace": "http://openrosa.org/formdesigner/UUID-OF-SECOND-FORM"
+                                }
+                            },
+                            "mappings": {
+                                "form|path|to|field": "FieldInOutput",
+                                "form|path|to|another|field": "AnotherFieldInOutput"
+                            }
                         }
-                    },
-                    "mappings": {
-                        "form|path|to|field" : "FieldInOutput",
-                        "form|path|to|another|field" : "AnotherFieldInOutput"
-                    }
+                    ]
                 },
                 {
-                    "name": "SomeOtherForm",
-                    "url": {
-                        "base": "https://www.commcarehq.org/a/abhilasha/reports/export/",
-                        "queryParams": {
-                            "nameSpace": "http://openrosa.org/formdesigner/UUID-OF-SECOND-FORM"
+                    "forms": [
+                        {
+                            "name": "Child Registration",
+                            "url": {
+                                "base": "https://www.commcarehq.org/a/abhilasha/reports/export/",
+                                "queryParams": {
+                                    "nameSpace": "http://openrosa.org/formdesigner/UUID-OF-CHILD-FIRST-FORM"
+                                }
+                            },
+                            "mappings": {
+                                "form|path|to|field": "FieldInOutput",
+                                "form|path|to|another|field": "AnotherFieldInOutput"
+                            }
+                        },
+                        {
+                            "name": "Child SomeOtherForm",
+                            "url": {
+                                "base": "https://www.commcarehq.org/a/abhilasha/reports/export/",
+                                "queryParams": {
+                                    "nameSpace": "http://openrosa.org/formdesigner/UUID-OF-CHILD-SECOND-FORM"
+                                }
+                            },
+                            "mappings": {
+                                "form|path|to|field": "FieldInOutput",
+                                "form|path|to|another|field": "AnotherFieldInOutput"
+                            }
                         }
-                    },
-                    "mappings": {
-                        "form|path|to|field" : "FieldInOutput",
-                        "form|path|to|another|field" : "AnotherFieldInOutput"
-                    }
+                    ]
                 }
             ]
         }
@@ -70,6 +104,10 @@ What do I need to do to make this work?
   The *mappings* specify which fields of the form we care about. The left-hand-side of the mappings can be got by
   looking at the CSV/JSON exports from CommCareHQ. Normally, they'll look like "form|Mother|Name" or
   "form|Mother_Name". The right-hand-side of the mappings specify the key of the resulting fields.
+
+  There are two modules specified in the JSON. All the forms belonging to each module are fetched, and only if all the
+  forms are fetched properly is the whole module considered to have been fetched properly. If not, the previous fetch
+  tokens are not updated and the partially fetched forms will be rejected.
   
 Description of the process
 --------------------------

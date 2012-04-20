@@ -126,19 +126,31 @@ public class CommCareFormImportServiceTest {
 
     @Test
     public void shouldFetchNoFormInstancesWhenItFailsToFetchAtLeastOneFormDefinition() throws Exception {
-        CommCareFormDefinition form1 = setupForm("", "OLD-TOKEN", formResponse(200, "/test-data/form.1.dump.json", "NEW-TOKEN"));
-        CommCareFormDefinition form2 = setupForm("", "OLD-TOKEN", formResponse(302, "/test-data/form.1.dump.json", null));
+        CommCareFormDefinition form1 = setupForm("__FORM1__", "OLD-TOKEN", formResponse(200, "/test-data/form.1.dump.json", "NEW-TOKEN"));
+        CommCareFormDefinition form2 = setupForm("__FORM2__", "OLD-TOKEN", formResponse(302, "/test-data/form.with.empty.data.json", null));
 
         List<CommCareFormInstance> instances = formImportService.fetchForms(asList(form1, form2), "user", "password");
 
-        assertEquals(new ArrayList<CommCareFormInstance>(), instances);
+        assertThat(instances.size(), is(2));
+        verify(allExportTokens).updateToken(NAMESPACE2, "NEW-TOKEN");
+    }
+
+    @Test
+    public void shouldUpdateOnlyTokensForThoseCallsWhichHadNewData() throws Exception {
+        CommCareFormDefinition form1 = setupForm("FORM1", "OLD-TOKEN", formResponse(200, "/test-data/form.1.dump.json", "NEW-TOKEN"));
+        CommCareFormDefinition form2 = setupForm("FORM2", "OLD-TOKEN", formResponse(302, "/test-data/form.with.empty.data.json", null));
+        CommCareFormDefinition form3 = setupForm("FORM3", "OLD-TOKEN", formResponse(302, "/test-data/form.with.empty.data.json", null));
+
+        formImportService.fetchForms(asList(form1, form2, form3), "user", "password");
+
+        verify(allExportTokens, times(1)).updateToken(NAMESPACE2, "NEW-TOKEN");
     }
 
     @Test
     public void shouldNotUpdateAnyTokensWhenItFailsToFetchAtLeastOneFormDefinition() throws Exception {
         CommCareFormDefinition form1 = setupForm("FORM1", "OLD-TOKEN", formResponse(200, "/test-data/form.1.dump.json", "NEW-TOKEN"));
-        CommCareFormDefinition form2 = setupForm("FORM2", "OLD-TOKEN", formResponse(302, "/test-data/form.1.dump.json", null));
-        CommCareFormDefinition form3 = setupForm("FORM3", "OLD-TOKEN", formResponse(302, "/test-data/form.1.dump.json", null));
+        CommCareFormDefinition form2 = setupForm("FORM2", "OLD-TOKEN", formResponse(404, "/test-data/form.1.dump.json", null));
+        CommCareFormDefinition form3 = setupForm("FORM3", "OLD-TOKEN", formResponse(200, "/test-data/form.1.dump.json", "NEW-TOKEN"));
 
         formImportService.fetchForms(asList(form1, form2, form3), "user", "password");
 

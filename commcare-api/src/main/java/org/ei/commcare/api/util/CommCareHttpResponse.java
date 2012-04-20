@@ -2,6 +2,8 @@ package org.ei.commcare.api.util;
 
 import org.apache.http.Header;
 
+import java.util.Arrays;
+
 public class CommCareHttpResponse {
     private final int statusCode;
     private final Header[] headers;
@@ -36,6 +38,10 @@ public class CommCareHttpResponse {
 
     @Override
     public String toString() {
-        return "Status code: " + statusCode + ", Token for next export: " + tokenForNextExport() + ", Content: " + contentAsString();
+        return "Status code: " + statusCode + ", Headers: " + Arrays.asList(headers) + ", Content: " + contentAsString();
+    }
+
+    public boolean isFailure() {
+        return statusCode != 200 && statusCode != 302;
     }
 }

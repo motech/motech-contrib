@@ -1,13 +1,12 @@
 package org.ei.commcare.api.util;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.http.Header;
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
+import org.apache.http.*;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicHeader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -38,13 +37,13 @@ public class CommCareHttpClient {
             HttpResponse response = httpClient.execute(new HttpGet(url));
             Header[] headers = response.getAllHeaders();
 
-            commCareHttpResponse = new CommCareHttpResponse(response.getStatusLine().getStatusCode(), headers, new byte[0]);
+            commCareHttpResponse = failureResponse(response.getStatusLine().getStatusCode(), headers);
             HttpEntity entity = response.getEntity();
             if (entity != null) {
                 commCareHttpResponse = new CommCareHttpResponse(response.getStatusLine().getStatusCode(), headers, IOUtils.toByteArray(entity.getContent()));
             }
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            return failureResponse(404, new Header[] { new BasicHeader("Exception-Happened", e.getMessage())});
         } finally {
             lock.unlock();
         }
@@ -54,5 +53,9 @@ public class CommCareHttpClient {
         }
 
         return commCareHttpResponse;
+    }
+
+    private CommCareHttpResponse failureResponse(int statusCode, Header[] headers) {
+        return new CommCareHttpResponse(statusCode, headers, new byte[0]);
     }
 }
