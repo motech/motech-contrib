@@ -1,5 +1,6 @@
 package org.motechproject.security.domain;
 
+import org.motechproject.security.domain.MotechWebUser;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 

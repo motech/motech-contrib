@@ -12,7 +12,7 @@ import java.util.List;
 public class MotechWebUser extends CouchDbDocument {
 
     @JsonProperty
-    private String name;
+    private String id;
 
     @JsonProperty
     private String userName;
@@ -20,16 +20,24 @@ public class MotechWebUser extends CouchDbDocument {
     @JsonProperty
     private String password;
 
-    @JsonProperty
-    private List<Role> roles = new ArrayList<Role>();
-
     protected MotechWebUser(String name, String userName, String password, List<Role> roles) {
-        this.name = name;
         this.userName = userName;
         this.password = password;
         if(roles != null) {
             this.roles = roles;
         }
+    }
+    private List<Role> roles;
+
+    protected MotechWebUser(String id, String userName, String password) {
+        this.id = id;
+        this.userName = userName;
+        this.password = password;
+        roles = new ArrayList<Role>();
+    }
+
+    public String getId() {
+        return id;
     }
 
     public String getUserName() {
@@ -47,10 +55,6 @@ public class MotechWebUser extends CouchDbDocument {
     public MotechWebUser addRole(Role role) {
         roles.add(role);
         return this;
-    }
-
-    public String getName() {
-        return name;
     }
 
     public List<GrantedAuthority> getAuthorities() {
