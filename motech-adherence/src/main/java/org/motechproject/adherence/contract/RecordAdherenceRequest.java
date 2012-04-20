@@ -1,22 +1,38 @@
 package org.motechproject.adherence.contract;
 
-import org.joda.time.DateTime;
-
-import java.util.List;
-
 public class RecordAdherenceRequest {
 
     private String externalId;
 
     private String referenceId;
 
-    private DateTime from;
-
-    private DateTime to;
-
     private int dosesTaken;
 
     private int totalDoses;
 
-    private List<String> tags;
+    public String getExternalId() {
+        return externalId;
+    }
+
+    public String getReferenceId() {
+        return referenceId;
+    }
+
+    public int getDosesTaken() {
+        return dosesTaken;
+    }
+
+    public int getTotalDoses() {
+        return totalDoses;
+    }
+
+    public RecordAdherenceRequest addDosesTaken(int dosesTaken) {
+        this.dosesTaken += dosesTaken;
+        return this;
+    }
+
+    public RecordAdherenceRequest addTotalDoses(int totalDoses) {
+        this.totalDoses += totalDoses;
+        return this;
+    }
 }
