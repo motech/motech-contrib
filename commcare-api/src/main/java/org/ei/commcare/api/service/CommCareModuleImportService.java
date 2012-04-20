@@ -5,10 +5,12 @@ import org.ei.commcare.api.contract.CommCareModuleDefinitions;
 import org.ei.commcare.api.domain.CommCareFormInstance;
 import org.ei.commcare.api.util.CommCareImportProperties;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Service
 public class CommCareModuleImportService {
     private CommCareFormImportService formImportService;
     private CommCareModuleDefinitions moduleDefinitions;
