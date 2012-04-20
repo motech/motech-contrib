@@ -20,7 +20,6 @@ public class CommcareCaseParser<T> {
     private String xmlDoc;
     private String caseAction;
 
-
     public CommcareCaseParser(Class<T> clazz,String xmlDocument) {
         domainMapper = new CaseMapper<T>(clazz);
          this.xmlDoc = xmlDocument;
@@ -60,25 +59,25 @@ public class CommcareCaseParser<T> {
         return ccCase;
     }
 
-
-
     private void updateAction(Case ccCase,Element item) {
 
       if(getMatchingChildNode(item, "create") != null)   {
           setCaseAction(ccCase,"CREATE");
           populateValuesForCreation(ccCase, item);
-          populateValuesForUpdation(ccCase, item);
+          populateValuesFor(ccCase, item, "update");
 
       } else {
           if(getMatchingChildNode(item, "update") != null){
               setCaseAction(ccCase, "UPDATE");
-              populateValuesForUpdation(ccCase,item);
-
+              populateValuesFor(ccCase, item, "update");
           }else {
               if (getMatchingChildNode(item, "close") != null) {
                   setCaseAction(ccCase, "CLOSE");
               }
           }
+      }
+      if (getMatchingChildNode(item, "index") != null) {
+          populateValuesFor(ccCase, item, "index");
       }
     }
 
@@ -93,15 +92,14 @@ public class CommcareCaseParser<T> {
         ccCase.setOwner_id(getTextValue(item, "owner_id"));
     }
 
-    private void populateValuesForUpdation(Case ccCase, Element item) {
-        Node updateitem = getMatchingNode(item, "update");
-        NodeList childNodes = updateitem.getChildNodes();
+    private void populateValuesFor(Case ccCase, Element item, String tagName) {
+        Node matchingNode = getMatchingNode(item, tagName);
+        NodeList childNodes = matchingNode.getChildNodes();
 
         for(int i = 0;i<childNodes.getLength();i++){
             Node childNode = childNodes.item(i);
             if(!childNode.getNodeName().contains("text"))
                 ccCase.AddFieldvalue(childNode.getNodeName(),childNode.getTextContent());
-
         }
     }
 
@@ -129,7 +127,6 @@ public class CommcareCaseParser<T> {
         }
         return element;
     }
-
 
     public String getCaseAction() {
         return caseAction;

@@ -50,6 +50,17 @@ public class CommcareCaseParserTest extends TestCase {
         Assert.assertEquals("CREATE",aCase.getAction());
     }
 
+    @Test
+    public void testShouldParseIndexElementCorrectly() throws FileNotFoundException {
+        CommcareCaseParser<Case> parser = new CommcareCaseParser<Case>(Case.class, childXml());
+        Case aCase = parser.parseCase();
+        Assert.assertEquals("45134cf7-90f8-4284-8ca1-16392fc0ce57",aCase.getCase_id());
+        Assert.assertEquals("2012-04-03",aCase.getDate_modified());
+        Assert.assertEquals("d823ea3d392a06f8b991e9e4933348bd",aCase.getUser_id());
+        Assert.assertEquals("d823ea3d392a06f8b991e9e49394ce45",aCase.getOwner_id());
+        Assert.assertEquals("motherCaseId",aCase.getFieldValues().get("mother_id"));
+    }
+
     private String caseXml() {
         String caseXml = "<case xmlns=\"http://commcarehq.org/case/transaction/v2\" case_id=\"3F2504E04F8911D39A0C0305E82C3301\" user_id=\"F0183EDA012765103CB106821BBA51A0\" date_modified=\"2011-12-08T13:34:30\" >\n" +
         "<create>"+
@@ -67,4 +78,21 @@ public class CommcareCaseParserTest extends TestCase {
         return caseXml;  //To change body of created methods use File | Settings | File Templates.
     }
 
+    private String childXml() {
+        String caseXml = "<case xmlns=\"http://commcarehq.org/case/transaction/v2\" case_id=\"45134cf7-90f8-4284-8ca1-16392fc0ce57\" date_modified=\"2012-04-03\" user_id=\"d823ea3d392a06f8b991e9e4933348bd\">\n" +
+        "<create>" +
+        "<case_type>cc_bihar_newborn</case_type>" +
+        "<case_name>RAM</case_name>" +
+        "<owner_id>d823ea3d392a06f8b991e9e49394ce45</owner_id>" +
+        "</create>" +
+        "<update>" +
+        "<gender>male</gender>" +
+        "</update>" +
+        "<index>" +
+        "<mother_id case_type=\"cc_bihar_pregnancy\">motherCaseId</mother_id>" +
+        "</index>" +
+        "</case>";
+
+        return caseXml;
+    }
 }
