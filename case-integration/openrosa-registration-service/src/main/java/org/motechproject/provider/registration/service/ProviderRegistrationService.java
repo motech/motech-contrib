@@ -20,7 +20,7 @@ public abstract class ProviderRegistrationService<T> {
     @RequestMapping(value = "/process", method = RequestMethod.POST)
     public ResponseEntity<String> processCase(HttpEntity<String> requestEntity) throws IOException {
         HttpHeaders responseHeaders = new HttpHeaders();
-        responseHeaders.setContentType(MediaType.TEXT_HTML);
+        responseHeaders.setContentType(MediaType.TEXT_PLAIN);
 
         RegistrationParser<T> parser = new RegistrationParser<T>(clazz, requestEntity.getBody());
         try {

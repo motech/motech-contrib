@@ -22,7 +22,7 @@ public abstract class CaseService<T> {
     public ResponseEntity<String> processCase(HttpEntity<String> requestEntity) throws IOException {
         logger.info(requestEntity.getBody());
         HttpHeaders responseHeaders = new HttpHeaders();
-        responseHeaders.setContentType(MediaType.TEXT_HTML);
+        responseHeaders.setContentType(MediaType.TEXT_PLAIN);
 
         try {
             CommcareCaseParser<T> caseParser = new CommcareCaseParser<T>(clazz, requestEntity.getBody());
