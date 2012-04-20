@@ -4,13 +4,6 @@ import junit.framework.TestCase;
 import org.junit.Test;
 import org.motechproject.provider.registration.exception.OpenRosaRegistrationParserException;
 
-/**
- * Created by IntelliJ IDEA.
- * User: pchandra
- * Date: 4/16/12
- * Time: 3:25 AM
- * To change this template use File | Settings | File Templates.
- */
 public class RegistrationParserTest extends TestCase {
 
     @Test
@@ -22,16 +15,20 @@ public class RegistrationParserTest extends TestCase {
         assertEquals("984659964", testProvider.getTertiary_mobile());
         assertEquals("cha011", testProvider.getProvider_id());
         assertEquals("Muzaffarpur", testProvider.getDistrict());
+        assertEquals("Name", testProvider.getUsername());
+        assertEquals("pwd", testProvider.getPassword());
+        assertEquals("123456", testProvider.getUuid());
+        assertEquals("19/02/2012", testProvider.getDate());
 
     }
 
     private String xmlDocument() {
         return "<Registration xmlns=\"http://openrosa.org/user/registration\">\n" +
                 "\n" +
-                "    <username></username>\n" +
-                "    <password></password>\n" +
-                "    <uuid></uuid>\n" +
-                "    <date></date>\n" +
+                "    <username>Name</username>\n" +
+                "    <password>pwd</password>\n" +
+                "    <uuid>123456</uuid>\n" +
+                "    <date>19/02/2012</date>\n" +
                 "\n" +
                 "    <registering_phone_id></registering_phone_id>\n" +
                 "\n" +

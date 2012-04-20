@@ -1,18 +1,40 @@
 package org.motechproject.provider.registration.parser;
 
-/**
- * Created by IntelliJ IDEA.
- * User: pchandra
- * Date: 4/16/12
- * Time: 3:56 AM
- * To change this template use File | Settings | File Templates.
- */
 public class TestProvider {
     private String primary_mobile;
     private String secondary_mobile;
     private String tertiary_mobile;
     private String provider_id;
     private String district;
+
+    private String username;
+    private String password;
+    private String uuid;
+    private String date;
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
+    }
 
     public String getPrimary_mobile() {
         return primary_mobile;
@@ -54,4 +76,11 @@ public class TestProvider {
         this.district = district;
     }
 
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
 }

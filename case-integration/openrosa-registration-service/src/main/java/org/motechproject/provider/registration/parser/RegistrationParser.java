@@ -47,6 +47,12 @@ public class RegistrationParser<T> {
 
     private Provider createProvider(Element item) {
         Provider provider = new Provider();
+
+        addFieldForElement(item, provider, "username");
+        addFieldForElement(item, provider, "password");
+        addFieldForElement(item, provider, "uuid");
+        addFieldForElement(item, provider, "date");
+
         Element element = (Element) getMatchingNode(item, "user_data");
         NodeList childNodes = element.getElementsByTagName("data");
 
@@ -60,6 +66,11 @@ public class RegistrationParser<T> {
 
         }
         return provider;
+    }
+
+    private void addFieldForElement(Element item, Provider provider, String tagName) {
+        Element element = (Element) getMatchingNode(item, tagName);
+        if(element != null) provider.AddFieldvalue(tagName, element.getTextContent());
     }
 
     private Node getMatchingNode(Element ele, String tagName) {
