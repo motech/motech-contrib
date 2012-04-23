@@ -3,6 +3,7 @@ package org.motechproject.security.domain;
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.ektorp.support.CouchDbDocument;
 import org.ektorp.support.TypeDiscriminator;
+import org.motechproject.model.MotechBaseDataObject;
 import org.springframework.security.core.GrantedAuthority;
 
 import java.util.ArrayList;
@@ -29,7 +30,7 @@ public class MotechWebUser extends CouchDbDocument {
     }
     private List<Role> roles;
 
-    protected MotechWebUser(String id, String userName, String password) {
+    public MotechWebUser(String id, String userName, String password) {
         this.id = id;
         this.userName = userName;
         this.password = password;

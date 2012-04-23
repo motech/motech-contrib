@@ -20,6 +20,14 @@ public class MotechAuthenticationService {
         allMotechWebUsers.add(user);
     }
 
+    public MotechWebUser findByUserName(String userName) {
+       return allMotechWebUsers.findByUserName(userName);
+    }
+
+    public void remove(MotechWebUser user) {
+        allMotechWebUsers.remove(user);
+    }
+
     public AuthenticatedUser authenticate(String userName, String password) {
         MotechWebUser user = allMotechWebUsers.findByUserName(userName);
         if (user != null && password.equals(user.getPassword())) {
