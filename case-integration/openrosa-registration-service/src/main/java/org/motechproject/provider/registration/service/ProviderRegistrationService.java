@@ -1,5 +1,6 @@
 package org.motechproject.provider.registration.service;
 
+import org.apache.log4j.Logger;
 import org.motechproject.provider.registration.exception.OpenRosaRegistrationParserException;
 import org.motechproject.provider.registration.exception.OpenRosaRegistrationValidationException;
 import org.motechproject.provider.registration.parser.RegistrationParser;
@@ -11,6 +12,8 @@ import java.io.IOException;
 
 public abstract class ProviderRegistrationService<T> {
 
+    private static Logger logger = Logger.getLogger(ProviderRegistrationService.class);
+
     private Class<T> clazz;
 
     public ProviderRegistrationService(Class<T> clazz) {
@@ -19,24 +22,29 @@ public abstract class ProviderRegistrationService<T> {
 
     @RequestMapping(value = "/process", method = RequestMethod.POST)
     public ResponseEntity<String> processCase(HttpEntity<String> requestEntity) throws IOException {
+        logger.info("Received provider registration request: " + requestEntity.getBody());
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.setContentType(MediaType.TEXT_PLAIN);
+        ResponseEntity<String> response;
 
         RegistrationParser<T> parser = new RegistrationParser<T>(clazz, requestEntity.getBody());
         try {
             T provider = parser.parseProvider();
             createOrUpdate(provider);
         } catch (OpenRosaRegistrationParserException exception) {
-            return new ResponseEntity<String>(exception.getMessage(), responseHeaders, exception.getStatusCode());
+            response = new ResponseEntity<String>(exception.getMessage(), responseHeaders, exception.getStatusCode());
 
         } catch (OpenRosaRegistrationValidationException exception) {
-            return new ResponseEntity<String>(exception.getMessage(), responseHeaders, exception.getStatusCode());
+            response = new ResponseEntity<String>(exception.getMessage(), responseHeaders, exception.getStatusCode());
 
         } catch (RuntimeException exception) {
-            return new ResponseEntity<String>(exception.getMessage(), responseHeaders, HttpStatus.INTERNAL_SERVER_ERROR);
+            response = new ResponseEntity<String>(exception.getMessage(), responseHeaders, HttpStatus.INTERNAL_SERVER_ERROR);
 
         }
-        return new ResponseEntity<String>("Request successfully processed.", responseHeaders, HttpStatus.OK);
+        response = new ResponseEntity<String>("Request successfully processed.", responseHeaders, HttpStatus.OK);
+
+        logger.info("Response sent: Status Code: " + response.getStatusCode() + ". Body: " + response.getBody());
+        return response;
     }
 
     public abstract void createOrUpdate(T registration) throws OpenRosaRegistrationValidationException;
