@@ -8,11 +8,11 @@ import org.springframework.security.core.GrantedAuthority;
 import java.util.ArrayList;
 import java.util.List;
 
-@TypeDiscriminator("doc.type == 'Provider'")
+@TypeDiscriminator("doc.type == 'MotechUser'")
 public class MotechWebUser extends CouchDbDocument {
 
     @JsonProperty
-    private String id;
+    private String name;
 
     @JsonProperty
     private String userName;
@@ -21,17 +21,15 @@ public class MotechWebUser extends CouchDbDocument {
     private String password;
 
     @JsonProperty
-    private List<Role> roles;
+    private List<Role> roles = new ArrayList<Role>();
 
-    protected MotechWebUser(String id, String userName, String password) {
-        this.id = id;
+    protected MotechWebUser(String name, String userName, String password, List<Role> roles) {
+        this.name = name;
         this.userName = userName;
         this.password = password;
-        roles = new ArrayList<Role>();
-    }
-
-    public String getId() {
-        return id;
+        if(roles != null) {
+            this.roles = roles;
+        }
     }
 
     public String getUserName() {
@@ -49,6 +47,10 @@ public class MotechWebUser extends CouchDbDocument {
     public MotechWebUser addRole(Role role) {
         roles.add(role);
         return this;
+    }
+
+    public String getName() {
+        return name;
     }
 
     public List<GrantedAuthority> getAuthorities() {
