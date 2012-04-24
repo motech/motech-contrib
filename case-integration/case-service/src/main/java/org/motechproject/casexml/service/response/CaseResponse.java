@@ -1,21 +1,21 @@
 package org.motechproject.casexml.service.response;
 
-import org.motechproject.casexml.service.exception.CaseValidationException;
+import org.motechproject.casexml.service.exception.CaseException;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class CaseResponse {
-    public List<CaseValidationException> errors;
+    public List<CaseException> errors;
     public String status;
 
     public String message;
 
-    public List<CaseValidationException> getErrors() {
+    public List<CaseException> getErrors() {
         return errors;
     }
 
-    public void setErrors(List<CaseValidationException> errors) {
+    public void setErrors(List<CaseException> errors) {
         this.errors = errors;
     }
 
@@ -36,10 +36,10 @@ public class CaseResponse {
     }
 
     public CaseResponse(){
-        errors = new ArrayList<CaseValidationException>();
+        errors = new ArrayList<CaseException>();
     }
 
-    public void add(CaseValidationException error){
+    public void add(CaseException error){
         errors.add(error);
     }
 }

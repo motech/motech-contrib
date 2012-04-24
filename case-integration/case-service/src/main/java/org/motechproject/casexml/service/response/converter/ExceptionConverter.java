@@ -5,7 +5,7 @@ import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
-import org.motechproject.casexml.service.exception.CaseValidationException;
+import org.motechproject.casexml.service.exception.CaseException;
 
 import java.util.Iterator;
 import java.util.Map;
@@ -15,8 +15,8 @@ public class ExceptionConverter implements Converter{
 
     @Override
     public void marshal(Object o, HierarchicalStreamWriter writer, MarshallingContext marshallingContext) {
-        CaseValidationException validationException = (CaseValidationException) o;
-        Map<String,String> errorMessages = validationException.getErrorMessages();
+        CaseException exception = (CaseException) o;
+        Map<String,String> errorMessages = exception.getErrorMessages();
         if(errorMessages != null){
             Set<String> errorKeys = errorMessages.keySet();
 
@@ -46,6 +46,6 @@ public class ExceptionConverter implements Converter{
 
     @Override
     public boolean canConvert(Class aClass) {
-        return aClass.equals(CaseValidationException.class);
+        return aClass.equals(CaseException.class) || aClass.getSuperclass().equals(CaseException.class);
     }
 }

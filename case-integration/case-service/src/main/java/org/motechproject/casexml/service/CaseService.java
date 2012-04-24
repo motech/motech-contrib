@@ -3,7 +3,7 @@ package org.motechproject.casexml.service;
 import org.apache.log4j.Logger;
 import org.motechproject.casexml.exception.CaseParserException;
 import org.motechproject.casexml.parser.CommcareCaseParser;
-import org.motechproject.casexml.service.exception.CaseValidationException;
+import org.motechproject.casexml.service.exception.CaseException;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -35,7 +35,7 @@ public abstract class CaseService<T> {
         } catch (CaseParserException exception) {
             return new ResponseEntity<String>(exception.getMessage(), responseHeaders, HttpStatus.BAD_REQUEST);
 
-        } catch (CaseValidationException exception) {
+        } catch (CaseException exception) {
             String responseMessage = responseMessageBuilder.createResponseMessage(exception);
             return new ResponseEntity<String>(responseMessage, responseHeaders, exception.getHttpStatusCode());
 
@@ -45,7 +45,7 @@ public abstract class CaseService<T> {
         return new ResponseEntity<String>("Request successfully processed.", responseHeaders, HttpStatus.OK);
     }
 
-    private void processCaseAction(CommcareCaseParser<T> caseParser, T object) throws CaseValidationException {
+    private void processCaseAction(CommcareCaseParser<T> caseParser, T object) throws CaseException {
         if ("CREATE".equals(caseParser.getCaseAction()))
             createCase(object);
         else if ("UPDATE".equals(caseParser.getCaseAction()))
@@ -55,10 +55,10 @@ public abstract class CaseService<T> {
     }
 
 
-    public abstract void closeCase(T ccCase) throws CaseValidationException;
+    public abstract void closeCase(T ccCase) throws CaseException;
 
-    public abstract void updateCase(T ccCase) throws CaseValidationException;
+    public abstract void updateCase(T ccCase) throws CaseException;
 
-    public abstract void createCase(T ccCase) throws CaseValidationException;
+    public abstract void createCase(T ccCase) throws CaseException;
 
 }
