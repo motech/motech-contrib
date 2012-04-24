@@ -3,30 +3,54 @@ package org.motechproject.casexml.service.exception;
 
 import org.springframework.http.HttpStatus;
 
+import java.util.Map;
+
 public class CaseValidationException extends Exception {
 
-    private HttpStatus statusCode;
+    private HttpStatus httpStatusCode;
     private String message;
+    private Map<String,String> errorMessages;
 
-    public CaseValidationException(Exception cause, HttpStatus statusCode) {
+    public Map<String, String> getErrorMessages() {
+        return errorMessages;
+    }
+
+    public void setErrorMessages(Map<String, String> errorMessages) {
+        this.errorMessages = errorMessages;
+    }
+
+    public CaseValidationException(Exception cause, HttpStatus httpStatusCode) {
         super(cause);
         this.message = cause.getMessage();
-        this.statusCode = statusCode;
+        this.httpStatusCode = httpStatusCode;
     }
 
-    public CaseValidationException(Exception cause, String message, HttpStatus statusCode) {
+    public CaseValidationException(Exception cause, String message, HttpStatus httpStatusCode) {
         super(message, cause);
         this.message = message;
-        this.statusCode = statusCode;
+        this.httpStatusCode = httpStatusCode;
     }
-
-    public CaseValidationException(String message, HttpStatus statusCode) {
+    
+    public CaseValidationException(Exception cause, String message, HttpStatus httpStatusCode,Map<String,String> errorMessages) {
+        super(message, cause);
         this.message = message;
-        this.statusCode = statusCode;
+        this.httpStatusCode = httpStatusCode;
+        this.errorMessages = errorMessages;
     }
 
-    public HttpStatus getStatusCode() {
-        return statusCode;
+    public CaseValidationException(String message, HttpStatus httpStatusCode) {
+        this.message = message;
+        this.httpStatusCode = httpStatusCode;
+    }
+
+    public CaseValidationException(String message, HttpStatus httpStatusCode,Map<String,String> errorMessages) {
+        this.message = message;
+        this.httpStatusCode = httpStatusCode;
+        this.errorMessages = errorMessages;
+    }
+
+    public HttpStatus getHttpStatusCode() {
+        return httpStatusCode;
     }
 
     public String getMessage() {
