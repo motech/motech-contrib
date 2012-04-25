@@ -3,10 +3,14 @@ package org.motechproject.security.service;
 import junit.framework.TestCase;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.motechproject.security.domain.AuthenticatedUser;
 import org.motechproject.security.domain.MotechWebUser;
+import org.motechproject.security.repository.AllMotechWebUsers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+
+import java.util.Arrays;
 
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -16,21 +20,32 @@ public class MotechAuthenticationServiceTest extends TestCase {
     @Autowired
     MotechAuthenticationService motechAuthenticationService;
 
+    @Autowired
+    AllMotechWebUsers allMotechWebUsers;
+
     @Test
     public void testRegister() throws Exception {
-        MotechWebUser user = createUser();
-       // motechAuthenticationService.register(user);
-        //MotechWebUser motechWebUser = motechAuthenticationService.findByUserName(user.getUserName());
-        //assertNotNull(motechWebUser);
+        motechAuthenticationService.register("userName", "password", "Administrator", "1234", Arrays.asList("IT_ADMIN", "DB_ADMIN"));
+        MotechWebUser motechWebUser = allMotechWebUsers.findByUserName("userName");
 
-        //motechAuthenticationService.remove(motechWebUser);
-
-
+        assertNotNull(motechWebUser);
+        assertEquals("IT_ADMIN", motechWebUser.getRoles().get(0).getName());
+        assertEquals("DB_ADMIN", motechWebUser.getRoles().get(1).getName());
+        allMotechWebUsers.remove(motechWebUser);
     }
+    
+    @Test
+    public void testAuthenticate() throws Exception {
+        motechAuthenticationService.register("userName", "password", "Administrator", "1234", Arrays.asList("IT_ADMIN", "DB_ADMIN"));
 
-    private MotechWebUser createUser() {
-        MotechWebUser webUser = new MotechWebUser("1234","guest","guest");
+        AuthenticatedUser authenticatedUser = motechAuthenticationService.authenticate("userName", "password");
 
-        return webUser;
+        assertNotNull(authenticatedUser);
+        assertEquals("userName", authenticatedUser.getUsername());
+        assertEquals("Administrator", authenticatedUser.getUserType());
+        assertEquals("1234", authenticatedUser.getExternalId());
+
+        motechAuthenticationService.remove("userName");
+        assertNull(allMotechWebUsers.findByUserName("userName"));
     }
 }

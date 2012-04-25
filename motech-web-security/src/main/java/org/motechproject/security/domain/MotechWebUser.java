@@ -1,7 +1,7 @@
 package org.motechproject.security.domain;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonProperty;
-import org.ektorp.support.CouchDbDocument;
 import org.ektorp.support.TypeDiscriminator;
 import org.motechproject.model.MotechBaseDataObject;
 import org.springframework.security.core.GrantedAuthority;
@@ -9,11 +9,11 @@ import org.springframework.security.core.GrantedAuthority;
 import java.util.ArrayList;
 import java.util.List;
 
-@TypeDiscriminator("doc.type == 'MotechUser'")
-public class MotechWebUser extends CouchDbDocument {
+@TypeDiscriminator("doc.type == 'MotechWebUser'")
+public class MotechWebUser extends MotechBaseDataObject {
 
     @JsonProperty
-    private String id;
+    private String externalId;
 
     @JsonProperty
     private String userName;
@@ -21,24 +21,33 @@ public class MotechWebUser extends CouchDbDocument {
     @JsonProperty
     private String password;
 
-    protected MotechWebUser(String name, String userName, String password, List<Role> roles) {
+    @JsonProperty
+    private String userType;
+
+    @JsonProperty
+    private List<Role> roles;
+
+    public MotechWebUser(){
+        super();
+    }
+
+    public MotechWebUser(String userName, String password, String userType, String externalId, List<Role> roles) {
+        super();
         this.userName = userName;
         this.password = password;
+        this.externalId = externalId;
+        this.userType = userType;
         if(roles != null) {
             this.roles = roles;
         }
     }
-    private List<Role> roles;
 
-    public MotechWebUser(String id, String userName, String password) {
-        this.id = id;
-        this.userName = userName;
-        this.password = password;
-        roles = new ArrayList<Role>();
+    public String getUserType() {
+        return userType;
     }
 
-    public String getId() {
-        return id;
+    public String getExternalId() {
+        return externalId;
     }
 
     public String getUserName() {
@@ -53,11 +62,7 @@ public class MotechWebUser extends CouchDbDocument {
         return roles;
     }
 
-    public MotechWebUser addRole(Role role) {
-        roles.add(role);
-        return this;
-    }
-
+    @JsonIgnore
     public List<GrantedAuthority> getAuthorities() {
         List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
         for (Role role : roles) {

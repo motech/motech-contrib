@@ -1,6 +1,5 @@
 package org.motechproject.security.domain;
 
-import org.motechproject.security.domain.MotechWebUser;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 
@@ -19,11 +18,11 @@ public class AuthenticatedUser extends User {
         return webUser.getId();
     }
 
-    public String getUserName() {
-        return webUser.getUserName();
+    public String getExternalId() {
+        return webUser.getExternalId();
     }
 
-    public String getPassword() {
-        return webUser.getPassword();
+    public String getUserType() {
+        return webUser.getUserType();
     }
 }

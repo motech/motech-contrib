@@ -2,9 +2,13 @@ package org.motechproject.security.service;
 
 import org.motechproject.security.domain.AuthenticatedUser;
 import org.motechproject.security.domain.MotechWebUser;
+import org.motechproject.security.domain.Role;
 import org.motechproject.security.repository.AllMotechWebUsers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class MotechAuthenticationService {
@@ -16,16 +20,18 @@ public class MotechAuthenticationService {
         this.allMotechWebUsers = allMotechWebUsers;
     }
 
-    public void register(MotechWebUser user) {
-        allMotechWebUsers.add(user);
+    public void register(String userName, String password, String userType, String externalId, List<String> roles) {
+        List<Role> rolesDomain = new ArrayList<Role>();
+        for (String role : roles) {
+            rolesDomain.add(new Role(role));
+        }
+        allMotechWebUsers.add(new MotechWebUser(userName, password, userType, externalId, rolesDomain));
     }
 
-    public MotechWebUser findByUserName(String userName) {
-       return allMotechWebUsers.findByUserName(userName);
-    }
-
-    public void remove(MotechWebUser user) {
-        allMotechWebUsers.remove(user);
+    public void remove(String userName) {
+        MotechWebUser motechWebUser = allMotechWebUsers.findByUserName(userName);
+        if(motechWebUser != null)
+            allMotechWebUsers.remove(motechWebUser);
     }
 
     public AuthenticatedUser authenticate(String userName, String password) {
