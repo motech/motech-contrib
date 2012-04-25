@@ -4,6 +4,7 @@ import org.apache.log4j.Logger;
 import org.motechproject.casexml.exception.CaseParserException;
 import org.motechproject.casexml.parser.CommcareCaseParser;
 import org.motechproject.casexml.service.exception.CaseException;
+import org.motechproject.casexml.service.response.ResponseMessageBuilder;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -42,7 +43,7 @@ public abstract class CaseService<T> {
         } catch (RuntimeException exception) {
             return new ResponseEntity<String>(responseMessageBuilder.messageForRuntimeException(), responseHeaders, HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        return new ResponseEntity<String>("Request successfully processed.", responseHeaders, HttpStatus.OK);
+        return new ResponseEntity<String>(responseMessageBuilder.messageForSuccess(), responseHeaders, HttpStatus.OK);
     }
 
     private void processCaseAction(CommcareCaseParser<T> caseParser, T object) throws CaseException {

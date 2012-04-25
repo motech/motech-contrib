@@ -2,22 +2,19 @@ package org.motechproject.casexml.service.response;
 
 import org.motechproject.casexml.service.exception.CaseException;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class CaseResponse {
-    public List<CaseException> errors;
-    public String status;
-
-    public String message;
-
-    public List<CaseException> getErrors() {
+    public CaseException getException() {
         return errors;
     }
 
-    public void setErrors(List<CaseException> errors) {
-        this.errors = errors;
+    public void setException(CaseException exception) {
+        this.errors = exception;
     }
+
+    public CaseException errors;
+    public String status;
+
+    public String message;
 
     public String getStatus() {
         return status;
@@ -35,11 +32,5 @@ public class CaseResponse {
         this.message = message;
     }
 
-    public CaseResponse(){
-        errors = new ArrayList<CaseException>();
-    }
 
-    public void add(CaseException error){
-        errors.add(error);
-    }
 }

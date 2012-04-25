@@ -23,14 +23,16 @@ public class ExceptionConverter implements Converter{
             Iterator<String> iterator = errorKeys.iterator();
             while(iterator.hasNext()){
                 String nextKey = iterator.next();
-                writeErrorNode(writer, nextKey, errorMessages.get(nextKey));
+                writeErrorNode(writer, nextKey, errorMessages.get(nextKey),marshallingContext);
             }
         }
     }
 
-    private void writeErrorNode(HierarchicalStreamWriter writer, String key, String value) {
+    private void writeErrorNode(HierarchicalStreamWriter writer, String key, String value, MarshallingContext marshallingContext) {
+       writer.startNode("error");
         writeNode(writer, "code", key);
         writeNode(writer, "message", value);
+        writer.endNode();
     }
 
     private void writeNode(HierarchicalStreamWriter writer,String nodeName, String value) {
