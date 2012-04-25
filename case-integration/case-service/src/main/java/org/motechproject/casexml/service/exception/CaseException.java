@@ -5,7 +5,7 @@ import org.springframework.http.HttpStatus;
 
 import java.util.Map;
 
-public class CaseException extends Exception {
+public class CaseException extends RuntimeException {
 
     private HttpStatus httpStatusCode;
     private String message;
