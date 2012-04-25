@@ -3,6 +3,7 @@ package org.motechproject.casexml.service.response;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.naming.NoNameCoder;
 import com.thoughtworks.xstream.io.xml.DomDriver;
+import org.motechproject.casexml.exception.CaseParserException;
 import org.motechproject.casexml.service.exception.CaseException;
 import org.motechproject.casexml.service.response.converter.ExceptionConverter;
 
@@ -23,24 +24,24 @@ public class ResponseMessageBuilder {
         xstream.registerConverter(new ExceptionConverter());
 
         return xstream.toXML(response);
+    }
 
+    public String createResponseMessage(CaseParserException exception){
+        return responseWithMessage("An unexpected exception occurred while while trying to parse caseXml", "Failure");
     }
 
     public String messageForRuntimeException() {
-        CaseResponse response = new CaseResponse();
-        response.setStatus("Failure");
-        response.setMessage("An unexpected exception occured while processing .Please verify the message and try again");
-
-        xstream.alias("response", CaseResponse.class);
-        xstream.omitField(CaseResponse.class,"errors");
-
-        return xstream.toXML(response);
+        return responseWithMessage("An unexpected exception occurred while processing .Please verify the message and try again", "Failure");
     }
 
     public String messageForSuccess() {
+        return responseWithMessage("Request successfully processed", "Success");
+    }
+
+    private String responseWithMessage(String message, String status) {
         CaseResponse response = new CaseResponse();
-        response.setStatus("Success");
-        response.setMessage("Request successfully processed");
+        response.setStatus(status);
+        response.setMessage(message);
 
         xstream.alias("response", CaseResponse.class);
         xstream.omitField(CaseResponse.class,"errors");

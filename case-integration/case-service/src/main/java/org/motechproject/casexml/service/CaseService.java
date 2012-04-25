@@ -25,7 +25,7 @@ public abstract class CaseService<T> {
     public ResponseEntity<String> processCase(HttpEntity<String> requestEntity) throws IOException {
         logger.info(requestEntity.getBody());
         HttpHeaders responseHeaders = new HttpHeaders();
-        responseHeaders.setContentType(MediaType.TEXT_PLAIN);
+        responseHeaders.setContentType(MediaType.TEXT_XML);
 
         try {
             CommcareCaseParser<T> caseParser = new CommcareCaseParser<T>(clazz, requestEntity.getBody());
@@ -34,11 +34,10 @@ public abstract class CaseService<T> {
             processCaseAction(caseParser, object);
 
         } catch (CaseParserException exception) {
-            return loggedResponse(new ResponseEntity<String>(exception.getMessage(), responseHeaders, HttpStatus.BAD_REQUEST));
+            return loggedResponse(new ResponseEntity<String>(responseMessageBuilder.createResponseMessage(exception), responseHeaders, HttpStatus.BAD_REQUEST));
 
         } catch (CaseException exception) {
-            String responseMessage = responseMessageBuilder.createResponseMessage(exception);
-            return loggedResponse(new ResponseEntity<String>(responseMessage, responseHeaders, exception.getHttpStatusCode()));
+            return loggedResponse(new ResponseEntity<String>(responseMessageBuilder.createResponseMessage(exception), responseHeaders, exception.getHttpStatusCode()));
 
         } catch (RuntimeException exception) {
             return loggedResponse(new ResponseEntity<String>(responseMessageBuilder.messageForRuntimeException(), responseHeaders, HttpStatus.INTERNAL_SERVER_ERROR));
