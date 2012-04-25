@@ -34,16 +34,24 @@ public abstract class CaseService<T> {
             processCaseAction(caseParser, object);
 
         } catch (CaseParserException exception) {
-            return new ResponseEntity<String>(exception.getMessage(), responseHeaders, HttpStatus.BAD_REQUEST);
+            return loggedResponse(new ResponseEntity<String>(exception.getMessage(), responseHeaders, HttpStatus.BAD_REQUEST));
 
         } catch (CaseException exception) {
             String responseMessage = responseMessageBuilder.createResponseMessage(exception);
-            return new ResponseEntity<String>(responseMessage, responseHeaders, exception.getHttpStatusCode());
+            return loggedResponse(new ResponseEntity<String>(responseMessage, responseHeaders, exception.getHttpStatusCode()));
 
         } catch (RuntimeException exception) {
-            return new ResponseEntity<String>(responseMessageBuilder.messageForRuntimeException(), responseHeaders, HttpStatus.INTERNAL_SERVER_ERROR);
+            return loggedResponse(new ResponseEntity<String>(responseMessageBuilder.messageForRuntimeException(), responseHeaders, HttpStatus.INTERNAL_SERVER_ERROR));
         }
-        return new ResponseEntity<String>(responseMessageBuilder.messageForSuccess(), responseHeaders, HttpStatus.OK);
+        return loggedResponse(new ResponseEntity<String>(responseMessageBuilder.messageForSuccess(), responseHeaders, HttpStatus.OK));
+    }
+
+    private ResponseEntity<String> loggedResponse(ResponseEntity<String> responseEntity) {
+        if(responseEntity.getStatusCode().equals(HttpStatus.OK))
+            logger.info(responseEntity);
+        else
+            logger.error(responseEntity);
+        return responseEntity;
     }
 
     private void processCaseAction(CommcareCaseParser<T> caseParser, T object) throws CaseException {
