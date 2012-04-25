@@ -27,15 +27,15 @@ public class ResponseMessageBuilder {
     }
 
     public String createResponseMessage(CaseParserException exception){
-        return responseWithMessage("An unexpected exception occurred while while trying to parse caseXml", "Failure");
+        return responseWithMessage("An unexpected exception occurred while while trying to parse caseXml.", "Failure");
     }
 
     public String messageForRuntimeException() {
-        return responseWithMessage("An unexpected exception occurred while processing .Please verify the message and try again", "Failure");
+        return responseWithMessage("An unexpected exception occurred while processing. Please verify the message and try again.", "Failure");
     }
 
     public String messageForSuccess() {
-        return responseWithMessage("Request successfully processed", "Success");
+        return responseWithMessage("Request successfully processed.", "Success");
     }
 
     private String responseWithMessage(String message, String status) {
