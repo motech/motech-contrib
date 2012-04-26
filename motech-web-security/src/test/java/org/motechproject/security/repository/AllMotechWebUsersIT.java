@@ -1,5 +1,7 @@
 package org.motechproject.security.repository;
 
+import org.jasypt.encryption.pbe.PBEStringEncryptor;
+import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.motechproject.security.domain.MotechWebUser;
@@ -10,9 +12,9 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.util.Arrays;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertNotNull;
-import static junit.framework.Assert.assertNull;
+import static junit.framework.Assert.*;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.core.Is.is;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations="classpath*:applicationWebSecurityContext.xml")
@@ -21,8 +23,11 @@ public class AllMotechWebUsersIT {
     @Autowired
     AllMotechWebUsers allMotechWebUsers;
 
+    @Autowired
+    PBEStringEncryptor pbeStringEncryptor;
+
     @Test
-    public void testFindByUserName() {
+    public void findByUserName_shouldAlsoDecryptPassword() {
         MotechWebUser motechWebUser = new MotechWebUser("testuser", "testpassword", "Administrator", "id", Arrays.asList(new Role("ADMIN")));
         allMotechWebUsers.add(motechWebUser);
 
@@ -32,8 +37,19 @@ public class AllMotechWebUsersIT {
         assertEquals("testpassword", testUser.getPassword());
         assertEquals("Administrator", testUser.getUserType());
         assertEquals("ADMIN", testUser.getRoles().get(0).getName());
+    }
 
-        allMotechWebUsers.remove(testUser);
-        assertNull(allMotechWebUsers.findByUserName("testuser"));
+    @Test
+    public void shouldEncryptPlainTextPassword_BeforeSavingTheUser() {
+        String plainTextPassword = "testpassword";
+        MotechWebUser motechWebUser = new MotechWebUser("testuser", plainTextPassword, "Administrator", "id", Arrays.asList(new Role("ADMIN")));
+        allMotechWebUsers.add(motechWebUser);
+
+        assertThat(pbeStringEncryptor.decrypt(motechWebUser.getPassword()), is(plainTextPassword));
+    }
+
+    @After
+    public void tearDown() {
+        allMotechWebUsers.removeAll();
     }
 }

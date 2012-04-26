@@ -11,6 +11,11 @@
         <constructor-arg ref="couchDbInstance"/>
     </bean>
 
+    <bean id="encryptor" class="org.jasypt.encryption.pbe.StandardPBEStringEncryptor" lazy-init="false">
+        <property name="algorithm" value="PBEWithMD5AndDES"/>
+        <property name="password" value="jasypt"/>
+    </bean>
+
     <context:annotation-config/>
     <context:component-scan base-package="org.motechproject.security"/>
 </beans>

@@ -58,6 +58,10 @@ public class MotechWebUser extends MotechBaseDataObject {
         return password;
     }
 
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
     public List<Role> getRoles() {
         return roles;
     }
