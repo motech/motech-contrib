@@ -36,22 +36,26 @@ public abstract class CaseService<T> {
             processCaseAction(caseParser, object);
 
         } catch (CaseParserException exception) {
+            logError(exception);
             return loggedResponse(new ResponseEntity<String>(responseMessageBuilder.createResponseMessage(exception), responseHeaders, HttpStatus.BAD_REQUEST));
 
         } catch (CaseException exception) {
+            logError(exception);
             return loggedResponse(new ResponseEntity<String>(responseMessageBuilder.createResponseMessage(exception), responseHeaders, exception.getHttpStatusCode()));
 
         } catch (RuntimeException exception) {
+            logError(exception);
             return loggedResponse(new ResponseEntity<String>(responseMessageBuilder.messageForRuntimeException(), responseHeaders, HttpStatus.INTERNAL_SERVER_ERROR));
         }
         return loggedResponse(new ResponseEntity<String>(responseMessageBuilder.messageForSuccess(), responseHeaders, HttpStatus.OK));
     }
 
+    private void logError(Throwable exception) {
+        logger.error("Exception encountered while processing case xml", exception);
+    }
+
     private ResponseEntity<String> loggedResponse(ResponseEntity<String> responseEntity) {
-        if(responseEntity.getStatusCode().equals(HttpStatus.OK))
-            logger.info(responseEntity);
-        else
-            logger.error(responseEntity);
+        logger.info("Sending case xml Response: Status Code: " + responseEntity.getStatusCode() + "; Body: " + responseEntity.getBody());
         return responseEntity;
     }
 
