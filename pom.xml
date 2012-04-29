@@ -20,6 +20,7 @@
         <module>commcare-listener</module>
         <module>motech-http-client</module>
         <module>motech-web-security</module>
+        <module>motech-validation</module>
     </modules>
 
     <distributionManagement>
