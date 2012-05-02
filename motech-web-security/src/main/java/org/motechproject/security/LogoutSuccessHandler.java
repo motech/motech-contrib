@@ -22,7 +22,6 @@ public class LogoutSuccessHandler extends SimpleUrlLogoutSuccessHandler {
                 session.removeAttribute(LoginSuccessHandler.LOGGED_IN_USER);
                 session.invalidate();
             }
-            WebAuthenticationDetails details = (WebAuthenticationDetails) authentication.getDetails();
         }
         super.onLogoutSuccess(request, response, authentication);
     }

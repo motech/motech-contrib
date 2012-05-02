@@ -14,8 +14,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class AuthenticationProvider extends AbstractUserDetailsAuthenticationProvider {
 
-    public static final String PLEASE_ENTER_PASSWORD = "Please enter password";
-    public static final String USER_NOT_FOUND = "The username or password you entered is incorrect";
+    public static final String PLEASE_ENTER_PASSWORD = "Please enter password.";
+    public static final String USER_NOT_FOUND = "The username or password you entered is incorrect. Please enter the correct credentials.";
     public static final String FAILURE = "Failure";
     public static final String SUCCESS = "Success";
 
