@@ -36,8 +36,7 @@ public class CaseTaskXmlConverterTest {
         String clientElementTag = "mother_id";
         CaseTask task = createCaseTask(randomGeneratedCaseId, motherCaseId, taskId, dateEligible,  dateExpires, currentTime, motechUserId, clientElementTag, pregnancyCaseType);
 
-        String caseXmlWithEnvelope = new CaseTaskXmlConverter().convertToCaseXmlWithEnvelope(task);
-
+        String caseXmlWithEnvelope = new CaseTaskXmlConverter().convertToCaseXml(task);
         Document doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(new InputSource(new StringReader(caseXmlWithEnvelope)));
 
 
@@ -85,7 +84,7 @@ public class CaseTaskXmlConverterTest {
         String clientElementTag = "child_id";
         CaseTask task = createCaseTask(randomGeneratedCaseId, childCaseId, taskId, dateEligible,  dateExpires, currentTime, motechUserId, clientElementTag, childCaseType);
 
-        String caseXmlWithEnvelope = new CaseTaskXmlConverter().convertToCaseXmlWithEnvelope(task);
+        String caseXmlWithEnvelope = new CaseTaskXmlConverter().convertToCaseXml(task);
 
         Document doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(new InputSource(new StringReader(caseXmlWithEnvelope)));
 
@@ -139,5 +138,39 @@ public class CaseTaskXmlConverterTest {
         return caseTask;
     }
 
+    @Test
+    public void shouldConvertToCloseCaseXmlWithEnvelopeCorrectlyForAVaccination() throws ParserConfigurationException, IOException, SAXException {
+        String childCaseId = "3F2504E04F8911D39A0C0305E82C3301";
+        String randomGeneratedCaseId = "3F2504E04F8911D39A0C0305E82C3300";
+        String taskId = "measles";
+        String dateExpires = DateUtil.today().plusDays(5).toString();
+        String dateEligible = DateUtil.today().toString();
+        String currentTime = DateUtil.now().toDateTime(DateTimeZone.UTC).toString();
+        String motechUserId = "motechId";
+        String clientElementTag = "child_id";
+        CaseTask task = createCaseTask(randomGeneratedCaseId, childCaseId, taskId, dateEligible,  dateExpires, currentTime, motechUserId, clientElementTag, childCaseType);
+        String caseXmlWithEnvelope = new CaseTaskXmlConverter().convertToCloseCaseXml(task);
 
+        Document doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(new InputSource(new StringReader(caseXmlWithEnvelope)));
+
+
+        assertEquals("data", (doc).getDocumentElement().getTagName());
+        assertEquals("http://bihar.commcarehq.org/pregnancy/task", (doc).getDocumentElement().getAttribute("xmlns"));
+
+        Element meta = (Element)doc.getElementsByTagName("meta").item(0);
+        assertEquals("http://openrosa.org/jr/xforms", meta.getAttribute("xmlns"));
+        assertEquals(currentTime , meta.getElementsByTagName("timeStart").item(0).getTextContent());
+        assertEquals(currentTime, meta.getElementsByTagName("timeEnd").item(0).getTextContent());
+        assertEquals(motechUserId, meta.getElementsByTagName("userID").item(0).getTextContent());
+        assertNotNull(meta.getElementsByTagName("instanceID").item(0).getTextContent());
+
+        Element caseEle = (Element)doc.getElementsByTagName("case").item(0);
+        assertEquals(randomGeneratedCaseId, caseEle.getAttribute("case_id"));
+        assertEquals(currentTime, caseEle.getAttribute("date_modified"));
+        assertEquals(motechUserId, caseEle.getAttribute("user_id"));
+        assertEquals("http://commcarehq.org/case/transaction/v2", caseEle.getAttribute("xmlns"));
+
+        Element closeEle = (Element)caseEle.getElementsByTagName("close").item(0);
+        assertNotNull(closeEle);
+    }
 }

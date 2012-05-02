@@ -38,9 +38,23 @@ public class CommcareCaseGatewayTest  {
         CaseTask task = new CaseTask();
         String data = "request";
         String url = "someUrl";
-        when(caseTaskXmlConverter.convertToCaseXmlWithEnvelope(task)).thenReturn(data);
+        when(caseTaskXmlConverter.convertToCaseXml(task)).thenReturn(data);
         commcareCaseGateway.submitCase(url, task);
-        verify(caseTaskXmlConverter).convertToCaseXmlWithEnvelope(task);
+        verify(caseTaskXmlConverter).convertToCaseXml(task);
+        HashMap<String, Object> parameters = new HashMap<String, Object>();
+        parameters.put(EventDataKeys.URL, url);
+        parameters.put(EventDataKeys.DATA, data);
+        verify(eventRelay).sendEventMessage(new MotechEvent(EventSubjects.HTTP_REQUEST,parameters));
+    }
+
+    @Test
+    public void shouldFormXmlRequestAndPostItToCommCareForCloseCase(){
+        CaseTask task = new CaseTask();
+        String data = "request";
+        String url = "someUrl";
+        when(caseTaskXmlConverter.convertToCloseCaseXml(task)).thenReturn(data);
+        commcareCaseGateway.closeCase(url, task);
+        verify(caseTaskXmlConverter).convertToCloseCaseXml(task);
         HashMap<String, Object> parameters = new HashMap<String, Object>();
         parameters.put(EventDataKeys.URL, url);
         parameters.put(EventDataKeys.DATA, data);

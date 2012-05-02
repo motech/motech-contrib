@@ -17,7 +17,12 @@ public class CommcareCaseGateway{
     }
 
     public void submitCase(String commcareUrl, CaseTask task){
-        String request = caseTaskXmlConverter.convertToCaseXmlWithEnvelope(task);
+        String request = caseTaskXmlConverter.convertToCaseXml(task);
+        httpClientService.post(commcareUrl,request);
+    }
+
+    public void closeCase(String commcareUrl, CaseTask task) {
+        String request = caseTaskXmlConverter.convertToCloseCaseXml(task);
         httpClientService.post(commcareUrl,request);
     }
 }

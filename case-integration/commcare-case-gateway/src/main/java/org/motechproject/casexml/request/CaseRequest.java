@@ -2,8 +2,9 @@ package org.motechproject.casexml.request;
 
 public class CaseRequest {
     private CreateElement createElement;
-
     private UpdateElement updateElement;
+    private CloseElement closeElement;
+
     private Index index;
     private String user_id;
     private String xmlns;
@@ -78,6 +79,14 @@ public class CaseRequest {
 
     public void setDate_Modified(String s) {
         this.date_modified = s;
+    }
+
+    public CloseElement getCloseElement() {
+        return closeElement;
+    }
+
+    public void setCloseElement(CloseElement closeElement) {
+        this.closeElement = closeElement;
     }
 }
 
