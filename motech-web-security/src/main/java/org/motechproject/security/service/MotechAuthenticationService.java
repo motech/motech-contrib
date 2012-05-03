@@ -20,12 +20,12 @@ public class MotechAuthenticationService {
         this.allMotechWebUsers = allMotechWebUsers;
     }
 
-    public void register(String userName, String password, String userType, String externalId, List<String> roles) {
+    public void register(String userName, String password, String externalId, List<String> roles) {
         List<Role> rolesDomain = new ArrayList<Role>();
         for (String role : roles) {
             rolesDomain.add(new Role(role));
         }
-        allMotechWebUsers.add(new MotechWebUser(userName, password, userType, externalId, rolesDomain));
+        allMotechWebUsers.add(new MotechWebUser(userName, password, externalId, rolesDomain));
     }
 
     public void remove(String userName) {

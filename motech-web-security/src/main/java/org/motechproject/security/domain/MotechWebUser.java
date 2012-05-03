@@ -22,28 +22,20 @@ public class MotechWebUser extends MotechBaseDataObject {
     private String password;
 
     @JsonProperty
-    private String userType;
-
-    @JsonProperty
     private List<Role> roles;
 
     public MotechWebUser(){
         super();
     }
 
-    public MotechWebUser(String userName, String password, String userType, String externalId, List<Role> roles) {
+    public MotechWebUser(String userName, String password, String externalId, List<Role> roles) {
         super();
         this.userName = userName;
         this.password = password;
         this.externalId = externalId;
-        this.userType = userType;
         if(roles != null) {
             this.roles = roles;
         }
-    }
-
-    public String getUserType() {
-        return userType;
     }
 
     public String getExternalId() {

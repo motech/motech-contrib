@@ -22,7 +22,7 @@ public class AuthenticatedUser extends User {
         return webUser.getExternalId();
     }
 
-    public String getUserType() {
-        return webUser.getUserType();
+    public List<Role> getRoles() {
+        return webUser.getRoles();
     }
 }

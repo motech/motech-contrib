@@ -25,7 +25,7 @@ public class MotechAuthenticationServiceTest extends TestCase {
 
     @Test
     public void testRegister() throws Exception {
-        motechAuthenticationService.register("userName", "password", "Administrator", "1234", Arrays.asList("IT_ADMIN", "DB_ADMIN"));
+        motechAuthenticationService.register("userName", "password", "1234", Arrays.asList("IT_ADMIN", "DB_ADMIN"));
         MotechWebUser motechWebUser = allMotechWebUsers.findByUserName("userName");
 
         assertNotNull(motechWebUser);
@@ -36,13 +36,12 @@ public class MotechAuthenticationServiceTest extends TestCase {
     
     @Test
     public void testAuthenticate() throws Exception {
-        motechAuthenticationService.register("userName", "password", "Administrator", "1234", Arrays.asList("IT_ADMIN", "DB_ADMIN"));
+        motechAuthenticationService.register("userName", "password", "1234", Arrays.asList("IT_ADMIN", "DB_ADMIN"));
 
         AuthenticatedUser authenticatedUser = motechAuthenticationService.authenticate("userName", "password");
 
         assertNotNull(authenticatedUser);
         assertEquals("userName", authenticatedUser.getUsername());
-        assertEquals("Administrator", authenticatedUser.getUserType());
         assertEquals("1234", authenticatedUser.getExternalId());
 
         motechAuthenticationService.remove("userName");

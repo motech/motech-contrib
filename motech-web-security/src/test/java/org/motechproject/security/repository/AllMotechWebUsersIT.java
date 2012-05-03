@@ -28,21 +28,20 @@ public class AllMotechWebUsersIT {
 
     @Test
     public void findByUserName_shouldAlsoDecryptPassword() {
-        MotechWebUser motechWebUser = new MotechWebUser("testuser", "testpassword", "Administrator", "id", Arrays.asList(new Role("ADMIN")));
+        MotechWebUser motechWebUser = new MotechWebUser("testuser", "testpassword", "id", Arrays.asList(new Role("ADMIN")));
         allMotechWebUsers.add(motechWebUser);
 
         MotechWebUser testUser = allMotechWebUsers.findByUserName("testuser");
         assertNotNull(testUser);
         assertEquals("testuser", testUser.getUserName());
         assertEquals("testpassword", testUser.getPassword());
-        assertEquals("Administrator", testUser.getUserType());
         assertEquals("ADMIN", testUser.getRoles().get(0).getName());
     }
 
     @Test
     public void shouldEncryptPlainTextPassword_BeforeSavingTheUser() {
         String plainTextPassword = "testpassword";
-        MotechWebUser motechWebUser = new MotechWebUser("testuser", plainTextPassword, "Administrator", "id", Arrays.asList(new Role("ADMIN")));
+        MotechWebUser motechWebUser = new MotechWebUser("testuser", plainTextPassword, "id", Arrays.asList(new Role("ADMIN")));
         allMotechWebUsers.add(motechWebUser);
 
         assertThat(pbeStringEncryptor.decrypt(motechWebUser.getPassword()), is(plainTextPassword));
