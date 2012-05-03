@@ -6,6 +6,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.motechproject.security.domain.MotechWebUser;
 import org.motechproject.security.domain.Role;
+import org.motechproject.security.domain.Roles;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -28,7 +29,7 @@ public class AllMotechWebUsersIT {
 
     @Test
     public void findByUserName_shouldAlsoDecryptPassword() {
-        MotechWebUser motechWebUser = new MotechWebUser("testuser", "testpassword", "id", Arrays.asList(new Role("ADMIN")));
+        MotechWebUser motechWebUser = new MotechWebUser("testuser", "testpassword", "id", new Roles(Arrays.asList(new Role("ADMIN"))));
         allMotechWebUsers.add(motechWebUser);
 
         MotechWebUser testUser = allMotechWebUsers.findByUserName("testuser");
@@ -41,7 +42,7 @@ public class AllMotechWebUsersIT {
     @Test
     public void shouldEncryptPlainTextPassword_BeforeSavingTheUser() {
         String plainTextPassword = "testpassword";
-        MotechWebUser motechWebUser = new MotechWebUser("testuser", plainTextPassword, "id", Arrays.asList(new Role("ADMIN")));
+        MotechWebUser motechWebUser = new MotechWebUser("testuser", plainTextPassword, "id", new Roles(Arrays.asList(new Role("ADMIN"))));
         allMotechWebUsers.add(motechWebUser);
 
         assertThat(pbeStringEncryptor.decrypt(motechWebUser.getPassword()), is(plainTextPassword));

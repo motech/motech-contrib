@@ -22,20 +22,18 @@ public class MotechWebUser extends MotechBaseDataObject {
     private String password;
 
     @JsonProperty
-    private List<Role> roles;
+    private Roles roles;
 
     public MotechWebUser(){
         super();
     }
 
-    public MotechWebUser(String userName, String password, String externalId, List<Role> roles) {
+    public MotechWebUser(String userName, String password, String externalId, Roles roles) {
         super();
         this.userName = userName;
         this.password = password;
         this.externalId = externalId;
-        if(roles != null) {
-            this.roles = roles;
-        }
+        this.roles = roles;
     }
 
     public String getExternalId() {
@@ -54,7 +52,7 @@ public class MotechWebUser extends MotechBaseDataObject {
         this.password = password;
     }
 
-    public List<Role> getRoles() {
+    public Roles getRoles() {
         return roles;
     }
 

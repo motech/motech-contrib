@@ -3,11 +3,11 @@ package org.motechproject.security.service;
 import org.motechproject.security.domain.AuthenticatedUser;
 import org.motechproject.security.domain.MotechWebUser;
 import org.motechproject.security.domain.Role;
+import org.motechproject.security.domain.Roles;
 import org.motechproject.security.repository.AllMotechWebUsers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -21,7 +21,7 @@ public class MotechAuthenticationService {
     }
 
     public void register(String userName, String password, String externalId, List<String> roles) {
-        List<Role> rolesDomain = new ArrayList<Role>();
+        Roles rolesDomain = new Roles();
         for (String role : roles) {
             rolesDomain.add(new Role(role));
         }
