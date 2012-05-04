@@ -26,6 +26,7 @@ public class EnumValidator extends PropertyValidator {
     private boolean isInValid(Object target, Field field, List<String> allEnumerations) {
         field.setAccessible(true);
         try {
+            if (field.get(target) == null ) return false;
             return !allEnumerations.contains(field.get(target).toString());
         } catch (Exception ignored) {
         }
