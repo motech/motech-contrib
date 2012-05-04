@@ -23,7 +23,8 @@ public class DateFieldValidator extends PropertyValidator {
         DateTimeFormatter localDateFormatter = org.joda.time.format.DateTimeFormat.forPattern(expectedFormat);
         field.setAccessible(true);
         try {
-            localDateFormatter.parseLocalDate((String) field.get(target));
+            if (field.get(target) != null)
+                localDateFormatter.parseLocalDate((String) field.get(target));
         } catch (IllegalAccessException e) {
             errors.rejectValue(field.getName(), "access-error", e.getStackTrace(), e.getMessage());
         } catch (IllegalArgumentException e) {

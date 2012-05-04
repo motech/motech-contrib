@@ -3,7 +3,6 @@ package org.motechproject.validation.validator;
 import lombok.Data;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.motechproject.validation.validator.DateFieldValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.test.context.ContextConfiguration;
@@ -55,15 +54,13 @@ public class DateFieldValidatorTest {
     }
 
     @Test
-    public void shouldReportErrorForNullFieldValues() throws NoSuchFieldException {
+    public void shouldNotReportErrorForNullFieldValues() throws NoSuchFieldException {
         ClassWithValidations target = new ClassWithValidations(null, null, null);
         BeanPropertyBindingResult errors = new BeanPropertyBindingResult(target, "classWithValidations");
         dateFieldValidator.validateField(target, ClassWithValidations.class.getDeclaredField("date"), errors);
         dateFieldValidator.validateField(target, ClassWithValidations.class.getDeclaredField("dateTime"), errors);
-        dateFieldValidator.validateField(target, ClassWithValidations.class.getDeclaredField("dateWithoutValidation"), errors);
-        assertEquals(2, errors.getFieldErrors().size());
-        assertEquals(null, errors.getFieldErrors().get(0).getDefaultMessage());
-        assertEquals(null, errors.getFieldErrors().get(1).getDefaultMessage());
+        assertNull(errors.getFieldError("date"));
+        assertNull(errors.getFieldError("dateTime"));
     }
 
     @Test
