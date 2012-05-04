@@ -3,7 +3,6 @@ package org.motechproject.validation.validator;
 import lombok.Data;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.motechproject.validation.validator.EnumValidator;
 import org.motechproject.validation.constraints.Enumeration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -32,6 +31,15 @@ public class EnumValidatorTest {
     @Test
     public void shouldNotReportErrorWhenValueIsEnumerated() throws NoSuchFieldException {
         ClassWithValidations target = new ClassWithValidations("enumValue1", "enumValue1");
+        BeanPropertyBindingResult errors = new BeanPropertyBindingResult(target, "classWithValidations");
+        enumValidator.validateField(target, ClassWithValidations.class.getDeclaredField("enumField"), errors);
+
+        assertNull(errors.getFieldError("enumField"));
+    }
+
+    @Test
+    public void shouldNotReportErrorWhenValueIsNull() throws NoSuchFieldException {
+        ClassWithValidations target = new ClassWithValidations(null, "enumValue1");
         BeanPropertyBindingResult errors = new BeanPropertyBindingResult(target, "classWithValidations");
         enumValidator.validateField(target, ClassWithValidations.class.getDeclaredField("enumField"), errors);
 
