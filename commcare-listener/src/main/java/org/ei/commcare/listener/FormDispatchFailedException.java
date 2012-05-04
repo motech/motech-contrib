@@ -1,5 +1,7 @@
 package org.ei.commcare.listener;
 
+import org.apache.commons.lang.StringUtils;
+
 import java.util.ArrayList;
 
 public class FormDispatchFailedException extends RuntimeException {
@@ -19,5 +21,16 @@ public class FormDispatchFailedException extends RuntimeException {
 
     public boolean hasExceptions() {
         return innerExceptions.size() > 0;
+    }
+
+    @Override
+    public String getMessage() {
+        String message = "Number of failures: " + innerExceptions().size() + ". Failures: [\n";
+        for (Throwable innerException : innerExceptions) {
+            message += "Message: " + innerException.getMessage() + "\n";
+            message += StringUtils.join(innerException.getStackTrace(), "\n    ") + "\n=============\n";
+        }
+        message += "]";
+        return message;
     }
 }
