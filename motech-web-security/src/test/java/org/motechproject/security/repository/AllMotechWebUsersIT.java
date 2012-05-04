@@ -48,6 +48,18 @@ public class AllMotechWebUsersIT {
         assertThat(pbeStringEncryptor.decrypt(motechWebUser.getPassword()), is(plainTextPassword));
     }
 
+    @Test
+    public void shouldEncryptPlainTextPassword_OnChangePassword() {
+        String userName = "testuser";
+        allMotechWebUsers.add(new MotechWebUser(userName, "testpassword", "id", new Roles(Arrays.asList(new Role("ADMIN")))));
+
+        String newPassword = "newPassword";
+        allMotechWebUsers.changePassword(userName, newPassword);
+
+        MotechWebUser testUser = allMotechWebUsers.findByUserName(userName);
+        assertThat(testUser.getPassword(), is(newPassword));
+    }
+
     @After
     public void tearDown() {
         allMotechWebUsers.removeAll();

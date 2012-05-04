@@ -24,7 +24,7 @@ public class MotechAuthenticationServiceTest extends TestCase {
     AllMotechWebUsers allMotechWebUsers;
 
     @Test
-    public void testRegister() throws Exception {
+    public void testRegister() {
         motechAuthenticationService.register("userName", "password", "1234", Arrays.asList("IT_ADMIN", "DB_ADMIN"));
         MotechWebUser motechWebUser = allMotechWebUsers.findByUserName("userName");
 
@@ -35,7 +35,7 @@ public class MotechAuthenticationServiceTest extends TestCase {
     }
     
     @Test
-    public void testAuthenticate() throws Exception {
+    public void testAuthenticate() {
         motechAuthenticationService.register("userName", "password", "1234", Arrays.asList("IT_ADMIN", "DB_ADMIN"));
 
         AuthenticatedUser authenticatedUser = motechAuthenticationService.authenticate("userName", "password");
@@ -46,5 +46,16 @@ public class MotechAuthenticationServiceTest extends TestCase {
 
         motechAuthenticationService.remove("userName");
         assertNull(allMotechWebUsers.findByUserName("userName"));
+    }
+
+    @Test
+    public void testChangePassword() {
+        motechAuthenticationService.register("userName", "password", "1234", Arrays.asList("IT_ADMIN", "DB_ADMIN"));
+
+        motechAuthenticationService.changePassword("userName", "newPassword");
+        MotechWebUser user = allMotechWebUsers.findByUserName("userName");
+        assertEquals("newPassword", user.getPassword());
+
+        motechAuthenticationService.remove("userName");
     }
 }

@@ -28,6 +28,10 @@ public class MotechAuthenticationService {
         allMotechWebUsers.add(new MotechWebUser(userName, password, externalId, rolesDomain));
     }
 
+    public void changePassword(String userName, String newPassword) {
+        allMotechWebUsers.changePassword(userName, newPassword);
+    }
+
     public void remove(String userName) {
         MotechWebUser motechWebUser = allMotechWebUsers.findByUserName(userName);
         if(motechWebUser != null)
