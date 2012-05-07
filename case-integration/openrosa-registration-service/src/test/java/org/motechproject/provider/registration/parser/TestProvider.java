@@ -11,6 +11,7 @@ public class TestProvider {
     private String password;
     private String uuid;
     private String date;
+    private String api_key;
 
     public String getUsername() {
         return username;
@@ -82,5 +83,13 @@ public class TestProvider {
 
     public void setDate(String date) {
         this.date = date;
+    }
+
+    public String getApi_key() {
+        return api_key;
+    }
+
+    public void setApi_key(String api_key) {
+        this.api_key = api_key;
     }
 }

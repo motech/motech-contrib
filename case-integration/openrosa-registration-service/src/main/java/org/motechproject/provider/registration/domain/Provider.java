@@ -3,14 +3,12 @@ package org.motechproject.provider.registration.domain;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Created by IntelliJ IDEA.
- * User: pchandra
- * Date: 4/15/12
- * Time: 3:25 AM
- * To change this template use File | Settings | File Templates.
- */
 public class Provider {
+
+    private String api_key;
+
+    public Map<String, String> fieldValues;
+
     public Provider() {
         fieldValues = new HashMap<String, String>();
     }
@@ -19,9 +17,15 @@ public class Provider {
         return fieldValues;
     }
 
-    public Map<String, String> fieldValues;
-
     public void AddFieldvalue(String nodeName, String textContent) {
         fieldValues.put(nodeName, textContent);
+    }
+
+    public String getApi_key() {
+        return api_key;
+    }
+
+    public void setApi_key(String api_key) {
+        this.api_key = api_key;
     }
 }

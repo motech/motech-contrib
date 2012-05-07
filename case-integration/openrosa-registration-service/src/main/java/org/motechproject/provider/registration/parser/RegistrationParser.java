@@ -48,6 +48,7 @@ public class RegistrationParser<T> {
     private Provider createProvider(Element item) {
         Provider provider = new Provider();
 
+        provider.setApi_key(item.getAttribute("api_key"));
         addFieldForElement(item, provider, "username");
         addFieldForElement(item, provider, "password");
         addFieldForElement(item, provider, "uuid");
