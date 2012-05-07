@@ -1,4 +1,4 @@
-package org.motechproject.casexml.service.response;
+package org.motechproject.casexml.builder;
 
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;

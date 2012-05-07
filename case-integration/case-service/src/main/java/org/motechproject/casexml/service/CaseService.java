@@ -2,10 +2,10 @@ package org.motechproject.casexml.service;
 
 import org.apache.log4j.Logger;
 import org.apache.velocity.app.VelocityEngine;
+import org.motechproject.casexml.builder.ResponseMessageBuilder;
 import org.motechproject.casexml.exception.CaseParserException;
 import org.motechproject.casexml.parser.CommcareCaseParser;
 import org.motechproject.casexml.service.exception.CaseException;
-import org.motechproject.casexml.service.response.ResponseMessageBuilder;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;

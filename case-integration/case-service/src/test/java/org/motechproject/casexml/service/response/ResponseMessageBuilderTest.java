@@ -4,6 +4,7 @@ import com.sun.org.apache.xerces.internal.parsers.DOMParser;
 import org.apache.velocity.app.VelocityEngine;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.motechproject.casexml.builder.ResponseMessageBuilder;
 import org.motechproject.casexml.service.exception.CaseException;
 import org.motechproject.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
