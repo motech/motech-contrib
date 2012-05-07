@@ -6,6 +6,7 @@ import java.util.Map;
 public class Case {
     private String case_id;
     private String user_id;
+    private String api_key;
     private String date_modified;
 
     private String action;
@@ -85,5 +86,13 @@ public class Case {
 
     public void setUser_id(String userId) {
         this.user_id =   userId;
+    }
+
+    public String getApi_key() {
+        return api_key;
+    }
+
+    public void setApi_key(String api_key) {
+        this.api_key = api_key;
     }
 }

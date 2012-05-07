@@ -54,6 +54,7 @@ public class CommcareCaseParser<T> {
         Case ccCase = new Case();
 
         ccCase.setCase_id(item.getAttribute("case_id"));
+        ccCase.setApi_key(item.getAttribute("api_key"));
         ccCase.setDate_modified(item.getAttribute("date_modified"));
         ccCase.setUser_id(item.getAttribute("user_id"));
         return ccCase;
