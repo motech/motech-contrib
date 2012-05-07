@@ -31,18 +31,14 @@ public abstract class ProviderRegistrationService<T> {
         try {
             T provider = parser.parseProvider();
             createOrUpdate(provider);
+            response = new ResponseEntity<String>("Request successfully processed.", responseHeaders, HttpStatus.OK);
         } catch (OpenRosaRegistrationParserException exception) {
             response = new ResponseEntity<String>(exception.getMessage(), responseHeaders, exception.getStatusCode());
-
         } catch (OpenRosaRegistrationValidationException exception) {
             response = new ResponseEntity<String>(exception.getMessage(), responseHeaders, exception.getStatusCode());
-
         } catch (RuntimeException exception) {
             response = new ResponseEntity<String>(exception.getMessage(), responseHeaders, HttpStatus.INTERNAL_SERVER_ERROR);
-
         }
-        response = new ResponseEntity<String>("Request successfully processed.", responseHeaders, HttpStatus.OK);
-
         logger.info("Response sent: Status Code: " + response.getStatusCode() + ". Body: " + response.getBody());
         return response;
     }
