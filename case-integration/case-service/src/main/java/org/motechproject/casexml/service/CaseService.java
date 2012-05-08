@@ -1,7 +1,6 @@
 package org.motechproject.casexml.service;
 
 import org.apache.log4j.Logger;
-import org.apache.velocity.app.VelocityEngine;
 import org.motechproject.casexml.builder.ResponseMessageBuilder;
 import org.motechproject.casexml.exception.CaseParserException;
 import org.motechproject.casexml.parser.CommcareCaseParser;
@@ -18,8 +17,8 @@ public abstract class CaseService<T> {
 
     private ResponseMessageBuilder responseMessageBuilder;
 
-    public CaseService(Class<T> clazz, VelocityEngine velocityEngine) {
-        this.responseMessageBuilder = new ResponseMessageBuilder(velocityEngine);
+    public CaseService(Class<T> clazz) {
+        this.responseMessageBuilder = new ResponseMessageBuilder();
         this.clazz = clazz;
     }
 

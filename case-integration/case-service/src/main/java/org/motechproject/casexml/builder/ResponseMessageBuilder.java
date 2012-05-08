@@ -7,12 +7,22 @@ import org.motechproject.casexml.exception.CaseParserException;
 import org.motechproject.casexml.service.exception.CaseException;
 
 import java.io.StringWriter;
+import java.util.Properties;
 
 public class ResponseMessageBuilder {
     private VelocityEngine velocityEngine;
 
-    public ResponseMessageBuilder(VelocityEngine velocityEngine) {
-        this.velocityEngine = velocityEngine;
+    public ResponseMessageBuilder() {
+        this.velocityEngine = createVelocityEngine();
+    }
+
+    private VelocityEngine createVelocityEngine() {
+        Properties properties = new Properties();
+        properties.setProperty("resource.loader", "class");
+        properties.setProperty("class.resource.loader.class", "org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader");
+        VelocityEngine velocityEngine = new VelocityEngine(properties);
+        velocityEngine.init();
+        return velocityEngine;
     }
 
     public String createResponseMessage(CaseException exception) {

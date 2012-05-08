@@ -1,16 +1,11 @@
 package org.motechproject.casexml.service.response;
 
 import com.sun.org.apache.xerces.internal.parsers.DOMParser;
-import org.apache.velocity.app.VelocityEngine;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.motechproject.casexml.builder.ResponseMessageBuilder;
 import org.motechproject.casexml.service.exception.CaseException;
 import org.motechproject.util.StringUtil;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -28,18 +23,13 @@ import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration("classpath*:applicationContext-caseService.xml")
 public class ResponseMessageBuilderTest {
 
     public static String newline = System.getProperty("line.separator");
 
-    @Autowired
-    private VelocityEngine velocityEngine;
-
     @Test
     public void shouldCreateErrorResponseForCaseExceptionWithErrorMessages(){
-        ResponseMessageBuilder messageBuilder = new ResponseMessageBuilder(velocityEngine);
+        ResponseMessageBuilder messageBuilder = new ResponseMessageBuilder();
 
         Map<String,String> errorMessages = new HashMap<String,String>();
         errorMessages.put("520","Address Validation failed");
@@ -66,7 +56,7 @@ public class ResponseMessageBuilderTest {
 
     @Test
     public void shouldCreateErrorResponseForCaseExceptionWithoutErrorMessages(){
-        ResponseMessageBuilder messageBuilder = new ResponseMessageBuilder(velocityEngine);
+        ResponseMessageBuilder messageBuilder = new ResponseMessageBuilder();
 
         CaseException exception = new CaseException("Validation failed", HttpStatus.BAD_REQUEST, null);
 
@@ -80,7 +70,7 @@ public class ResponseMessageBuilderTest {
 
     @Test
     public void shouldCreateValidSuccessResponse() {
-        ResponseMessageBuilder responseMessageBuilder = new ResponseMessageBuilder(velocityEngine);
+        ResponseMessageBuilder responseMessageBuilder = new ResponseMessageBuilder();
         String successResponse = responseMessageBuilder.messageForSuccess();
 
         String expectedResponse = "<OpenRosaResponse xmlns=\"http://openrosa.org/http/response\">" + newline +
@@ -91,7 +81,7 @@ public class ResponseMessageBuilderTest {
 
     @Test
     public void shouldCreateValidErrorResponseForRuntimeException() {
-        ResponseMessageBuilder responseMessageBuilder = new ResponseMessageBuilder(velocityEngine);
+        ResponseMessageBuilder responseMessageBuilder = new ResponseMessageBuilder();
         String errorResponse = responseMessageBuilder.messageForRuntimeException();
 
         String expectedResponse = "<OpenRosaResponse xmlns=\"http://openrosa.org/http/response\">" + newline +
