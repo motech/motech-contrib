@@ -52,8 +52,7 @@ public class MotechAuthenticationServiceTest extends TestCase {
     public void testChangePassword() {
         motechAuthenticationService.register("userName", "password", "1234", Arrays.asList("IT_ADMIN", "DB_ADMIN"));
 
-        motechAuthenticationService.changePassword("userName", "newPassword");
-        MotechWebUser user = allMotechWebUsers.findByUserName("userName");
+        AuthenticatedUser user = motechAuthenticationService.changePassword("userName", "newPassword");
         assertEquals("newPassword", user.getPassword());
 
         motechAuthenticationService.remove("userName");
