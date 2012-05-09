@@ -23,7 +23,7 @@ public class EnumValidatorTest {
     public void shouldReportErrorWhenValueIsNotEnumerated() throws NoSuchFieldException {
         ClassWithValidations target = new ClassWithValidations("notAnEnum", "enumValue1");
         BeanPropertyBindingResult errors = new BeanPropertyBindingResult(target, "classWithValidations");
-        enumValidator.validateField(target, ClassWithValidations.class.getDeclaredField("enumField"), errors);
+        enumValidator.validateField(target, ClassWithValidations.class.getDeclaredField("enumField"), null, errors);
 
         assertEquals("The value should be one of : [enumValue1, enumValue2]", errors.getFieldError("enumField").getDefaultMessage());
     }
@@ -32,7 +32,7 @@ public class EnumValidatorTest {
     public void shouldNotReportErrorWhenValueIsEnumerated() throws NoSuchFieldException {
         ClassWithValidations target = new ClassWithValidations("enumValue1", "enumValue1");
         BeanPropertyBindingResult errors = new BeanPropertyBindingResult(target, "classWithValidations");
-        enumValidator.validateField(target, ClassWithValidations.class.getDeclaredField("enumField"), errors);
+        enumValidator.validateField(target, ClassWithValidations.class.getDeclaredField("enumField"), null, errors);
 
         assertNull(errors.getFieldError("enumField"));
     }
@@ -41,7 +41,7 @@ public class EnumValidatorTest {
     public void shouldNotReportErrorWhenValueIsNull() throws NoSuchFieldException {
         ClassWithValidations target = new ClassWithValidations(null, "enumValue1");
         BeanPropertyBindingResult errors = new BeanPropertyBindingResult(target, "classWithValidations");
-        enumValidator.validateField(target, ClassWithValidations.class.getDeclaredField("enumField"), errors);
+        enumValidator.validateField(target, ClassWithValidations.class.getDeclaredField("enumField"), null, errors);
 
         assertNull(errors.getFieldError("enumField"));
     }
@@ -50,7 +50,7 @@ public class EnumValidatorTest {
     public void shouldNotValidateFieldWithoutEnumerationAnnotation() throws NoSuchFieldException {
         ClassWithValidations target = new ClassWithValidations("enumValue1", "notEnumeratedValue");
         BeanPropertyBindingResult errors = new BeanPropertyBindingResult(target, "classWithValidations");
-        enumValidator.validateField(target, ClassWithValidations.class.getDeclaredField("enumField"), errors);
+        enumValidator.validateField(target, ClassWithValidations.class.getDeclaredField("enumField"), null, errors);
 
         assertNull(errors.getFieldError("notValidated"));
     }

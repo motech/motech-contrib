@@ -12,7 +12,7 @@ import java.util.Set;
 public class JSRConstraintsValidator extends PropertyValidator {
 
     @Override
-    public void validateField(Object target, Field field, Errors errors) {
+    public void validateField(Object target, Field field, String scope, Errors errors) {
         Set<ConstraintViolation<Object>> constraintViolations = this.validateProperty(
                 target,
                 field.getName()

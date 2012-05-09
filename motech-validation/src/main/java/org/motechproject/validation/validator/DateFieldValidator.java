@@ -12,7 +12,7 @@ import java.lang.reflect.Field;
 public class DateFieldValidator extends PropertyValidator {
 
     @Override
-    public void validateField(Object target, Field field, Errors errors) {
+    public void validateField(Object target, Field field, String scope, Errors errors) {
         if (field.isAnnotationPresent(DateTimeFormat.class)) {
             validateDateTimeFormat(target, field, errors);
         }

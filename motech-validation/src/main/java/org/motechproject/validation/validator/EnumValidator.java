@@ -13,7 +13,7 @@ import java.util.List;
 public class EnumValidator extends PropertyValidator {
 
     @Override
-    public void validateField(Object target, Field field, Errors errors) {
+    public void validateField(Object target, Field field, String scope, Errors errors) {
         if (field.isAnnotationPresent(Enumeration.class)) {
             Class<? extends Enum> possibleValues = field.getAnnotation(Enumeration.class).type();
             List<String> allEnumerations = allEnumValues(possibleValues);
@@ -26,7 +26,7 @@ public class EnumValidator extends PropertyValidator {
     private boolean isInValid(Object target, Field field, List<String> allEnumerations) {
         field.setAccessible(true);
         try {
-            if (field.get(target) == null ) return false;
+            if (field.get(target) == null) return false;
             return !allEnumerations.contains(field.get(target).toString());
         } catch (Exception ignored) {
         }

@@ -44,7 +44,7 @@ public class BeanValidator {
             }
         } else {
             for (PropertyValidator fieldValidator : fieldValidators) {
-                fieldValidator.validateField(target, field, errors);
+                fieldValidator.validateField(target, field, scope, errors);
             }
         }
     }

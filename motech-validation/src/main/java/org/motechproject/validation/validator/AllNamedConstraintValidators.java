@@ -1,10 +1,10 @@
 package org.motechproject.validation.validator;
 
 
-import org.motechproject.validation.constraints.NamedConstraint;
-import org.motechproject.validation.validator.root.PropertyValidator;
 import org.motechproject.validation.NoValidatorFoundException;
+import org.motechproject.validation.constraints.NamedConstraint;
 import org.motechproject.validation.validator.root.NamedConstraintValidator;
+import org.motechproject.validation.validator.root.PropertyValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
@@ -28,7 +28,7 @@ public class AllNamedConstraintValidators extends PropertyValidator {
     }
 
     @Override
-    public void validateField(Object target, Field field, Errors errors) {
+    public void validateField(Object target, Field field, String scope, Errors errors) {
         if (field.isAnnotationPresent(NamedConstraint.class)) {
             NamedConstraintValidator validator = getValidatorForField(field);
             validator.validateField(target, field, errors);

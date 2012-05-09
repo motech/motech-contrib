@@ -7,5 +7,5 @@ import java.lang.reflect.Field;
 
 public abstract class PropertyValidator extends LocalValidatorFactoryBean {
 
-    public abstract void validateField(Object target, Field field, Errors errors);
+    public abstract void validateField(Object target, Field field, String scope, Errors errors);
 }
