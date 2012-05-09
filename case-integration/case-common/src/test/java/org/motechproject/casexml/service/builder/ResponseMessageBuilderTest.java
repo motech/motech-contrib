@@ -120,15 +120,14 @@ public class ResponseMessageBuilderTest {
 
         try {
             TransformerFactory transformerFactory = TransformerFactory.newInstance();
-            Transformer transformer = transformerFactory.newTransformer();;
+            Transformer transformer = transformerFactory.newTransformer();
             transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "no");
             transformer.setOutputProperty(OutputKeys.INDENT, "yes");
             StringWriter stringWriter = new StringWriter();
             StreamResult result = new StreamResult(stringWriter);
             DOMSource source = new DOMSource(doc);
             transformer.transform(source, result);
-            String xmlString = stringWriter.toString();
-            return xmlString;
+            return stringWriter.toString();
         } catch (Exception e) {
             throw new RuntimeException();
         }
