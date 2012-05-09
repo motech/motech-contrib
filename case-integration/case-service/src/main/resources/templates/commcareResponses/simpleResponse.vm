@@ -1,3 +1,0 @@
-<OpenRosaResponse xmlns="http://openrosa.org/http/response">
-    <message nature="$status">$message</message>
-</OpenRosaResponse>

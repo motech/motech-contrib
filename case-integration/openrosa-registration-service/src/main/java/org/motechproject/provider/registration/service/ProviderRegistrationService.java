@@ -1,6 +1,7 @@
 package org.motechproject.provider.registration.service;
 
 import org.apache.log4j.Logger;
+import org.motechproject.casexml.builder.ResponseMessageBuilder;
 import org.motechproject.provider.registration.exception.OpenRosaRegistrationParserException;
 import org.motechproject.provider.registration.exception.OpenRosaRegistrationValidationException;
 import org.motechproject.provider.registration.parser.RegistrationParser;
@@ -13,11 +14,14 @@ import java.io.IOException;
 public abstract class ProviderRegistrationService<T> {
 
     private static Logger logger = Logger.getLogger(ProviderRegistrationService.class);
+    private ResponseMessageBuilder responseMessageBuilder;
+
 
     private Class<T> clazz;
 
     public ProviderRegistrationService(Class<T> clazz) {
         this.clazz = clazz;
+        responseMessageBuilder = new ResponseMessageBuilder();
     }
 
     @RequestMapping(value = "/process", method = RequestMethod.POST)
@@ -31,13 +35,13 @@ public abstract class ProviderRegistrationService<T> {
         try {
             T provider = parser.parseProvider();
             createOrUpdate(provider);
-            response = new ResponseEntity<String>("Request successfully processed.", responseHeaders, HttpStatus.OK);
+            response = new ResponseEntity<String>(responseMessageBuilder.messageForSuccess(), responseHeaders, HttpStatus.OK);
         } catch (OpenRosaRegistrationParserException exception) {
-            response = new ResponseEntity<String>(exception.getMessage(), responseHeaders, exception.getStatusCode());
+            response = new ResponseEntity<String>(responseMessageBuilder.createResponseMessage(exception), responseHeaders, exception.getStatusCode());
         } catch (OpenRosaRegistrationValidationException exception) {
-            response = new ResponseEntity<String>(exception.getMessage(), responseHeaders, exception.getStatusCode());
+            response = new ResponseEntity<String>(responseMessageBuilder.createResponseMessage(exception), responseHeaders, exception.getHttpStatusCode());
         } catch (RuntimeException exception) {
-            response = new ResponseEntity<String>(exception.getMessage(), responseHeaders, HttpStatus.INTERNAL_SERVER_ERROR);
+            response = new ResponseEntity<String>(responseMessageBuilder.messageForRuntimeException(), responseHeaders, HttpStatus.INTERNAL_SERVER_ERROR);
         }
         logger.info("Response sent: Status Code: " + response.getStatusCode() + ". Body: " + response.getBody());
         return response;

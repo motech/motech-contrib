@@ -1,26 +1,24 @@
 package org.motechproject.provider.registration.exception;
 
+import org.motechproject.casexml.exception.CaseParserException;
 import org.springframework.http.HttpStatus;
 
-public class OpenRosaRegistrationParserException extends Exception {
+public class OpenRosaRegistrationParserException extends CaseParserException {
     
     private HttpStatus statusCode;
-    private String message;
 
     public OpenRosaRegistrationParserException(Exception cause, HttpStatus statusCode) {
-        super(cause);
-        this.message = cause.getMessage();
+        super(cause.getMessage());
         this.statusCode = statusCode;
     }
     
     public OpenRosaRegistrationParserException(Exception cause, String message, HttpStatus statusCode) {
-        super(message, cause);
-        this.message = message;
+        super(cause,message);
         this.statusCode = statusCode;
     }
     
     public OpenRosaRegistrationParserException(String message, HttpStatus statusCode) {
-        this.message = message;
+        super(message);
         this.statusCode = statusCode;
     }
 
@@ -28,7 +26,4 @@ public class OpenRosaRegistrationParserException extends Exception {
         return statusCode;
     }
 
-    public String getMessage() {
-        return message;
-    }
-}
+  }

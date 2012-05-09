@@ -1,6 +1,7 @@
-package org.motechproject.casexml.service.response;
+package org.motechproject.casexml.service.builder;
 
 import com.sun.org.apache.xerces.internal.parsers.DOMParser;
+import junit.framework.Assert;
 import org.junit.Test;
 import org.motechproject.casexml.builder.ResponseMessageBuilder;
 import org.motechproject.casexml.service.exception.CaseException;
@@ -20,8 +21,6 @@ import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.Map;
-
-import static org.junit.Assert.assertEquals;
 
 public class ResponseMessageBuilderTest {
 
@@ -93,7 +92,7 @@ public class ResponseMessageBuilderTest {
     private void compareXmlString(String expected, String actual) {
         expected = toString(documentFrom(expected));
         actual = toString(documentFrom(actual));
-        assertEquals(expected, actual);
+        Assert.assertEquals(expected, actual);
     }
 
     private Document documentFrom(String xmlDocument) {

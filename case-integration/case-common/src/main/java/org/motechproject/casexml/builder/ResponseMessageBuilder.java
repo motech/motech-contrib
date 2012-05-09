@@ -26,7 +26,7 @@ public class ResponseMessageBuilder {
     }
 
     public String createResponseMessage(CaseException exception) {
-        Template template = velocityEngine.getTemplate("/templates/commcareResponses/responseWithMultipleErrors.vm");
+        Template template = velocityEngine.getTemplate("/templates/responses/responseWithMultipleErrors.vm");
         VelocityContext context = new VelocityContext();
         context.put("message", exception.getMessage());
         context.put("status", "submit_error");
@@ -37,7 +37,7 @@ public class ResponseMessageBuilder {
     }
 
     public String createResponseMessage(CaseParserException exception){
-        return responseWithMessage("An unexpected exception occurred while while trying to parse caseXml.", "submit_error");
+        return responseWithMessage("An unexpected exception occurred while while trying to parse xml ", "submit_error");
     }
 
     public String messageForRuntimeException() {
@@ -49,7 +49,7 @@ public class ResponseMessageBuilder {
     }
 
     private String responseWithMessage(String message, String status) {
-        Template template = velocityEngine.getTemplate("/templates/commcareResponses/simpleResponse.vm");
+        Template template = velocityEngine.getTemplate("/templates/responses/simpleResponse.vm");
         VelocityContext context = new VelocityContext();
         context.put("message", message);
         context.put("status", status);
