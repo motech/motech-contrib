@@ -18,30 +18,21 @@ public class AdherenceData {
     @JsonProperty
     int status;
     @JsonProperty
-    Map<String, Object> meta;
+    Map<String, Object> meta = new HashMap<String, Object>();
 
     public AdherenceData() {
     }
 
-    public AdherenceData(String externalId, String treatmentId, LocalDate doseDate) {
+    public AdherenceData(String externalId, String treatmentId, LocalDate doseDate, int status, Map<String, Object> meta) {
         this.externalId = externalId;
         this.treatmentId = treatmentId;
         this.doseDate = doseDate;
-        meta = new HashMap<String, Object>();
-    }
-
-    public AdherenceData status(int status) {
         this.status = status;
-        return this;
+        if (meta != null) this.meta = meta;
     }
 
     public Map<String, Object> meta() {
         return meta;
-    }
-
-    public AdherenceData meta(Map<String, Object> meta) {
-        this.meta = meta;
-        return this;
     }
 
     public AdherenceData addMeta(String key, Object value) {

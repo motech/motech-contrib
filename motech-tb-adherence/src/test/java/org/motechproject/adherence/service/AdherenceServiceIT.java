@@ -49,8 +49,7 @@ public class AdherenceServiceIT extends SpringIntegrationTest {
 
     @Test
     public void shouldRecordAdherence() {
-        AdherenceData data = new AdherenceData("externalId", "treatmentId", DateUtil.today());
-        data = data.status(1);
+        AdherenceData data = new AdherenceData("externalId", "treatmentId", DateUtil.today(), 1, null);
 
         adherenceService.recordAdherence("someUser", "TEST", data);
         assertEquals(1, adherenceService.adherenceRecords("externalId", "treatmentId", DateUtil.today()).size());
@@ -61,8 +60,7 @@ public class AdherenceServiceIT extends SpringIntegrationTest {
         DateTime now = new DateTime(2011, 11, 29, 10, 30, 0);
         PowerMockito.stub(method(DateUtil.class, "now")).toReturn(now);
 
-        AdherenceData data = new AdherenceData("externalId", "treatmentId", DateUtil.today());
-        data = data.status(1);
+        AdherenceData data = new AdherenceData("externalId", "treatmentId", DateUtil.today(), 1, null);
 
         adherenceService.recordAdherence("someUser", "TEST", data);
 
@@ -77,21 +75,8 @@ public class AdherenceServiceIT extends SpringIntegrationTest {
     }
 
     @Test
-    public void shouldNotCreateAuditLog_WhenThereIsNoChangeInAdherence() {
-        AdherenceData data = new AdherenceData("externalId", "treatmentId", DateUtil.today());
-        data = data.status(1);
-
-        adherenceService.recordAdherence("someUser", "TEST", data);
-        assertEquals(1, allAdherenceAuditLogs.getAll().size());
-
-        adherenceService.recordAdherence("someUser", "TEST", data);
-        assertEquals(1, allAdherenceAuditLogs.getAll().size());
-    }
-
-    @Test
     public void shouldBeIdempotentOnRecordAdherence() {
-        AdherenceData data = new AdherenceData("externalId", "treatmentId", DateUtil.today());
-        data = data.status(2);
+        AdherenceData data = new AdherenceData("externalId", "treatmentId", DateUtil.today(), 2, null);
 
         adherenceService.recordAdherence("someUser", "TEST", data);
         adherenceService.recordAdherence("someUser", "TEST", data);
@@ -100,8 +85,7 @@ public class AdherenceServiceIT extends SpringIntegrationTest {
 
     @Test
     public void shouldFetchAdherenceRecords() {
-        AdherenceData data = new AdherenceData("externalId", "treatmentId", DateUtil.today());
-        data = data.status(1);
+        AdherenceData data = new AdherenceData("externalId", "treatmentId", DateUtil.today(), 1, null);
 
         adherenceService.recordAdherence("someUser", "TEST", data);
         assertEquals(1, adherenceService.adherenceRecords("externalId", "treatmentId", DateUtil.today()).size());
@@ -110,14 +94,9 @@ public class AdherenceServiceIT extends SpringIntegrationTest {
     @Test
     public void shouldFetchAllAdherenceLogsWithinGivenDate() {
         LocalDate today = DateUtil.today();
-        AdherenceData patientOneWithinDateLimit = new AdherenceData("externalId1", "treatmentId", today);
-        patientOneWithinDateLimit = patientOneWithinDateLimit.status(1);
-
-        AdherenceData patientOneOutsideLimit = new AdherenceData("externalId1", "treatmentId", today.plusDays(1));
-        patientOneOutsideLimit = patientOneOutsideLimit.status(1);
-
-        AdherenceData patientTwoWithinDateLimit = new AdherenceData("externalId2", "treatmentId", today.minusDays(1));
-        patientTwoWithinDateLimit = patientTwoWithinDateLimit.status(1);
+        AdherenceData patientOneWithinDateLimit = new AdherenceData("externalId1", "treatmentId", today, 1, null);
+        AdherenceData patientOneOutsideLimit = new AdherenceData("externalId1", "treatmentId", today.plusDays(1), 1, null);
+        AdherenceData patientTwoWithinDateLimit = new AdherenceData("externalId2", "treatmentId", today.minusDays(1), 1, null);
 
         adherenceService.recordAdherence("someUser", "TEST", patientOneOutsideLimit, patientOneWithinDateLimit, patientTwoWithinDateLimit);
         assertEquals(1, adherenceService.adherenceLogs(today, 0, 1).size());
@@ -128,10 +107,8 @@ public class AdherenceServiceIT extends SpringIntegrationTest {
     public void shouldFetchAdherenceRecordsBetweenTwoDates() {
         LocalDate today = DateUtil.today();
 
-        AdherenceData forYesterday = new AdherenceData("externalId", "treatmentId", today.minusDays(1));
-        forYesterday = forYesterday.status(1);
-        AdherenceData forToday = new AdherenceData("externalId", "treatmentId", today);
-        forToday = forToday.status(1);
+        AdherenceData forYesterday = new AdherenceData("externalId", "treatmentId", today.minusDays(1), 1, null);
+        AdherenceData forToday = new AdherenceData("externalId", "treatmentId", today, 1, null);
 
         adherenceService.recordAdherence("someUser", "TEST", forYesterday, forToday);
         assertEquals(2, adherenceService.adherenceRecords("externalId", "treatmentId", today.minusDays(1), today).size());

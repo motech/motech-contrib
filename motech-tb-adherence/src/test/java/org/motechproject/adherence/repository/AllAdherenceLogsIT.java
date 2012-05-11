@@ -4,12 +4,9 @@ import org.joda.time.LocalDate;
 import org.junit.After;
 import org.junit.Test;
 import org.motechproject.adherence.common.SpringIntegrationTest;
-import org.motechproject.adherence.domain.AdherenceAuditLog;
 import org.motechproject.adherence.domain.AdherenceLog;
 import org.motechproject.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import java.util.List;
 
 import static org.junit.Assert.*;
 
@@ -25,14 +22,14 @@ public class AllAdherenceLogsIT extends SpringIntegrationTest {
 
     @Test
     public void shouldSaveAdherenceLog() {
-        AdherenceLog adherenceLog = new AdherenceLog("externalId", "treatmentId", DateUtil.today());
+        AdherenceLog adherenceLog = new AdherenceLog("externalId", "treatmentId", DateUtil.today(), 1, null);
         allAdherenceLogs.add(adherenceLog);
         assertNotNull(allAdherenceLogs.get(adherenceLog.getId()));
     }
 
     @Test
     public void shouldBeIdempotentOnSave() {
-        AdherenceLog adherenceLog = new AdherenceLog("externalId", "treatmentId", DateUtil.today());
+        AdherenceLog adherenceLog = new AdherenceLog("externalId", "treatmentId", DateUtil.today(), 1, null);
 
         allAdherenceLogs.add(adherenceLog);
         allAdherenceLogs.add(adherenceLog);
@@ -43,10 +40,10 @@ public class AllAdherenceLogsIT extends SpringIntegrationTest {
     public void shouldFetchAdherenceLogByKey() {
         LocalDate today = DateUtil.today();
 
-        AdherenceLog toBeFound = new AdherenceLog("externalId", "treatmentId", today);
-        AdherenceLog toBeIgnoredByExternalId = new AdherenceLog("otherExternalId", "treatmentId", today);
-        AdherenceLog toBeIgnoredByTreatmentId = new AdherenceLog("externalId", "otherTreatmentId", today);
-        AdherenceLog toBeIgnoredByDate = new AdherenceLog("externalId", "treatmentId", today.plusDays(1));
+        AdherenceLog toBeFound = new AdherenceLog("externalId", "treatmentId", today, 1, null);
+        AdherenceLog toBeIgnoredByExternalId = new AdherenceLog("otherExternalId", "treatmentId", today, 1, null);
+        AdherenceLog toBeIgnoredByTreatmentId = new AdherenceLog("externalId", "otherTreatmentId", today, 1, null);
+        AdherenceLog toBeIgnoredByDate = new AdherenceLog("externalId", "treatmentId", today.plusDays(1), 1, null);
 
         addAll(toBeFound, toBeIgnoredByExternalId, toBeIgnoredByTreatmentId, toBeIgnoredByDate);
 
@@ -60,10 +57,10 @@ public class AllAdherenceLogsIT extends SpringIntegrationTest {
     public void shouldFetchAllAdherenceLogsByKeyTillKeyDate() {
         LocalDate today = DateUtil.today();
 
-        AdherenceLog toBeFound = new AdherenceLog("externalId", "treatmentId", today);
-        AdherenceLog anotherToBeFound = new AdherenceLog("externalId", "treatmentId", today.plusDays(1));
-        AdherenceLog toBeIgnoredByExternalId = new AdherenceLog("otherExternalId", "treatmentId", today);
-        AdherenceLog toBeIgnoredByTreatmentId = new AdherenceLog("externalId", "otherTreatmentId", today);
+        AdherenceLog toBeFound = new AdherenceLog("externalId", "treatmentId", today, 1, null);
+        AdherenceLog anotherToBeFound = new AdherenceLog("externalId", "treatmentId", today.plusDays(1), 1, null);
+        AdherenceLog toBeIgnoredByExternalId = new AdherenceLog("otherExternalId", "treatmentId", today, 1, null);
+        AdherenceLog toBeIgnoredByTreatmentId = new AdherenceLog("externalId", "otherTreatmentId", today, 1, null);
 
         addAll(toBeFound, anotherToBeFound, toBeIgnoredByExternalId, toBeIgnoredByTreatmentId);
 
@@ -75,8 +72,8 @@ public class AllAdherenceLogsIT extends SpringIntegrationTest {
     public void shouldNotFetchAllAdherenceLogsByKeyBeyondKeyDate() {
         LocalDate today = DateUtil.today();
 
-        AdherenceLog hasDateWithinKeyDate = new AdherenceLog("externalId", "treatmentId", today);
-        AdherenceLog hasDateBeyondKeyDate = new AdherenceLog("externalId", "treatmentId", today.plusDays(1));
+        AdherenceLog hasDateWithinKeyDate = new AdherenceLog("externalId", "treatmentId", today, 1, null);
+        AdherenceLog hasDateBeyondKeyDate = new AdherenceLog("externalId", "treatmentId", today.plusDays(1), 1, null);
 
         addAll(hasDateWithinKeyDate, hasDateBeyondKeyDate);
 

@@ -5,6 +5,7 @@ import org.ektorp.support.TypeDiscriminator;
 import org.joda.time.LocalDate;
 import org.motechproject.model.MotechBaseDataObject;
 
+import java.util.HashMap;
 import java.util.Map;
 
 @TypeDiscriminator("doc.type === 'AdherenceLog'")
@@ -19,26 +20,18 @@ public class AdherenceLog extends MotechBaseDataObject {
     @JsonProperty
     private int status;
     @JsonProperty
-    private Map<String, Object> meta;
+    private Map<String, Object> meta = new HashMap<String, Object>();
 
     public AdherenceLog() {
     }
 
-    public AdherenceLog(String externalId, String treatmentId, LocalDate doseDate) {
+    public AdherenceLog(String externalId, String treatmentId, LocalDate doseDate, int status, Map<String, Object> meta) {
         super();
         this.externalId = externalId;
         this.treatmentId = treatmentId;
         this.doseDate = doseDate;
-    }
-
-    public AdherenceLog status(int status) {
         this.status = status;
-        return this;
-    }
-
-    public AdherenceLog meta(Map<String, Object> meta) {
-        this.meta = meta;
-        return this;
+        if(meta !=null) this.meta = meta;
     }
 
     public String externalId() {
@@ -59,6 +52,15 @@ public class AdherenceLog extends MotechBaseDataObject {
 
     public Map<String, Object> meta() {
         return meta;
+    }
+
+    public AdherenceLog updateStatus(int status) {
+        this.status = status;
+        return this;
+    }
+    public AdherenceLog addToMeta(String key, Object value) {
+        this.meta.put(key, value);
+        return this;
     }
 
     @Override

@@ -26,21 +26,14 @@ public class AdherenceService {
 
     public void recordAdherence(String user, String source, AdherenceData... datas) {
         for (AdherenceData data : datas) {
-            AdherenceLog adherenceLog = new AdherenceLog(data.externalId(), data.treatmentId(), data.doseDate());
-            adherenceLog.status(data.status());
-            adherenceLog.meta(data.meta());
-            addWithAuditLog(adherenceLog, user, source);
+            AdherenceLog adherenceLog = new AdherenceLog(data.externalId(), data.treatmentId(), data.doseDate(), data.status(), data.meta());
+            allAdherenceLogs.add(adherenceLog);
+            addAuditLog(adherenceLog, user, source);
         }
     }
 
-    private void addWithAuditLog(AdherenceLog adherenceLog, String user, String source) {
-        AdherenceLog existingLog = allAdherenceLogs.findLogBy(adherenceLog.externalId(), adherenceLog.treatmentId(), adherenceLog.doseDate());
-
-        allAdherenceLogs.add(adherenceLog);
-
-        if (adherenceUpdated(adherenceLog, existingLog)) {
-            allAdherenceAuditLogs.add(new AdherenceAuditLog(adherenceLog, user, source));
-        }
+    private void addAuditLog(AdherenceLog adherenceLog, String user, String source) {
+        allAdherenceAuditLogs.add(new AdherenceAuditLog(adherenceLog, user, source));
     }
 
     private boolean adherenceUpdated(AdherenceLog adherenceLog, AdherenceLog existingLog) {
