@@ -25,7 +25,7 @@ public class ReportController {
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "{groupName}/{reportName}.xls")
-    public void createReport(@PathVariable("reportName") String groupName, @PathVariable("reportName") String reportName, HttpServletResponse response) {
+    public void createReport(@PathVariable("groupName") String groupName, @PathVariable("reportName") String reportName, HttpServletResponse response) {
         ReportDataSource reportDataSource = allReportDataSources.get(groupName);
         excelWriter.writeExcelToResponse(response, reportDataSource, reportName,  reportName + ".xls");
     }
