@@ -20,7 +20,7 @@
         <module>motech-http-client</module>
         <module>motech-web-security</module>
         <module>motech-validation</module>
-        <module>motech-reports</module>
+        <module>motech-bulk-export-import</module>
     </modules>
 
     <distributionManagement>
