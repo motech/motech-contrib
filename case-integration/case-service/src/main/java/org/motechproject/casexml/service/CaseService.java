@@ -50,7 +50,7 @@ public abstract class CaseService<T> {
     }
 
     private void logError(Throwable exception) {
-        logger.error("Exception encountered while processing case xml", exception);
+        logger.error("Exception encountered while processing case xml" + exception.getMessage() + exception.getStackTrace(), exception);
     }
 
     private ResponseEntity<String> loggedResponse(ResponseEntity<String> responseEntity) {
