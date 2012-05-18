@@ -20,7 +20,7 @@ import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 
-@ContextConfiguration(locations = "classpath*:/applicationBulkExportImportContext.xml")
+@ContextConfiguration(locations = "classpath*:/applicationBulkExportContext.xml")
 public class ReportControllerTest extends SpringIntegrationTest {
 
     @Mock

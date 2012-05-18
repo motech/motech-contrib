@@ -9,7 +9,7 @@ import org.springframework.test.context.ContextConfiguration;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
-@ContextConfiguration(locations = "classpath*:/applicationBulkExportImportContext.xml")
+@ContextConfiguration(locations = "classpath*:/applicationBulkExportContext.xml")
 public class AllReportDataSourcesTest extends SpringIntegrationTest {
 
     @Autowired
