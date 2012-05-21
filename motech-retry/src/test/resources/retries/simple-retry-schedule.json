@@ -1,0 +1,7 @@
+[
+    {
+            "name" : "Simple-Retry",
+            "retryCount" : "5",
+            "retryInterval" : "30 minutes"
+    }
+]
