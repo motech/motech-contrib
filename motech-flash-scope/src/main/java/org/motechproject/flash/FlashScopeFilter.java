@@ -6,7 +6,9 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.List;
 
 import static org.motechproject.flash.FlashAttributeName.*;
 
@@ -51,11 +53,22 @@ public class FlashScopeFilter implements Filter {
             String attributeName = (String) attributeNames.nextElement();
             if (shouldBeConsumed(attributeName)) {
                 response.addCookie(new Cookie(attributeName, request.getAttribute(attributeName).toString()));
-                request.removeAttribute(attributeName);
-            } else if (shouldBeDestroyed(attributeName)) {
-                request.removeAttribute(attributeName);
             }
         }
+        removeFlashAttributes(request);
+    }
 
+    private void removeFlashAttributes(HttpServletRequest request) {
+        Enumeration attributeNames = request.getAttributeNames();
+        List<String> toBeRemoved = new ArrayList<String>();
+        while (attributeNames.hasMoreElements()) {
+            String attributeName = (String) attributeNames.nextElement();
+            if (shouldBeConsumed(attributeName) || shouldBeDestroyed(attributeName)) {
+                toBeRemoved.add(attributeName);
+            }
+        }
+        for (String attribute : toBeRemoved) {
+            request.removeAttribute(attribute);
+        }
     }
 }
