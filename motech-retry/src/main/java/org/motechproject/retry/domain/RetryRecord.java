@@ -3,9 +3,10 @@ package org.motechproject.retry.domain;
 import org.joda.time.MutablePeriod;
 import org.joda.time.Period;
 import org.joda.time.ReadWritablePeriod;
-import org.joda.time.format.PeriodFormatterBuilder;
 
 import java.util.List;
+
+import static org.motechproject.retry.util.PeriodParser.FORMATTER;
 
 public class RetryRecord {
     private String name;
@@ -37,14 +38,7 @@ public class RetryRecord {
     }
 
     private Period parse(String interval) {
-        return Period.parse(interval, new PeriodFormatterBuilder()
-                .appendYears().appendSuffix(" year", " years")
-                .appendMonths().appendSuffix(" month", " months")
-                .appendDays().appendSuffix(" day", " days")
-                .appendHours().appendSuffix(" hour", " hours")
-                .appendMinutes().appendSuffix(" minute", " minutes")
-                .appendSeconds().appendSuffix(" second", " seconds")
-                .toFormatter());
+        return Period.parse(interval, FORMATTER);
     }
 
     public void setRetryInterval(List<String> retryInterval) {
