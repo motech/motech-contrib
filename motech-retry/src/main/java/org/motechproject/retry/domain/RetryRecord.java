@@ -1,12 +1,16 @@
 package org.motechproject.retry.domain;
 
+import org.joda.time.MutablePeriod;
 import org.joda.time.Period;
+import org.joda.time.ReadWritablePeriod;
 import org.joda.time.format.PeriodFormatterBuilder;
+
+import java.util.List;
 
 public class RetryRecord {
     private String name;
     private Integer retryCount;
-    private String retryInterval;
+    private List<String> retryInterval;
 
     public String name() {
         return name;
@@ -25,7 +29,15 @@ public class RetryRecord {
     }
 
     public Period retryInterval() {
-        return Period.parse(retryInterval, new PeriodFormatterBuilder()
+        ReadWritablePeriod period = new MutablePeriod();
+        for (String interval : retryInterval) {
+            period.add(parse(interval));
+        }
+        return period.toPeriod();
+    }
+
+    private Period parse(String interval) {
+        return Period.parse(interval, new PeriodFormatterBuilder()
                 .appendYears().appendSuffix(" year", " years")
                 .appendMonths().appendSuffix(" month", " months")
                 .appendDays().appendSuffix(" day", " days")
@@ -35,7 +47,7 @@ public class RetryRecord {
                 .toFormatter());
     }
 
-    public void setRetryInterval(String retryInterval) {
+    public void setRetryInterval(List<String> retryInterval) {
         this.retryInterval = retryInterval;
     }
 }

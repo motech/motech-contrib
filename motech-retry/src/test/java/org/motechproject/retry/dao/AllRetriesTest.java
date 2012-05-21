@@ -18,7 +18,7 @@ public class AllRetriesTest {
     private AllRetries allRetries;
 
     @Test
-    public void shouldLoadJsonFromClasspath() {
+    public void shouldLoadJsonForASimpleRetrySchedule() {
         String retryScheduleName = "Simple-Retry";
 
         RetryRecord retryRecord = allRetries.get(retryScheduleName);
@@ -26,6 +26,26 @@ public class AllRetriesTest {
         assertThat(retryRecord.name(), is(retryScheduleName));
         assertThat(retryRecord.retryCount(), is(5));
         assertThat(retryRecord.retryInterval(), is(Period.minutes(30)));
+    }
+
+    @Test
+    public void shouldLoadJsonWithMultiplePeriods() {
+        String retryScheduleName = "retry-every-2hrs-and-30mins";
+        RetryRecord retryRecord = allRetries.get(retryScheduleName);
+
+        assertThat(retryRecord.name(), is(retryScheduleName));
+        assertThat(retryRecord.retryCount(), is(5));
+        assertThat(retryRecord.retryInterval(), is(Period.minutes(30).plusHours(2)));
+    }
+
+    @Test
+    public void shouldLoadJsonWithMultipleRetries() {
+        String retryScheduleName = "retry-every-10Days";
+        RetryRecord retryRecord = allRetries.get(retryScheduleName);
+
+        assertThat(retryRecord.name(), is(retryScheduleName));
+        assertThat(retryRecord.retryCount(), is(5));
+        assertThat(retryRecord.retryInterval(), is(Period.days(10)));
     }
 
 }
