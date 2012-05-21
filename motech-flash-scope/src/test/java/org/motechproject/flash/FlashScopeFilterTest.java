@@ -6,11 +6,9 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 
 import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.util.Hashtable;
 
 import static org.junit.Assert.assertEquals;
@@ -41,24 +39,24 @@ public class FlashScopeFilterTest {
     }
 
     @Test
-    public void shouldPassFlashParametersAsFlashIn() throws IOException, ServletException {
+    public void shouldPassFlashParametersAsFlashIn() throws Exception {
         Hashtable<String, String> nonFlashAttributes = new Hashtable<String, String>();
         nonFlashAttributes.put("name", "value");
 
         when(request.getAttributeNames()).thenReturn(nonFlashAttributes.keys());
-        filter.doFilter(request, response, chain);
+        filter.preHandle(request, response, null);
         verify(request).setAttribute("flash.in.name", "value");
     }
 
     @Test
-    public void shouldCreateCookieForFlashOuts() throws IOException, ServletException {
+    public void shouldCreateCookieForFlashOuts() throws Exception {
         Hashtable<String, String> nonFlashAttributes = new Hashtable<String, String>();
         nonFlashAttributes.put("flash.out.name", "value");
 
         when(request.getAttributeNames()).thenReturn(nonFlashAttributes.keys());
         when(request.getAttribute("flash.out.name")).thenReturn("value");
 
-        filter.doFilter(request, response, chain);
+        filter.postHandle(request, response, null, null);
         verify(response).addCookie(cookieCaptor.capture());
         assertEquals(cookieCaptor.getValue().getName(), "flash.out.name");
     }

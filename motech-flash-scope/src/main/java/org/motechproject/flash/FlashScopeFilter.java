@@ -1,6 +1,10 @@
 package org.motechproject.flash;
 
 
+import org.springframework.stereotype.Component;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
+
 import javax.servlet.*;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -12,25 +16,19 @@ import java.util.List;
 
 import static org.motechproject.flash.FlashAttributeName.*;
 
-public class FlashScopeFilter implements Filter {
+@Component
+public class FlashScopeFilter extends HandlerInterceptorAdapter {
 
     @Override
-    public void init(FilterConfig filterConfig) throws ServletException {
+    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+        setFlashParamsInRequestAttributesAndRemoveThemFromCookie(request);
+        return super.preHandle(request, response, handler);
     }
 
     @Override
-    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
-        if (servletRequest instanceof HttpServletRequest) {
-            setFlashParamsInRequestAttributesAndRemoveThemFromCookie((HttpServletRequest) servletRequest);
-        }
-        filterChain.doFilter(servletRequest, servletResponse);
-        if (servletRequest instanceof HttpServletRequest) {
-            storeFlashParamsInCookie((HttpServletRequest) servletRequest, (HttpServletResponse) servletResponse);
-        }
-    }
-
-    @Override
-    public void destroy() {
+    public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
+        storeFlashParamsInCookie(request, response);
+        super.postHandle(request, response, handler, modelAndView);
     }
 
     private void setFlashParamsInRequestAttributesAndRemoveThemFromCookie(HttpServletRequest request) {
@@ -52,7 +50,10 @@ public class FlashScopeFilter implements Filter {
         while (attributeNames.hasMoreElements()) {
             String attributeName = (String) attributeNames.nextElement();
             if (shouldBeConsumed(attributeName)) {
-                response.addCookie(new Cookie(attributeName, request.getAttribute(attributeName).toString()));
+                Cookie cookie = new Cookie(attributeName, (String) request.getAttribute(attributeName));
+                cookie.setMaxAge(-1);
+                cookie.setPath("/");
+                response.addCookie(cookie);
             }
         }
         removeFlashAttributes(request);
