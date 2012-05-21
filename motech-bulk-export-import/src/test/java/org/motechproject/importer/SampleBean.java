@@ -1,7 +1,10 @@
 package org.motechproject.importer;
 
+import org.motechproject.importer.annotation.ColumnName;
+
 public class SampleBean {
 
+    @ColumnName(name = "y")
     private String sampleY;
 
     private String sampleX;
