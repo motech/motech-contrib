@@ -27,7 +27,7 @@ public class RetryHttpPostTest {
     private boolean hasListenerHasBeenCalledMultipleTimes() {
         int sleepTime = 1000;
         for (int counter = 0; counter < 30; counter++) {
-            if (customHttpClientEventListener.hasTriedMultipleTimes()) {
+            if (customHttpClientEventListener.hasTriedNumberOfTimes(7)) {
                 return true;
             }
             try {

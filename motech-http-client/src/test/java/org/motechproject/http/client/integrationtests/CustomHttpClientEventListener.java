@@ -13,25 +13,20 @@ import java.util.Map;
 @Component
 public class CustomHttpClientEventListener {
 
-    private RestTemplate restTemplate;
-    private int numberOfRetries;
-    private final int maxNumberOfRetries = 2;
-
-    public CustomHttpClientEventListener() {
-        numberOfRetries = -1;
-        restTemplate = new RestTemplate();
-    }
+    private RestTemplate restTemplate=new RestTemplate();
+    private int numberOfTries=0;
+    private final int maxNumberOfTries = 20;
 
     @MotechListener(subjects = EventSubjects.HTTP_REQUEST)
     public void handle(MotechEvent motechEvent) {
-        numberOfRetries++;
-        if (numberOfRetries < maxNumberOfRetries){
-        Map<String,Object> parameters = motechEvent.getParameters();
-        restTemplate.postForLocation(String.valueOf(parameters.get(EventDataKeys.URL)),parameters.get(EventDataKeys.DATA));
+        numberOfTries++;
+        if (numberOfTries <= maxNumberOfTries){
+            Map<String,Object> parameters = motechEvent.getParameters();
+            restTemplate.postForLocation(String.valueOf(parameters.get(EventDataKeys.URL)),parameters.get(EventDataKeys.DATA));
         }
     }
 
-    public boolean hasTriedMultipleTimes() {
-        return numberOfRetries > 0;
+    public boolean hasTriedNumberOfTimes(int count) {
+        return numberOfTries >= count;
     }
 }
