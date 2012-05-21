@@ -21,7 +21,7 @@ public class RetryHttpPostTest {
     @Test
     public void shouldRetryPostingInCaseOfHttpError() {
         httpClientService.post("http://shouldfailasthedomaindoesnotexist/", "dummypostdata");
-        Assert.assertTrue(hasListenerHasBeenCalledMultipleTimes());
+        Assert.assertTrue("Please stop an already running jetty instance for this test to pass.",hasListenerHasBeenCalledMultipleTimes());
     }
 
     private boolean hasListenerHasBeenCalledMultipleTimes() {
