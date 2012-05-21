@@ -5,11 +5,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
-import javax.servlet.*;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
@@ -33,9 +31,11 @@ public class FlashScopeFilter extends HandlerInterceptorAdapter {
 
     private void setFlashParamsInRequestAttributesAndRemoveThemFromCookie(HttpServletRequest request) {
         Cookie[] cookies = request.getCookies();
-        for (Cookie cookie : cookies) {
-            setFlashParamsInRequestAttributes(request, cookie);
-            cookie.setMaxAge(0);
+        if (null != cookies) {
+            for (Cookie cookie : cookies) {
+                setFlashParamsInRequestAttributes(request, cookie);
+                cookie.setMaxAge(0);
+            }
         }
     }
 
