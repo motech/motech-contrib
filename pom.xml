@@ -22,6 +22,7 @@
         <module>motech-validation</module>
         <module>motech-bulk-export-import</module>
         <module>motech-retry</module>
+        <module>motech-flash-scope</module>
     </modules>
 
     <distributionManagement>
