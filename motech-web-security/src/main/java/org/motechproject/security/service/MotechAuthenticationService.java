@@ -28,6 +28,16 @@ public class MotechAuthenticationService {
         allMotechWebUsers.add(new MotechWebUser(userName, password, externalId, rolesDomain));
     }
 
+    public void register(String userName, String password, String externalId, List<String> roles, boolean isActive) {
+        Roles rolesDomain = new Roles();
+        for (String role : roles) {
+            rolesDomain.add(new Role(role));
+        }
+        MotechWebUser user = new MotechWebUser(userName, password, externalId, rolesDomain);
+        user.setActive(isActive);
+        allMotechWebUsers.add(user);
+    }
+
     public AuthenticatedUser changePassword(String userName, String newPassword) {
         allMotechWebUsers.changePassword(userName, newPassword);
         MotechWebUser motechWebUser = allMotechWebUsers.findByUserName(userName);

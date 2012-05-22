@@ -33,7 +33,25 @@ public class MotechAuthenticationServiceTest extends TestCase {
         assertEquals("DB_ADMIN", motechWebUser.getRoles().get(1).getName());
         allMotechWebUsers.remove(motechWebUser);
     }
-    
+
+    @Test
+    public void shouldCreateActiveUserByDefault() {
+        motechAuthenticationService.register("userName", "password", "1234", Arrays.asList("IT_ADMIN", "DB_ADMIN"));
+        MotechWebUser motechWebUser = allMotechWebUsers.findByUserName("userName");
+
+        assertTrue(motechWebUser.isActive());
+        allMotechWebUsers.remove(motechWebUser);
+    }
+
+    @Test
+    public void shouldCreateInActiveUser() {
+        motechAuthenticationService.register("userName", "password", "1234", Arrays.asList("IT_ADMIN", "DB_ADMIN"), false);
+        MotechWebUser motechWebUser = allMotechWebUsers.findByUserName("userName");
+
+        assertFalse(motechWebUser.isActive());
+        allMotechWebUsers.remove(motechWebUser);
+    }
+
     @Test
     public void testAuthenticate() {
         motechAuthenticationService.register("userName", "password", "1234", Arrays.asList("IT_ADMIN", "DB_ADMIN"));

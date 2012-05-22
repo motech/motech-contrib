@@ -24,6 +24,9 @@ public class MotechWebUser extends MotechBaseDataObject {
     @JsonProperty
     private Roles roles;
 
+    @JsonProperty
+    private boolean active = true;
+
     public MotechWebUser(){
         super();
     }
@@ -63,5 +66,13 @@ public class MotechWebUser extends MotechBaseDataObject {
             authorities.add(role.authority());
         }
         return authorities;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
     }
 }

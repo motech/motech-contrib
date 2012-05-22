@@ -16,6 +16,7 @@ public class AuthenticationProvider extends AbstractUserDetailsAuthenticationPro
 
     public static final String PLEASE_ENTER_PASSWORD = "Please enter password.";
     public static final String USER_NOT_FOUND = "The username or password you entered is incorrect. Please enter the correct credentials.";
+    public static final String USER_NOT_ACTIVATED = "The user has been registered but not activated. Please contact your local administrator.";
 
     private MotechAuthenticationService authenticationService;
 
@@ -35,6 +36,8 @@ public class AuthenticationProvider extends AbstractUserDetailsAuthenticationPro
         AuthenticatedUser user = authenticationService.authenticate(username, password);
         if (user == null) {
             throw new BadCredentialsException(USER_NOT_FOUND);
+        } else if (user.isActive()) {
+            throw new BadCredentialsException(USER_NOT_ACTIVATED);
         } else {
             return user;
         }

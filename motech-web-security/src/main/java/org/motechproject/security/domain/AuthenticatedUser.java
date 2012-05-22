@@ -25,4 +25,8 @@ public class AuthenticatedUser extends User {
     public Roles getRoles() {
         return webUser.getRoles();
     }
+
+    public boolean isActive(){
+        return webUser.isActive();
+    }
 }
