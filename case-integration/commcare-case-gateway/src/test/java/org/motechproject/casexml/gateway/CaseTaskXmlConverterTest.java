@@ -33,8 +33,7 @@ public class CaseTaskXmlConverterTest {
         String dateEligible = DateUtil.today().toString();
         String currentTime = DateUtil.now().toDateTime(DateTimeZone.UTC).toString();
         String motechUserId = "motechId";
-        String clientElementTag = "mother_id";
-        CaseTask task = createCaseTask(randomGeneratedCaseId, motherCaseId, taskId, dateEligible,  dateExpires, currentTime, motechUserId, clientElementTag, pregnancyCaseType);
+        CaseTask task = createCaseTask(randomGeneratedCaseId, motherCaseId, taskId, dateEligible,  dateExpires, currentTime, motechUserId,  pregnancyCaseType);
 
         String caseXmlWithEnvelope = new CaseTaskXmlConverter().convertToCaseXml(task);
         Document doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(new InputSource(new StringReader(caseXmlWithEnvelope)));
@@ -67,7 +66,7 @@ public class CaseTaskXmlConverterTest {
         assertEquals(dateExpires, updateEle.getElementsByTagName("date_expires").item(0).getTextContent());
 
         Element indexEle = (Element)caseEle.getElementsByTagName("index").item(0);
-        Element motherEle = (Element)indexEle.getElementsByTagName(clientElementTag).item(0);
+        Element motherEle = (Element)indexEle.getElementsByTagName("person_id").item(0);
         assertEquals(motherCaseId, motherEle.getTextContent());
         assertEquals(pregnancyCaseType, motherEle.getAttribute("case_type"));
     }
@@ -81,8 +80,7 @@ public class CaseTaskXmlConverterTest {
         String dateEligible = DateUtil.today().toString();
         String currentTime = DateUtil.now().toDateTime(DateTimeZone.UTC).toString();
         String motechUserId = "motechId";
-        String clientElementTag = "child_id";
-        CaseTask task = createCaseTask(randomGeneratedCaseId, childCaseId, taskId, dateEligible,  dateExpires, currentTime, motechUserId, clientElementTag, childCaseType);
+        CaseTask task = createCaseTask(randomGeneratedCaseId, childCaseId, taskId, dateEligible,  dateExpires, currentTime, motechUserId,  childCaseType);
 
         String caseXmlWithEnvelope = new CaseTaskXmlConverter().convertToCaseXml(task);
 
@@ -116,12 +114,12 @@ public class CaseTaskXmlConverterTest {
         assertEquals(dateExpires, updateEle.getElementsByTagName("date_expires").item(0).getTextContent());
 
         Element indexEle = (Element)caseEle.getElementsByTagName("index").item(0);
-        Element childEle = (Element)indexEle.getElementsByTagName(clientElementTag).item(0);
+        Element childEle = (Element)indexEle.getElementsByTagName("person_id").item(0);
         assertEquals(childCaseId, childEle.getTextContent());
         assertEquals(childCaseType, childEle.getAttribute("case_type"));
     }
 
-    private CaseTask createCaseTask(String caseId, String motherCaseId, String taskId, String dateEligible, String dateExpires, String currentTime, String motechUserId, String clientElementTag, String clientCaseType) {
+    private CaseTask createCaseTask(String caseId, String motherCaseId, String taskId, String dateEligible, String dateExpires, String currentTime, String motechUserId, String clientCaseType) {
         CaseTask caseTask = new CaseTask();
         caseTask.setCaseId(caseId);
         caseTask.setCaseType("task");
@@ -134,7 +132,6 @@ public class CaseTaskXmlConverterTest {
         caseTask.setClientCaseType(clientCaseType);
         caseTask.setDateEligible(dateEligible);
         caseTask.setDateExpires(dateExpires);
-        caseTask.setClientElementTag(clientElementTag);
         return caseTask;
     }
 
@@ -147,8 +144,7 @@ public class CaseTaskXmlConverterTest {
         String dateEligible = DateUtil.today().toString();
         String currentTime = DateUtil.now().toDateTime(DateTimeZone.UTC).toString();
         String motechUserId = "motechId";
-        String clientElementTag = "child_id";
-        CaseTask task = createCaseTask(randomGeneratedCaseId, childCaseId, taskId, dateEligible,  dateExpires, currentTime, motechUserId, clientElementTag, childCaseType);
+        CaseTask task = createCaseTask(randomGeneratedCaseId, childCaseId, taskId, dateEligible,  dateExpires, currentTime, motechUserId, childCaseType);
         String caseXmlWithEnvelope = new CaseTaskXmlConverter().convertToCloseCaseXml(task);
 
         Document doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(new InputSource(new StringReader(caseXmlWithEnvelope)));

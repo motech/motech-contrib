@@ -45,7 +45,7 @@ public class CaseTaskXmlConverter {
         ccCase.setUpdateElement(update);
 
         Patient patient = new Patient(task.getClientCaseId(), task.getClientCaseType());
-        Index index = new Index(patient, task.getClientElementTag());
+        Index index = new Index(patient);
         ccCase.setIndex(index);
 
         return ccCase;
@@ -71,10 +71,9 @@ public class CaseTaskXmlConverter {
         xstream.alias("index", Index.class);
         xstream.omitField(Index.class, "patientTagName");
 
-        String patient_case_type = request.getCcCase().getIndex().getPatient().getCase_type();
-        String patient_tag_name = request.getCcCase().getIndex().getPatientTagName();
-        xstream.registerConverter(new PatientConverter(patient_case_type));
-        xstream.aliasField(patient_tag_name, Index.class, "patient");
+        String patientCaseType = request.getCcCase().getIndex().getPatient().getCase_type();
+        xstream.registerConverter(new PatientConverter(patientCaseType));
+        xstream.aliasField("person_id", Index.class, "patient");
 
         return xstream.toXML(request);
     }

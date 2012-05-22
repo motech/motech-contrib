@@ -66,7 +66,7 @@ public class CommcareCaseParserTest extends TestCase {
         Assert.assertEquals("2012-04-03", aCase.getDate_modified());
         Assert.assertEquals("d823ea3d392a06f8b991e9e4933348bd", aCase.getUser_id());
         Assert.assertEquals("d823ea3d392a06f8b991e9e49394ce45", aCase.getOwner_id());
-        Assert.assertEquals("motherCaseId", aCase.getFieldValues().get("mother_id"));
+        Assert.assertEquals("motherCaseId", aCase.getFieldValues().get("person_id"));
     }
 
     private String caseXml() {
@@ -97,7 +97,7 @@ public class CommcareCaseParserTest extends TestCase {
                 "<gender>male</gender>" +
                 "</update>" +
                 "<index>" +
-                "<mother_id case_type=\"cc_bihar_pregnancy\">motherCaseId</mother_id>" +
+                "<person_id case_type=\"cc_bihar_pregnancy\">motherCaseId</person_id>" +
                 "</index>" +
                 "</case>";
 
