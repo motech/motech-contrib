@@ -12,14 +12,14 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
 
-import static org.motechproject.flash.FlashAttributeName.*;
+import static org.motechproject.flash.Flash.*;
 
 @Component
 public class FlashScopeFilter extends HandlerInterceptorAdapter {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        setFlashParamsInRequestAttributesAndRemoveThemFromCookie(request);
+        setFlashParamsInRequestAttributesAndRemoveThemFromCookie(request, response);
         return super.preHandle(request, response, handler);
     }
 
@@ -29,19 +29,17 @@ public class FlashScopeFilter extends HandlerInterceptorAdapter {
         super.postHandle(request, response, handler, modelAndView);
     }
 
-    private void setFlashParamsInRequestAttributesAndRemoveThemFromCookie(HttpServletRequest request) {
+    private void setFlashParamsInRequestAttributesAndRemoveThemFromCookie(HttpServletRequest request, HttpServletResponse response) {
         Cookie[] cookies = request.getCookies();
         if (null != cookies) {
             for (Cookie cookie : cookies) {
-                setFlashParamsInRequestAttributes(request, cookie);
-                cookie.setMaxAge(0);
+                if (shouldBeConsumed(cookie.getName())) {
+                    transfer(cookie.getName(), cookie.getValue(), request);
+                    cookie.setMaxAge(0);
+                    cookie.setPath("/");
+                    response.addCookie(cookie);
+                }
             }
-        }
-    }
-
-    private void setFlashParamsInRequestAttributes(HttpServletRequest request, Cookie cookie) {
-        if (shouldBeConsumed(cookie.getName()) && cookie.getValue() != null) {
-            request.setAttribute(in(simpleAttributeName(cookie.getName())), cookie.getValue());
         }
     }
 
