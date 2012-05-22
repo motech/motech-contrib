@@ -38,16 +38,25 @@ public class MotechAuthenticationService {
         allMotechWebUsers.add(user);
     }
 
+    public void activateUser(String userName) {
+        MotechWebUser motechWebUser = allMotechWebUsers.findByUserName(userName);
+        if (null != motechWebUser) {
+            motechWebUser.setActive(true);
+            allMotechWebUsers.update(motechWebUser);
+        }
+    }
+
     public AuthenticatedUser changePassword(String userName, String newPassword) {
         allMotechWebUsers.changePassword(userName, newPassword);
         MotechWebUser motechWebUser = allMotechWebUsers.findByUserName(userName);
-        if (motechWebUser == null) return null;
+        if (motechWebUser == null)
+            return null;
         return new AuthenticatedUser(motechWebUser.getAuthorities(), motechWebUser);
     }
 
     public void remove(String userName) {
         MotechWebUser motechWebUser = allMotechWebUsers.findByUserName(userName);
-        if(motechWebUser != null)
+        if (motechWebUser != null)
             allMotechWebUsers.remove(motechWebUser);
     }
 

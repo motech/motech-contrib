@@ -40,9 +40,17 @@ public class AllMotechWebUsers extends MotechBaseRepository<MotechWebUser> {
         super.add(user);
     }
 
+    @Override
+    public void update(MotechWebUser user) {
+        String encryptedPassword = encryptor.encrypt(user.getPassword());
+        user.setPassword(encryptedPassword);
+        super.update(user);
+    }
+
     public void changePassword(String userName, String newPassword) {
         MotechWebUser user = findByUserName(userName);
-        if (user == null) return;
+        if (user == null)
+            return;
         String encryptedPassword = encryptor.encrypt(newPassword);
         user.setPassword(encryptedPassword);
         super.update(user);

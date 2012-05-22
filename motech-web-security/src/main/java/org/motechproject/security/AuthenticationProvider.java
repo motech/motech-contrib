@@ -36,7 +36,7 @@ public class AuthenticationProvider extends AbstractUserDetailsAuthenticationPro
         AuthenticatedUser user = authenticationService.authenticate(username, password);
         if (user == null) {
             throw new BadCredentialsException(USER_NOT_FOUND);
-        } else if (user.isActive()) {
+        } else if (!user.isActive()) {
             throw new BadCredentialsException(USER_NOT_ACTIVATED);
         } else {
             return user;
