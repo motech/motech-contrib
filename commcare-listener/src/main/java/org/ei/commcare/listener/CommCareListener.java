@@ -26,7 +26,10 @@ public class CommCareListener {
     }
 
     public void fetchFromServer() throws Exception {
-        lock.lock();
+        if (!lock.tryLock()) {
+            logger.warn("Not fetching from CommCareHQ. It is already in progress.");
+            return;
+        }
         try {
             logger.info("Fetching from CommCareHQ.");
             List<List<CommCareFormInstance>> formsForAllModules = moduleImportService.fetchFormsForAllModules();
