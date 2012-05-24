@@ -8,9 +8,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 @Target({FIELD})
 @Retention(RUNTIME)
-public @interface Enumeration {
-    Class<? extends java.lang.Enum> type();
-    boolean validateEmptyString() default true;
-
+public @interface DateTimeFormat {
+    String pattern() default "dd/MM/YYYY HH:mm:ss";
+    boolean validateEmptyString() default  true;
 }
-

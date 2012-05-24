@@ -15,21 +15,26 @@ public class EnumValidator extends PropertyValidator {
     @Override
     public void validateField(Object target, Field field, String scope, Errors errors) {
         if (field.isAnnotationPresent(Enumeration.class)) {
-            Class<? extends Enum> possibleValues = field.getAnnotation(Enumeration.class).type();
+            Enumeration annotation = field.getAnnotation(Enumeration.class);
+            Class<? extends Enum> possibleValues = annotation.type();
+            boolean validateEmptyString = annotation.validateEmptyString();
             List<String> allEnumerations = allEnumValues(possibleValues);
-            if (isInValid(target, field, allEnumerations)) {
+            if (isInValid(target, field, allEnumerations,validateEmptyString)) {
                 errors.rejectValue(field.getName(), "invalid-data", "The value should be one of : " + allEnumerations);
             }
         }
     }
 
-    private boolean isInValid(Object target, Field field, List<String> allEnumerations) {
+    private boolean isInValid(Object target, Field field, List<String> allEnumerations,boolean validateEmptyString) {
         field.setAccessible(true);
         try {
             if (field.get(target) == null)
                 return false;
+            String value = ((String) field.get(target)).trim();
+            if(validateEmptyString==false && value.isEmpty())
+                return false;
             for (String enumValue : allEnumerations)
-                if (enumValue.compareToIgnoreCase(field.get(target).toString().trim()) == 0)
+                if (enumValue.compareToIgnoreCase(value) == 0)
                     return false;
         } catch (Exception ignored) {
         }

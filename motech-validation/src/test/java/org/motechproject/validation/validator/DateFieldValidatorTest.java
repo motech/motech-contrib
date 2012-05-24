@@ -3,8 +3,8 @@ package org.motechproject.validation.validator;
 import lombok.Data;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.motechproject.validation.constraints.DateTimeFormat;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.validation.BeanPropertyBindingResult;
@@ -71,13 +71,30 @@ public class DateFieldValidatorTest {
         assertEquals(0, errors.getFieldErrors().size());
     }
 
+    @Test
+    public void shouldNotValidateEmptyStringOnlyIfPropertyIsSetInAnnotation() throws NoSuchFieldException {
+        ClassWithValidations target = new ClassWithValidations("", "  ", "");
+
+        BeanPropertyBindingResult errors = new BeanPropertyBindingResult(target, "classWithValidations");
+        dateFieldValidator.validateField(target, ClassWithValidations.class.getDeclaredField("date"), null, errors);
+        assertEquals(1, errors.getFieldErrors().size());
+
+        errors = new BeanPropertyBindingResult(target, "classWithValidations");
+        dateFieldValidator.validateField(target, ClassWithValidations.class.getDeclaredField("dateTime"), null, errors);
+        assertEquals(0, errors.getFieldErrors().size());
+
+        errors = new BeanPropertyBindingResult(target, "classWithValidations");
+        dateFieldValidator.validateField(target, ClassWithValidations.class.getDeclaredField("dateWithoutValidation"), null, errors);
+        assertEquals(0, errors.getFieldErrors().size());
+    }
+
     @Data
     public static class ClassWithValidations {
 
         @DateTimeFormat(pattern = "dd/MM/YYYY")
         private String date;
 
-        @DateTimeFormat(pattern = "dd/MM/YYYY HH:mm:ss")
+        @DateTimeFormat(validateEmptyString = false)
         private String dateTime;
 
         private String dateWithoutValidation;

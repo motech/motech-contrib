@@ -10,6 +10,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.validation.BeanPropertyBindingResult;
 
 import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertNull;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -21,45 +22,61 @@ public class EnumValidatorTest {
 
     @Test
     public void shouldReportErrorWhenValueIsNotEnumerated() throws NoSuchFieldException {
-        ClassWithValidations target = new ClassWithValidations("notAnEnum", "enumValue1");
+        ClassWithValidations target = new ClassWithValidations("notAnEnum", "enumValue1","enumValue2");
         BeanPropertyBindingResult errors = new BeanPropertyBindingResult(target, "classWithValidations");
-        enumValidator.validateField(target, ClassWithValidations.class.getDeclaredField("enumField"), null, errors);
+        enumValidator.validateField(target, ClassWithValidations.class.getDeclaredField("enumField1"), null, errors);
 
-        assertEquals("The value should be one of : [enumValue1, enumValue2]", errors.getFieldError("enumField").getDefaultMessage());
+        assertEquals("The value should be one of : [enumValue1, enumValue2]", errors.getFieldError("enumField1").getDefaultMessage());
     }
 
     @Test
     public void shouldNotReportErrorWhenValueIsEnumerated() throws NoSuchFieldException {
-        ClassWithValidations target = new ClassWithValidations("enumValue1", "enumValue1");
+        ClassWithValidations target = new ClassWithValidations("enumValue1", "enumValue1","enumValue2");
         BeanPropertyBindingResult errors = new BeanPropertyBindingResult(target, "classWithValidations");
-        enumValidator.validateField(target, ClassWithValidations.class.getDeclaredField("enumField"), null, errors);
+        enumValidator.validateField(target, ClassWithValidations.class.getDeclaredField("enumField1"), null, errors);
 
-        assertNull(errors.getFieldError("enumField"));
+        assertNull(errors.getFieldError("enumField1"));
     }
 
     @Test
     public void shouldNotReportErrorWhenValueIsNull() throws NoSuchFieldException {
-        ClassWithValidations target = new ClassWithValidations(null, "enumValue1");
+        ClassWithValidations target = new ClassWithValidations(null, "enumValue1","enumValue1");
         BeanPropertyBindingResult errors = new BeanPropertyBindingResult(target, "classWithValidations");
-        enumValidator.validateField(target, ClassWithValidations.class.getDeclaredField("enumField"), null, errors);
+        enumValidator.validateField(target, ClassWithValidations.class.getDeclaredField("enumField1"), null, errors);
 
-        assertNull(errors.getFieldError("enumField"));
+        assertNull(errors.getFieldError("enumField1"));
     }
 
     @Test
     public void validationShouldHandleSpaceAndBeCaseInsensitive() throws NoSuchFieldException {
-        ClassWithValidations target = new ClassWithValidations(String.format("   %s   ",Enum.enumValue1.name().toUpperCase()), "enumValue1");
+        ClassWithValidations target = new ClassWithValidations(String.format("   %s   ",Enum.enumValue1.name().toUpperCase()), "enumValue2","enumValue1");
         BeanPropertyBindingResult errors = new BeanPropertyBindingResult(target, "classWithValidations");
-        enumValidator.validateField(target, ClassWithValidations.class.getDeclaredField("enumField"), null, errors);
+        enumValidator.validateField(target, ClassWithValidations.class.getDeclaredField("enumField1"), null, errors);
 
-        assertNull(errors.getFieldError("enumField"));
+        assertNull(errors.getFieldError("enumField1"));
     }
     @Test
     public void shouldNotValidateFieldWithoutEnumerationAnnotation() throws NoSuchFieldException {
-        ClassWithValidations target = new ClassWithValidations("enumValue1", "notEnumeratedValue");
+        ClassWithValidations target = new ClassWithValidations("enumValue1","enumValue2", "notEnumeratedValue");
         BeanPropertyBindingResult errors = new BeanPropertyBindingResult(target, "classWithValidations");
-        enumValidator.validateField(target, ClassWithValidations.class.getDeclaredField("enumField"), null, errors);
+        enumValidator.validateField(target, ClassWithValidations.class.getDeclaredField("enumField1"), null, errors);
 
+        assertNull(errors.getFieldError("notValidated"));
+    }
+    @Test
+    public void shouldNotValidateEmptyStringOnlyIfThePropertyIsSetInAnnotation() throws NoSuchFieldException {
+        ClassWithValidations target = new ClassWithValidations("","  ", "");
+
+        BeanPropertyBindingResult errors = new BeanPropertyBindingResult(target, "classWithValidations");
+        enumValidator.validateField(target, ClassWithValidations.class.getDeclaredField("enumField1"), null, errors);
+        assertNotNull(errors.getFieldError("enumField1"));
+
+        errors = new BeanPropertyBindingResult(target, "classWithValidations");
+        enumValidator.validateField(target, ClassWithValidations.class.getDeclaredField("enumField2"), null, errors);
+        assertNull(errors.getFieldError("enumField2"));
+
+        errors = new BeanPropertyBindingResult(target, "classWithValidations");
+        enumValidator.validateField(target, ClassWithValidations.class.getDeclaredField("notValidated"), null, errors);
         assertNull(errors.getFieldError("notValidated"));
     }
 
@@ -67,12 +84,16 @@ public class EnumValidatorTest {
     public static class ClassWithValidations {
 
         @Enumeration(type = Enum.class)
-        private String enumField;
+        private String enumField1;
+
+        @Enumeration(type = Enum.class, validateEmptyString = false)
+        private String enumField2;
 
         private String notValidated;
 
-        public ClassWithValidations(String enumField, String notValidated) {
-            this.enumField = enumField;
+        public ClassWithValidations(String enumField1, String enumField2,String notValidated) {
+            this.enumField1 = enumField1;
+            this.enumField2 = enumField2;
             this.notValidated = notValidated;
         }
     }
