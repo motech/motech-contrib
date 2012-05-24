@@ -29,7 +29,7 @@ public class EnumValidator extends PropertyValidator {
             if (field.get(target) == null)
                 return false;
             for (String enumValue : allEnumerations)
-                if (enumValue.compareToIgnoreCase(field.get(target).toString()) == 0)
+                if (enumValue.compareToIgnoreCase(field.get(target).toString().trim()) == 0)
                     return false;
         } catch (Exception ignored) {
         }
