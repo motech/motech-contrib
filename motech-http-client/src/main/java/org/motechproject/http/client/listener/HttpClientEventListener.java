@@ -1,6 +1,7 @@
 package org.motechproject.http.client.listener;
 
 
+import org.apache.log4j.Logger;
 import org.motechproject.http.client.constants.EventDataKeys;
 import org.motechproject.http.client.constants.EventSubjects;
 import org.motechproject.model.MotechEvent;
@@ -14,6 +15,7 @@ import java.util.Map;
 public class HttpClientEventListener {
 
     private RestTemplate restTemplate;
+    Logger logger = Logger.getLogger(HttpClientEventListener.class);
 
     public HttpClientEventListener(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
@@ -26,6 +28,9 @@ public class HttpClientEventListener {
     @MotechListener(subjects = EventSubjects.HTTP_REQUEST)
     public void handle(MotechEvent motechEvent) {
         Map<String,Object> parameters = motechEvent.getParameters();
-        restTemplate.postForLocation(String.valueOf(parameters.get(EventDataKeys.URL)),parameters.get(EventDataKeys.DATA));
+        String url = String.valueOf(parameters.get(EventDataKeys.URL));
+        Object requestData = parameters.get(EventDataKeys.DATA);
+        logger.info(String.format("Posting Http request -- Url: %s, Data: %s",url, String.valueOf(requestData)));
+        restTemplate.postForLocation(url, requestData);
     }
 }
