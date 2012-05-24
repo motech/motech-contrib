@@ -34,11 +34,33 @@ public class ReportDataSource {
         return beanClass.isAnnotationPresent(ReportGroup.class);
     }
 
-    public List<Object> data(String reportName, int pageNumber) {
+    public List<Object> dataForPage(String reportName, int pageNumber) {
         try {
             Method method = getDataMethod(reportName);
             if (method != null) {
                 return (List<Object>) method.invoke(controller, pageNumber);
+            }
+        } catch (IllegalAccessException e) {
+            logger.error("Data method should be public" + e.getMessage());
+            throw new RuntimeException("Data method should be public" + e.getMessage());
+        } catch (InvocationTargetException e) {
+            logger.error("Format of data method is invalid." + e.getMessage());
+            throw new RuntimeException("Format of data method is invalid." + e.getMessage());
+        } catch (IllegalArgumentException e) {
+            logger.error("Format of data method is invalid." + e.getMessage());
+            throw new RuntimeException("Format of data method is invalid." + e.getMessage());
+        } catch (ClassCastException e) {
+            logger.error("Format of data method is invalid." + e.getMessage());
+            throw new RuntimeException("Format of data method is invalid." + e.getMessage());
+        }
+        return new ArrayList<Object>();
+    }
+
+    public List<Object> data(String reportName) {
+        try {
+            Method method = getDataMethod(reportName);
+            if (method != null) {
+                return (List<Object>) method.invoke(controller);
             }
         } catch (IllegalAccessException e) {
             logger.error("Data method should be public" + e.getMessage());
@@ -62,6 +84,42 @@ public class ReportDataSource {
 
     public List<String> rowData(String reportName, Object model) {
         return new ReportDataModel(getDataMethod(reportName).getGenericReturnType()).rowData(model);
+    }
+
+    public ReportData createEntireReport(String reportName) {
+        List<String> headers = columnHeaders(reportName);
+        List<List<String>> allRowData = new ArrayList<List<String>>();
+        List<Object> data = data(reportName);
+        if (data != null && !data.isEmpty()) {
+            for (Object datum : data) {
+                allRowData.add(rowData(reportName, datum));
+            }
+        }
+
+        return new ReportData(headers, allRowData);
+    }
+
+    public ReportData createPagedReport(String reportName) {
+        boolean doneBuilding = false;
+        int pageNumber = 1;
+        List<String> headers = columnHeaders(reportName);
+        List<List<String>> allRowData = new ArrayList<List<String>>();
+
+        while (!doneBuilding) {
+            List<Object> data = dataForPage(reportName, pageNumber);
+            if (data != null && !data.isEmpty()) {
+                List<List<String>> rowsOfAPage = new ArrayList<List<String>>();
+                for (Object datum : data) {
+                    rowsOfAPage.add(rowData(reportName, datum));
+                }
+                allRowData.addAll(rowsOfAPage);
+                pageNumber++;
+            } else {
+                doneBuilding = true;
+            }
+        }
+
+        return new ReportData(headers, allRowData);
     }
 
     private Method getDataMethod(String reportName) {
