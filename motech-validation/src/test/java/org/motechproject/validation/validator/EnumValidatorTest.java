@@ -47,6 +47,14 @@ public class EnumValidatorTest {
     }
 
     @Test
+    public void validationShouldBeCaseInsensitive() throws NoSuchFieldException {
+        ClassWithValidations target = new ClassWithValidations(Enum.enumValue1.name().toUpperCase(), "enumValue1");
+        BeanPropertyBindingResult errors = new BeanPropertyBindingResult(target, "classWithValidations");
+        enumValidator.validateField(target, ClassWithValidations.class.getDeclaredField("enumField"), null, errors);
+
+        assertNull(errors.getFieldError("enumField"));
+    }
+    @Test
     public void shouldNotValidateFieldWithoutEnumerationAnnotation() throws NoSuchFieldException {
         ClassWithValidations target = new ClassWithValidations("enumValue1", "notEnumeratedValue");
         BeanPropertyBindingResult errors = new BeanPropertyBindingResult(target, "classWithValidations");
