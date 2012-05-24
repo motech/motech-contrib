@@ -36,7 +36,7 @@ public class CsvReportBuilderTest{
         File file = csvReportBuilder.build();
         FileInputStream fileInputStream = new FileInputStream(file);
         String fileContents = IOUtils.toString(fileInputStream);
-        String expectedString  =  "Header1,Header\nFlw1,Location\nFlw2,Location\n";
+        String expectedString  =  "Header1,Header2\nFlw1,Location1\nFlw2,Location2\n";
         assertEquals(expectedString, fileContents);
         FileUtils.deleteQuietly(new File(fileName));
     }

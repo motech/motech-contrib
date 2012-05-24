@@ -58,7 +58,7 @@ public class CsvReportBuilder {
     }
 
     private String replaceTrailingCommaByNewline(String csvRow) {
-        int lastButOneCharacterIndex = csvRow.length() - 2;
-        return csvRow.substring(0, lastButOneCharacterIndex).concat("\n");
+        int lastCharacterIndex = csvRow.length() - 1;
+        return csvRow.substring(0, lastCharacterIndex).concat("\n");
     }
 }
