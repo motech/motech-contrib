@@ -2,10 +2,10 @@
     <message nature="$status">$message</message>
 #if( $errors.size() > 0 )
     <errors>
-#foreach( $code in $errors.keySet() )
+#foreach( $error in $errors )
         <error>
-            <code>$code</code>
-            <message>$errors.get($code)</message>
+            <code>$error.code</code>
+            <message>$error.message</message>
         </error>
 #end
     </errors>

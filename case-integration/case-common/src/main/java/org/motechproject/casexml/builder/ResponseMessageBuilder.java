@@ -30,7 +30,7 @@ public class ResponseMessageBuilder {
         VelocityContext context = new VelocityContext();
         context.put("message", exception.getMessage());
         context.put("status", "submit_error");
-        context.put("errors", exception.getErrorMessages());
+        context.put("errors", exception.getErrors());
         StringWriter writer = new StringWriter();
         template.merge(context, writer);
         return writer.toString();

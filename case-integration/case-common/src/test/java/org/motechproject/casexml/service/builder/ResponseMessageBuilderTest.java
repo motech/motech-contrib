@@ -4,6 +4,7 @@ import com.sun.org.apache.xerces.internal.parsers.DOMParser;
 import junit.framework.Assert;
 import org.junit.Test;
 import org.motechproject.casexml.builder.ResponseMessageBuilder;
+import org.motechproject.casexml.service.exception.CaseError;
 import org.motechproject.casexml.service.exception.CaseException;
 import org.motechproject.util.StringUtil;
 import org.springframework.http.HttpStatus;
@@ -19,21 +20,20 @@ import javax.xml.transform.stream.StreamResult;
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
+
+import static java.util.Arrays.asList;
 
 public class ResponseMessageBuilderTest {
 
     public static String newline = System.getProperty("line.separator");
 
     @Test
-    public void shouldCreateErrorResponseForCaseExceptionWithErrorMessages(){
+    public void shouldCreateErrorResponseForCaseExceptionWithErrorMessages() {
         ResponseMessageBuilder messageBuilder = new ResponseMessageBuilder();
 
-        Map<String,String> errorMessages = new HashMap<String,String>();
-        errorMessages.put("520","Address Validation failed");
-        errorMessages.put("521","TBIxd Validation failed");
-        CaseException exception = new CaseException("Validation failed", HttpStatus.BAD_REQUEST,errorMessages);
+        List<CaseError> errors = asList(new CaseError("520", "Address Validation failed"), new CaseError("521", "TBIxd Validation failed"));
+        CaseException exception = new CaseException("Validation failed", HttpStatus.BAD_REQUEST, errors);
 
         String responseMessage = messageBuilder.createResponseMessage(exception);
 
@@ -41,12 +41,12 @@ public class ResponseMessageBuilderTest {
                 "    <message nature=\"submit_error\">Validation failed</message>" + newline +
                 "    <errors>" + newline +
                 "        <error>" + newline +
-                "            <code>521</code>" + newline +
-                "            <message>TBIxd Validation failed</message>" + newline +
-                "        </error>" + newline +
-                "        <error>" + newline +
                 "            <code>520</code>" + newline +
                 "            <message>Address Validation failed</message>" + newline +
+                "        </error>" + newline +
+                "        <error>" + newline +
+                "            <code>521</code>" + newline +
+                "            <message>TBIxd Validation failed</message>" + newline +
                 "        </error>" + newline +
                 "    </errors>" + newline +
                 "</OpenRosaResponse>";
@@ -54,7 +54,7 @@ public class ResponseMessageBuilderTest {
     }
 
     @Test
-    public void shouldCreateErrorResponseForCaseExceptionWithoutErrorMessages(){
+    public void shouldCreateErrorResponseForCaseExceptionWithoutErrorMessages() {
         ResponseMessageBuilder messageBuilder = new ResponseMessageBuilder();
 
         CaseException exception = new CaseException("Validation failed", HttpStatus.BAD_REQUEST, null);
@@ -64,7 +64,7 @@ public class ResponseMessageBuilderTest {
         String expectedResponse = "<OpenRosaResponse xmlns=\"http://openrosa.org/http/response\">" + newline +
                 "    <message nature=\"submit_error\">Validation failed</message>" + newline +
                 "</OpenRosaResponse>";
-        compareXmlString(expectedResponse,responseMessage);
+        compareXmlString(expectedResponse, responseMessage);
     }
 
     @Test
@@ -96,7 +96,7 @@ public class ResponseMessageBuilderTest {
     }
 
     private Document documentFrom(String xmlDocument) {
-        if(StringUtil.isNullOrEmpty(xmlDocument)) {
+        if (StringUtil.isNullOrEmpty(xmlDocument)) {
             throw new IllegalArgumentException();
         }
 
@@ -110,8 +110,7 @@ public class ResponseMessageBuilderTest {
             return parser.getDocument();
         } catch (IOException ex) {
             throw new RuntimeException(ex);
-        }
-        catch (SAXException ex){
+        } catch (SAXException ex) {
             throw new RuntimeException(ex);
         }
     }

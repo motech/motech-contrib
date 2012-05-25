@@ -1,9 +1,10 @@
 package org.motechproject.provider.registration.exception;
 
+import org.motechproject.casexml.service.exception.CaseError;
 import org.motechproject.casexml.service.exception.CaseException;
 import org.springframework.http.HttpStatus;
 
-import java.util.Map;
+import java.util.List;
 
 public class OpenRosaRegistrationValidationException extends CaseException {
 
@@ -20,12 +21,12 @@ public class OpenRosaRegistrationValidationException extends CaseException {
         super(message, statusCode);
     }
 
-    public OpenRosaRegistrationValidationException(Exception cause, String message, HttpStatus httpStatusCode, Map<String, String> errorMessages) {
-        super(cause, message, httpStatusCode, errorMessages);
+    public OpenRosaRegistrationValidationException(Exception cause, String message, HttpStatus httpStatusCode, List<CaseError> errors) {
+        super(cause, message, httpStatusCode, errors);
     }
 
-    public OpenRosaRegistrationValidationException(String message, HttpStatus httpStatusCode, Map<String, String> errorMessages) {
-        super(message, httpStatusCode, errorMessages);
+    public OpenRosaRegistrationValidationException(String message, HttpStatus httpStatusCode, List<CaseError> errors) {
+        super(message, httpStatusCode, errors);
     }
 
 }
