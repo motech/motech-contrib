@@ -9,6 +9,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import static org.apache.commons.lang.StringUtils.*;
 
@@ -56,11 +57,11 @@ public class ReportDataSource {
         return new ArrayList<Object>();
     }
 
-    public List<Object> data(String reportName) {
+    public List<Object> data(String reportName, Map<String, String> criteria) {
         try {
             Method method = getDataMethod(reportName);
             if (method != null) {
-                return (List<Object>) method.invoke(controller);
+                return (List<Object>) method.invoke(controller, criteria);
             }
         } catch (IllegalAccessException e) {
             logger.error("Data method should be public" + e.getMessage());
@@ -86,10 +87,10 @@ public class ReportDataSource {
         return new ReportDataModel(getDataMethod(reportName).getGenericReturnType()).rowData(model);
     }
 
-    public ReportData createEntireReport(String reportName) {
+    public ReportData createEntireReport(String reportName, Map<String, String> criteria) {
         List<String> headers = columnHeaders(reportName);
         List<List<String>> allRowData = new ArrayList<List<String>>();
-        List<Object> data = data(reportName);
+        List<Object> data = data(reportName, criteria);
         if (data != null && !data.isEmpty()) {
             for (Object datum : data) {
                 allRowData.add(rowData(reportName, datum));

@@ -13,7 +13,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static junit.framework.Assert.assertEquals;
 import static org.mockito.Mockito.when;
@@ -31,8 +33,9 @@ public class CsvReportBuilderTest{
         List<String> columnHeaders = Arrays.asList("Header1", "Header2");
         List<List<String>> allRowData = Arrays.asList(Arrays.asList("Flw1", "Location1"), Arrays.asList("Flw2", "Location2"));
         int pageNumber = 1;
-        when(reportDataSource.createEntireReport(reportName)).thenReturn(new ReportData(columnHeaders,allRowData));
-        CsvReportBuilder csvReportBuilder = new CsvReportBuilder(fileName, reportName, reportDataSource);
+        Map<String, String> criteria = new HashMap<String, String>();
+        when(reportDataSource.createEntireReport(reportName, criteria)).thenReturn(new ReportData(columnHeaders,allRowData));
+        CsvReportBuilder csvReportBuilder = new CsvReportBuilder(fileName, reportName, reportDataSource, criteria);
         File file = csvReportBuilder.build();
         FileInputStream fileInputStream = new FileInputStream(file);
         String fileContents = IOUtils.toString(fileInputStream);

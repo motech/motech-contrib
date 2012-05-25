@@ -10,18 +10,21 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 public class CsvReportBuilder {
 
     private File file;
     private ReportDataSource reportDataSource;
+    private Map<String, String> criteria;
     private String reportName;
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 
-    public CsvReportBuilder(String fileName, String reportName, ReportDataSource reportDataSource) {
+    public CsvReportBuilder(String fileName, String reportName, ReportDataSource reportDataSource, Map<String, String> criteria) {
         this.reportName = reportName;
         this.reportDataSource = reportDataSource;
+        this.criteria = criteria;
         file = new File(fileName);
     }
 
@@ -38,7 +41,7 @@ public class CsvReportBuilder {
 
     private void writeCsvReportToFile() throws IOException {
         BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file));
-        ReportData report = reportDataSource.createEntireReport(reportName);
+        ReportData report = reportDataSource.createEntireReport(reportName, criteria);
         bufferedWriter.write(getCsvRow(report.getColumnHeaders()));
 
         for (List<String> row : report.getAllRowData())

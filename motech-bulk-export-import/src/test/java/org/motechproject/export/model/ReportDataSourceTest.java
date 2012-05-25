@@ -6,7 +6,9 @@ import org.motechproject.export.annotation.ReportGroup;
 import org.motechproject.export.controller.sample.SampleData;
 import org.motechproject.export.controller.sample.SampleReportController;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static java.util.Arrays.asList;
 import static junit.framework.Assert.assertEquals;
@@ -71,7 +73,8 @@ public class ReportDataSourceTest {
     @Test
     public void shouldCreateAnEntireReportWithHeadersAndRows(){
         ReportDataSource reportDataSource = new ReportDataSource(new ValidReportDataSource());
-        ReportData report = reportDataSource.createEntireReport("sampleReport");
+        Map<String, String> criteria = new HashMap<String, String>();
+        ReportData report = reportDataSource.createEntireReport("sampleReport", criteria);
 
         List<String> columnHeaders = report.getColumnHeaders();
         List<List<String>> allRowData = report.getAllRowData();
@@ -106,7 +109,7 @@ public class ReportDataSourceTest {
 class ValidReportDataSource {
 
     @Report
-    public List<SampleData> sampleReport() {
+    public List<SampleData> sampleReport(Map<String, String> criteria) {
         return asList(new SampleData("id"));
     }
 }
