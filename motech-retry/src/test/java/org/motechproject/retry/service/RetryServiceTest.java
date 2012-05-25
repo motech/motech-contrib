@@ -7,7 +7,7 @@ import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.motechproject.model.MotechEvent;
-import org.motechproject.model.RunOnceSchedulableJob;
+import org.motechproject.model.RepeatingSchedulableJob;
 import org.motechproject.retry.dao.AllRetries;
 import org.motechproject.retry.domain.RetryRecord;
 import org.motechproject.retry.domain.RetryRequest;
@@ -39,7 +39,7 @@ public class RetryServiceTest {
     }
 
     @Test
-    public void shouldCreateRetrySchedule() {
+    public void shouldUnscheduleAndCreateRetrySchedule() {
         String name = "retry-schedule-name";
         String externalId = "uniqueExternalId";
         DateTime startTime = DateUtil.now();
@@ -49,14 +49,18 @@ public class RetryServiceTest {
 
         retryService.schedule(new RetryRequest(name, externalId, startTime));
 
-        ArgumentCaptor<RunOnceSchedulableJob> jobCaptor = ArgumentCaptor.forClass(RunOnceSchedulableJob.class);
-        verify(mockSchedulerService).scheduleRunOnceJob(jobCaptor.capture());
-        RunOnceSchedulableJob actualJob = jobCaptor.getValue();
+        ArgumentCaptor<RepeatingSchedulableJob> jobCaptor = ArgumentCaptor.forClass(RepeatingSchedulableJob.class);
+        verify(mockSchedulerService).safeUnscheduleJob(RetryService.RETRY_SUBJECT,externalId);
+        verify(mockSchedulerService).scheduleRepeatingJob(jobCaptor.capture());
+        RepeatingSchedulableJob actualJob = jobCaptor.getValue();
         assertThat(actualJob.getMotechEvent(), is(new MotechEvent(RetryService.RETRY_SUBJECT, new HashMap<String, Object>() {{
             put(RetryService.MAX_RETRY_COUNT, 2);
             put(RetryService.RETRY_INTERVAL, Period.parse("2 hours", FORMATTER));
         }})));
-        assertThat(actualJob.getStartDate(), is(startTime.toDate()));
+        assertThat(actualJob.getStartTime(), is(startTime.toDate()));
+        assertThat(actualJob.getEndTime(), is(startTime.plusHours(4).toDate()));
+        assertThat(actualJob.getRepeatCount(), is(2));
+        assertThat(actualJob.getRepeatInterval(), is(Period.parse("2 hours", FORMATTER).toStandardDuration().getMillis()));
     }
 
     private RetryRecord retryRecord(String name, int retryCount, List<String> retryInterval) {
