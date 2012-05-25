@@ -25,7 +25,7 @@ public class CsvReportBuilder {
         this.reportName = reportName;
         this.reportDataSource = reportDataSource;
         this.criteria = criteria;
-        file = new File(fileName);
+        file = (fileName == null) ? new File(reportDataSource.name() + "-report.csv") : new File(fileName);
     }
 
     public File build() {

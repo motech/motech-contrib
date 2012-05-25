@@ -32,15 +32,37 @@ public class CsvReportBuilderTest{
         String fileName = "report_file";
         List<String> columnHeaders = Arrays.asList("Header1", "Header2");
         List<List<String>> allRowData = Arrays.asList(Arrays.asList("Flw1", "Location1"), Arrays.asList("Flw2", "Location2"));
-        int pageNumber = 1;
         Map<String, String> criteria = new HashMap<String, String>();
         when(reportDataSource.createEntireReport(reportName, criteria)).thenReturn(new ReportData(columnHeaders,allRowData));
+
         CsvReportBuilder csvReportBuilder = new CsvReportBuilder(fileName, reportName, reportDataSource, criteria);
         File file = csvReportBuilder.build();
+
         FileInputStream fileInputStream = new FileInputStream(file);
         String fileContents = IOUtils.toString(fileInputStream);
         String expectedString  =  "Header1,Header2\nFlw1,Location1\nFlw2,Location2\n";
+        assertEquals(fileName, file.getName());
         assertEquals(expectedString, fileContents);
         FileUtils.deleteQuietly(new File(fileName));
+    }
+
+    @Test
+    public void shouldCreateAnOutputFileWithDefaultNameIfNotGiven() throws IOException {
+        String reportName = "csv_report";
+        List<String> columnHeaders = Arrays.asList("Header1", "Header2");
+        List<List<String>> allRowData = Arrays.asList(Arrays.asList("Flw1", "Location1"), Arrays.asList("Flw2", "Location2"));
+        Map<String, String> criteria = new HashMap<String, String>();
+        when(reportDataSource.createEntireReport(reportName, criteria)).thenReturn(new ReportData(columnHeaders,allRowData));
+        when(reportDataSource.name()).thenReturn("SampleData");
+
+        CsvReportBuilder csvReportBuilder = new CsvReportBuilder(null, reportName, reportDataSource, criteria);
+        File file = csvReportBuilder.build();
+
+        FileInputStream fileInputStream = new FileInputStream(file);
+        String fileContents = IOUtils.toString(fileInputStream);
+        String expectedString  =  "Header1,Header2\nFlw1,Location1\nFlw2,Location2\n";
+        assertEquals("SampleData-report.csv", file.getName());
+        assertEquals(expectedString, fileContents);
+        FileUtils.deleteQuietly(new File("SampleData-report.csv"));
     }
 }
