@@ -1,7 +1,6 @@
 package org.motechproject.retry.service;
 
 import org.joda.time.DateTime;
-import org.joda.time.Duration;
 import org.joda.time.Period;
 import org.motechproject.model.MotechEvent;
 import org.motechproject.model.RepeatingSchedulableJob;
@@ -15,10 +14,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.Date;
 import java.util.HashMap;
 
+import static org.motechproject.retry.EventKeys.*;
+
 public class RetryService {
-    public static final String RETRY_SUBJECT = "org.motechproject.retry";
-    public static final String MAX_RETRY_COUNT = "MAX_RETRY_COUNT";
-    public static final String RETRY_INTERVAL = "RETRY_INTERVAL";
+    public static final String RETRY_INTERNAL_SUBJECT = "org.motechproject.retry.internal";
     private MotechSchedulerService schedulerService;
     private AllRetries allRetries;
 
@@ -31,22 +30,23 @@ public class RetryService {
     public void schedule(RetryRequest retryRequest) {
         RetryRecord retryRecord = allRetries.getRetryRecord(retryRequest.getName());
         allRetries.createRetry(new Retry(retryRequest.getName(), retryRequest.getExternalId(), retryRequest.getStartTime(), retryRecord.retryCount(), retryRecord.retryInterval()));
-        schedulerService.safeUnscheduleJob(RETRY_SUBJECT, retryRequest.getExternalId());
-        schedulerService.scheduleRepeatingJob(new RepeatingSchedulableJob(motechEvent(retryRecord), retryRequest.getStartTime().toDate(),
+        schedulerService.safeUnscheduleJob(RETRY_INTERNAL_SUBJECT, retryRequest.getExternalId());
+        schedulerService.scheduleRepeatingJob(new RepeatingSchedulableJob(motechEvent(retryRecord, retryRequest), retryRequest.getStartTime().toDate(),
                 endTime(retryRequest.getStartTime(), retryRecord.retryCount(), retryRecord.retryInterval()), retryRecord.retryCount(), intervalInMillis(retryRecord)));
     }
 
     private Date endTime(DateTime startTime, Integer repeatCount, Period retryInterval) {
-        Duration standardDuration = retryInterval.toStandardDuration();
-        return startTime.plus(standardDuration.getMillis() * repeatCount).toDate();
+        return startTime.plus(retryInterval.toStandardDuration().getMillis() * repeatCount).toDate();
     }
 
     private long intervalInMillis(RetryRecord retryRecord) {
         return (retryRecord.retryInterval().toStandardDuration().getMillis());
     }
 
-    private MotechEvent motechEvent(final RetryRecord retryRecord) {
-        return new MotechEvent(RETRY_SUBJECT, new HashMap<String, Object>() {{
+    private MotechEvent motechEvent(final RetryRecord retryRecord, final RetryRequest retryRequest) {
+        return new MotechEvent(RETRY_INTERNAL_SUBJECT, new HashMap<String, Object>() {{
+            put(EXTERNAL_ID, retryRequest.getExternalId());
+            put(NAME, retryRecord.name());
             put(MAX_RETRY_COUNT, retryRecord.retryCount());
             put(RETRY_INTERVAL, retryRecord.retryInterval());
         }});

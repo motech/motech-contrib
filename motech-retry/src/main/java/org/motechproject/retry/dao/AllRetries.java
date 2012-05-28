@@ -74,15 +74,21 @@ public class AllRetries extends MotechBaseRepository<Retry> {
     }
 
     public void createRetry(Retry retry) {
-        Retry existingRetry = getActiveRetry(retry.name(), retry.externalId(), retry.startTime());
+        Retry existingRetry = getActiveRetryWithStartTime(retry.name(), retry.externalId(), retry.startTime());
         if (existingRetry == null) {
             add(retry);
         }
     }
 
     @View(name = "get_retry_for_externalId_name_startTime", map = "function(doc) { if(doc.type === 'Retry' && doc.retryStatus === 'ACTIVE') emit([doc.externalId, doc.name, doc.startTime], doc) }")
-    private Retry getActiveRetry(String name, String externalId, DateTime startTime) {
+    private Retry getActiveRetryWithStartTime(String name, String externalId, DateTime startTime) {
         List<Retry> retries = queryView("get_retry_for_externalId_name_startTime", ComplexKey.of(externalId, name, startTime));
+        return retries.isEmpty() ? null : retries.get(0);
+    }
+
+    @View(name = "get_retry_for_externalId_name", map = "function(doc) { if(doc.type === 'Retry' && doc.retryStatus === 'ACTIVE') emit([doc.externalId, doc.name], doc) }")
+    public Retry getActiveRetry(String externalId, String name) {
+        List<Retry> retries = queryView("get_retry_for_externalId_name", ComplexKey.of(externalId, name));
         return retries.isEmpty() ? null : retries.get(0);
     }
 }

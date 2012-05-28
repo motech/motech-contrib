@@ -8,6 +8,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.motechproject.model.MotechEvent;
 import org.motechproject.model.RepeatingSchedulableJob;
+import org.motechproject.retry.EventKeys;
 import org.motechproject.retry.dao.AllRetries;
 import org.motechproject.retry.domain.RetryRecord;
 import org.motechproject.retry.domain.RetryRequest;
@@ -23,6 +24,7 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
+import static org.motechproject.retry.service.RetryService.RETRY_INTERNAL_SUBJECT;
 import static org.motechproject.retry.util.PeriodParser.FORMATTER;
 
 public class RetryServiceTest {
@@ -50,13 +52,15 @@ public class RetryServiceTest {
         retryService.schedule(new RetryRequest(name, externalId, startTime));
 
         ArgumentCaptor<RepeatingSchedulableJob> jobCaptor = ArgumentCaptor.forClass(RepeatingSchedulableJob.class);
-        verify(mockSchedulerService).safeUnscheduleJob(RetryService.RETRY_SUBJECT,externalId);
+        verify(mockSchedulerService).safeUnscheduleJob(RETRY_INTERNAL_SUBJECT, externalId);
         verify(mockSchedulerService).scheduleRepeatingJob(jobCaptor.capture());
+
         RepeatingSchedulableJob actualJob = jobCaptor.getValue();
-        assertThat(actualJob.getMotechEvent(), is(new MotechEvent(RetryService.RETRY_SUBJECT, new HashMap<String, Object>() {{
-            put(RetryService.MAX_RETRY_COUNT, 2);
-            put(RetryService.RETRY_INTERVAL, Period.parse("2 hours", FORMATTER));
+        assertThat(actualJob.getMotechEvent(), is(new MotechEvent(RETRY_INTERNAL_SUBJECT, new HashMap<String, Object>() {{
+            put(EventKeys.MAX_RETRY_COUNT, 2);
+            put(EventKeys.RETRY_INTERVAL, Period.parse("2 hours", FORMATTER));
         }})));
+
         assertThat(actualJob.getStartTime(), is(startTime.toDate()));
         assertThat(actualJob.getEndTime(), is(startTime.plusHours(4).toDate()));
         assertThat(actualJob.getRepeatCount(), is(2));

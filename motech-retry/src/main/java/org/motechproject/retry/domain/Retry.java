@@ -75,4 +75,20 @@ public class Retry extends MotechBaseDataObject {
     public void setRetryStatus(RetryStatus retryStatus) {
         this.retryStatus = retryStatus;
     }
+
+    public boolean hasRetriesLeft() {
+        return (retriesLeft > 0);
+    }
+
+    public RetryStatus retryStatus() {
+        return retryStatus;
+    }
+
+    public Integer retriesLeft() {
+        return retriesLeft;
+    }
+
+    public void decrementRetriesLeft() {
+        retriesLeft--;
+    }
 }
