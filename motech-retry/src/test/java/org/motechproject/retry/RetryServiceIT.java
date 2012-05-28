@@ -7,7 +7,6 @@ import org.junit.runner.RunWith;
 import org.motechproject.retry.dao.AllRetries;
 import org.motechproject.retry.domain.Retry;
 import org.motechproject.retry.domain.RetryRequest;
-import org.motechproject.retry.domain.RetryStatus;
 import org.motechproject.retry.service.RetryService;
 import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
@@ -17,6 +16,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -43,8 +43,7 @@ public class RetryServiceIT {
 
         retryService.fulfill(externalId, name);
 
-        activeRetry = allRetries.getActiveRetry(externalId, name);
-        assertThat(activeRetry.retryStatus(), is(RetryStatus.COMPLETED));
+        assertNull(allRetries.getActiveRetry(externalId, name));
     }
 
     @After

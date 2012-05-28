@@ -54,7 +54,7 @@ public class RetryServiceTest {
         retryService.schedule(new RetryRequest(name, externalId, startTime));
 
         ArgumentCaptor<RepeatingSchedulableJob> jobCaptor = ArgumentCaptor.forClass(RepeatingSchedulableJob.class);
-        verify(mockSchedulerService).safeUnscheduleJob(RETRY_INTERNAL_SUBJECT, externalId);
+        verify(mockSchedulerService).safeUnscheduleJob(RETRY_INTERNAL_SUBJECT, externalId + "." + name + "-repeat");
         verify(mockSchedulerService).scheduleRepeatingJob(jobCaptor.capture());
 
         RepeatingSchedulableJob actualJob = jobCaptor.getValue();
