@@ -6,4 +6,5 @@ public interface EventKeys {
     String RETRY_INTERVAL = "RETRY_INTERVAL";
     String NAME = "NAME";
     String RETRY_SUBJECT = "org.motechproject.retry";
+    String START_TIME = "START_TIME";
 }

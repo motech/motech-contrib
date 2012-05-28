@@ -68,6 +68,7 @@ public class RetryService {
             put(NAME, name);
             put(MAX_RETRY_COUNT, retryRecord.retryCount());
             put(RETRY_INTERVAL, retryRecord.retryInterval());
+            put(START_TIME, retryRequest.getStartTime());
             put(MotechSchedulerService.JOB_ID_KEY, jobIdKey(externalId, name));
         }});
     }

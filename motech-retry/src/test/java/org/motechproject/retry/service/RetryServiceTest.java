@@ -46,7 +46,7 @@ public class RetryServiceTest {
     public void shouldUnscheduleAndCreateRetrySchedule() {
         final String name = "retry-schedule-name";
         final String externalId = "uniqueExternalId";
-        DateTime startTime = DateUtil.now();
+        final DateTime startTime = DateUtil.now();
 
         RetryRecord retryRecord = retryRecord(name, 2, asList("2 hours"));
         when(mockAllRetries.getRetryRecord(name)).thenReturn(retryRecord);
@@ -63,6 +63,7 @@ public class RetryServiceTest {
             put(RETRY_INTERVAL, Period.parse("2 hours", FORMATTER));
             put(EXTERNAL_ID, externalId);
             put(NAME, name);
+            put(START_TIME, startTime);
             put(MotechSchedulerService.JOB_ID_KEY, externalId + "." + name);
         }})));
 
