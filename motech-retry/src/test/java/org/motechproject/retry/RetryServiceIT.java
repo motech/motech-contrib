@@ -7,6 +7,7 @@ import org.junit.runner.RunWith;
 import org.motechproject.retry.dao.AllRetries;
 import org.motechproject.retry.domain.Retry;
 import org.motechproject.retry.domain.RetryRequest;
+import org.motechproject.retry.domain.RetryStatus;
 import org.motechproject.retry.service.RetryService;
 import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
@@ -40,6 +41,10 @@ public class RetryServiceIT {
         assertThat(activeRetry.hasRetriesLeft(), is(true));
         assertThat(activeRetry.startTime(), is(startTime));
 
+        retryService.fulfill(externalId, name);
+
+        activeRetry = allRetries.getActiveRetry(externalId, name);
+        assertThat(activeRetry.retryStatus(), is(RetryStatus.COMPLETED));
     }
 
     @After

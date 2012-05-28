@@ -49,7 +49,7 @@ public class RetryInternalHandlerTest {
 
         retryInternalHandler.handle(event);
 
-        assertThat(retry.retryStatus(), is(RetryStatus.INACTIVE));
+        assertThat(retry.retryStatus(), is(RetryStatus.DEFAULTED));
 
         assertMotechEvent(true);
     }

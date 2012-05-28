@@ -9,8 +9,10 @@ import org.mockito.Mock;
 import org.motechproject.model.MotechEvent;
 import org.motechproject.model.RepeatingSchedulableJob;
 import org.motechproject.retry.dao.AllRetries;
+import org.motechproject.retry.domain.Retry;
 import org.motechproject.retry.domain.RetryRecord;
 import org.motechproject.retry.domain.RetryRequest;
+import org.motechproject.retry.domain.RetryStatus;
 import org.motechproject.scheduler.MotechSchedulerService;
 import org.motechproject.util.DateUtil;
 
@@ -69,6 +71,22 @@ public class RetryServiceTest {
         assertThat(actualJob.getRepeatCount(), is(2));
         assertThat(actualJob.getRepeatInterval(), is(Period.parse("2 hours", FORMATTER).toStandardDuration().getMillis()));
     }
+
+    @Test
+    public void shouldFulFillExistingActiveSchedule() {
+        final String name = "retry-schedule-name";
+        final String externalId = "uniqueExternalId";
+        DateTime startTime = DateUtil.now();
+
+        Retry retry = new Retry(name, externalId, startTime, 0, Period.days(1));
+        retry.setRetryStatus(RetryStatus.ACTIVE);
+        when(mockAllRetries.getActiveRetry(externalId, name)).thenReturn(retry);
+
+        retryService.fulfill(externalId, name);
+
+        assertThat(retry.retryStatus(), is(RetryStatus.COMPLETED));
+    }
+
 
     private RetryRecord retryRecord(String name, int retryCount, List<String> retryInterval) {
         RetryRecord retryRecord = new RetryRecord();

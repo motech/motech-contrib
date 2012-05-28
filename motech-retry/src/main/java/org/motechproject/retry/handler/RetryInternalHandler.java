@@ -36,7 +36,7 @@ public class RetryInternalHandler {
         activeRetry.decrementRetriesLeft();
 
         boolean isLastEvent = !activeRetry.hasRetriesLeft();
-        if (isLastEvent) activeRetry.setRetryStatus(RetryStatus.INACTIVE);
+        if (isLastEvent) activeRetry.setRetryStatus(RetryStatus.DEFAULTED);
         allRetries.update(activeRetry);
         return isLastEvent;
     }

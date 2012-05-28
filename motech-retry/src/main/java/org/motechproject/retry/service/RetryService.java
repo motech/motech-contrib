@@ -8,6 +8,7 @@ import org.motechproject.retry.dao.AllRetries;
 import org.motechproject.retry.domain.Retry;
 import org.motechproject.retry.domain.RetryRecord;
 import org.motechproject.retry.domain.RetryRequest;
+import org.motechproject.retry.domain.RetryStatus;
 import org.motechproject.scheduler.MotechSchedulerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -32,9 +33,22 @@ public class RetryService {
     public void schedule(RetryRequest retryRequest) {
         RetryRecord retryRecord = allRetries.getRetryRecord(retryRequest.getName());
         allRetries.createRetry(new Retry(retryRequest.getName(), retryRequest.getExternalId(), retryRequest.getStartTime(), retryRecord.retryCount(), retryRecord.retryInterval()));
-        schedulerService.safeUnscheduleJob(RETRY_INTERNAL_SUBJECT, retryRequest.getExternalId());
+        unscheduleRetryJob(retryRequest.getExternalId(), retryRequest.getName());
         schedulerService.scheduleRepeatingJob(new RepeatingSchedulableJob(motechEvent(retryRecord, retryRequest), retryRequest.getStartTime().toDate(),
                 endTime(retryRequest.getStartTime(), retryRecord.retryCount(), retryRecord.retryInterval()), retryRecord.retryCount(), intervalInMillis(retryRecord)));
+    }
+
+    private void unscheduleRetryJob(String externalId, String name) {
+        schedulerService.safeUnscheduleJob(RETRY_INTERNAL_SUBJECT, jobIdKey(externalId, name) + "-repeat");
+    }
+
+    public void fulfill(String externalId, String name) {
+        Retry activeRetry = allRetries.getActiveRetry(externalId, name);
+        if (activeRetry != null) {
+            activeRetry.setRetryStatus(RetryStatus.COMPLETED);
+            allRetries.update(activeRetry);
+            unscheduleRetryJob(externalId, name);
+        }
     }
 
     private Date endTime(DateTime startTime, Integer repeatCount, Period retryInterval) {
@@ -61,5 +75,4 @@ public class RetryService {
     private String jobIdKey(String externalId, String name) {
         return String.format("%s.%s", externalId, name);
     }
-
 }
