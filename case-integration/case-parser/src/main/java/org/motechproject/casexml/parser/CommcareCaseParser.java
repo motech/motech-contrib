@@ -14,16 +14,19 @@ import org.xml.sax.SAXException;
 import java.io.IOException;
 import java.io.StringReader;
 
+import static org.apache.commons.lang.StringUtils.trimToEmpty;
+
 public class CommcareCaseParser<T> {
 
     CaseMapper<T> domainMapper;
     private String xmlDoc;
     private String caseAction;
 
-    public CommcareCaseParser(Class<T> clazz,String xmlDocument) {
+    public CommcareCaseParser(Class<T> clazz, String xmlDocument) {
         domainMapper = new CaseMapper<T>(clazz);
-         this.xmlDoc = xmlDocument;
+        this.xmlDoc = xmlDocument;
     }
+
     public T parseCase() throws CaseParserException {
         DOMParser parser = new DOMParser();
 
@@ -35,54 +38,53 @@ public class CommcareCaseParser<T> {
             ccCase = parseCase(parser.getDocument());
         } catch (IOException ex) {
             throw new CaseParserException(ex, "Exception while trying to parse caseXml");
-        }
-        catch (SAXException ex){
+        } catch (SAXException ex) {
             throw new CaseParserException(ex, "Exception while trying to parse caseXml");
         }
 
         return domainMapper.mapToDomainObject(ccCase);
     }
 
-    public Case parseCase(Document document){
-        Element item = (Element)document.getElementsByTagName("case").item(0);
+    public Case parseCase(Document document) {
+        Element item = (Element) document.getElementsByTagName("case").item(0);
         Case ccCase = createCase(item);
-        updateAction(ccCase,item);
+        updateAction(ccCase, item);
         return ccCase;
     }
 
     private Case createCase(Element item) {
         Case ccCase = new Case();
 
-        ccCase.setCase_id(item.getAttribute("case_id"));
-        ccCase.setApi_key(item.getAttribute("api_key"));
-        ccCase.setDate_modified(item.getAttribute("date_modified"));
-        ccCase.setUser_id(item.getAttribute("user_id"));
+        ccCase.setCase_id(trimToEmpty(item.getAttribute("case_id")));
+        ccCase.setApi_key(trimToEmpty(item.getAttribute("api_key")));
+        ccCase.setDate_modified(trimToEmpty(item.getAttribute("date_modified")));
+        ccCase.setUser_id(trimToEmpty(item.getAttribute("user_id")));
         return ccCase;
     }
 
-    private void updateAction(Case ccCase,Element item) {
+    private void updateAction(Case ccCase, Element item) {
 
-      if(getMatchingChildNode(item, "create") != null)   {
-          setCaseAction(ccCase,"CREATE");
-          populateValuesForCreation(ccCase, item);
-          populateValuesFor(ccCase, item, "update");
+        if (getMatchingChildNode(item, "create") != null) {
+            setCaseAction(ccCase, "CREATE");
+            populateValuesForCreation(ccCase, item);
+            populateValuesFor(ccCase, item, "update");
 
-      } else {
-          if(getMatchingChildNode(item, "update") != null){
-              setCaseAction(ccCase, "UPDATE");
-              populateValuesFor(ccCase, item, "update");
-          }else {
-              if (getMatchingChildNode(item, "close") != null) {
-                  setCaseAction(ccCase, "CLOSE");
-              }
-          }
-      }
-      if (getMatchingChildNode(item, "index") != null) {
-          populateValuesFor(ccCase, item, "index");
-      }
+        } else {
+            if (getMatchingChildNode(item, "update") != null) {
+                setCaseAction(ccCase, "UPDATE");
+                populateValuesFor(ccCase, item, "update");
+            } else {
+                if (getMatchingChildNode(item, "close") != null) {
+                    setCaseAction(ccCase, "CLOSE");
+                }
+            }
+        }
+        if (getMatchingChildNode(item, "index") != null) {
+            populateValuesFor(ccCase, item, "index");
+        }
     }
 
-    private void setCaseAction(Case ccCase,String action) {
+    private void setCaseAction(Case ccCase, String action) {
         this.caseAction = action;
         ccCase.setAction(action);
     }
@@ -97,33 +99,34 @@ public class CommcareCaseParser<T> {
         Node matchingNode = getMatchingNode(item, tagName);
         NodeList childNodes = matchingNode.getChildNodes();
 
-        for(int i = 0;i<childNodes.getLength();i++){
+        for (int i = 0; i < childNodes.getLength(); i++) {
             Node childNode = childNodes.item(i);
-            if(!childNode.getNodeName().contains("text"))
-                ccCase.AddFieldvalue(childNode.getNodeName(),childNode.getTextContent());
+            if (!childNode.getNodeName().contains("text"))
+                ccCase.AddFieldvalue(childNode.getNodeName(), trimToEmpty(childNode.getTextContent()));
         }
     }
 
     private String getTextValue(Element ele, String tagName) {
         String textVal = null;
         NodeList nl = ele.getElementsByTagName(tagName);
-        if(nl != null && nl.getLength() > 0) {
-            Element el = (Element)nl.item(0);
+        if (nl != null && nl.getLength() > 0) {
+            Element el = (Element) nl.item(0);
             Node textNode = el.getFirstChild();
-            if(textNode != null)
+            if (textNode != null)
                 textVal = textNode.getNodeValue();
         }
-        return textVal;
+
+        return trimToEmpty(textVal);
     }
 
     private Node getMatchingChildNode(Element ele, String tagName) {
-        return getMatchingNode(ele,tagName);
+        return getMatchingNode(ele, tagName);
     }
 
     private Node getMatchingNode(Element ele, String tagName) {
         Node element = null;
         NodeList nl = ele.getElementsByTagName(tagName);
-        if(nl != null && nl.getLength() > 0) {
+        if (nl != null && nl.getLength() > 0) {
             element = nl.item(0);
         }
         return element;
