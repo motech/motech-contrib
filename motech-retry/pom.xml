@@ -87,5 +87,11 @@
             <version>1.8.5</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>5.1.13</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 </project>

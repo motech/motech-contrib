@@ -8,7 +8,6 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.motechproject.model.MotechEvent;
 import org.motechproject.model.RepeatingSchedulableJob;
-import org.motechproject.retry.EventKeys;
 import org.motechproject.retry.dao.AllRetries;
 import org.motechproject.retry.domain.RetryRecord;
 import org.motechproject.retry.domain.RetryRequest;
@@ -24,6 +23,7 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
+import static org.motechproject.retry.EventKeys.*;
 import static org.motechproject.retry.service.RetryService.RETRY_INTERNAL_SUBJECT;
 import static org.motechproject.retry.util.PeriodParser.FORMATTER;
 
@@ -42,8 +42,8 @@ public class RetryServiceTest {
 
     @Test
     public void shouldUnscheduleAndCreateRetrySchedule() {
-        String name = "retry-schedule-name";
-        String externalId = "uniqueExternalId";
+        final String name = "retry-schedule-name";
+        final String externalId = "uniqueExternalId";
         DateTime startTime = DateUtil.now();
 
         RetryRecord retryRecord = retryRecord(name, 2, asList("2 hours"));
@@ -57,8 +57,11 @@ public class RetryServiceTest {
 
         RepeatingSchedulableJob actualJob = jobCaptor.getValue();
         assertThat(actualJob.getMotechEvent(), is(new MotechEvent(RETRY_INTERNAL_SUBJECT, new HashMap<String, Object>() {{
-            put(EventKeys.MAX_RETRY_COUNT, 2);
-            put(EventKeys.RETRY_INTERVAL, Period.parse("2 hours", FORMATTER));
+            put(MAX_RETRY_COUNT, 2);
+            put(RETRY_INTERVAL, Period.parse("2 hours", FORMATTER));
+            put(EXTERNAL_ID, externalId);
+            put(NAME, name);
+            put(MotechSchedulerService.JOB_ID_KEY, externalId + "." + name);
         }})));
 
         assertThat(actualJob.getStartTime(), is(startTime.toDate()));
@@ -74,5 +77,4 @@ public class RetryServiceTest {
         retryRecord.setRetryInterval(retryInterval);
         return retryRecord;
     }
-
 }

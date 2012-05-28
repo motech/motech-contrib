@@ -10,12 +10,14 @@ import org.motechproject.retry.domain.RetryRecord;
 import org.motechproject.retry.domain.RetryRequest;
 import org.motechproject.scheduler.MotechSchedulerService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.HashMap;
 
 import static org.motechproject.retry.EventKeys.*;
 
+@Service
 public class RetryService {
     public static final String RETRY_INTERNAL_SUBJECT = "org.motechproject.retry.internal";
     private MotechSchedulerService schedulerService;
@@ -45,11 +47,19 @@ public class RetryService {
 
     private MotechEvent motechEvent(final RetryRecord retryRecord, final RetryRequest retryRequest) {
         return new MotechEvent(RETRY_INTERNAL_SUBJECT, new HashMap<String, Object>() {{
-            put(EXTERNAL_ID, retryRequest.getExternalId());
-            put(NAME, retryRecord.name());
+            String externalId = retryRequest.getExternalId();
+            String name = retryRecord.name();
+
+            put(EXTERNAL_ID, externalId);
+            put(NAME, name);
             put(MAX_RETRY_COUNT, retryRecord.retryCount());
             put(RETRY_INTERVAL, retryRecord.retryInterval());
+            put(MotechSchedulerService.JOB_ID_KEY, jobIdKey(externalId, name));
         }});
+    }
+
+    private String jobIdKey(String externalId, String name) {
+        return String.format("%s.%s", externalId, name);
     }
 
 }

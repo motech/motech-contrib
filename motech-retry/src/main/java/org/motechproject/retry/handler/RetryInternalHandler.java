@@ -1,7 +1,8 @@
-package org.motechproject.retry;
+package org.motechproject.retry.handler;
 
 import org.motechproject.gateway.OutboundEventGateway;
 import org.motechproject.model.MotechEvent;
+import org.motechproject.retry.EventKeys;
 import org.motechproject.retry.dao.AllRetries;
 import org.motechproject.retry.domain.Retry;
 import org.motechproject.retry.domain.RetryStatus;
