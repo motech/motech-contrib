@@ -13,6 +13,8 @@ import org.xml.sax.InputSource;
 
 import java.io.StringReader;
 
+import static org.apache.commons.lang.StringUtils.trimToEmpty;
+
 public class RegistrationParser<T> {
     RegistrationMapper<T> domainMapper;
     private String xmlDocument;
@@ -48,7 +50,7 @@ public class RegistrationParser<T> {
     private Provider createProvider(Element item) {
         Provider provider = new Provider();
 
-        provider.setApi_key(item.getAttribute("api_key"));
+        provider.setApi_key(trimToEmpty(item.getAttribute("api_key")));
         addFieldForElement(item, provider, "username");
         addFieldForElement(item, provider, "password");
         addFieldForElement(item, provider, "uuid");
@@ -61,17 +63,15 @@ public class RegistrationParser<T> {
             Node childNode = childNodes.item(i);
             if (childNode.getNodeName().equals("data")) {
                 String key = childNode.getAttributes().getNamedItem("key").getNodeValue();
-                provider.AddFieldvalue(key, childNode.getTextContent());
+                provider.AddFieldvalue(key, trimToEmpty(childNode.getTextContent()));
             }
-
-
         }
         return provider;
     }
 
     private void addFieldForElement(Element item, Provider provider, String tagName) {
         Element element = (Element) getMatchingNode(item, tagName);
-        if(element != null) provider.AddFieldvalue(tagName, element.getTextContent());
+        if(element != null) provider.AddFieldvalue(tagName, trimToEmpty(element.getTextContent()));
     }
 
     private Node getMatchingNode(Element ele, String tagName) {
