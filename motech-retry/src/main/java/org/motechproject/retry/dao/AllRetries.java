@@ -6,11 +6,8 @@ import org.ektorp.support.View;
 import org.joda.time.DateTime;
 import org.motechproject.dao.MotechBaseRepository;
 import org.motechproject.retry.domain.Retry;
-import org.motechproject.retry.domain.RetryRecord;
-import org.motechproject.retry.util.RetryJsonReader;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -18,21 +15,9 @@ import java.util.List;
 @Repository
 public class AllRetries extends MotechBaseRepository<Retry> {
 
-    private RetryJsonReader retryJsonReader;
-
     @Autowired
-    public AllRetries(@Value("#{retryProperties['retry.definition.dir']}") String definitionsDirectoryName,
-                      @Qualifier("retryConnector") CouchDbConnector dbConnector) {
+    public AllRetries(@Qualifier("retryConnector") CouchDbConnector dbConnector) {
         super(Retry.class, dbConnector);
-        retryJsonReader = new RetryJsonReader(definitionsDirectoryName);
-    }
-
-    public RetryRecord getRetryRecord(String retryScheduleName) {
-        return retryJsonReader.getRetryRecord(retryScheduleName);
-    }
-
-    public RetryRecord getNextRetryRecord(String retryScheduleName) {
-        return retryJsonReader.getNextRetryRecord(retryScheduleName);
     }
 
     public void createRetry(Retry retry) {
@@ -52,13 +37,5 @@ public class AllRetries extends MotechBaseRepository<Retry> {
     public Retry getActiveRetry(String externalId, String name) {
         List<Retry> retries = queryView("get_retry_for_externalId_name", ComplexKey.of(externalId, name));
         return retries.isEmpty() ? null : retries.get(0);
-    }
-
-    public List<String> getAllRetryRecordNames(String name) {
-        return retryJsonReader.getAllRetryRecordNames(name);
-    }
-
-    public String getRetryGroupName(String retryName) {
-        return retryJsonReader.getRetryGroupName(retryName);
     }
 }

@@ -5,6 +5,7 @@ import org.joda.time.Period;
 import org.motechproject.model.MotechEvent;
 import org.motechproject.model.RepeatingSchedulableJob;
 import org.motechproject.retry.dao.AllRetries;
+import org.motechproject.retry.dao.AllRetriesDefinition;
 import org.motechproject.retry.domain.Retry;
 import org.motechproject.retry.domain.RetryRecord;
 import org.motechproject.retry.domain.RetryRequest;
@@ -24,17 +25,19 @@ public class RetryService {
     public static final String RETRY_INTERNAL_SUBJECT = "org.motechproject.retry.internal";
     private MotechSchedulerService schedulerService;
     private AllRetries allRetries;
+    private AllRetriesDefinition allRetriesDefinition;
 
     @Autowired
-    public RetryService(MotechSchedulerService schedulerService, AllRetries allRetries) {
+    public RetryService(MotechSchedulerService schedulerService, AllRetries allRetries, AllRetriesDefinition allRetriesDefinition) {
         this.schedulerService = schedulerService;
         this.allRetries = allRetries;
+        this.allRetriesDefinition = allRetriesDefinition;
     }
 
     public void schedule(RetryRequest retryRequest) {
         RetryRecord retryRecord = createNewRetry(retryRequest);
         String externalId = retryRequest.getExternalId();
-        String groupName = allRetries.getRetryGroupName(retryRequest.getName());
+        String groupName = allRetriesDefinition.getRetryGroupName(retryRequest.getName());
         String retryName = retryRequest.getName();
 
         unscheduleRetryJob(externalId, groupName, retryName);
@@ -43,18 +46,18 @@ public class RetryService {
     }
 
     private RetryRecord createNewRetry(RetryRequest retryRequest) {
-        RetryRecord retryRecord = allRetries.getRetryRecord(retryRequest.getName());
+        RetryRecord retryRecord = allRetriesDefinition.getRetryRecord(retryRequest.getName());
         allRetries.createRetry(new Retry(retryRequest.getName(), retryRequest.getExternalId(), retryRequest.getStartTime(), retryRecord.retryCount(), retryRecord.retryInterval()));
         return retryRecord;
     }
 
     protected void scheduleNext(RetryRequest retryRequest) {
-        RetryRecord nextRetryRecord = allRetries.getNextRetryRecord(retryRequest.getName());
+        RetryRecord nextRetryRecord = allRetriesDefinition.getNextRetryRecord(retryRequest.getName());
         schedule(new RetryRequest(nextRetryRecord.name(), retryRequest.getExternalId(), retryRequest.getReferenceTime(), retryRequest.getReferenceTime()));
     }
 
     public void unscheduleRetryGroup(String externalId, String name) {
-        List<String> allRetryNames = allRetries.getAllRetryRecordNames(name);
+        List<String> allRetryNames = allRetriesDefinition.getAllRetryRecordNames(name);
         for (String retryName : allRetryNames) {
             unscheduleRetryJob(externalId, name, retryName);
         }
@@ -69,7 +72,7 @@ public class RetryService {
         if (activeRetry != null) {
             activeRetry.setRetryStatus(RetryStatus.COMPLETED);
             allRetries.update(activeRetry);
-            String groupName = allRetries.getRetryGroupName(name);
+            String groupName = allRetriesDefinition.getRetryGroupName(name);
             unscheduleRetryJob(externalId, groupName, name);
         }
     }

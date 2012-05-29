@@ -10,6 +10,7 @@ import org.mockito.Mock;
 import org.motechproject.model.MotechEvent;
 import org.motechproject.model.RepeatingSchedulableJob;
 import org.motechproject.retry.dao.AllRetries;
+import org.motechproject.retry.dao.AllRetriesDefinition;
 import org.motechproject.retry.domain.Retry;
 import org.motechproject.retry.domain.RetryRecord;
 import org.motechproject.retry.domain.RetryRequest;
@@ -35,11 +36,13 @@ public class RetryServiceTest {
     private MotechSchedulerService mockSchedulerService;
     @Mock
     private AllRetries mockAllRetries;
+    @Mock
+    private AllRetriesDefinition mockAllRetriesDef;
 
     @Before
     public void setUp() {
         initMocks(this);
-        retryService = new RetryService(mockSchedulerService, mockAllRetries);
+        retryService = new RetryService(mockSchedulerService, mockAllRetries, mockAllRetriesDef);
     }
 
     @Test
@@ -51,8 +54,8 @@ public class RetryServiceTest {
         final String groupName = "groupName";
 
         RetryRecord retryRecord = retryRecord(name, 2, asList("2 hours"));
-        when(mockAllRetries.getRetryRecord(name)).thenReturn(retryRecord);
-        when(mockAllRetries.getRetryGroupName(name)).thenReturn(groupName);
+        when(mockAllRetriesDef.getRetryRecord(name)).thenReturn(retryRecord);
+        when(mockAllRetriesDef.getRetryGroupName(name)).thenReturn(groupName);
 
         retryService.schedule(new RetryRequest(name, externalId, startTime, referenceTime));
 
@@ -89,7 +92,7 @@ public class RetryServiceTest {
         nextRetryRecord.setRetryInterval(asList("1 Day"));
         nextRetryRecord.setRetryCount(4);
 
-        when(mockAllRetries.getNextRetryRecord(name)).thenReturn(nextRetryRecord);
+        when(mockAllRetriesDef.getNextRetryRecord(name)).thenReturn(nextRetryRecord);
 
         RetryService service = spy(retryService);
         doNothing().when(service).schedule(Matchers.<RetryRequest>any());
