@@ -1,12 +1,15 @@
-[
-    {
-        "name" : "retry-every-2hrs-and-30mins",
-        "retryCount" : "5",
-        "retryInterval" : ["2 hours", "30 minutes"]
-    },
-    {
-        "name" : "retry-every-10Days",
-        "retryCount" : "5",
-        "retryInterval" : ["10 days"]
-    }
-]
+{
+    "name" : "campaign-retries",
+    "retries" : [
+        {
+            "name" : "retry-every-2hrs-and-30mins",
+            "retryCount" : "5",
+            "retryInterval" : ["2 hours", "30 minutes"]
+        },
+        {
+            "name" : "retry-every-10Days",
+            "retryCount" : "5",
+            "retryInterval" : ["10 days"]
+        }
+    ]
+}

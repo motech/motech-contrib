@@ -34,8 +34,9 @@ public class RetryServiceIT {
         String name = "retry-every-2hrs-and-30mins";
         String externalId = "externalId";
         DateTime startTime = DateTime.now();
+        DateTime referenceTime = DateTime.now();
 
-        retryService.schedule(new RetryRequest(name, externalId, startTime));
+        retryService.schedule(new RetryRequest(name, externalId, startTime, referenceTime));
 
         Retry activeRetry = allRetries.getActiveRetry(externalId, name);
         assertThat(activeRetry.hasRetriesLeft(), is(true));

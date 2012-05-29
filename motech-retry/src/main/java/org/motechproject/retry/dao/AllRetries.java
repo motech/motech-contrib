@@ -31,6 +31,10 @@ public class AllRetries extends MotechBaseRepository<Retry> {
         return retryJsonReader.getRetryRecord(retryScheduleName);
     }
 
+    public RetryRecord getNextRetryRecord(String retryScheduleName) {
+        return retryJsonReader.getNextRetryRecord(retryScheduleName);
+    }
+
     public void createRetry(Retry retry) {
         Retry existingRetry = getActiveRetryWithStartTime(retry.name(), retry.externalId(), retry.startTime());
         if (existingRetry == null) {
@@ -48,5 +52,13 @@ public class AllRetries extends MotechBaseRepository<Retry> {
     public Retry getActiveRetry(String externalId, String name) {
         List<Retry> retries = queryView("get_retry_for_externalId_name", ComplexKey.of(externalId, name));
         return retries.isEmpty() ? null : retries.get(0);
+    }
+
+    public List<String> getAllRetryRecordNames(String name) {
+        return retryJsonReader.getAllRetryRecordNames(name);
+    }
+
+    public String getRetryGroupName(String retryName) {
+        return retryJsonReader.getRetryGroupName(retryName);
     }
 }

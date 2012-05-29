@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 
 import static org.motechproject.retry.EventKeys.*;
 
@@ -31,15 +32,36 @@ public class RetryService {
     }
 
     public void schedule(RetryRequest retryRequest) {
-        RetryRecord retryRecord = allRetries.getRetryRecord(retryRequest.getName());
-        allRetries.createRetry(new Retry(retryRequest.getName(), retryRequest.getExternalId(), retryRequest.getStartTime(), retryRecord.retryCount(), retryRecord.retryInterval()));
-        unscheduleRetryJob(retryRequest.getExternalId(), retryRequest.getName());
-        schedulerService.scheduleRepeatingJob(new RepeatingSchedulableJob(motechEvent(retryRecord, retryRequest), retryRequest.getStartTime().toDate(),
+        RetryRecord retryRecord = createNewRetry(retryRequest);
+        String externalId = retryRequest.getExternalId();
+        String groupName = allRetries.getRetryGroupName(retryRequest.getName());
+        String retryName = retryRequest.getName();
+
+        unscheduleRetryJob(externalId, groupName, retryName);
+        schedulerService.scheduleRepeatingJob(new RepeatingSchedulableJob(motechEvent(retryRecord, retryRequest, jobIdKey(externalId, groupName, retryName)), retryRequest.getStartTime().toDate(),
                 endTime(retryRequest.getStartTime(), retryRecord.retryCount(), retryRecord.retryInterval()), retryRecord.retryCount(), intervalInMillis(retryRecord)));
     }
 
-    private void unscheduleRetryJob(String externalId, String name) {
-        schedulerService.safeUnscheduleJob(RETRY_INTERNAL_SUBJECT, jobIdKey(externalId, name) + "-repeat");
+    private RetryRecord createNewRetry(RetryRequest retryRequest) {
+        RetryRecord retryRecord = allRetries.getRetryRecord(retryRequest.getName());
+        allRetries.createRetry(new Retry(retryRequest.getName(), retryRequest.getExternalId(), retryRequest.getStartTime(), retryRecord.retryCount(), retryRecord.retryInterval()));
+        return retryRecord;
+    }
+
+    protected void scheduleNext(RetryRequest retryRequest) {
+        RetryRecord nextRetryRecord = allRetries.getNextRetryRecord(retryRequest.getName());
+        schedule(new RetryRequest(nextRetryRecord.name(), retryRequest.getExternalId(), retryRequest.getReferenceTime(), retryRequest.getReferenceTime()));
+    }
+
+    private void unscheduleRetryGroup(String externalId, String name) {
+        List<String> allRetryNames = allRetries.getAllRetryRecordNames(name);
+        for (String retryName : allRetryNames) {
+            unscheduleRetryJob(externalId, name, retryName);
+        }
+    }
+
+    private void unscheduleRetryJob(String externalId, String name, String retryName) {
+        schedulerService.safeUnscheduleJob(RETRY_INTERNAL_SUBJECT, jobIdKey(externalId, name, retryName) + "-repeat");
     }
 
     public void fulfill(String externalId, String name) {
@@ -47,7 +69,8 @@ public class RetryService {
         if (activeRetry != null) {
             activeRetry.setRetryStatus(RetryStatus.COMPLETED);
             allRetries.update(activeRetry);
-            unscheduleRetryJob(externalId, name);
+            String groupName = allRetries.getRetryGroupName(name);
+            unscheduleRetryJob(externalId, groupName, name);
         }
     }
 
@@ -59,7 +82,7 @@ public class RetryService {
         return (retryRecord.retryInterval().toStandardDuration().getMillis());
     }
 
-    private MotechEvent motechEvent(final RetryRecord retryRecord, final RetryRequest retryRequest) {
+    private MotechEvent motechEvent(final RetryRecord retryRecord, final RetryRequest retryRequest, final String jobId) {
         return new MotechEvent(RETRY_INTERNAL_SUBJECT, new HashMap<String, Object>() {{
             String externalId = retryRequest.getExternalId();
             String name = retryRecord.name();
@@ -69,11 +92,12 @@ public class RetryService {
             put(MAX_RETRY_COUNT, retryRecord.retryCount());
             put(RETRY_INTERVAL, retryRecord.retryInterval());
             put(START_TIME, retryRequest.getStartTime());
-            put(MotechSchedulerService.JOB_ID_KEY, jobIdKey(externalId, name));
+            put(REFERENCE_TIME, retryRequest.getReferenceTime());
+            put(MotechSchedulerService.JOB_ID_KEY, jobId);
         }});
     }
 
-    private String jobIdKey(String externalId, String name) {
-        return String.format("%s.%s", externalId, name);
+    private String jobIdKey(String externalId, String groupName, String name) {
+        return String.format("%s.%s.%s", externalId, groupName, name);
     }
 }

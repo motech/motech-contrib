@@ -1,7 +1,10 @@
-[
-    {
-        "name" : "Simple-Retry",
-        "retryCount" : "5",
-        "retryInterval" : ["30 minutes"]
-    }
-]
+{
+    "name" : "simple-campaign",
+    "retries" : [
+        {
+            "name" : "Simple-Retry",
+            "retryCount" : "5",
+            "retryInterval" : ["30 minutes"]
+        }
+    ]
+}

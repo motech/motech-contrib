@@ -7,4 +7,5 @@ public interface EventKeys {
     String NAME = "NAME";
     String RETRY_SUBJECT = "org.motechproject.retry";
     String START_TIME = "START_TIME";
+    String REFERENCE_TIME = "REFERENCE_TIME";
 }
