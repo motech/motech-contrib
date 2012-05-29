@@ -53,7 +53,7 @@ public class RetryService {
         schedule(new RetryRequest(nextRetryRecord.name(), retryRequest.getExternalId(), retryRequest.getReferenceTime(), retryRequest.getReferenceTime()));
     }
 
-    private void unscheduleRetryGroup(String externalId, String name) {
+    public void unscheduleRetryGroup(String externalId, String name) {
         List<String> allRetryNames = allRetries.getAllRetryRecordNames(name);
         for (String retryName : allRetryNames) {
             unscheduleRetryJob(externalId, name, retryName);
