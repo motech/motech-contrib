@@ -30,12 +30,12 @@ public class RetryInternalHandlerTest {
     @Mock
     private OutboundEventGateway mockOutboundGateway;
     @Mock
-    private RetryService mockRetryService;
+    private RetryServiceImpl mockRetryServiceImpl;
 
     @Before
     public void setUp() {
         initMocks(this);
-        retryInternalHandler = new RetryInternalHandler(mockAllRetries, mockOutboundGateway, mockRetryService);
+        retryInternalHandler = new RetryInternalHandler(mockAllRetries, mockOutboundGateway, mockRetryServiceImpl);
     }
 
     @Test
@@ -59,7 +59,7 @@ public class RetryInternalHandlerTest {
         assertMotechEvent(true);
 
         ArgumentCaptor<RetryRequest> retryRequestCaptor = ArgumentCaptor.forClass(RetryRequest.class);
-        verify(mockRetryService).scheduleNext(retryRequestCaptor.capture());
+        verify(mockRetryServiceImpl).scheduleNext(retryRequestCaptor.capture());
         RetryRequest request = retryRequestCaptor.getValue();
 
         assertThat(request.getName(), is(name));

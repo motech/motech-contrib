@@ -17,13 +17,13 @@ import static org.motechproject.retry.EventKeys.*;
 public class RetryInternalHandler {
     private AllRetries allRetries;
     private OutboundEventGateway outboundEventGateway;
-    private RetryService retryService;
+    private RetryServiceImpl retryServiceImpl;
 
     @Autowired
-    public RetryInternalHandler(AllRetries allRetries, OutboundEventGateway outboundEventGateway, RetryService retryService) {
+    public RetryInternalHandler(AllRetries allRetries, OutboundEventGateway outboundEventGateway, RetryServiceImpl retryServiceImpl) {
         this.allRetries = allRetries;
         this.outboundEventGateway = outboundEventGateway;
-        this.retryService = retryService;
+        this.retryServiceImpl = retryServiceImpl;
     }
 
     @MotechListener(subjects = "org.motechproject.internal.retry")
@@ -34,7 +34,7 @@ public class RetryInternalHandler {
 
         boolean isLastEvent = updateRetriesLeft(externalId, retryRecordName);
         if (isLastEvent) {
-            retryService.scheduleNext(new RetryRequest(retryRecordName, externalId, referenceTime, referenceTime));
+            retryServiceImpl.scheduleNext(new RetryRequest(retryRecordName, externalId, referenceTime, referenceTime));
         }
 
         outboundEventGateway.sendEventMessage(motechEvent(RETRY_SUBJECT, event.getParameters(), isLastEvent));

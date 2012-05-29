@@ -7,7 +7,7 @@ import org.junit.runner.RunWith;
 import org.motechproject.retry.dao.AllRetries;
 import org.motechproject.retry.domain.Retry;
 import org.motechproject.retry.domain.RetryRequest;
-import org.motechproject.retry.service.RetryService;
+import org.motechproject.retry.service.RetryServiceImpl;
 import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +23,7 @@ import static org.junit.Assert.assertThat;
 @ContextConfiguration("classpath:applicationContext-retry.xml")
 public class RetryServiceIT {
     @Autowired
-    private RetryService retryService;
+    private RetryServiceImpl retryServiceImpl;
     @Autowired
     private AllRetries allRetries;
     @Autowired
@@ -31,18 +31,19 @@ public class RetryServiceIT {
 
     @Test
     public void shouldCreateRetryEvent() {
+        String groupName = "campaign-retries";
         String name = "retry-every-2hrs-and-30mins";
         String externalId = "externalId";
         DateTime startTime = DateTime.now();
         DateTime referenceTime = DateTime.now();
 
-        retryService.schedule(new RetryRequest(name, externalId, startTime, referenceTime));
+        retryServiceImpl.schedule(new RetryRequest(name, externalId, startTime, referenceTime));
 
         Retry activeRetry = allRetries.getActiveRetry(externalId, name);
         assertThat(activeRetry.hasRetriesLeft(), is(true));
         assertThat(activeRetry.startTime(), is(startTime));
 
-        retryService.fulfill(externalId, name);
+        retryServiceImpl.fulfill(externalId, groupName);
 
         assertNull(allRetries.getActiveRetry(externalId, name));
     }

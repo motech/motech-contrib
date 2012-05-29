@@ -1,5 +1,5 @@
 {
-    "name" : "simple-campaign",
+    "groupName" : "simple-campaign",
     "retries" : [
         {
             "name" : "Simple-Retry",

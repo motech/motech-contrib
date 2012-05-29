@@ -27,11 +27,11 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
 import static org.motechproject.retry.EventKeys.*;
-import static org.motechproject.retry.service.RetryService.RETRY_INTERNAL_SUBJECT;
+import static org.motechproject.retry.service.RetryServiceImpl.RETRY_INTERNAL_SUBJECT;
 import static org.motechproject.retry.util.PeriodParser.FORMATTER;
 
-public class RetryServiceTest {
-    private RetryService retryService;
+public class RetryServiceImplTest {
+    private RetryServiceImpl retryServiceImpl;
     @Mock
     private MotechSchedulerService mockSchedulerService;
     @Mock
@@ -42,7 +42,7 @@ public class RetryServiceTest {
     @Before
     public void setUp() {
         initMocks(this);
-        retryService = new RetryService(mockSchedulerService, mockAllRetries, mockAllRetriesDef);
+        retryServiceImpl = new RetryServiceImpl(mockSchedulerService, mockAllRetries, mockAllRetriesDef);
     }
 
     @Test
@@ -57,7 +57,7 @@ public class RetryServiceTest {
         when(mockAllRetriesDef.getRetryRecord(name)).thenReturn(retryRecord);
         when(mockAllRetriesDef.getRetryGroupName(name)).thenReturn(groupName);
 
-        retryService.schedule(new RetryRequest(name, externalId, startTime, referenceTime));
+        retryServiceImpl.schedule(new RetryRequest(name, externalId, startTime, referenceTime));
 
         ArgumentCaptor<RepeatingSchedulableJob> jobCaptor = ArgumentCaptor.forClass(RepeatingSchedulableJob.class);
         verify(mockSchedulerService).safeUnscheduleJob(RETRY_INTERNAL_SUBJECT, externalId + "." + groupName + "." + name + "-repeat");
@@ -65,11 +65,8 @@ public class RetryServiceTest {
 
         RepeatingSchedulableJob actualJob = jobCaptor.getValue();
         assertThat(actualJob.getMotechEvent(), is(new MotechEvent(RETRY_INTERNAL_SUBJECT, new HashMap<String, Object>() {{
-            put(MAX_RETRY_COUNT, 2);
-            put(RETRY_INTERVAL, Period.parse("2 hours", FORMATTER));
             put(EXTERNAL_ID, externalId);
             put(NAME, name);
-            put(START_TIME, startTime);
             put(REFERENCE_TIME, referenceTime);
             put(MotechSchedulerService.JOB_ID_KEY, externalId + "." + groupName + "." + name);
         }})));
@@ -94,7 +91,7 @@ public class RetryServiceTest {
 
         when(mockAllRetriesDef.getNextRetryRecord(name)).thenReturn(nextRetryRecord);
 
-        RetryService service = spy(retryService);
+        RetryServiceImpl service = spy(retryServiceImpl);
         doNothing().when(service).schedule(Matchers.<RetryRequest>any());
         service.scheduleNext(new RetryRequest(name, externalId, startTime, referenceTime));
 
@@ -109,6 +106,27 @@ public class RetryServiceTest {
     }
 
     @Test
+    public void shouldNotScheduleNextRetryIfNoRetryRecordsArePresent() {
+        DateTime referenceTime = DateTime.now();
+        DateTime startTime = DateTime.now();
+        String externalId = "externalId";
+        String name = "retrySchedule1";
+
+        RetryRecord nextRetryRecord = new RetryRecord();
+        nextRetryRecord.setName("retrySchedule2");
+        nextRetryRecord.setRetryInterval(asList("1 Day"));
+        nextRetryRecord.setRetryCount(4);
+
+        when(mockAllRetriesDef.getNextRetryRecord(name)).thenReturn(null);
+
+        RetryServiceImpl service = spy(retryServiceImpl);
+        doNothing().when(service).schedule(Matchers.<RetryRequest>any());
+        service.scheduleNext(new RetryRequest(name, externalId, startTime, referenceTime));
+
+        verify(service, never()).schedule(Matchers.<RetryRequest>any());
+    }
+
+    @Test
     public void shouldFulFillExistingActiveSchedule() {
         final String name = "retry-schedule-name";
         final String externalId = "uniqueExternalId";
@@ -116,9 +134,10 @@ public class RetryServiceTest {
 
         Retry retry = new Retry(name, externalId, startTime, 0, Period.days(1));
         retry.setRetryStatus(RetryStatus.ACTIVE);
+        when(mockAllRetriesDef.getAllRetryRecordNames("groupName")).thenReturn(asList(name));
         when(mockAllRetries.getActiveRetry(externalId, name)).thenReturn(retry);
 
-        retryService.fulfill(externalId, name);
+        retryServiceImpl.fulfill(externalId, "groupName");
 
         assertThat(retry.retryStatus(), is(RetryStatus.COMPLETED));
     }

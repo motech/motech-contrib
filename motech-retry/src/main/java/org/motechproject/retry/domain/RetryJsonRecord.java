@@ -3,7 +3,7 @@ package org.motechproject.retry.domain;
 import java.util.List;
 
 public class RetryJsonRecord {
-    private String name;
+    private String groupName;
     private List<RetryRecord> retries;
 
     public List<RetryRecord> getRetries() {
@@ -15,10 +15,10 @@ public class RetryJsonRecord {
     }
 
     public String getName() {
-        return name;
+        return groupName;
     }
 
     public void setName(String name) {
-        this.name = name;
+        this.groupName = name;
     }
 }

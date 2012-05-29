@@ -1,5 +1,5 @@
 {
-    "name" : "campaign-retries",
+    "groupName" : "campaign-retries",
     "retries" : [
         {
             "name" : "retry-every-2hrs-and-30mins",
