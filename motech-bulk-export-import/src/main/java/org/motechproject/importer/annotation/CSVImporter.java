@@ -9,6 +9,5 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 public @interface CSVImporter {
     String entity();
-
     Class bean();
 }

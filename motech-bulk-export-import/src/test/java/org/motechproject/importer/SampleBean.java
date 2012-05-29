@@ -9,6 +9,11 @@ public class SampleBean {
 
     private String sampleX;
 
+    private String notPresentInFile;
+
+    @ColumnName(name = "setUsingSetter")
+    private String shouldBeSetUsingSetter;
+
     public String getSampleY() {
         return sampleY;
     }
@@ -23,5 +28,22 @@ public class SampleBean {
 
     public void setSampleX(String sampleX) {
         this.sampleX = sampleX;
+    }
+
+    public String getNotPresentInFile() {
+        return notPresentInFile;
+    }
+
+    public void setNotPresentInFile(String notPresentInFile) {
+        this.notPresentInFile = notPresentInFile;
+    }
+
+    public String getShouldBeSetUsingSetter() {
+        return shouldBeSetUsingSetter;
+    }
+
+    @ColumnName(name = "setUsingSetter")
+    public void setShouldBeSetUsingSetter(String shouldBeSetUsingSetter) {
+        this.shouldBeSetUsingSetter = "differentValueThanTheOnePresentInCSVFile";
     }
 }

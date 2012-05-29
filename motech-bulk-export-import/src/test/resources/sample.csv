@@ -1,2 +1,2 @@
-sampleX,y
-123,456
+sampleX,y,setUsingSetter
+123,456,defaultValue
