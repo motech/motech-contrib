@@ -51,10 +51,12 @@ public class RetryServiceImpl implements RetryService {
         return retryRecord;
     }
 
-    protected void scheduleNext(RetryRequest retryRequest) {
+    protected boolean scheduleNext(RetryRequest retryRequest) {
         RetryRecord nextRetryRecord = allRetriesDefinition.getNextRetryRecord(retryRequest.getName());
-        if (null != nextRetryRecord)
+        boolean isLastRetryRecord = (null == nextRetryRecord);
+        if (!isLastRetryRecord)
             schedule(new RetryRequest(nextRetryRecord.name(), retryRequest.getExternalId(), retryRequest.getReferenceTime(), retryRequest.getReferenceTime()));
+        return isLastRetryRecord;
     }
 
     public void unscheduleRetryGroup(String externalId, String name) {

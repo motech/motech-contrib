@@ -33,11 +33,12 @@ public class RetryInternalHandler {
         String retryRecordName = (String) event.getParameters().get(NAME);
 
         boolean isLastEvent = updateRetriesLeft(externalId, retryRecordName);
+        boolean isLastEventRecord = false;
         if (isLastEvent) {
-            retryServiceImpl.scheduleNext(new RetryRequest(retryRecordName, externalId, referenceTime, referenceTime));
+            isLastEventRecord = retryServiceImpl.scheduleNext(new RetryRequest(retryRecordName, externalId, referenceTime, referenceTime));
         }
 
-        outboundEventGateway.sendEventMessage(motechEvent(RETRY_SUBJECT, event.getParameters(), isLastEvent));
+        outboundEventGateway.sendEventMessage(motechEvent(RETRY_SUBJECT, event.getParameters(), isLastEventRecord));
     }
 
     private boolean updateRetriesLeft(String externalId, String retryRecordName) {

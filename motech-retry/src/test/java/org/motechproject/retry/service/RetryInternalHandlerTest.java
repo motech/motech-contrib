@@ -5,6 +5,7 @@ import org.joda.time.Period;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
+import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.motechproject.gateway.OutboundEventGateway;
 import org.motechproject.model.MotechEvent;
@@ -51,6 +52,7 @@ public class RetryInternalHandlerTest {
 
         Retry retry = new Retry(name, externalId, DateTime.now(), 0, Period.millis(600));
         when(mockAllRetries.getActiveRetry(externalId, name)).thenReturn(retry);
+        when(mockRetryServiceImpl.scheduleNext(Matchers.<RetryRequest>any())).thenReturn(true);
 
         retryInternalHandler.handle(event);
 
