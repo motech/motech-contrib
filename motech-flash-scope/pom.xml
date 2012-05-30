@@ -12,7 +12,6 @@
     <properties>
         <spring-security.version>3.0.5.RELEASE</spring-security.version>
         <spring.version>3.0.5.RELEASE</spring.version>
-        <motech.version>0.10-SNAPSHOT</motech.version>
     </properties>
 
     <parent>
