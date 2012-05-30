@@ -50,7 +50,7 @@ public class CSVDataImportProcessor extends DataImportProcessor {
 
     private Map<String, String> getColumnMapping() {
         Map<String, String> mapping = new HashMap<String, String>();
-        List<Member> members = getAllAnnotatedMembers();
+        List<Member> members = getAllMembers();
         for (Member member : members) {
             if (member instanceof Field) {
                 addFieldDescription(mapping, (Field) member);
@@ -66,7 +66,7 @@ public class CSVDataImportProcessor extends DataImportProcessor {
         if (method.isAnnotationPresent(ColumnName.class)) {
             mapping.put(method.getAnnotation(ColumnName.class).name(), method.getName().replace("set", ""));
         } else {
-            mapping.put(method.getName(), method.getName());
+            mapping.put(method.getName(), method.getName().replace("set",""));
         }
     }
 
@@ -79,7 +79,7 @@ public class CSVDataImportProcessor extends DataImportProcessor {
         }
     }
 
-    private List<Member> getAllAnnotatedMembers() {
+    private List<Member> getAllMembers() {
         List<Member> members = new ArrayList<Member>();
         members.addAll(asList(bean().getDeclaredFields()));
         members.addAll(asList(bean().getDeclaredMethods()));
