@@ -7,18 +7,17 @@
     <artifactId>motech-web-security</artifactId>
     <packaging>jar</packaging>
     <name>motech-web-security</name>
-    <version>0.1-SNAPSHOT</version>
+    <version>0.10-SNAPSHOT</version>
 
     <properties>
         <spring-security.version>3.0.5.RELEASE</spring-security.version>
         <spring.version>3.0.5.RELEASE</spring.version>
-        <motech.version>0.11-SNAPSHOT</motech.version>
     </properties>
 
     <parent>
         <artifactId>motech-contrib</artifactId>
         <groupId>org.motechproject</groupId>
-        <version>0.1-SNAPSHOT</version>
+        <version>0.10-SNAPSHOT</version>
     </parent>
 
     <repositories>

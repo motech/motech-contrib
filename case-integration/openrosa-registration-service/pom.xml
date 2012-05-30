@@ -5,7 +5,7 @@
     <parent>
         <artifactId>case-integration</artifactId>
         <groupId>org.motechproject</groupId>
-        <version>0.1-SNAPSHOT</version>
+        <version>0.10-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -15,7 +15,6 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <spring.version>3.0.5.RELEASE</spring.version>
-        <motech.version>0.11-SNAPSHOT</motech.version>
         <db.server>localhost</db.server>
         <db.port>5984</db.port>
         <db.name>commcare</db.name>
@@ -80,12 +79,12 @@
         <dependency>
             <groupId>org.motechproject</groupId>
             <artifactId>case-parser</artifactId>
-            <version>0.1-SNAPSHOT</version>
+            <version>0.10-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.motechproject</groupId>
             <artifactId>case-common</artifactId>
-            <version>0.1-SNAPSHOT</version>
+            <version>0.10-SNAPSHOT</version>
         </dependency>
     </dependencies>
 

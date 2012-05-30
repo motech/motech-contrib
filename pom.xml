@@ -6,9 +6,12 @@
     <name>motech-contrib</name>
     <artifactId>motech-contrib</artifactId>
     <groupId>org.motechproject</groupId>
-    <version>0.1-SNAPSHOT</version>
+    <version>0.10-SNAPSHOT</version>
 
     <packaging>pom</packaging>
+    <properties>
+        <motech.version>0.10</motech.version>
+    </properties>
 
     <modules>
         <module>message-aggregator</module>
@@ -46,9 +49,14 @@
             <url>https://repository.sonatype.org/content/groups/forge/</url>
         </repository>
         <repository>
-            <id>motech.nexus</id>
+            <id>motech.nexus.snapshots</id>
             <name>Motech Snapshots Repository</name>
             <url>http://nexus.motechproject.org/content/repositories/snapshots</url>
+        </repository>
+        <repository>
+            <id>motech.nexus.releases</id>
+            <name>Motech Releases Repository</name>
+            <url>http://nexus.motechproject.org/content/repositories/releases</url>
         </repository>
         <repository>
             <id>motech-repo</id>
