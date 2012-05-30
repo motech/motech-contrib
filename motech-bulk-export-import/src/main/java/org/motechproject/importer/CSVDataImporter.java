@@ -16,7 +16,6 @@ public class CSVDataImporter {
     public static final String APPLICATION_CONTEXT_XML = "applicationBulkImportContext.xml";
 
     public static void main(String args[]) {
-
         ApplicationContext context = new ClassPathXmlApplicationContext(APPLICATION_CONTEXT_XML);
         CSVDataImporter dataImporter = (CSVDataImporter) context.getBean("csvDataImporter");
         dataImporter.importData(args[0],args[1]);

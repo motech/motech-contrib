@@ -36,6 +36,18 @@ public class CSVDataImportProcessor extends DataImportProcessor {
         return importer.getClass().getAnnotation(CSVImporter.class).bean();
     }
 
+    public List<Object> parse(String filePath) throws Exception {
+        CSVReader reader = new CSVReader(new FileReader(filePath), ',');
+        HeaderColumnNameTranslateMappingStrategy columnNameMappingStrategy = new HeaderColumnNameTranslateMappingStrategy();
+        columnNameMappingStrategy.setType(bean());
+        columnNameMappingStrategy.setColumnMapping(getColumnMapping());
+        return csvToBean.parse(columnNameMappingStrategy, reader);
+    }
+
+    public static boolean isValid(Class beanClass) {
+        return beanClass.isAnnotationPresent(CSVImporter.class);
+    }
+
     private Map<String, String> getColumnMapping() {
         Map<String, String> mapping = new HashMap<String, String>();
         List<Member> members = getAllAnnotatedMembers();
@@ -72,17 +84,5 @@ public class CSVDataImportProcessor extends DataImportProcessor {
         members.addAll(asList(bean().getDeclaredFields()));
         members.addAll(asList(bean().getDeclaredMethods()));
         return members;
-    }
-
-    public List<Object> parse(String filePath) throws Exception {
-        CSVReader reader = new CSVReader(new FileReader(filePath), ',');
-        HeaderColumnNameTranslateMappingStrategy columnNameMappingStrategy = new HeaderColumnNameTranslateMappingStrategy();
-        columnNameMappingStrategy.setType(bean());
-        columnNameMappingStrategy.setColumnMapping(getColumnMapping());
-        return csvToBean.parse(columnNameMappingStrategy, reader);
-    }
-
-    public static boolean isValid(Class beanClass) {
-        return beanClass.isAnnotationPresent(CSVImporter.class);
     }
 }

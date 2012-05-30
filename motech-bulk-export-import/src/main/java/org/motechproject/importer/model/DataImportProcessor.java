@@ -2,9 +2,16 @@ package org.motechproject.importer.model;
 
 import org.motechproject.importer.annotation.Post;
 import org.motechproject.importer.annotation.Validate;
+import org.motechproject.importer.domain.Error;
+import org.motechproject.importer.domain.ValidationResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.List;
 
@@ -29,17 +36,40 @@ public abstract class DataImportProcessor {
     public void process(String filePath) {
         try {
             List<Object> valuesFromFile = parse(filePath);
-            Boolean isValid = true;
-            if(validateMethod != null)
-                isValid = (Boolean) validateMethod.invoke(importer, valuesFromFile);
-            if (isValid) {
-                List<Object> entities = valuesFromFile;
-                if(postMethod != null)
-                    postMethod.invoke(importer, entities);
+            ValidationResponse validationResponse = validate(valuesFromFile);
+            if (validationResponse.isValid()) {
+                invokePostMethod(valuesFromFile);
+            } else {
+                processErrors(validationResponse.getErrors(), filePath);
             }
         } catch (Exception e) {
             logger.error("Error while importing csv : " + e.getMessage());
         }
+    }
+
+    private void invokePostMethod(List<Object> entities) throws IllegalAccessException, InvocationTargetException {
+        if (postMethod != null)
+            postMethod.invoke(importer, entities);
+    }
+
+    private ValidationResponse validate(List<Object> valuesFromFile) throws IllegalAccessException, InvocationTargetException {
+        ValidationResponse validationResponse = new ValidationResponse(true);
+        if (validateMethod != null) {
+            validationResponse = (ValidationResponse) validateMethod.invoke(importer, valuesFromFile);
+        }
+        return validationResponse;
+    }
+
+    private void processErrors(List<Error> errors, String filePath) throws IOException {
+        String fileDirectory = new File(filePath).getParent();
+        File errorsFile = new File(fileDirectory + File.separator + "errors.csv");
+        errorsFile.createNewFile();
+
+        BufferedWriter writer = new BufferedWriter(new FileWriter(errorsFile));
+        for (Error error : errors) {
+            writer.write(error.getMessage());
+        }
+        writer.close();
     }
 
     public abstract String entity();
