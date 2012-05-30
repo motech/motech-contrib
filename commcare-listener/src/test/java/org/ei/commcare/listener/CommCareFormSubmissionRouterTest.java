@@ -112,8 +112,10 @@ public class CommCareFormSubmissionRouterTest {
             fail("Should have thrown an exception");
         } catch (FormDispatchFailedException e) {
             assertThat(e.innerExceptions().size(), is(2));
-            assertThat(e.innerExceptions().get(0).getMessage(), is("boo"));
-            assertThat(e.innerExceptions().get(1).getMessage(), is("boo"));
+            assertThat(e.innerExceptions().get(0).getMessage(), is("Failed during dispatch. Info: Form ID: FORM-ID-1, Method: methodWhichThrowsAnException, Parameter JSON: {\"age\":\"23\",\"name\":\"Mom\"}"));
+            assertThat(e.innerExceptions().get(0).getCause().getMessage(), is("boo"));
+            assertThat(e.innerExceptions().get(1).getMessage(), is("Failed during dispatch. Info: Form ID: FORM-ID-1, Method: methodWhichThrowsAnException, Parameter JSON: {\"age\":\"23\",\"name\":\"Mom\"}"));
+            assertThat(e.innerExceptions().get(1).getCause().getMessage(), is("boo"));
         }
 
         verify(drishtiController, times(2)).registerMother(new FakeMotherRegistrationRequest("Mom1", 23));

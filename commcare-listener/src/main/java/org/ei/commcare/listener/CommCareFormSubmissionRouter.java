@@ -53,7 +53,8 @@ public class CommCareFormSubmissionRouter {
             try {
                 dispatch(formId, methodName, parameterJson);
             } catch (InvocationTargetException e) {
-                exception.add(e.getTargetException());
+                exception.add(new RuntimeException("Failed during dispatch. Info: Form ID: " + formId + ", Method: " + methodName
+                        + ", Parameter JSON: " + parameterJson, e.getTargetException()));
             }
         }
 
