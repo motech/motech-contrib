@@ -118,4 +118,10 @@
             </plugin>
         </plugins>
     </build>
+
+    <scm>
+        <connection>scm:git:https://github.com/motech/motech-contrib</connection>
+        <developerConnection>scm:git:https://github.com/motech/motech-contrib</developerConnection>
+        <url>https://github.com/motech/motech-contrib</url>
+    </scm>
 </project>
