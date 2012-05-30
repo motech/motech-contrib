@@ -27,10 +27,10 @@ public class HttpClientEventListener {
 
     @MotechListener(subjects = EventSubjects.HTTP_REQUEST)
     public void handle(MotechEvent motechEvent) {
-        Map<String,Object> parameters = motechEvent.getParameters();
+        Map<String, Object> parameters = motechEvent.getParameters();
         String url = String.valueOf(parameters.get(EventDataKeys.URL));
         Object requestData = parameters.get(EventDataKeys.DATA);
-        logger.info(String.format("Posting Http request -- Url: %s, Data: %s",url, String.valueOf(requestData)));
+        logger.info(String.format("Posting Http request -- Url: %s, Data: %s", url, String.valueOf(requestData)));
         restTemplate.postForLocation(url, requestData);
     }
 }
