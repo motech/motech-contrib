@@ -1,62 +1,62 @@
 package org.motechproject.validation.validator;
 
 import org.motechproject.validation.constraints.Scope;
-import org.motechproject.validation.validator.root.PropertyValidator;
+import org.motechproject.validation.constraints.ValidateIfNotEmpty;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 
-import javax.validation.Valid;
 import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Set;
 
 @Component
 public class BeanValidator {
 
-    protected Set<PropertyValidator> fieldValidators;
+    private FieldValidator fieldValidator;
 
     @Autowired
-    public BeanValidator(Set<PropertyValidator> fieldValidators) {
-        this.fieldValidators = fieldValidators;
+    public BeanValidator(FieldValidator fieldValidator) {
+        this.fieldValidator = fieldValidator;
     }
 
     public void validate(Object target, String scope, Errors errors) {
+        if (shouldValidate(target)) {
+            validateFields(target, scope, errors);
+        }
+    }
+
+    private boolean shouldValidate(Object target) {
+        return validateIfNotEmptyType(target.getClass()) ? isNotEmpty(target) : true;
+    }
+
+    private boolean validateIfNotEmptyType(Class<?> targetType) {
+        return targetType.isAnnotationPresent(ValidateIfNotEmpty.class);
+    }
+
+    private boolean isNotEmpty(Object target) {
+        boolean isEmpty = true;
+        for (Field field : target.getClass().getDeclaredFields()) {
+            field.setAccessible(true);
+            try {
+                Object fieldValue = field.get(target);
+                isEmpty &= (fieldValue == null);
+            } catch (IllegalAccessException ignored) {
+            }
+        }
+        return isEmpty;
+    }
+
+    private void validateFields(Object target, String scope, Errors errors) {
         for (Field field : target.getClass().getDeclaredFields()) {
             if (field.isAnnotationPresent(Scope.class)) {
                 List<String> scopeList = Arrays.asList(field.getAnnotation(Scope.class).scope());
                 if (scopeList.contains(scope)) {
-                    validateField(target, scope, errors, field);
+                    fieldValidator.validateField(target, scope, errors, field, this);
                 }
             } else {
-                validateField(target, scope, errors, field);
+                fieldValidator.validateField(target, scope, errors, field, this);
             }
         }
-    }
-
-    protected void validateField(Object target, String scope, Errors errors, Field field) {
-        field.setAccessible(true);
-        if (isValidatedMemberInstance(field)) {
-            try {
-                validateMemberInstance(target, scope, errors, field);
-            } catch (IllegalAccessException ignored) {
-            }
-        } else {
-            for (PropertyValidator fieldValidator : fieldValidators) {
-                fieldValidator.validateField(target, field, scope, errors);
-            }
-        }
-    }
-
-    private boolean isValidatedMemberInstance(Field field) {
-        return field.isAnnotationPresent(Valid.class);
-    }
-
-    private void validateMemberInstance(Object target, String scope, Errors errors, Field field) throws IllegalAccessException {
-        Object fieldValue = field.get(target);
-        errors.pushNestedPath(field.getName());
-        this.validate(fieldValue, scope, errors);
-        errors.popNestedPath();
     }
 }

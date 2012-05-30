@@ -3,7 +3,6 @@ package org.motechproject.validation.validator;
 import lombok.Data;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.motechproject.validation.validator.BeanValidator;
 import org.motechproject.validation.constraints.Scope;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -11,6 +10,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.validation.BeanPropertyBindingResult;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotNull;
 
 import static junit.framework.Assert.assertEquals;
@@ -58,6 +58,25 @@ public class BeanValidatorTest {
         assertEquals("may not be null", errors.getFieldError("memberField.notNullField").getDefaultMessage());
     }
 
+    @Test
+    public void shouldNotValidateIfTypeShouldBeIgnoredOnEmpty() {
+        NotValidatedIfEmpty target = new NotValidatedIfEmpty();
+        BeanPropertyBindingResult errors = new BeanPropertyBindingResult(target, "notValidatedIfEmpty");
+        beanValidator.validate(target, "create", errors);
+        assertEquals(0, errors.getErrorCount());
+    }
+
+    @Test
+    public void shouldValidateIfTypeShouldBeIgnoredOnEmpty() {
+        NotValidatedIfEmpty target = new NotValidatedIfEmpty();
+        target.setField("invalidFieldValue");
+
+        BeanPropertyBindingResult errors = new BeanPropertyBindingResult(target, "notValidatedIfEmpty");
+        beanValidator.validate(target, "create", errors);
+
+        assertEquals("numeric value out of bounds (<2 digits>.<2 digits> expected)", errors.getFieldError("field").getDefaultMessage());
+    }
+
     @Data
     public static class ClassWithValidations {
 
@@ -98,5 +117,12 @@ public class BeanValidatorTest {
         public void setNotNullField(String notNullField) {
             this.notNullField = notNullField;
         }
+    }
+
+    @Data
+    public static class NotValidatedIfEmpty {
+
+        @Digits(integer = 2, fraction = 2)
+        private String field;
     }
 }
