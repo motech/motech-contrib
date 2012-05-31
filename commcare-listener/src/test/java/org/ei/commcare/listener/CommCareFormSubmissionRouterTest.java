@@ -3,7 +3,6 @@ package org.ei.commcare.listener;
 import org.ei.commcare.api.domain.CommCareFormContent;
 import org.ei.commcare.api.domain.CommCareFormInstance;
 import org.ei.commcare.listener.event.*;
-import org.ei.drishti.common.audit.Auditor;
 import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
@@ -18,7 +17,6 @@ import java.util.Random;
 import static com.ibm.icu.impl.Assert.fail;
 import static java.util.Arrays.asList;
 import static org.ei.commcare.api.domain.CommCareFormContent.FORM_ID_FIELD;
-import static org.ei.drishti.common.audit.AuditMessageType.FORM_SUBMISSION;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.*;
@@ -29,17 +27,13 @@ public class CommCareFormSubmissionRouterTest {
     @Mock
     FakeDrishtiController drishtiController;
     @Mock
-    Auditor auditor;
-    @Mock
-    private Auditor.AuditMessageBuilder messageBuilder;
+    AuditorRegistrar auditor;
 
     private CommCareFormSubmissionRouter commCareFormSubmissionRouter;
 
     @Before
     public void setUp() throws Exception {
         initMocks(this);
-        when(auditor.audit(FORM_SUBMISSION)).thenReturn(messageBuilder);
-        when(messageBuilder.with(any(String.class), any(String.class))).thenReturn(messageBuilder);
 
         commCareFormSubmissionRouter = new CommCareFormSubmissionRouter(auditor);
         commCareFormSubmissionRouter.registerForDispatch(drishtiController);
@@ -157,13 +151,9 @@ public class CommCareFormSubmissionRouterTest {
 
     @Test
     public void shouldAuditWhenAFormSubmissionSuccessfullyGoesThroughToTheController() throws Exception {
-        when(auditor.audit(FORM_SUBMISSION)).thenReturn(messageBuilder);
-
         commCareFormSubmissionRouter.handle(eventFor(form("ancVisit", asList("something"), asList("3"))));
 
-        verify(messageBuilder).with("formId", FORM_ID);
-        verify(messageBuilder).with("formType", "ancVisit");
-        verify(messageBuilder).with("formData", "{\"something\":\"3\"}");
+        verify(auditor).auditFormSubmission(FORM_ID, "ancVisit", "{\"something\":\"3\"}");
     }
 
     private MotechEvent eventFor(CommCareFormInstance... events) {

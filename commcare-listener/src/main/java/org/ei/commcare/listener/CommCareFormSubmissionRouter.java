@@ -4,7 +4,6 @@ import com.google.gson.Gson;
 import com.google.gson.JsonParseException;
 import org.ei.commcare.api.domain.CommCareFormInstance;
 import org.ei.commcare.listener.event.CommCareFormEvent;
-import org.ei.drishti.common.audit.Auditor;
 import org.motechproject.dao.MotechJsonReader;
 import org.motechproject.model.MotechEvent;
 import org.motechproject.server.event.annotations.MotechListener;
@@ -18,16 +17,15 @@ import java.lang.reflect.Method;
 import java.util.List;
 
 import static org.ei.commcare.listener.event.CommCareFormEvent.FORM_INSTANCES_PARAMETER;
-import static org.ei.drishti.common.audit.AuditMessageType.FORM_SUBMISSION;
 
 @Component
 public class CommCareFormSubmissionRouter {
     private Object routeEventsHere;
     private static Logger logger = LoggerFactory.getLogger(CommCareFormSubmissionRouter.class.toString());
-    private final Auditor auditor;
+    private final AuditorRegistrar auditor;
 
     @Autowired
-    public CommCareFormSubmissionRouter(Auditor auditor) {
+    public CommCareFormSubmissionRouter(AuditorRegistrar auditor) {
         this.auditor = auditor;
     }
 
@@ -76,7 +74,7 @@ public class CommCareFormSubmissionRouter {
             return;
         }
 
-        auditor.audit(FORM_SUBMISSION).with("formId", formId).with("formType", methodName).with("formData", parameterJson).done();
+        auditor.auditFormSubmission(formId, methodName, parameterJson);
         logger.debug("Dispatching " + parameter + " to method: " + method + " in object: " + routeEventsHere);
 
         method.invoke(routeEventsHere, parameter);
