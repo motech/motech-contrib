@@ -6,14 +6,14 @@ import org.springframework.stereotype.Component;
 public class AuditorRegistrar {
     public Auditor auditor;
 
-    void auditFormSubmission(String formId, String formType, String formData) {
+    public void auditFormSubmission(String formId, String formType, String formData) {
         if (auditor == null) {
             return;
         }
         auditor.auditFormSubmission(formId, formType, formData);
     }
 
-    void register(Auditor auditor) {
+    public void register(Auditor auditor) {
         this.auditor = auditor;
     }
 }
