@@ -32,8 +32,8 @@
         </dependency>
         <dependency>
             <groupId>org.motechproject</groupId>
-            <artifactId>motech-platform-common-api</artifactId>
-            <version>0.11-SNAPSHOT</version>
+            <artifactId>motech-platform-common</artifactId>
+            <version>${motech.version}</version>
         </dependency>
         <dependency>
             <groupId>org.mockito</groupId>
