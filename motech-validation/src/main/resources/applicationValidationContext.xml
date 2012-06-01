@@ -6,7 +6,7 @@
 
                            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd">
 
-    <import resource="classpath*:applicationPlatformCommon.xml"/>
+    <import resource="classpath*:applicationPlatformCommonAPI.xml"/>
 
     <context:property-placeholder location="classpath*:*.properties"/>
     <context:annotation-config/>
