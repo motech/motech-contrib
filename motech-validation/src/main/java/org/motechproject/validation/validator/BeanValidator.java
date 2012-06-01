@@ -10,6 +10,8 @@ import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.List;
 
+import static org.apache.commons.lang.StringUtils.isEmpty;
+
 @Component
 public class BeanValidator {
 
@@ -40,11 +42,15 @@ public class BeanValidator {
             field.setAccessible(true);
             try {
                 Object fieldValue = field.get(target);
-                isEmpty &= (fieldValue == null);
+                if (fieldValue instanceof String) {
+                    isEmpty &= isEmpty((String) fieldValue);
+                } else {
+                    isEmpty &= (fieldValue == null);
+                }
             } catch (IllegalAccessException ignored) {
             }
         }
-        return isEmpty;
+        return !isEmpty;
     }
 
     private void validateFields(Object target, String scope, Errors errors) {

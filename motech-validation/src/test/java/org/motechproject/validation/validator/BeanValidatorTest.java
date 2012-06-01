@@ -4,6 +4,7 @@ import lombok.Data;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.motechproject.validation.constraints.Scope;
+import org.motechproject.validation.constraints.ValidateIfNotEmpty;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -14,6 +15,7 @@ import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotNull;
 
 import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertNull;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = "classpath*:/applicationValidationContext.xml")
@@ -67,6 +69,16 @@ public class BeanValidatorTest {
     }
 
     @Test
+    public void shouldConsiderBeansWithEmptyStringsAsEmpty() {
+        NotValidatedIfEmpty target = new NotValidatedIfEmpty();
+        target.setField("");
+
+        BeanPropertyBindingResult errors = new BeanPropertyBindingResult(target, "notValidatedIfEmpty");
+        beanValidator.validate(target, "create", errors);
+        assertEquals(0, errors.getErrorCount());
+    }
+
+    @Test
     public void shouldValidateIfTypeShouldBeIgnoredOnEmpty() {
         NotValidatedIfEmpty target = new NotValidatedIfEmpty();
         target.setField("invalidFieldValue");
@@ -76,6 +88,7 @@ public class BeanValidatorTest {
 
         assertEquals("numeric value out of bounds (<2 digits>.<2 digits> expected)", errors.getFieldError("field").getDefaultMessage());
     }
+
 
     @Data
     public static class ClassWithValidations {
@@ -120,8 +133,10 @@ public class BeanValidatorTest {
     }
 
     @Data
+    @ValidateIfNotEmpty
     public static class NotValidatedIfEmpty {
 
+        @NotNull
         @Digits(integer = 2, fraction = 2)
         private String field;
     }
