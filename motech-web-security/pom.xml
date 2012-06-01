@@ -5,7 +5,7 @@
     <artifactId>motech-web-security</artifactId>
     <packaging>jar</packaging>
     <name>motech-web-security</name>
-    <version>0.10.2-SNAPSHOT</version>
+    <version>0.11-SNAPSHOT</version>
 
     <properties>
         <spring-security.version>3.0.5.RELEASE</spring-security.version>
@@ -15,7 +15,7 @@
     <parent>
         <artifactId>motech-contrib</artifactId>
         <groupId>org.motechproject</groupId>
-        <version>0.10.2-SNAPSHOT</version>
+        <version>0.11-SNAPSHOT</version>
     </parent>
 
     <repositories>
@@ -133,7 +133,7 @@
         </dependency>
         <dependency>
             <groupId>org.motechproject</groupId>
-            <artifactId>motech-platform-common</artifactId>
+            <artifactId>motech-platform-common-api</artifactId>
             <version>${motech.version}</version>
         </dependency>
         <dependency>
