@@ -29,7 +29,8 @@ public class FormDispatchFailedException extends RuntimeException {
         for (Throwable innerException : innerExceptions) {
             message += "Message: " + innerException.getMessage() + "\n";
             message += "Inner exception message: " + innerException.getCause().getMessage() + "\n";
-            message += StringUtils.join(innerException.getStackTrace(), "\n    ") + "\n=============\n";
+            message += StringUtils.join(innerException.getStackTrace(), "\n    ") + "\n";
+            message += StringUtils.join(innerException.getCause().getStackTrace(), "\n    ") + "\n=============\n";
         }
         message += "]";
         return message;
