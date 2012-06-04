@@ -24,6 +24,9 @@ public class AllMotechWebUsers extends MotechBaseRepository<MotechWebUser> {
 
     @GenerateView
     public MotechWebUser findByUserName(String userName) {
+        if(userName == null)
+            return null;
+        userName = userName.toLowerCase();
         ViewQuery viewQuery = createQuery("by_userName").key(userName).includeDocs(true);
         MotechWebUser motechWebUser = singleResult(db.queryView(viewQuery, MotechWebUser.class));
         if (motechWebUser != null) {

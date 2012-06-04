@@ -60,6 +60,31 @@ public class AllMotechWebUsersIT {
         assertThat(testUser.getPassword(), is(newPassword));
     }
 
+    @Test
+    public void findByUserNameShouldBeCaseInsensitive() {
+        String userName = "TestUser";
+        allMotechWebUsers.add(new MotechWebUser(userName, "testpassword", "id", new Roles(Arrays.asList(new Role("ADMIN")))));
+
+        assertNotNull(allMotechWebUsers.findByUserName("TESTUSER"));
+    }
+
+    @Test
+    public void UserNameShouldbeCaseInsensitiveForChangePassword() {
+        String userName = "testuser";
+        allMotechWebUsers.add(new MotechWebUser(userName, "testpassword", "id", new Roles(Arrays.asList(new Role("ADMIN")))));
+
+        String newPassword = "newPassword";
+        allMotechWebUsers.changePassword("TESTUSER", newPassword);
+
+        MotechWebUser testUser = allMotechWebUsers.findByUserName(userName);
+        assertThat(testUser.getPassword(), is(newPassword));
+    }
+
+    @Test
+    public void findByUseridShouldReturnNullIfuserNameIsNull() {
+        assertNull(null,allMotechWebUsers.findByUserName(null));
+    }
+
     @After
     public void tearDown() {
         allMotechWebUsers.removeAll();
