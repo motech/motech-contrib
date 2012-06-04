@@ -4,11 +4,14 @@ import org.motechproject.security.domain.AuthenticatedUser;
 import org.motechproject.security.domain.MotechWebUser;
 import org.motechproject.security.domain.Role;
 import org.motechproject.security.domain.Roles;
+import org.motechproject.security.exceptions.WebSecurityException;
 import org.motechproject.security.repository.AllMotechWebUsers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+
+import static org.apache.commons.lang.StringUtils.isBlank;
 
 @Service
 public class MotechAuthenticationService {
@@ -20,7 +23,8 @@ public class MotechAuthenticationService {
         this.allMotechWebUsers = allMotechWebUsers;
     }
 
-    public void register(String userName, String password, String externalId, List<String> roles) {
+    public void register(String userName, String password, String externalId, List<String> roles) throws WebSecurityException {
+        validateUserInfo(userName, password);
         Roles rolesDomain = new Roles();
         for (String role : roles) {
             rolesDomain.add(new Role(role));
@@ -28,7 +32,15 @@ public class MotechAuthenticationService {
         allMotechWebUsers.add(new MotechWebUser(userName, password, externalId, rolesDomain));
     }
 
-    public void register(String userName, String password, String externalId, List<String> roles, boolean isActive) {
+    private void validateUserInfo(String userName, String password) throws WebSecurityException {
+        if(isBlank(userName) || isBlank(password)) {
+            throw new WebSecurityException("Username or password cannot be empty");
+        }
+    }
+
+    public void register(String userName, String password, String externalId, List<String> roles, boolean isActive) throws WebSecurityException {
+        validateUserInfo(userName, password);
+
         Roles rolesDomain = new Roles();
         for (String role : roles) {
             rolesDomain.add(new Role(role));
