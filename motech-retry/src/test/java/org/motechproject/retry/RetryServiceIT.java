@@ -2,6 +2,7 @@ package org.motechproject.retry;
 
 import org.joda.time.DateTime;
 import org.junit.After;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.motechproject.retry.dao.AllRetries;
@@ -21,6 +22,7 @@ import static org.junit.Assert.assertThat;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("classpath:applicationContext-retry.xml")
+@Ignore
 public class RetryServiceIT {
     @Autowired
     private RetryServiceImpl retryServiceImpl;
