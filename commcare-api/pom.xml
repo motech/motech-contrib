@@ -5,12 +5,12 @@
     <parent>
         <artifactId>motech-contrib</artifactId>
         <groupId>org.motechproject</groupId>
-        <version>0.10.2</version>
+        <version>0.10.3-SNAPSHOT</version>
     </parent>
 
     <artifactId>commcare-api</artifactId>
     <groupId>org.motechproject</groupId>
-    <version>0.10.2</version>
+    <version>0.10.3-SNAPSHOT</version>
     <name>commcare-api</name>
 
     <properties>
