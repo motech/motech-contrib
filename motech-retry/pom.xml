@@ -4,7 +4,7 @@
 
     <groupId>org.motechproject</groupId>
     <artifactId>motech-retry</artifactId>
-    <version>0.10.3</version>
+    <version>0.10.4-SNAPSHOT</version>
 
     <properties>
         <spring.version>3.0.5.RELEASE</spring.version>
@@ -13,7 +13,7 @@
     <parent>
         <artifactId>motech-contrib</artifactId>
         <groupId>org.motechproject</groupId>
-        <version>0.10.3</version>
+        <version>0.10.4-SNAPSHOT</version>
     </parent>
 
     <repositories>

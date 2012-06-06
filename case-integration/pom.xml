@@ -4,7 +4,7 @@
     <groupId>org.motechproject</groupId>
     <artifactId>case-integration</artifactId>
     <packaging>pom</packaging>
-    <version>0.10.3</version>
+    <version>0.10.4-SNAPSHOT</version>
     <name>case-integration</name>
 
     <modules>
@@ -18,7 +18,7 @@
     <parent>
         <artifactId>motech-contrib</artifactId>
         <groupId>org.motechproject</groupId>
-        <version>0.10.3</version>
+        <version>0.10.4-SNAPSHOT</version>
     </parent>
 
 

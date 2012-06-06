@@ -4,7 +4,7 @@
 
     <groupId>org.motechproject</groupId>
     <artifactId>case-service</artifactId>
-    <version>0.10.3</version>
+    <version>0.10.4-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>case-service</name>
 
@@ -19,7 +19,7 @@
     <parent>
         <artifactId>case-integration</artifactId>
         <groupId>org.motechproject</groupId>
-        <version>0.10.3</version>
+        <version>0.10.4-SNAPSHOT</version>
     </parent>
 
     <dependencies>
@@ -64,7 +64,7 @@
         <dependency>
             <groupId>org.motechproject</groupId>
             <artifactId>case-common</artifactId>
-            <version>0.10.3</version>
+            <version>0.10.4-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
@@ -79,7 +79,7 @@
         <dependency>
             <groupId>org.motechproject</groupId>
             <artifactId>case-parser</artifactId>
-            <version>0.10.3</version>
+            <version>0.10.4-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.apache.velocity</groupId>
