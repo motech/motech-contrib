@@ -1,7 +1,6 @@
 package org.motechproject.retry.dao;
 
 import org.joda.time.Period;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.motechproject.retry.domain.RetryRecord;
@@ -22,7 +21,6 @@ import static org.unitils.reflectionassert.ReflectionAssert.assertReflectionEqua
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("classpath:applicationContext-retry.xml")
-@Ignore
 public class AllRetriesDefinitionTest {
 
     @Autowired

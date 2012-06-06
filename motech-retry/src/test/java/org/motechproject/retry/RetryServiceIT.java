@@ -22,7 +22,6 @@ import static org.junit.Assert.assertThat;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("classpath:applicationContext-retry.xml")
-@Ignore
 public class RetryServiceIT {
     @Autowired
     private RetryServiceImpl retryServiceImpl;
