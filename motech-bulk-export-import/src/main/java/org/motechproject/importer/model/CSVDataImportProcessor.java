@@ -1,7 +1,6 @@
 package org.motechproject.importer.model;
 
 import au.com.bytecode.opencsv.CSVReader;
-import au.com.bytecode.opencsv.bean.CsvToBean;
 import au.com.bytecode.opencsv.bean.HeaderColumnNameTranslateMappingStrategy;
 import org.motechproject.importer.annotation.CSVImporter;
 import org.motechproject.importer.annotation.ColumnName;
@@ -19,13 +18,13 @@ import static java.util.Arrays.asList;
 
 public class CSVDataImportProcessor extends DataImportProcessor {
 
-    private CsvToBean csvToBean;
+    private MyCsvToBean csvToBean;
     private Object importer;
 
     public CSVDataImportProcessor(Object importer) {
         super(importer);
         this.importer = importer;
-        this.csvToBean = new CsvToBean();
+        this.csvToBean = new MyCsvToBean();
     }
 
     public String entity() {
