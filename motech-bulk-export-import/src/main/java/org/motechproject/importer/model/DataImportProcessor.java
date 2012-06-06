@@ -61,7 +61,7 @@ public abstract class DataImportProcessor {
     }
 
     private void processErrors(List<Error> errors, String filePath) throws IOException {
-        String fileDirectory = new File(filePath).getParent();
+        String fileDirectory = new File(new File(filePath).getAbsolutePath()).getParent();
         File errorsFile = new File(fileDirectory + File.separator + "errors.csv");
         errorsFile.createNewFile();
 
