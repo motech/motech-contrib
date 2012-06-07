@@ -68,6 +68,7 @@ public abstract class DataImportProcessor {
         BufferedWriter writer = new BufferedWriter(new FileWriter(errorsFile));
         for (Error error : errors) {
             writer.write(error.getMessage());
+            writer.newLine();
         }
         writer.close();
     }
