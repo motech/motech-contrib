@@ -80,7 +80,7 @@ public class DataImporterTest {
         FileInputStream fileInputStream = new FileInputStream(errorsFilePath.toURI().getPath());
         String fileContent = IOUtils.toString(fileInputStream);
 
-        assertEquals("this is a sample error", fileContent);
+        assertEquals("this is a sample error", fileContent.trim());
         FileUtils.deleteQuietly(new File(errorsFilePath.toString()));
     }
 }

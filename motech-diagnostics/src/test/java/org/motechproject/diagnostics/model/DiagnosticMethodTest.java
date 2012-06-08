@@ -1,5 +1,7 @@
 package org.motechproject.diagnostics.model;
 
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.motechproject.diagnostics.response.DiagnosticsResponse;
 import org.motechproject.diagnostics.util.TestClass;
@@ -10,6 +12,11 @@ import static junit.framework.Assert.*;
 import static org.motechproject.diagnostics.model.DiagnosticMethod.isValidDiagnosticMethod;
 
 public class DiagnosticMethodTest {
+    @Before
+    @After
+    public void setUpAndTearDown() {
+        TestClass.methodExecutionCount = 0;
+    }
 
     @Test
     public void shouldSayIfAMethodIsADiagnosticMethod() throws NoSuchMethodException {
