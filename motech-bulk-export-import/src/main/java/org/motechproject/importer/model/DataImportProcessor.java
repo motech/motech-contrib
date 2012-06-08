@@ -1,5 +1,6 @@
 package org.motechproject.importer.model;
 
+import org.apache.commons.lang.exception.ExceptionUtils;
 import org.motechproject.importer.annotation.Post;
 import org.motechproject.importer.annotation.Validate;
 import org.motechproject.importer.domain.Error;
@@ -43,7 +44,7 @@ public abstract class DataImportProcessor {
                 processErrors(validationResponse.getErrors(), filePath);
             }
         } catch (Exception e) {
-            logger.error("Error while importing csv : " + e.getMessage());
+            logger.error("Error while importing csv : " + ExceptionUtils.getFullStackTrace(e));
         }
     }
 
