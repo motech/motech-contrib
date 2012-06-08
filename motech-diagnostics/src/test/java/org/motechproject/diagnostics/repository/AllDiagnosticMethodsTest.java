@@ -2,6 +2,8 @@ package org.motechproject.diagnostics.repository;
 
 
 import org.ektorp.CouchDbConnector;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.motechproject.diagnostics.response.DiagnosticsResponse;
 import org.motechproject.diagnostics.util.TestClass;
@@ -16,6 +18,11 @@ import static junit.framework.Assert.*;
 
 @ContextConfiguration(locations = "classpath*:/applicationContext-Diagnostics.xml")
 public class AllDiagnosticMethodsTest extends SpringIntegrationTest {
+    @Before
+    @After
+    public void setUpAndTearDown() {
+        TestClass.methodExecutionCount = 0;
+    }
 
     @Autowired
     private AllDiagnosticMethods allDiagnosticMethods;
