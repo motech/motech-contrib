@@ -17,7 +17,9 @@ import java.util.ArrayList;
 
 import static java.util.Arrays.asList;
 import static junit.framework.Assert.assertFalse;
-import static junit.framework.Assert.assertNull;
+import static junit.framework.Assert.assertTrue;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
 
 
@@ -35,9 +37,12 @@ public class MotechAuthenticationServiceTest extends SpringIntegrationTest {
     @Qualifier("webSecurityDbConnector")
     CouchDbConnector connector;
 
+    @Autowired
+    private MotechPasswordEncoder passwordEncoder;
+
     @Test
-    public void testRegister() throws WebSecurityException{
-        motechAuthenticationService.register("userName", "password", "1234", asList(new String[]{ "IT_ADMIN", "DB_ADMIN"}));
+    public void testRegister() throws WebSecurityException {
+        motechAuthenticationService.register("userName", "password", "1234", asList(new String[]{"IT_ADMIN", "DB_ADMIN"}));
         MotechWebUser motechWebUser = allMotechWebUsers.findByUserName("userName");
 
         assertNotNull(motechWebUser);
@@ -56,12 +61,12 @@ public class MotechAuthenticationServiceTest extends SpringIntegrationTest {
 
     @Test(expected = WebSecurityException.class)
     public void shouldThrowExceptionIfUserNameIsEmptyForRegister() throws WebSecurityException {
-        motechAuthenticationService.register("","password","ext_id",new ArrayList<String>());
+        motechAuthenticationService.register("", "password", "ext_id", new ArrayList<String>());
     }
 
     @Test(expected = WebSecurityException.class)
     public void shouldThrowExceptionIfUserNameIsEmptyForRegisterWithActiveInfo() throws WebSecurityException {
-        motechAuthenticationService.register("","password","ext_id",new ArrayList<String>(),true);
+        motechAuthenticationService.register("", "password", "ext_id", new ArrayList<String>(), true);
 
     }
 
@@ -85,7 +90,7 @@ public class MotechAuthenticationServiceTest extends SpringIntegrationTest {
     }
 
     @Test
-    public void shouldCreateActiveUserByDefault() throws WebSecurityException{
+    public void shouldCreateActiveUserByDefault() throws WebSecurityException {
         motechAuthenticationService.register("userName", "password", "1234", asList("IT_ADMIN", "DB_ADMIN"));
         MotechWebUser motechWebUser = allMotechWebUsers.findByUserName("userName");
 
@@ -101,11 +106,18 @@ public class MotechAuthenticationServiceTest extends SpringIntegrationTest {
     }
 
     @Test
+    public void testPasswordEncoding() throws WebSecurityException {
+        String plainTextPassword = "testpassword";
+        motechAuthenticationService.register("testuser", plainTextPassword, "entity1", asList("ADMIN"));
+        MotechWebUser motechWebUser = allMotechWebUsers.findByUserName("testuser");
+        assertTrue(passwordEncoder.isPasswordValid(motechWebUser.getPassword(), plainTextPassword));
+    }
+
+    @Test
     public void testChangePassword() throws WebSecurityException {
         motechAuthenticationService.register("userName", "password", "1234", asList("IT_ADMIN", "DB_ADMIN"));
-
         MotechWebUser webUser = motechAuthenticationService.changePassword("userName", "newPassword");
-        assertEquals("newPassword", webUser.getPassword());
+        assertTrue(passwordEncoder.isPasswordValid(webUser.getPassword(), "newPassword"));
     }
 
     @After

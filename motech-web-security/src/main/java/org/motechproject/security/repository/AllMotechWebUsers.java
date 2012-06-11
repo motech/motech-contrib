@@ -4,7 +4,6 @@ import org.ektorp.CouchDbConnector;
 import org.ektorp.ViewQuery;
 import org.ektorp.support.GenerateView;
 import org.ektorp.support.View;
-import org.jasypt.encryption.pbe.PBEStringEncryptor;
 import org.motechproject.dao.MotechBaseRepository;
 import org.motechproject.security.domain.MotechWebUser;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,12 +15,9 @@ import java.util.List;
 @Component
 public class AllMotechWebUsers extends MotechBaseRepository<MotechWebUser> {
 
-    private PBEStringEncryptor encryptor;
-
     @Autowired
-    protected AllMotechWebUsers(@Qualifier("webSecurityDbConnector") CouchDbConnector db, PBEStringEncryptor encryptor) {
+    protected AllMotechWebUsers(@Qualifier("webSecurityDbConnector") CouchDbConnector db) {
         super(MotechWebUser.class, db);
-        this.encryptor = encryptor;
         initStandardDesignDocument();
     }
 
@@ -31,12 +27,7 @@ public class AllMotechWebUsers extends MotechBaseRepository<MotechWebUser> {
             return null;
         userName = userName.toLowerCase();
         ViewQuery viewQuery = createQuery("by_userName").key(userName).includeDocs(true);
-        MotechWebUser motechWebUser = singleResult(db.queryView(viewQuery, MotechWebUser.class));
-        if (motechWebUser != null) {
-            String decryptedPassword = encryptor.decrypt(motechWebUser.getPassword());
-            motechWebUser.setPassword(decryptedPassword);
-        }
-        return motechWebUser;
+        return singleResult(db.queryView(viewQuery, MotechWebUser.class));
     }
 
     @View(name = "find_by_role", map = "function(doc) {if (doc.type ==='MotechWebUser') {for(i in doc.roles) {emit(doc.roles[i], [doc._id]);}}}")
@@ -48,26 +39,12 @@ public class AllMotechWebUsers extends MotechBaseRepository<MotechWebUser> {
     }
 
     @Override
-    public void add(MotechWebUser webUser) {
-        String encryptedPassword = encryptor.encrypt(webUser.getPassword());
-        webUser.setPassword(encryptedPassword);
-        super.add(webUser);
+    public void add(MotechWebUser motechWebUser) {
+        super.add(motechWebUser);
     }
 
     @Override
-    public void update(MotechWebUser webUser) {
-        String encryptedPassword = encryptor.encrypt(webUser.getPassword());
-        webUser.setPassword(encryptedPassword);
-        super.update(webUser);
+    public void update(MotechWebUser motechWebUser) {
+        super.update(motechWebUser);
     }
-
-    public void changePassword(String userName, String newPassword) {
-        MotechWebUser webUser = findByUserName(userName);
-        if (webUser == null)
-            return;
-        String encryptedPassword = encryptor.encrypt(newPassword);
-        webUser.setPassword(encryptedPassword);
-        super.update(webUser);
-    }
-
 }
