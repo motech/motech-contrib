@@ -26,6 +26,7 @@
         <module>motech-diagnostics</module>
         <module>motech-retry</module>
         <module>motech-flash-scope</module>
+        <module>motech-common</module>
     </modules>
 
     <distributionManagement>
