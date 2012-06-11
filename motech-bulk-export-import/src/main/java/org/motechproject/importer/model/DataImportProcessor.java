@@ -44,6 +44,7 @@ public abstract class DataImportProcessor {
                 processErrors(validationResponse.getErrors(), filePath);
             }
         } catch (Exception e) {
+            System.err.println("Error while importing csv : " + ExceptionUtils.getFullStackTrace(e));
             logger.error("Error while importing csv : " + ExceptionUtils.getFullStackTrace(e));
         }
     }
