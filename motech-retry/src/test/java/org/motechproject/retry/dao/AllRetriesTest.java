@@ -3,6 +3,7 @@ package org.motechproject.retry.dao;
 import org.joda.time.DateTime;
 import org.joda.time.Period;
 import org.junit.After;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Matchers;

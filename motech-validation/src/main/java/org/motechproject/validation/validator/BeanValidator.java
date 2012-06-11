@@ -10,7 +10,7 @@ import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.apache.commons.lang.StringUtils.isEmpty;
+import static org.springframework.util.StringUtils.hasText;
 
 @Component
 public class BeanValidator {
@@ -37,20 +37,22 @@ public class BeanValidator {
     }
 
     private boolean isNotEmpty(Object target) {
-        boolean isEmpty = true;
+        boolean isNotEmpty = true;
         for (Field field : target.getClass().getDeclaredFields()) {
             field.setAccessible(true);
             try {
                 Object fieldValue = field.get(target);
                 if (fieldValue instanceof String) {
-                    isEmpty &= isEmpty((String) fieldValue);
+                    isNotEmpty = hasText((String) fieldValue);
+                    break;
                 } else {
-                    isEmpty &= (fieldValue == null);
+                    isNotEmpty = (fieldValue != null);
+                    break;
                 }
             } catch (IllegalAccessException ignored) {
             }
         }
-        return !isEmpty;
+        return isNotEmpty;
     }
 
     private void validateFields(Object target, String scope, Errors errors) {

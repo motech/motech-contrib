@@ -1,5 +1,6 @@
 package org.motechproject.importer.model;
 
+import org.apache.commons.lang.exception.ExceptionUtils;
 import org.motechproject.importer.annotation.Post;
 import org.motechproject.importer.annotation.Validate;
 import org.motechproject.importer.domain.Error;
@@ -43,8 +44,7 @@ public abstract class DataImportProcessor {
                 processErrors(validationResponse.getErrors(), filePath);
             }
         } catch (Exception e) {
-            System.err.println("Error while importing csv : " + e.getMessage());
-            logger.error("Error while importing csv : " + e.getMessage());
+            logger.error("Error while importing csv : " + ExceptionUtils.getFullStackTrace(e));
         }
     }
 
@@ -62,13 +62,14 @@ public abstract class DataImportProcessor {
     }
 
     private void processErrors(List<Error> errors, String filePath) throws IOException {
-        String fileDirectory = new File(filePath).getParent();
+        String fileDirectory = new File(new File(filePath).getAbsolutePath()).getParent();
         File errorsFile = new File(fileDirectory + File.separator + "errors.csv");
         errorsFile.createNewFile();
 
         BufferedWriter writer = new BufferedWriter(new FileWriter(errorsFile));
         for (Error error : errors) {
             writer.write(error.getMessage());
+            writer.newLine();
         }
         writer.close();
     }

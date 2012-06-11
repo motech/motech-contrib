@@ -23,6 +23,7 @@
         <module>motech-web-security</module>
         <module>motech-validation</module>
         <module>motech-bulk-export-import</module>
+        <module>motech-diagnostics</module>
         <module>motech-retry</module>
         <module>motech-flash-scope</module>
     </modules>

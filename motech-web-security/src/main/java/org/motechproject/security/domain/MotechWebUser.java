@@ -27,13 +27,17 @@ public class MotechWebUser extends MotechBaseDataObject {
     @JsonProperty
     private boolean active = true;
 
-    public MotechWebUser(){
+    public MotechWebUser() {
         super();
     }
 
     public MotechWebUser(String userName, String password, String externalId, Roles roles) {
         super();
-        this.userName = userName;
+        if (userName == null)
+            this.userName = null;
+        else
+            this.userName = userName.toLowerCase();
+
         this.password = password;
         this.externalId = externalId;
         this.roles = roles;

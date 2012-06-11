@@ -15,7 +15,6 @@ import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotNull;
 
 import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertNull;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = "classpath*:/applicationValidationContext.xml")
@@ -63,6 +62,8 @@ public class BeanValidatorTest {
     @Test
     public void shouldNotValidateIfTypeShouldBeIgnoredOnEmpty() {
         NotValidatedIfEmpty target = new NotValidatedIfEmpty();
+        target.setField(null);
+        target.setField2(null);
         BeanPropertyBindingResult errors = new BeanPropertyBindingResult(target, "notValidatedIfEmpty");
         beanValidator.validate(target, "create", errors);
         assertEquals(0, errors.getErrorCount());
@@ -82,11 +83,13 @@ public class BeanValidatorTest {
     public void shouldValidateIfTypeShouldBeIgnoredOnEmpty() {
         NotValidatedIfEmpty target = new NotValidatedIfEmpty();
         target.setField("invalidFieldValue");
-
+        target.setField2(null);
         BeanPropertyBindingResult errors = new BeanPropertyBindingResult(target, "notValidatedIfEmpty");
         beanValidator.validate(target, "create", errors);
 
+        assertEquals(2,errors.getAllErrors().size());
         assertEquals("numeric value out of bounds (<2 digits>.<2 digits> expected)", errors.getFieldError("field").getDefaultMessage());
+        assertEquals("may not be null", errors.getFieldError("field2").getDefaultMessage());
     }
 
 
@@ -139,5 +142,10 @@ public class BeanValidatorTest {
         @NotNull
         @Digits(integer = 2, fraction = 2)
         private String field;
+
+        @NotNull
+        @Digits(integer = 2, fraction = 2)
+        private String field2;
+
     }
 }
