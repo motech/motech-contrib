@@ -5,6 +5,7 @@ import org.codehaus.jackson.annotate.JsonProperty;
 import org.ektorp.support.TypeDiscriminator;
 import org.motechproject.model.MotechBaseDataObject;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.GrantedAuthorityImpl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +23,7 @@ public class MotechWebUser extends MotechBaseDataObject {
     private String password;
 
     @JsonProperty
-    private Roles roles;
+    private List<String> roles;
 
     @JsonProperty
     private boolean active = true;
@@ -31,13 +32,9 @@ public class MotechWebUser extends MotechBaseDataObject {
         super();
     }
 
-    public MotechWebUser(String userName, String password, String externalId, Roles roles) {
+    public MotechWebUser(String userName, String password, String externalId, List<String> roles) {
         super();
-        if (userName == null)
-            this.userName = null;
-        else
-            this.userName = userName.toLowerCase();
-
+        this.userName = userName == null ? null : userName.toLowerCase();
         this.password = password;
         this.externalId = externalId;
         this.roles = roles;
@@ -59,15 +56,15 @@ public class MotechWebUser extends MotechBaseDataObject {
         this.password = password;
     }
 
-    public Roles getRoles() {
+    public List<String> getRoles() {
         return roles;
     }
 
     @JsonIgnore
     public List<GrantedAuthority> getAuthorities() {
         List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
-        for (Role role : roles) {
-            authorities.add(role.authority());
+        for (String role : roles) {
+            authorities.add(new GrantedAuthorityImpl(role));
         }
         return authorities;
     }

@@ -1,9 +1,6 @@
 package org.motechproject.security.service;
 
-import org.motechproject.security.domain.AuthenticatedUser;
 import org.motechproject.security.domain.MotechWebUser;
-import org.motechproject.security.domain.Role;
-import org.motechproject.security.domain.Roles;
 import org.motechproject.security.exceptions.WebSecurityException;
 import org.motechproject.security.repository.AllMotechWebUsers;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,11 +22,7 @@ public class MotechAuthenticationService {
 
     public void register(String userName, String password, String externalId, List<String> roles) throws WebSecurityException {
         validateUserInfo(userName, password);
-        Roles rolesDomain = new Roles();
-        for (String role : roles) {
-            rolesDomain.add(new Role(role));
-        }
-        allMotechWebUsers.add(new MotechWebUser(userName, password, externalId, rolesDomain));
+        allMotechWebUsers.add(new MotechWebUser(userName, password, externalId, roles));
     }
 
     private void validateUserInfo(String userName, String password) throws WebSecurityException {
@@ -40,14 +33,9 @@ public class MotechAuthenticationService {
 
     public void register(String userName, String password, String externalId, List<String> roles, boolean isActive) throws WebSecurityException {
         validateUserInfo(userName, password);
-
-        Roles rolesDomain = new Roles();
-        for (String role : roles) {
-            rolesDomain.add(new Role(role));
-        }
-        MotechWebUser user = new MotechWebUser(userName, password, externalId, rolesDomain);
-        user.setActive(isActive);
-        allMotechWebUsers.add(user);
+        MotechWebUser webUser = new MotechWebUser(userName, password, externalId, roles);
+        webUser.setActive(isActive);
+        allMotechWebUsers.add(webUser);
     }
 
     public void activateUser(String userName) {
@@ -58,25 +46,14 @@ public class MotechAuthenticationService {
         }
     }
 
-    public AuthenticatedUser changePassword(String userName, String newPassword) {
+    public MotechWebUser changePassword(String userName, String newPassword) {
         allMotechWebUsers.changePassword(userName, newPassword);
-        MotechWebUser motechWebUser = allMotechWebUsers.findByUserName(userName);
-        if (motechWebUser == null)
-            return null;
-        return new AuthenticatedUser(motechWebUser.getAuthorities(), motechWebUser);
+        return allMotechWebUsers.findByUserName(userName);
     }
 
     public void remove(String userName) {
         MotechWebUser motechWebUser = allMotechWebUsers.findByUserName(userName);
         if (motechWebUser != null)
             allMotechWebUsers.remove(motechWebUser);
-    }
-
-    public AuthenticatedUser authenticate(String userName, String password) {
-        MotechWebUser user = allMotechWebUsers.findByUserName(userName);
-        if (user != null && password.equals(user.getPassword())) {
-            return new AuthenticatedUser(user.getAuthorities(), user);
-        }
-        return null;
     }
 }

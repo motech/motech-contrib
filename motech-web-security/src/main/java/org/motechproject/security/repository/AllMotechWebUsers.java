@@ -7,7 +7,6 @@ import org.ektorp.support.View;
 import org.jasypt.encryption.pbe.PBEStringEncryptor;
 import org.motechproject.dao.MotechBaseRepository;
 import org.motechproject.security.domain.MotechWebUser;
-import org.motechproject.security.domain.Role;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
@@ -41,7 +40,7 @@ public class AllMotechWebUsers extends MotechBaseRepository<MotechWebUser> {
     }
 
     @View(name = "find_by_role", map = "function(doc) {if (doc.type ==='MotechWebUser') {for(i in doc.roles) {emit(doc.roles[i], [doc._id]);}}}")
-    public List<MotechWebUser> findByRoles(Role role) {
+    public List<MotechWebUser> findByRole(String role) {
         if (role == null)
             return null;
         ViewQuery viewQuery = createQuery("find_by_role").key(role).includeDocs(true);
@@ -49,26 +48,26 @@ public class AllMotechWebUsers extends MotechBaseRepository<MotechWebUser> {
     }
 
     @Override
-    public void add(MotechWebUser user) {
-        String encryptedPassword = encryptor.encrypt(user.getPassword());
-        user.setPassword(encryptedPassword);
-        super.add(user);
+    public void add(MotechWebUser webUser) {
+        String encryptedPassword = encryptor.encrypt(webUser.getPassword());
+        webUser.setPassword(encryptedPassword);
+        super.add(webUser);
     }
 
     @Override
-    public void update(MotechWebUser user) {
-        String encryptedPassword = encryptor.encrypt(user.getPassword());
-        user.setPassword(encryptedPassword);
-        super.update(user);
+    public void update(MotechWebUser webUser) {
+        String encryptedPassword = encryptor.encrypt(webUser.getPassword());
+        webUser.setPassword(encryptedPassword);
+        super.update(webUser);
     }
 
     public void changePassword(String userName, String newPassword) {
-        MotechWebUser user = findByUserName(userName);
-        if (user == null)
+        MotechWebUser webUser = findByUserName(userName);
+        if (webUser == null)
             return;
         String encryptedPassword = encryptor.encrypt(newPassword);
-        user.setPassword(encryptedPassword);
-        super.update(user);
+        webUser.setPassword(encryptedPassword);
+        super.update(webUser);
     }
 
 }

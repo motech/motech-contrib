@@ -4,7 +4,6 @@ import org.ektorp.CouchDbConnector;
 import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.motechproject.security.domain.AuthenticatedUser;
 import org.motechproject.security.domain.MotechWebUser;
 import org.motechproject.security.exceptions.WebSecurityException;
 import org.motechproject.security.repository.AllMotechWebUsers;
@@ -15,8 +14,8 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
+import static java.util.Arrays.asList;
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertNull;
 import static org.junit.Assert.*;
@@ -38,17 +37,17 @@ public class MotechAuthenticationServiceTest extends SpringIntegrationTest {
 
     @Test
     public void testRegister() throws WebSecurityException{
-        motechAuthenticationService.register("userName", "password", "1234", Arrays.asList("IT_ADMIN", "DB_ADMIN"));
+        motechAuthenticationService.register("userName", "password", "1234", asList(new String[]{ "IT_ADMIN", "DB_ADMIN"}));
         MotechWebUser motechWebUser = allMotechWebUsers.findByUserName("userName");
 
         assertNotNull(motechWebUser);
-        assertEquals("IT_ADMIN", motechWebUser.getRoles().get(0).getName());
-        assertEquals("DB_ADMIN", motechWebUser.getRoles().get(1).getName());
+        assertEquals("IT_ADMIN", motechWebUser.getRoles().get(0));
+        assertEquals("DB_ADMIN", motechWebUser.getRoles().get(1));
     }
 
     @Test
     public void shouldActivateUser() throws WebSecurityException {
-        motechAuthenticationService.register("userName", "password", "1234", Arrays.asList("IT_ADMIN", "DB_ADMIN"), false);
+        motechAuthenticationService.register("userName", "password", "1234", asList("IT_ADMIN", "DB_ADMIN"), false);
         motechAuthenticationService.activateUser("userName");
         MotechWebUser motechWebUser = allMotechWebUsers.findByUserName("userName");
 
@@ -68,17 +67,17 @@ public class MotechAuthenticationServiceTest extends SpringIntegrationTest {
 
     @Test(expected = WebSecurityException.class)
     public void shouldThrowExceptionIfPasswordIsEmptyForRegister() throws WebSecurityException {
-        motechAuthenticationService.register("user","","ext_id",new ArrayList<String>());
+        motechAuthenticationService.register("user", "", "ext_id", new ArrayList<String>());
     }
 
     @Test(expected = WebSecurityException.class)
     public void shouldThrowExceptionIfUserNameisNull() throws WebSecurityException {
-        motechAuthenticationService.register(null,"","ext_id",new ArrayList<String>());
+        motechAuthenticationService.register(null, "", "ext_id", new ArrayList<String>());
     }
 
     @Test
     public void shouldNotActivateInvalidUser() throws WebSecurityException {
-        motechAuthenticationService.register("userName", "password", "1234", Arrays.asList("IT_ADMIN", "DB_ADMIN"), false);
+        motechAuthenticationService.register("userName", "password", "1234", asList("IT_ADMIN", "DB_ADMIN"), false);
         motechAuthenticationService.activateUser("userName1");
         MotechWebUser motechWebUser = allMotechWebUsers.findByUserName("userName");
 
@@ -87,7 +86,7 @@ public class MotechAuthenticationServiceTest extends SpringIntegrationTest {
 
     @Test
     public void shouldCreateActiveUserByDefault() throws WebSecurityException{
-        motechAuthenticationService.register("userName", "password", "1234", Arrays.asList("IT_ADMIN", "DB_ADMIN"));
+        motechAuthenticationService.register("userName", "password", "1234", asList("IT_ADMIN", "DB_ADMIN"));
         MotechWebUser motechWebUser = allMotechWebUsers.findByUserName("userName");
 
         assertTrue(motechWebUser.isActive());
@@ -95,46 +94,18 @@ public class MotechAuthenticationServiceTest extends SpringIntegrationTest {
 
     @Test
     public void shouldCreateInActiveUser() throws WebSecurityException {
-        motechAuthenticationService.register("userName", "password", "1234", Arrays.asList("IT_ADMIN", "DB_ADMIN"), false);
+        motechAuthenticationService.register("userName", "password", "1234", asList("IT_ADMIN", "DB_ADMIN"), false);
         MotechWebUser motechWebUser = allMotechWebUsers.findByUserName("userName");
 
         assertFalse(motechWebUser.isActive());
     }
 
     @Test
-    public void testAuthenticate() throws WebSecurityException {
-        motechAuthenticationService.register("username", "password", "1234", Arrays.asList("IT_ADMIN", "DB_ADMIN"));
-
-        AuthenticatedUser authenticatedUser = motechAuthenticationService.authenticate("userName", "password");
-
-        assertNotNull(authenticatedUser);
-        assertEquals("username", authenticatedUser.getUsername());
-        assertEquals("1234", authenticatedUser.getExternalId());
-
-        motechAuthenticationService.remove("username");
-        assertNull(allMotechWebUsers.findByUserName("username"));
-    }
-
-    @Test
-    public void registerSouldBeCaseInsensitive() throws WebSecurityException {
-        motechAuthenticationService.register("userName", "password", "1234", Arrays.asList("IT_ADMIN", "DB_ADMIN"));
-
-        AuthenticatedUser authenticatedUser = motechAuthenticationService.authenticate("userName", "password");
-
-        assertNotNull(authenticatedUser);
-        assertEquals("username", authenticatedUser.getUsername());
-        assertEquals("1234", authenticatedUser.getExternalId());
-
-        motechAuthenticationService.remove("userName");
-        assertNull(allMotechWebUsers.findByUserName("username"));
-    }
-
-    @Test
     public void testChangePassword() throws WebSecurityException {
-        motechAuthenticationService.register("userName", "password", "1234", Arrays.asList("IT_ADMIN", "DB_ADMIN"));
+        motechAuthenticationService.register("userName", "password", "1234", asList("IT_ADMIN", "DB_ADMIN"));
 
-        AuthenticatedUser user = motechAuthenticationService.changePassword("userName", "newPassword");
-        assertEquals("newPassword", user.getPassword());
+        MotechWebUser webUser = motechAuthenticationService.changePassword("userName", "newPassword");
+        assertEquals("newPassword", webUser.getPassword());
     }
 
     @After
