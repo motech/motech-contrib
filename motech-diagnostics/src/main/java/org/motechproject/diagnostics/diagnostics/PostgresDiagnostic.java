@@ -16,13 +16,14 @@ public class PostgresDiagnostic {
 
     private Properties postgresProperties;
 
-    @Autowired
-    public PostgresDiagnostic(@Qualifier("postgresProperties") Properties postgresProperties) {
+    @Autowired(required = false)
+    public void setPostgresProperties(@Qualifier("postgresProperties")Properties postgresProperties) {
         this.postgresProperties = postgresProperties;
     }
 
     @Diagnostic(name = "postgres")
     public DiagnosticsResult performDiagnosis() {
+        if(postgresProperties == null) return null;
         DiagnosticLog diagnosticLog = new DiagnosticLog("POSTGRES");
         diagnosticLog.add("Opening session with database");
         try {

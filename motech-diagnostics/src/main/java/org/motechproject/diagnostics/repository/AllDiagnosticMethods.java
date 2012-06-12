@@ -35,7 +35,9 @@ public class AllDiagnosticMethods implements BeanPostProcessor {
     public List<DiagnosticsResponse> runAllDiagnosticMethods() throws InvocationTargetException, IllegalAccessException {
         List<DiagnosticsResponse> diagnosticsResponses = new ArrayList<DiagnosticsResponse>();
         for (DiagnosticMethod diagnosticMethod : diagnosticMethods) {
-            diagnosticsResponses.add(diagnosticMethod.run());
+            DiagnosticsResponse response = diagnosticMethod.run();
+            if (response != null)
+                diagnosticsResponses.add(response);
         }
         return diagnosticsResponses;
     }

@@ -23,6 +23,12 @@ public class TestClass {
         return new DiagnosticsResult(false, "test message");
     }
 
+    @Diagnostic(name = "testDiagnosticsWithNullResult")
+    public DiagnosticsResult method3WithNullResult() {
+        methodExecutionCount++;
+        return null;
+    }
+
     public void methodWithoutAnnotation() {
         methodExecutionCount++;
     }
