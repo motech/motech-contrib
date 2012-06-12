@@ -8,6 +8,7 @@
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd">
 
     <context:property-placeholder location="classpath*:*.properties"/>
+    <util:properties id="postgresProperties" location="classpath:postgres.properties"/>
 
     <context:annotation-config/>
 
@@ -15,5 +16,13 @@
 
     <import resource="classpath:applicationPlatformServerAPI.xml"/>
 
+    <bean id="configurationDiagnostic" class="org.motechproject.diagnostics.diagnostics.ConfigurationDiagnostic">
+        <property name="propertyFilesMap">
+          <map>
+              <entry key="activemq"><util:properties location="classpath:activemq.properties"/></entry>
+              <entry key="postgres"><util:properties location="classpath:postgres.properties"/></entry>
+          </map>
+        </property>
+    </bean>
 
 </beans>

@@ -36,8 +36,11 @@ public class AllDiagnosticMethodsTest extends SpringIntegrationTest {
     public void shouldInvokeAllDiagnosticMethods() throws InvocationTargetException, IllegalAccessException {
         List<DiagnosticsResponse> diagnosticsResponses = allDiagnosticMethods.runAllDiagnosticMethods();
 
-        assertEquals(2, TestClass.methodExecutionCount);
+        assertEquals(3, TestClass.methodExecutionCount);
         assertTrue(diagnosticsResponses.get(0).getResult().getStatus());
         assertFalse(diagnosticsResponses.get(1).getResult().getStatus());
+        
+        for(DiagnosticsResponse response : diagnosticsResponses)
+            assertNotNull(response.getResult());
     }
 }

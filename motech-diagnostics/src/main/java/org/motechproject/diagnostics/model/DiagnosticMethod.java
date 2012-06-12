@@ -24,6 +24,6 @@ public class DiagnosticMethod {
 
     public DiagnosticsResponse run() throws InvocationTargetException, IllegalAccessException {
         DiagnosticsResult result = (DiagnosticsResult) method.invoke(bean, null);
-        return new DiagnosticsResponse(name, result);
+        return result == null ? null : new DiagnosticsResponse(name, result);
     }
 }

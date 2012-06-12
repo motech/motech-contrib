@@ -37,4 +37,15 @@ public class DiagnosticMethodTest {
         assertTrue(diagnosticsResponse.getResult().getStatus());
         assertEquals("test message", diagnosticsResponse.getResult().getMessage());
     }
+
+    @Test
+    public void shouldReturnResponseAsNullIfResultIsNull() throws InvocationTargetException, IllegalAccessException, NoSuchMethodException {
+        TestClass testClass = new TestClass();
+        String methodName = "testMethod3";
+        DiagnosticMethod diagnosticMethod = new DiagnosticMethod(methodName, testClass, testClass.getClass().getMethod("method3WithNullResult"));
+
+        DiagnosticsResponse diagnosticsResponse = diagnosticMethod.run();
+
+        assertNull(diagnosticsResponse);
+    }
 }
