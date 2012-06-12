@@ -79,4 +79,28 @@ public class MotechWebUser extends MotechBaseDataObject {
     public void setActive(boolean active) {
         this.active = active;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        MotechWebUser that = (MotechWebUser) o;
+
+        if (active != that.active) return false;
+        if (!externalId.equals(that.externalId)) return false;
+        if (!roles.equals(that.roles)) return false;
+        if (!userName.equals(that.userName)) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = externalId.hashCode();
+        result = 31 * result + userName.hashCode();
+        result = 31 * result + roles.hashCode();
+        result = 31 * result + (active ? 1 : 0);
+        return result;
+    }
 }
