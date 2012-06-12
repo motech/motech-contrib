@@ -10,6 +10,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import javax.jms.JMSException;
 
 import static junit.framework.Assert.assertNotNull;
+import static junit.framework.Assert.assertTrue;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("classpath:applicationContext-Diagnostics.xml")
@@ -21,7 +22,7 @@ public class ActiveMQDiagnosticIT {
     @Test
     public void shouldCheckActiveMQConnection() throws JMSException {
         DiagnosticsResult diagnosticsResult = activeMQDiagnostic.performDiagnosis();
-        System.out.println(diagnosticsResult.toString());
         assertNotNull(diagnosticsResult);
+        assertTrue("Connection check should return true.", diagnosticsResult.getStatus());
     }
 }
