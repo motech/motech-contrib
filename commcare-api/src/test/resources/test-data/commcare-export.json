@@ -15,6 +15,9 @@
                     "mappings": {
                         "form|path|to|field": "1_FieldInOutput",
                         "form|path|to|another|field": "1_AnotherFieldInOutput"
+                    },
+                    "extraMappings": {
+                        "form|path|to|extra|field": "1_ExtraFieldInOutput"
                     }
                 },
                 {
@@ -28,6 +31,8 @@
                     "mappings": {
                         "form|path|to|field": "2_FieldInOutput",
                         "form|path|to|another|field": "2_AnotherFieldInOutput"
+                    },
+                    "extraMappings": {
                     }
                 }
             ]

@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.List;
+import java.util.Map;
 
 import static org.ei.commcare.listener.event.CommCareFormEvent.FORM_INSTANCES_PARAMETER;
 
@@ -49,7 +50,7 @@ public class CommCareFormSubmissionRouter {
             String formId = instance.formId();
 
             try {
-                dispatch(formId, methodName, parameterJson);
+                dispatch(formId, methodName, parameterJson, instance.hasExtraDataEnabled(), instance.extraData());
             } catch (InvocationTargetException e) {
                 exception.add(new RuntimeException("Failed during dispatch. Info: Form ID: " + formId + ", Method: " + methodName
                         + ", Parameter JSON: " + parameterJson, e.getTargetException()));
@@ -61,8 +62,8 @@ public class CommCareFormSubmissionRouter {
         }
     }
 
-    public void dispatch(String formId, String methodName, String parameterJson) throws Exception {
-        Method method = findMethodWhichAcceptsOneParameter(methodName);
+    public void dispatch(String formId, String methodName, String parameterJson, boolean hasExtraDataEnabled, Map<String, String> extraData) throws Exception {
+        Method method = findMethodForName(methodName, hasExtraDataEnabled);
         if (method == null) {
             logger.warn("Cannot dispatch: Unable to find method: " + methodName + " in " + routeEventsHere.getClass());
             return;
@@ -77,13 +78,19 @@ public class CommCareFormSubmissionRouter {
         auditor.auditFormSubmission(formId, methodName, parameterJson);
         logger.debug("Dispatching " + parameter + " to method: " + method + " in object: " + routeEventsHere);
 
+        if (hasExtraDataEnabled) {
+            method.invoke(routeEventsHere, parameter, extraData);
+            return;
+        }
         method.invoke(routeEventsHere, parameter);
     }
 
-    private Method findMethodWhichAcceptsOneParameter(String methodName) {
+    private Method findMethodForName(String methodName, boolean hasExtraDataEnabled) {
+        int expectedParamLength = hasExtraDataEnabled ? 2 : 1;
+
         Method[] methods = routeEventsHere.getClass().getMethods();
         for (Method method : methods) {
-            if (method.getName().equals(methodName) && method.getParameterTypes().length == 1) {
+            if (method.getName().equals(methodName) && method.getParameterTypes().length == expectedParamLength) {
                 return method;
             }
         }

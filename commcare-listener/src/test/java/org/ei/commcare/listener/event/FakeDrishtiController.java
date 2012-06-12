@@ -1,5 +1,7 @@
 package org.ei.commcare.listener.event;
 
+import java.util.Map;
+
 public class FakeDrishtiController {
     public void registerMother(FakeMotherRegistrationRequest request) {
     }
@@ -10,7 +12,10 @@ public class FakeDrishtiController {
     public void methodWithoutArguments() {
     }
 
-    public void methodWithTwoArguments(int a, int b) {
+    public void methodWithTwoArguments(FakeMotherRegistrationRequest request, Map<String, String> extraData) {
+    }
+
+    public void methodWithThreeArguments(int a, int b, int c) {
     }
 
     public void methodWhichThrowsAnException(FakeMotherRegistrationRequest request) {

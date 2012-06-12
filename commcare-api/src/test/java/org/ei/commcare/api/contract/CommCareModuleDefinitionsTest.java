@@ -7,6 +7,7 @@ import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertTrue;
 
 public class CommCareModuleDefinitionsTest {
     @Test
@@ -31,6 +32,10 @@ public class CommCareModuleDefinitionsTest {
         validatingForm(definitionsOfFirstModule.get(0), "1_");
         validatingForm(definitionsOfFirstModule.get(1), "2_");
         validatingForm(definitionsOfSecondModule.get(0), "3_");
+
+        assertThat(definitionsOfFirstModule.get(0).extraMappings().get("form|path|to|extra|field"), is("1_ExtraFieldInOutput"));
+        assertTrue(definitionsOfFirstModule.get(1).extraMappings().isEmpty());
+        assertTrue(definitionsOfSecondModule.get(0).extraMappings().isEmpty());
     }
 
     private void validatingForm(CommCareFormDefinition formDefinition, String prefix) {

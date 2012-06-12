@@ -18,16 +18,19 @@
     "#": {
         "headers": [
             "form|path|to|field",
-            "form|path|to|another|field"
+            "form|path|to|another|field",
+            "form|path|to|extra|field"
         ],
         "rows": [
             [
                 "form-2-instance-1-value-1",
-                "form-2-instance-1-value-2"
+                "form-2-instance-1-value-2",
+                "extraFieldValue-2-1"
             ],
             [
                 "form-2-instance-2-value-1",
-                "form-2-instance-2-value-2"
+                "form-2-instance-2-value-2",
+                "extraFieldValue-2-2"
             ]
        ]
     }

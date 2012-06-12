@@ -11,11 +11,16 @@ public class CommCareFormInstance implements Serializable {
     private String formName;
     private String formId;
     private Map<String, String> fieldsWeCareAbout;
+    private Map<String, String> extraData;
+    private boolean hasExtraDataEnabled;
 
     public CommCareFormInstance(CommCareFormDefinition formDefinition, CommCareFormContent content) {
         this.formName = formDefinition.name();
         this.fieldsWeCareAbout = content.getValuesOfFieldsSpecifiedByPath(formDefinition.mappings());
         this.formId = content.formId();
+
+        this.extraData = content.getValuesOfFieldsSpecifiedByPath(formDefinition.extraMappings());
+        this.hasExtraDataEnabled = !formDefinition.extraMappings().isEmpty();
     }
 
     public String formName() {
@@ -28,5 +33,13 @@ public class CommCareFormInstance implements Serializable {
 
     public Map<String, String> fields() {
         return fieldsWeCareAbout;
+    }
+
+    public Map<String, String> extraData() {
+        return extraData;
+    }
+
+    public boolean hasExtraDataEnabled() {
+        return hasExtraDataEnabled;
     }
 }

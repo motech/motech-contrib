@@ -14,6 +14,10 @@ public class CommCareFormDefinitionBuilder {
         HashMap<String, String> mappings = new HashMap<String, String>();
         mappings.put("form|path|to|field", "FieldInOutput");
         mappings.put("form|path|to|another|field", "AnotherFieldInOutput");
-        return new CommCareFormDefinition(formPrefix, url, mappings);
+
+        HashMap<String, String> extraMappings = new HashMap<String, String>();
+        extraMappings.put("form|path|to|extra|field", "extraDataFieldName");
+
+        return new CommCareFormDefinition(formPrefix, url, mappings, extraMappings);
     }
 }

@@ -58,8 +58,8 @@ public class CommCareFormImportServiceTest {
 
         verify(httpClient).get(urlOfExport, "user", "password");
         assertEquals(2, formInstances.size());
-        assertForm(formInstances.get(0), new String[]{"form-1-instance-1-value-1", "form-1-instance-1-value-2"}, "__FORM__");
-        assertForm(formInstances.get(1), new String[]{"form-1-instance-2-value-1", "form-1-instance-2-value-2"}, "__FORM__");
+        assertForm(formInstances.get(0), new String[]{"form-1-instance-1-value-1", "form-1-instance-1-value-2"}, "__FORM__", "extraFieldValue-1-1");
+        assertForm(formInstances.get(1), new String[]{"form-1-instance-2-value-1", "form-1-instance-2-value-2"}, "__FORM__", "extraFieldValue-1-2");
     }
 
     @Test
@@ -78,10 +78,10 @@ public class CommCareFormImportServiceTest {
         verify(allExportTokens).updateToken(NAMESPACE2, "NEW-TOKEN");
 
         assertEquals(4, formInstances.size());
-        assertForm(formInstances.get(0), new String[]{"form-1-instance-1-value-1", "form-1-instance-1-value-2"}, "__FORM1__");
-        assertForm(formInstances.get(1), new String[]{"form-1-instance-2-value-1", "form-1-instance-2-value-2"}, "__FORM1__");
-        assertForm(formInstances.get(2), new String[]{"form-2-instance-1-value-1", "form-2-instance-1-value-2"}, "__FORM2__");
-        assertForm(formInstances.get(3), new String[]{"form-2-instance-2-value-1", "form-2-instance-2-value-2"}, "__FORM2__");
+        assertForm(formInstances.get(0), new String[]{"form-1-instance-1-value-1", "form-1-instance-1-value-2"}, "__FORM1__", "extraFieldValue-1-1");
+        assertForm(formInstances.get(1), new String[]{"form-1-instance-2-value-1", "form-1-instance-2-value-2"}, "__FORM1__", "extraFieldValue-1-2");
+        assertForm(formInstances.get(2), new String[]{"form-2-instance-1-value-1", "form-2-instance-1-value-2"}, "__FORM2__", "extraFieldValue-2-1");
+        assertForm(formInstances.get(3), new String[]{"form-2-instance-2-value-1", "form-2-instance-2-value-2"}, "__FORM2__", "extraFieldValue-2-2");
     }
 
     @Test
@@ -180,7 +180,7 @@ public class CommCareFormImportServiceTest {
         return new CommCareHttpResponse(statusCode, headers.toArray(new Header[0]), IOUtils.toByteArray(getClass().getResourceAsStream(jsonDump)));
     }
 
-    private void assertForm(CommCareFormInstance actualFormInstance, String[] expectedValuesOfForm, String formName) {
+    private void assertForm(CommCareFormInstance actualFormInstance, String[] expectedValuesOfForm, String formName, String expectedExtraDataValue) {
         assertEquals(actualFormInstance.formName(), formName);
 
         Map<String,String> data = actualFormInstance.fields();
@@ -188,5 +188,6 @@ public class CommCareFormImportServiceTest {
         assertEquals(2, data.size());
         assertThat(data.get("FieldInOutput"), is(expectedValuesOfForm[0]));
         assertThat(data.get("AnotherFieldInOutput"), is(expectedValuesOfForm[1]));
+        assertThat(actualFormInstance.extraData().get("extraDataFieldName"), is(expectedExtraDataValue));
     }
 }
