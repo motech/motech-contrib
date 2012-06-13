@@ -7,7 +7,7 @@
     <version>0.11-SNAPSHOT</version>
 
     <properties>
-        <spring.version>3.0.5.RELEASE</spring.version>
+        <spring.version>3.1.0.RELEASE</spring.version>
     </properties>
 
     <parent>
@@ -60,6 +60,11 @@
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
+            <artifactId>spring-web</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
             <artifactId>spring-aop</artifactId>
             <version>${spring.version}</version>
         </dependency>
@@ -102,4 +107,84 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>properties-maven-plugin</artifactId>
+                <version>1.0-alpha-2</version>
+                <executions>
+                    <execution>
+                        <phase>initialize</phase>
+                        <goals>
+                            <goal>read-project-properties</goal>
+                        </goals>
+                        <configuration>
+                            <files>
+                                <file>${project.parent.relativePath}/../build/maven.properties</file>
+                            </files>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <version>1.7</version>
+                <executions>
+                    <execution>
+                        <id>drop-quartz-schema</id>
+                        <phase>process-resources</phase>
+                        <configuration>
+                            <target>
+                                <echo message="Dropping Quartz databases"/>
+                                <path id="dependencies">
+                                    <fileset file="../build/lib/mysql-connector-java-5.1.13.jar"/>
+                                </path>
+                                <sql driver="${mysql.driver}"
+                                     url="jdbc:mysql://${mysql.server}:${mysql.port}?autoReconnect=true"
+                                     userid="${mysql.user}"
+                                     classpathref="dependencies"
+                                     password="${mysql.password}"
+                                     onerror="continue">
+                                    drop database if exists ${mysql.dbQuartz};
+                                </sql>
+                            </target>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>setup-aggregation-schema</id>
+                        <phase>process-resources</phase>
+                        <configuration>
+                            <target>
+                                <echo message="Quartz schema loading: START"/>
+                                <path id="dependencies">
+                                    <fileset file="../build/lib/mysql-connector-java-5.1.13.jar"/>
+                                </path>
+                                <sql driver="${mysql.driver}"
+                                     url="jdbc:mysql://${mysql.server}:${mysql.port}?autoReconnect=true"
+                                     userid="${mysql.user}"
+                                     classpathref="dependencies"
+                                     password="${mysql.password}">
+                                    <path>
+                                        <fileset dir="../build/sql">
+                                            <include name="tables_mysql_innodb.sql"/>
+                                        </fileset>
+                                    </path>
+                                </sql>
+                                <echo message="Quartz schema loading: END"/>
+                            </target>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 </project>
