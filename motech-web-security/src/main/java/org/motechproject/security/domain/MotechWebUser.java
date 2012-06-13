@@ -84,9 +84,6 @@ public class MotechWebUser extends MotechBaseDataObject {
 
         MotechWebUser that = (MotechWebUser) o;
 
-        if (active != that.active) return false;
-        if (!externalId.equals(that.externalId)) return false;
-        if (!roles.equals(that.roles)) return false;
         if (!userName.equals(that.userName)) return false;
 
         return true;
@@ -94,10 +91,6 @@ public class MotechWebUser extends MotechBaseDataObject {
 
     @Override
     public int hashCode() {
-        int result = externalId.hashCode();
-        result = 31 * result + userName.hashCode();
-        result = 31 * result + roles.hashCode();
-        result = 31 * result + (active ? 1 : 0);
-        return result;
+        return userName.hashCode();
     }
 }
