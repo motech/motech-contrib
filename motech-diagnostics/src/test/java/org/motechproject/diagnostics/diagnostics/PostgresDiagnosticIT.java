@@ -4,12 +4,14 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.motechproject.diagnostics.response.DiagnosticsResult;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.Properties;
 
 import static junit.framework.Assert.*;
 
@@ -24,7 +26,6 @@ public class PostgresDiagnosticIT {
     public void shouldReturnSuccessfulMessageWhenPostgresConnectionIsSuccessful() {
         postGresDiagnosticStub.setConnectionIsSuccessful(true);
         DiagnosticsResult diagnosticsResult = postGresDiagnosticStub.performDiagnosis();
-        System.out.println(diagnosticsResult.toString());
         assertNotNull(diagnosticsResult);
         assertTrue(diagnosticsResult.getMessage().contains("Opening session Successful"));
     }
@@ -33,15 +34,14 @@ public class PostgresDiagnosticIT {
     public void shouldReturnErrorMessageWhenPostgresConnectionFailed() {
         postGresDiagnosticStub.setConnectionIsSuccessful(false);
         DiagnosticsResult diagnosticsResult = postGresDiagnosticStub.performDiagnosis();
-        System.out.println(diagnosticsResult.toString());
         assertNotNull(diagnosticsResult);
         assertTrue(diagnosticsResult.getMessage().contains("Opening session Failed"));
     }
 
     @Test
     public void shouldReturnNullResultWhenPropertyFileDoesNotExist() {
-        postGresDiagnosticStub.setPostgresProperties(null);
-        DiagnosticsResult diagnosticsResult = postGresDiagnosticStub.performDiagnosis();
+        PostGresDiagnosticStub postgresDiagnosticStub = new PostGresDiagnosticStub();
+        DiagnosticsResult diagnosticsResult = postgresDiagnosticStub.performDiagnosis();
         assertNull(diagnosticsResult);
     }
 }

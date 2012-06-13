@@ -28,14 +28,12 @@ public class ConfigurationDiagnosticIT {
         assertTrue(diagnosticsResult.getMessage().contains("queue.for.events=QueueForEvents"));
         assertTrue(diagnosticsResult.getMessage().contains("postgres"));
         assertTrue(diagnosticsResult.getMessage().contains("jdbc.username=postgres"));
-
     }
 
     @Test
     public void shouldNotPerformDiagnosisIfPropertyFileMapIsNull() throws JMSException {
-        configurationDiagnostic.setPropertyFilesMap(null);
+        ConfigurationDiagnostic configurationDiagnostic = new ConfigurationDiagnostic();
         DiagnosticsResult diagnosticsResult = configurationDiagnostic.performDiagnosis();
         assertNull(diagnosticsResult);
-
     }
 }
