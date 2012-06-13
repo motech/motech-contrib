@@ -3,16 +3,17 @@ package org.motechproject.security.repository;
 import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.motechproject.security.domain.MotechWebUser;
 import org.motechproject.security.authentication.MotechPasswordEncoder;
+import org.motechproject.security.domain.MotechWebUser;
+import org.motechproject.security.exceptions.WebSecurityException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.util.List;
 
-import static ch.lambdaj.Lambda.on;
 import static ch.lambdaj.Lambda.extract;
+import static ch.lambdaj.Lambda.on;
 import static java.util.Arrays.asList;
 import static junit.framework.Assert.*;
 
@@ -41,6 +42,22 @@ public class AllMotechWebUsersIT {
 
         assertNotNull(allMotechWebUsers.findByUserName("TESTUSER"));
     }
+
+    @Test
+    public void shouldNotCreateNewAccountIfUserAlreadyExists() throws WebSecurityException {
+        String userName = "username";
+
+        allMotechWebUsers.add(new MotechWebUser(userName, "testpassword", "id", asList("ADMIN")));
+        allMotechWebUsers.add(new MotechWebUser(userName, "testpassword1", "id2", asList("ADMIN")));
+
+
+        MotechWebUser motechWebUser = allMotechWebUsers.findByUserName("userName");
+        assertEquals(1, allMotechWebUsers.getAll().size());
+        assertEquals("testpassword", motechWebUser.getPassword());
+        assertEquals("id", motechWebUser.getExternalId());
+
+    }
+
 
     @Test
     public void shouldListWebUsersByRole() {

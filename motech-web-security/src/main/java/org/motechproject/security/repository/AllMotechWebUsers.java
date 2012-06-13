@@ -39,8 +39,10 @@ public class AllMotechWebUsers extends MotechBaseRepository<MotechWebUser> {
     }
 
     @Override
-    public void add(MotechWebUser motechWebUser) {
-        super.add(motechWebUser);
+    public void add(MotechWebUser user) {
+        if(findByUserName(user.getUserName())!=null)
+            return;
+        super.add(user);
     }
 
     @Override
