@@ -4,7 +4,7 @@ import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.motechproject.security.domain.MotechWebUser;
-import org.motechproject.security.service.MotechPasswordEncoder;
+import org.motechproject.security.authentication.MotechPasswordEncoder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;

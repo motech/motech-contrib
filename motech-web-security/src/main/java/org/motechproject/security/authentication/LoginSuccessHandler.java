@@ -1,4 +1,4 @@
-package org.motechproject.security;
+package org.motechproject.security.authentication;
 
 import org.motechproject.security.domain.MotechWebUser;
 import org.springframework.security.core.Authentication;

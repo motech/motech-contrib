@@ -1,11 +1,10 @@
 package org.motechproject.security.service;
 
+import org.motechproject.security.authentication.MotechPasswordEncoder;
 import org.motechproject.security.domain.MotechWebUser;
 import org.motechproject.security.exceptions.WebSecurityException;
 import org.motechproject.security.repository.AllMotechWebUsers;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.authentication.encoding.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,6 +16,7 @@ public class MotechAuthenticationService {
 
     @Autowired
     private AllMotechWebUsers allMotechWebUsers;
+
     @Autowired
     private MotechPasswordEncoder passwordEncoder;
 

@@ -1,4 +1,4 @@
-package org.motechproject.security.service;
+package org.motechproject.security.authentication;
 
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;

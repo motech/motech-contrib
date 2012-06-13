@@ -20,10 +20,12 @@ public class MotechAuthenticationProvider extends AbstractUserDetailsAuthenticat
     public static final String USER_NOT_ACTIVATED = "The user has been registered but not activated. Please contact your local administrator.";
 
     private AllMotechWebUsers allMotechWebUsers;
+    private MotechPasswordEncoder passwordEncoder;
 
     @Autowired
-    public MotechAuthenticationProvider(AllMotechWebUsers allMotechWebUsers) {
+    public MotechAuthenticationProvider(AllMotechWebUsers allMotechWebUsers, MotechPasswordEncoder passwordEncoder) {
         this.allMotechWebUsers = allMotechWebUsers;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -32,7 +34,7 @@ public class MotechAuthenticationProvider extends AbstractUserDetailsAuthenticat
         if (StringUtils.isEmpty(password)) {
             throw new BadCredentialsException(PLEASE_ENTER_PASSWORD);
         }
-        if (!password.equals(userDetails.getPassword())) {
+        if (!passwordEncoder.isPasswordValid(userDetails.getPassword(), password)) {
             throw new BadCredentialsException(USER_NOT_FOUND);
         }
     }
