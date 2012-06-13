@@ -15,13 +15,11 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import static java.util.Arrays.asList;
-import static junit.framework.Assert.assertFalse;
-import static junit.framework.Assert.assertTrue;
-import static org.junit.Assert.assertEquals;
+import static junit.framework.Assert.*;
 import static org.junit.Assert.assertNotNull;
-
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = "classpath*:/applicationWebSecurityContext.xml")
@@ -118,6 +116,16 @@ public class MotechAuthenticationServiceTest extends SpringIntegrationTest {
         motechAuthenticationService.register("userName", "password", "1234", asList("IT_ADMIN", "DB_ADMIN"));
         MotechWebUser webUser = motechAuthenticationService.changePassword("userName", "newPassword");
         assertTrue(passwordEncoder.isPasswordValid(webUser.getPassword(), "newPassword"));
+    }
+    
+    @Test
+    public void hasUserShouldReturnTrueOnlyIfUserExists() throws WebSecurityException {
+        assertFalse(motechAuthenticationService.hasUser("username"));
+
+        motechAuthenticationService.register("userName", "password", "1234", Arrays.asList("IT_ADMIN", "DB_ADMIN"));
+
+        assertTrue(motechAuthenticationService.hasUser("username"));
+        
     }
 
     @After

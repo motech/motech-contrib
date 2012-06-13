@@ -60,5 +60,9 @@ public class MotechAuthenticationService {
         if (motechWebUser != null)
             allMotechWebUsers.remove(motechWebUser);
     }
+
+    public boolean hasUser(String userName) {
+        return allMotechWebUsers.findByUserName(userName)!=null;
+    }
 }
 
