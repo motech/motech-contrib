@@ -35,7 +35,7 @@ public class DiagnosticMethodTest {
         assertTrue(testClass.methodWithAnnotationRun);
         assertEquals(methodName, diagnosticsResponse.getName());
         assertTrue(diagnosticsResponse.getResult().getStatus());
-        assertEquals("test message", diagnosticsResponse.getResult().getMessage());
+        assertEquals("test message 1", diagnosticsResponse.getResult().getMessage());
     }
 
     @Test

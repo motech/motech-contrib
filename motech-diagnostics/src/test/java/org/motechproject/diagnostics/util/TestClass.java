@@ -14,13 +14,13 @@ public class TestClass {
     public DiagnosticsResult method1WithAnnotation() {
         methodExecutionCount++;
         methodWithAnnotationRun = true;
-        return new DiagnosticsResult(true, "test message");
+        return new DiagnosticsResult(true, "test message 1");
     }
 
     @Diagnostic(name = "testDiagnostics2")
     public DiagnosticsResult method2WithAnnotation() {
         methodExecutionCount++;
-        return new DiagnosticsResult(false, "test message");
+        return new DiagnosticsResult(false, "test message 2");
     }
 
     @Diagnostic(name = "testDiagnosticsWithNullResult")

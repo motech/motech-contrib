@@ -1,19 +1,23 @@
 package org.motechproject.diagnostics.repository;
 
 
+import ch.lambdaj.function.matcher.HasArgumentWithValue;
 import org.ektorp.CouchDbConnector;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.hamcrest.Matchers;
 import org.motechproject.diagnostics.response.DiagnosticsResponse;
 import org.motechproject.diagnostics.util.TestClass;
 import org.motechproject.testing.utils.SpringIntegrationTest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 
+import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
+import static ch.lambdaj.Lambda.*;
 import static junit.framework.Assert.*;
 
 @ContextConfiguration(locations = "classpath*:/applicationContext-Diagnostics.xml")
@@ -36,11 +40,13 @@ public class AllDiagnosticMethodsTest extends SpringIntegrationTest {
     public void shouldInvokeAllDiagnosticMethods() throws InvocationTargetException, IllegalAccessException {
         List<DiagnosticsResponse> diagnosticsResponses = allDiagnosticMethods.runAllDiagnosticMethods();
 
+        List<DiagnosticsResponse> testDiagnostics1Response = filter(having(on(DiagnosticsResponse.class).getName(), Matchers.equalTo("testDiagnostics1")), diagnosticsResponses);
+        List<DiagnosticsResponse> testDiagnostics2Response = filter(having(on(DiagnosticsResponse.class).getName(), Matchers.equalTo("testDiagnostics2")), diagnosticsResponses);
+        List<DiagnosticsResponse> nullDiagnosticResponse = filter(having(on(DiagnosticsResponse.class).getResult(), Matchers.equalTo(null)), diagnosticsResponses);
+
         assertEquals(3, TestClass.methodExecutionCount);
-        assertTrue(diagnosticsResponses.get(0).getResult().getStatus());
-        assertFalse(diagnosticsResponses.get(1).getResult().getStatus());
-        
-        for(DiagnosticsResponse response : diagnosticsResponses)
-            assertNotNull(response.getResult());
+        assertTrue(testDiagnostics1Response.get(0).getResult().getStatus());
+        assertFalse(testDiagnostics2Response.get(0).getResult().getStatus());
+        assertTrue(nullDiagnosticResponse.isEmpty());
     }
 }
