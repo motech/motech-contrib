@@ -23,4 +23,7 @@ public class MotechUser {
     public List<String> getRoles() {
         return user.getRoles();
     }
+    public boolean isActive() {
+        return user.isActive();
+    }
 }
