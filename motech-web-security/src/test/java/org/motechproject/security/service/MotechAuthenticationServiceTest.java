@@ -16,6 +16,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import static java.util.Arrays.asList;
 import static junit.framework.Assert.*;
@@ -139,6 +140,18 @@ public class MotechAuthenticationServiceTest extends SpringIntegrationTest {
         motechAuthenticationService.register("username", "password", "1234", asList("IT_ADMIN"));
         assertNotNull(motechAuthenticationService.retrieveUserByCredentials("username", "password"));
         assertNull(motechAuthenticationService.retrieveUserByCredentials("username", "passw550rd"));
+    }
+
+    @Test
+    public void shouldReturnUsersByRole() throws WebSecurityException {
+        motechAuthenticationService.register("username1", "password", "1234", asList("IT_ADMIN"));
+        motechAuthenticationService.register("username2", "password", "12345", asList("ADMIN"));
+        motechAuthenticationService.register("username3", "password", "12346", asList("IT_ADMIN"));
+
+        List<MotechUser> users = motechAuthenticationService.findByRoles("IT_ADMIN");
+        assertEquals(2,users.size());
+        assertEquals("username1",users.get(0).getUserName());
+        assertEquals("username3",users.get(1).getUserName());
     }
 
     @After

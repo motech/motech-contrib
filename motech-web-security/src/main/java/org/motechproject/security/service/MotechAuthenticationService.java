@@ -7,6 +7,7 @@ import org.motechproject.security.repository.AllMotechWebUsers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.apache.commons.lang.StringUtils.isBlank;
@@ -72,6 +73,15 @@ public class MotechAuthenticationService {
 
     public boolean hasUser(String username) {
         return allMotechWebUsers.findByUserName(username) != null;
+    }
+
+    public List<MotechUser> findByRoles(String role) {
+        List<MotechWebUser> result = allMotechWebUsers.findByRole(role);
+        List<MotechUser> users = new ArrayList<MotechUser>();
+        for(MotechWebUser user : result) {
+            users.add(new MotechUser(user));
+        }
+        return users;
     }
 }
 
