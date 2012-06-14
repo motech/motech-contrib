@@ -38,7 +38,7 @@ public class PostgresDiagnostic {
     }
 
     protected Connection getConnection() throws SQLException {
-        String url = postgresProperties.getProperty("jdbc.diagnosticCheck.url");
+        String url = postgresProperties.getProperty("jdbc.url");
         String userName = postgresProperties.getProperty("jdbc.username");
         String password = postgresProperties.getProperty("jdbc.password");
         return DriverManager.getConnection(url, userName, password);

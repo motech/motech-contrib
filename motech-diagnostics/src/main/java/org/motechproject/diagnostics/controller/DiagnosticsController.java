@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.lang.reflect.InvocationTargetException;
@@ -28,9 +29,16 @@ public class DiagnosticsController {
     }
 
     @RequestMapping(method = RequestMethod.GET)
-    public List<DiagnosticsResponse> get() throws InvocationTargetException, IllegalAccessException {
+    public void getDiagnostics(HttpServletResponse response) throws InvocationTargetException, IllegalAccessException, IOException {
+        StringBuilder stringBuilder = new StringBuilder();
         List<DiagnosticsResponse> diagnosticsResponses = allDiagnosticMethods.runAllDiagnosticMethods();
-        return diagnosticsResponses;
+        for (DiagnosticsResponse diagnosticsResponse : diagnosticsResponses) {
+            stringBuilder.append("Name : " + diagnosticsResponse.getName() + "\n");
+            stringBuilder.append("Status : " + diagnosticsResponse.getResult().getStatus() + "\n");
+            stringBuilder.append(diagnosticsResponse.getResult().getMessage() + "\n");
+        }
+        response.getOutputStream().print(stringBuilder.toString());
+
     }
 
     @ExceptionHandler(Exception.class)
