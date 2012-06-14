@@ -40,7 +40,7 @@ public class MotechAuthenticationServiceTest extends SpringIntegrationTest {
 
     @Test
     public void testRegister() throws WebSecurityException {
-        motechAuthenticationService.register("userName", "password", "1234", asList(new String[]{"IT_ADMIN", "DB_ADMIN"}));
+        motechAuthenticationService.register("userName", "password", "1234", asList("IT_ADMIN", "DB_ADMIN"));
         MotechWebUser motechWebUser = allMotechWebUsers.findByUserName("userName");
 
         assertNotNull(motechWebUser);
@@ -112,20 +112,33 @@ public class MotechAuthenticationServiceTest extends SpringIntegrationTest {
     }
 
     @Test
-    public void testChangePassword() throws WebSecurityException {
+    public void shouldChangePassword() throws WebSecurityException {
         motechAuthenticationService.register("userName", "password", "1234", asList("IT_ADMIN", "DB_ADMIN"));
-        MotechWebUser webUser = motechAuthenticationService.changePassword("userName", "newPassword");
-        assertTrue(passwordEncoder.isPasswordValid(webUser.getPassword(), "newPassword"));
+        motechAuthenticationService.changePassword("userName", "password", "newPassword");
+        MotechWebUser motechWebUser = allMotechWebUsers.findByUserName("userName");
+        assertTrue(passwordEncoder.isPasswordValid(motechWebUser.getPassword(), "newPassword"));
     }
-    
+
+    @Test
+    public void shouldNotChangePasswordWithoutOldPassword() throws WebSecurityException {
+        motechAuthenticationService.register("userName", "password", "1234", asList("IT_ADMIN", "DB_ADMIN"));
+        motechAuthenticationService.changePassword("userName", "foo", "newPassword");
+        MotechWebUser motechWebUser = allMotechWebUsers.findByUserName("userName");
+        assertTrue(passwordEncoder.isPasswordValid(motechWebUser.getPassword(), "password"));
+    }
+
     @Test
     public void hasUserShouldReturnTrueOnlyIfUserExists() throws WebSecurityException {
         assertFalse(motechAuthenticationService.hasUser("username"));
-
         motechAuthenticationService.register("userName", "password", "1234", Arrays.asList("IT_ADMIN", "DB_ADMIN"));
-
         assertTrue(motechAuthenticationService.hasUser("username"));
-        
+    }
+
+    @Test
+    public void shouldValidateUserCredentials() throws WebSecurityException {
+        motechAuthenticationService.register("username", "password", "1234", asList("IT_ADMIN"));
+        assertNotNull(motechAuthenticationService.retrieveUserByCredentials("username", "password"));
+        assertNull(motechAuthenticationService.retrieveUserByCredentials("username", "passw550rd"));
     }
 
     @After

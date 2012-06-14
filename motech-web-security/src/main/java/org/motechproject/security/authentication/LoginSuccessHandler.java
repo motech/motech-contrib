@@ -1,6 +1,6 @@
 package org.motechproject.security.authentication;
 
-import org.motechproject.security.domain.MotechWebUser;
+import org.motechproject.security.service.MotechUser;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
@@ -16,8 +16,8 @@ public class LoginSuccessHandler extends SavedRequestAwareAuthenticationSuccessH
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
-        MotechWebUser webUser = (MotechWebUser) authentication.getDetails();
-        request.getSession().setAttribute(LOGGED_IN_USER, webUser);
+        MotechUser user = (MotechUser) authentication.getDetails();
+        request.getSession().setAttribute(LOGGED_IN_USER, user);
         request.getSession().removeAttribute(LoginFailureHandler.LOGIN_FAILURE);
         super.onAuthenticationSuccess(request, response, authentication);
     }

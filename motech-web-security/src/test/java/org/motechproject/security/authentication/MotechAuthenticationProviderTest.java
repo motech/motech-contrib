@@ -5,6 +5,7 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.motechproject.security.domain.MotechWebUser;
 import org.motechproject.security.repository.AllMotechWebUsers;
+import org.motechproject.security.service.MotechUser;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -37,10 +38,10 @@ public class MotechAuthenticationProviderTest {
 
         MotechAuthenticationProvider authenticationProvider = new MotechAuthenticationProvider(allMotechWebUsers, passwordEncoder);
         UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken("bob", "password");
-        UserDetails user = authenticationProvider.retrieveUser("bob", authentication);
+        UserDetails userDetails = authenticationProvider.retrieveUser("bob", authentication);
 
-        assertEquals("encodedPassword", user.getPassword());
-        assertEquals(motechWebUser, authentication.getDetails());
+        assertEquals("encodedPassword", userDetails.getPassword());
+        assertEquals(motechWebUser.getUserName(), ((MotechUser) authentication.getDetails()).getUserName());
     }
 
     @Test(expected = AuthenticationException.class)
