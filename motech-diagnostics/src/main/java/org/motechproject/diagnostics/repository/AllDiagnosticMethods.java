@@ -41,5 +41,4 @@ public class AllDiagnosticMethods implements BeanPostProcessor {
         }
         return diagnosticsResponses;
     }
-
 }
