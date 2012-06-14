@@ -148,7 +148,7 @@ public class MotechAuthenticationServiceTest extends SpringIntegrationTest {
         motechAuthenticationService.register("username2", "password", "12345", asList("ADMIN"));
         motechAuthenticationService.register("username3", "password", "12346", asList("IT_ADMIN"));
 
-        List<MotechUser> users = motechAuthenticationService.findByRoles("IT_ADMIN");
+        List<MotechUser> users = motechAuthenticationService.findByRole("IT_ADMIN");
         assertEquals(2,users.size());
         assertEquals("username1",users.get(0).getUserName());
         assertEquals("username3",users.get(1).getUserName());

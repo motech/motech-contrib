@@ -75,7 +75,7 @@ public class MotechAuthenticationService {
         return allMotechWebUsers.findByUserName(username) != null;
     }
 
-    public List<MotechUser> findByRoles(String role) {
+    public List<MotechUser> findByRole(String role) {
         List<MotechWebUser> result = allMotechWebUsers.findByRole(role);
         List<MotechUser> users = new ArrayList<MotechUser>();
         for(MotechWebUser user : result) {
