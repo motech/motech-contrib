@@ -1,110 +1,82 @@
 package org.motechproject.security.repository;
 
-import org.jasypt.encryption.pbe.PBEStringEncryptor;
 import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.motechproject.security.authentication.MotechPasswordEncoder;
 import org.motechproject.security.domain.MotechWebUser;
-import org.motechproject.security.domain.Role;
-import org.motechproject.security.domain.Roles;
+import org.motechproject.security.exceptions.WebSecurityException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import java.util.Arrays;
 import java.util.List;
 
+import static ch.lambdaj.Lambda.extract;
+import static ch.lambdaj.Lambda.on;
+import static java.util.Arrays.asList;
 import static junit.framework.Assert.*;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.core.Is.is;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations="classpath*:applicationWebSecurityContext.xml")
+@ContextConfiguration(locations = "classpath*:applicationWebSecurityContext.xml")
 public class AllMotechWebUsersIT {
 
     @Autowired
     AllMotechWebUsers allMotechWebUsers;
-
     @Autowired
-    PBEStringEncryptor pbeStringEncryptor;
+    MotechPasswordEncoder passwordEncoder;
 
     @Test
-    public void findByUserName_shouldAlsoDecryptPassword() {
-        MotechWebUser motechWebUser = new MotechWebUser("testuser", "testpassword", "id", new Roles(Arrays.asList(new Role("ADMIN"))));
+    public void findByUserName() {
+        MotechWebUser motechWebUser = new MotechWebUser("testuser", "testpassword", "id", asList("ADMIN"));
         allMotechWebUsers.add(motechWebUser);
 
-        MotechWebUser testUser = allMotechWebUsers.findByUserName("testuser");
-        assertNotNull(testUser);
-        assertEquals("testuser", testUser.getUserName());
-        assertEquals("testpassword", testUser.getPassword());
-        assertEquals("ADMIN", testUser.getRoles().get(0).getName());
-    }
-
-    @Test
-    public void shouldEncryptPlainTextPassword_BeforeSavingTheUser() {
-        String plainTextPassword = "testpassword";
-        MotechWebUser motechWebUser = new MotechWebUser("testuser", plainTextPassword, "id", new Roles(Arrays.asList(new Role("ADMIN"))));
-        allMotechWebUsers.add(motechWebUser);
-
-        assertThat(pbeStringEncryptor.decrypt(motechWebUser.getPassword()), is(plainTextPassword));
-    }
-
-    @Test
-    public void shouldEncryptPlainTextPassword_OnChangePassword() {
-        String userName = "testuser";
-        allMotechWebUsers.add(new MotechWebUser(userName, "testpassword", "id", new Roles(Arrays.asList(new Role("ADMIN")))));
-
-        String newPassword = "newPassword";
-        allMotechWebUsers.changePassword(userName, newPassword);
-
-        MotechWebUser testUser = allMotechWebUsers.findByUserName(userName);
-        assertThat(testUser.getPassword(), is(newPassword));
+        MotechWebUser testWebUser = allMotechWebUsers.findByUserName("testuser");
+        assertEquals("testuser", testWebUser.getUserName());
     }
 
     @Test
     public void findByUserNameShouldBeCaseInsensitive() {
         String userName = "TestUser";
-        allMotechWebUsers.add(new MotechWebUser(userName, "testpassword", "id", new Roles(Arrays.asList(new Role("ADMIN")))));
+        allMotechWebUsers.add(new MotechWebUser(userName, "testpassword", "id", asList("ADMIN")));
 
         assertNotNull(allMotechWebUsers.findByUserName("TESTUSER"));
     }
 
     @Test
-    public void UserNameShouldbeCaseInsensitiveForChangePassword() {
-        String userName = "testuser";
-        allMotechWebUsers.add(new MotechWebUser(userName, "testpassword", "id", new Roles(Arrays.asList(new Role("ADMIN")))));
+    public void shouldNotCreateNewAccountIfUserAlreadyExists() throws WebSecurityException {
+        String userName = "username";
 
-        String newPassword = "newPassword";
-        allMotechWebUsers.changePassword("TESTUSER", newPassword);
+        allMotechWebUsers.add(new MotechWebUser(userName, "testpassword", "id", asList("ADMIN")));
+        allMotechWebUsers.add(new MotechWebUser(userName, "testpassword1", "id2", asList("ADMIN")));
 
-        MotechWebUser testUser = allMotechWebUsers.findByUserName(userName);
-        assertThat(testUser.getPassword(), is(newPassword));
+
+        MotechWebUser motechWebUser = allMotechWebUsers.findByUserName("userName");
+        assertEquals(1, allMotechWebUsers.getAll().size());
+        assertEquals("testpassword", motechWebUser.getPassword());
+        assertEquals("id", motechWebUser.getExternalId());
+
     }
+
 
     @Test
     public void shouldListWebUsersByRole() {
-        Role testRole = new Role("PROVIDER");
-        MotechWebUser provider1 = new MotechWebUser("provider1", "testpassword", "id1", new Roles(Arrays.asList(testRole)));
-        MotechWebUser provider2 = new MotechWebUser("provider2", "testpassword", "id2", new Roles(Arrays.asList(testRole)));
-        MotechWebUser cmfAdmin = new MotechWebUser("cmfadmin", "testpassword", "id3", new Roles(Arrays.asList(new Role("CMFADMIN"))));
-        MotechWebUser itAdmin = new MotechWebUser("itadmin", "testpassword", "id4", new Roles(Arrays.asList(new Role("ITADMIN"))));
+        MotechWebUser provider1 = new MotechWebUser("provider1", "testpassword", "id1", asList("PROVIDER"));
+        MotechWebUser provider2 = new MotechWebUser("provider2", "testpassword", "id2", asList("PROVIDER"));
+        MotechWebUser cmfAdmin = new MotechWebUser("cmfadmin", "testpassword", "id3", asList("CMFADMIN"));
+        MotechWebUser itAdmin = new MotechWebUser("itadmin", "testpassword", "id4", asList("ITADMIN"));
         allMotechWebUsers.add(provider1);
         allMotechWebUsers.add(provider2);
         allMotechWebUsers.add(cmfAdmin);
         allMotechWebUsers.add(itAdmin);
 
-        List<MotechWebUser> providers = allMotechWebUsers.findByRoles(testRole);
-        assertNotNull(providers);
-        assertFalse(providers.isEmpty());
-        assertTrue(providers.contains(provider1));
-        assertTrue(providers.indexOf(provider2) != -1);
-        assertTrue(providers.indexOf(cmfAdmin) == -1);
-        assertTrue(providers.indexOf(itAdmin) == -1);
+        List<MotechWebUser> providers = allMotechWebUsers.findByRole("PROVIDER");
+        assertEquals(asList("id1", "id2"), extract(providers, on(MotechWebUser.class).getExternalId()));
     }
 
     @Test
     public void findByUseridShouldReturnNullIfuserNameIsNull() {
-        assertNull(null,allMotechWebUsers.findByUserName(null));
+        assertNull(null, allMotechWebUsers.findByUserName(null));
     }
 
     @After

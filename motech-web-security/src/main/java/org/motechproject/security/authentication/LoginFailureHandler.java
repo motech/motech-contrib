@@ -1,4 +1,4 @@
-package org.motechproject.security;
+package org.motechproject.security.authentication;
 
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;

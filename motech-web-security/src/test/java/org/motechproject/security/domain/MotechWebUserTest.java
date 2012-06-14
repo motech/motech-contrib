@@ -10,14 +10,14 @@ public class MotechWebUserTest {
     @Test
     public void userNameShouldBeSetToLowercase() {
 
-        MotechWebUser user = new MotechWebUser("TestUser", "p@ssw0rd", "", null);
-        assertEquals("testuser", user.getUserName());
+        MotechWebUser webUser = new MotechWebUser("TestUser", "p@ssw0rd", "", null);
+        assertEquals("testuser", webUser.getUserName());
     }
 
     @Test
     public void shouldHandleNullValueForUserName() {
-        MotechWebUser user = new MotechWebUser(null, "p@ssw0rd", "", null);
-        assertEquals(null, user.getUserName());
+        MotechWebUser webUser = new MotechWebUser(null, "p@ssw0rd", "", null);
+        assertEquals(null, webUser.getUserName());
     }
 
 }

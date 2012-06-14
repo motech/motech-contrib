@@ -1,9 +1,7 @@
 package org.motechproject.security.service;
 
-import org.motechproject.security.domain.AuthenticatedUser;
+import org.motechproject.security.authentication.MotechPasswordEncoder;
 import org.motechproject.security.domain.MotechWebUser;
-import org.motechproject.security.domain.Role;
-import org.motechproject.security.domain.Roles;
 import org.motechproject.security.exceptions.WebSecurityException;
 import org.motechproject.security.repository.AllMotechWebUsers;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,54 +14,45 @@ import static org.apache.commons.lang.StringUtils.isBlank;
 @Service
 public class MotechAuthenticationService {
 
+    @Autowired
     private AllMotechWebUsers allMotechWebUsers;
 
     @Autowired
-    public MotechAuthenticationService(AllMotechWebUsers allMotechWebUsers) {
-        this.allMotechWebUsers = allMotechWebUsers;
-    }
+    private MotechPasswordEncoder passwordEncoder;
 
     public void register(String userName, String password, String externalId, List<String> roles) throws WebSecurityException {
-        validateUserInfo(userName, password);
-        Roles rolesDomain = new Roles();
-        for (String role : roles) {
-            rolesDomain.add(new Role(role));
-        }
-        allMotechWebUsers.add(new MotechWebUser(userName, password, externalId, rolesDomain));
-    }
-
-    private void validateUserInfo(String userName, String password) throws WebSecurityException {
-        if(isBlank(userName) || isBlank(password)) {
-            throw new WebSecurityException("Username or password cannot be empty");
-        }
+        this.register(userName, password, externalId, roles, true);
     }
 
     public void register(String userName, String password, String externalId, List<String> roles, boolean isActive) throws WebSecurityException {
         validateUserInfo(userName, password);
+        password = passwordEncoder.encodePassword(password);
+        MotechWebUser webUser = new MotechWebUser(userName, password, externalId, roles);
+        webUser.setActive(isActive);
+        allMotechWebUsers.add(webUser);
+    }
 
-        Roles rolesDomain = new Roles();
-        for (String role : roles) {
-            rolesDomain.add(new Role(role));
+    private void validateUserInfo(String userName, String password) throws WebSecurityException {
+        if (isBlank(userName) || isBlank(password)) {
+            throw new WebSecurityException("Username or password cannot be empty");
         }
-        MotechWebUser user = new MotechWebUser(userName, password, externalId, rolesDomain);
-        user.setActive(isActive);
-        allMotechWebUsers.add(user);
     }
 
     public void activateUser(String userName) {
         MotechWebUser motechWebUser = allMotechWebUsers.findByUserName(userName);
-        if (null != motechWebUser) {
+        if (motechWebUser != null) {
             motechWebUser.setActive(true);
             allMotechWebUsers.update(motechWebUser);
         }
     }
 
-    public AuthenticatedUser changePassword(String userName, String newPassword) {
-        allMotechWebUsers.changePassword(userName, newPassword);
+    public MotechWebUser changePassword(String userName, String newPassword) {
         MotechWebUser motechWebUser = allMotechWebUsers.findByUserName(userName);
         if (motechWebUser == null)
             return null;
-        return new AuthenticatedUser(motechWebUser.getAuthorities(), motechWebUser);
+        motechWebUser.setPassword(passwordEncoder.encodePassword(newPassword));
+        allMotechWebUsers.update(motechWebUser);
+        return motechWebUser;
     }
 
     public void remove(String userName) {
@@ -72,11 +61,8 @@ public class MotechAuthenticationService {
             allMotechWebUsers.remove(motechWebUser);
     }
 
-    public AuthenticatedUser authenticate(String userName, String password) {
-        MotechWebUser user = allMotechWebUsers.findByUserName(userName);
-        if (user != null && password.equals(user.getPassword())) {
-            return new AuthenticatedUser(user.getAuthorities(), user);
-        }
-        return null;
+    public boolean hasUser(String userName) {
+        return allMotechWebUsers.findByUserName(userName)!=null;
     }
 }
+
