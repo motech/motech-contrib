@@ -1,6 +1,7 @@
 package org.motechproject.retry.service;
 
 import org.joda.time.DateTime;
+import org.joda.time.Period;
 import org.motechproject.gateway.OutboundEventGateway;
 import org.motechproject.model.MotechEvent;
 import org.motechproject.retry.dao.AllRetries;
@@ -33,13 +34,14 @@ public class RetryHandler {
         String externalId = (String) event.getParameters().get(EXTERNAL_ID);
         DateTime referenceTime = (DateTime) event.getParameters().get(REFERENCE_TIME);
         String retryRecordName = (String) event.getParameters().get(NAME);
+        Period offset = (Period) event.getParameters().get(OFFSET);
 
         final Retry retry = decrementPendingRetryCount(externalId, retryRecordName);
         boolean lastRetryWithinCurrentGroup = !retry.hasPendingRetires();
 
         boolean lastRetryBatch = false;
         if (lastRetryWithinCurrentGroup) {
-             lastRetryBatch = retryServiceImpl.scheduleNextGroup(new RetryRequest(retryRecordName, externalId, referenceTime, referenceTime));
+             lastRetryBatch = retryServiceImpl.scheduleNextGroup(new RetryRequest(retryRecordName, externalId, referenceTime));
         }
         outboundEventGateway.sendEventMessage(motechEvent(RETRY_SUBJECT, event.getParameters(), lastRetryBatch));
     }

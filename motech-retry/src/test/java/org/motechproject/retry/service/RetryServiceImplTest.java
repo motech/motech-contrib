@@ -49,15 +49,15 @@ public class RetryServiceImplTest {
     public void shouldUnscheduleAndCreateRetrySchedule() {
         final String name = "retry-schedule-name";
         final String externalId = "uniqueExternalId";
-        final DateTime startTime = DateUtil.now();
         final DateTime referenceTime = DateTime.now();
         final String groupName = "groupName";
+        final String offset = "1 hour";
 
-        RetryRecord retryRecord = retryRecord(name, 2, asList("2 hours"));
+        RetryRecord retryRecord = retryRecord(name, 2, asList("2 hours"), offset);
         when(mockAllRetriesDef.getRetryRecord(name)).thenReturn(retryRecord);
         when(mockAllRetriesDef.getRetryGroupName(name)).thenReturn(groupName);
 
-        retryServiceImpl.schedule(new RetryRequest(name, externalId, startTime, referenceTime));
+        retryServiceImpl.schedule(new RetryRequest(name, externalId, referenceTime));
 
         ArgumentCaptor<RepeatingSchedulableJob> jobCaptor = ArgumentCaptor.forClass(RepeatingSchedulableJob.class);
         verify(mockSchedulerService).safeUnscheduleJob(RETRY_INTERNAL_SUBJECT, externalId + "." + groupName + "." + name + "-repeat");
@@ -71,8 +71,9 @@ public class RetryServiceImplTest {
             put(MotechSchedulerService.JOB_ID_KEY, externalId + "." + groupName + "." + name);
         }})));
 
-        assertThat(actualJob.getStartTime(), is(startTime.toDate()));
-        assertThat(actualJob.getEndTime(), is(startTime.plusHours(4).toDate()));
+        final Period expectedOffset = Period.hours(1);
+        assertThat(actualJob.getStartTime(), is(referenceTime.plus(expectedOffset).toDate()));
+        assertThat(actualJob.getEndTime(), is(referenceTime.plus(expectedOffset).plusHours(4).toDate()));
         assertThat(actualJob.getRepeatCount(), is(2));
         assertThat(actualJob.getRepeatInterval(), is(Period.parse("2 hours", FORMATTER).toStandardDuration().getMillis()));
     }
@@ -80,27 +81,23 @@ public class RetryServiceImplTest {
     @Test
     public void shouldScheduleNextRetry() {
         DateTime referenceTime = DateTime.now();
-        DateTime startTime = DateTime.now();
         String externalId = "externalId";
         String name = "retrySchedule1";
 
         RetryRecord nextRetryRecord = new RetryRecord();
         nextRetryRecord.setName("retrySchedule2");
-        nextRetryRecord.setRetryInterval(asList("1 Day"));
-        nextRetryRecord.setRetryCount(4);
 
         when(mockAllRetriesDef.getNextRetryRecord(name)).thenReturn(nextRetryRecord);
 
         RetryServiceImpl service = spy(retryServiceImpl);
         doNothing().when(service).schedule(Matchers.<RetryRequest>any());
-        service.scheduleNextGroup(new RetryRequest(name, externalId, startTime, referenceTime));
+        service.scheduleNextGroup(new RetryRequest(name, externalId, referenceTime));
 
         ArgumentCaptor<RetryRequest> requestCaptor = ArgumentCaptor.forClass(RetryRequest.class);
         verify(service).schedule(requestCaptor.capture());
 
         RetryRequest request = requestCaptor.getValue();
         assertThat(request.getName(), is("retrySchedule2"));
-        assertThat(request.getStartTime(), is(referenceTime));
         assertThat(request.getReferenceTime(), is(referenceTime));
         assertThat(request.getExternalId(), is(externalId));
     }
@@ -108,7 +105,6 @@ public class RetryServiceImplTest {
     @Test
     public void shouldNotScheduleNextRetryIfNoRetryRecordsArePresent() {
         DateTime referenceTime = DateTime.now();
-        DateTime startTime = DateTime.now();
         String externalId = "externalId";
         String name = "retrySchedule1";
 
@@ -121,7 +117,7 @@ public class RetryServiceImplTest {
 
         RetryServiceImpl service = spy(retryServiceImpl);
         doNothing().when(service).schedule(Matchers.<RetryRequest>any());
-        service.scheduleNextGroup(new RetryRequest(name, externalId, startTime, referenceTime));
+        service.scheduleNextGroup(new RetryRequest(name, externalId, referenceTime));
 
         verify(service, never()).schedule(Matchers.<RetryRequest>any());
     }
@@ -142,11 +138,12 @@ public class RetryServiceImplTest {
         assertThat(retry.retryStatus(), is(RetryStatus.COMPLETED));
     }
 
-    private RetryRecord retryRecord(String name, int retryCount, List<String> retryInterval) {
+    private RetryRecord retryRecord(String name, int retryCount, List<String> retryInterval, String offset) {
         RetryRecord retryRecord = new RetryRecord();
         retryRecord.setName(name);
         retryRecord.setRetryCount(retryCount);
         retryRecord.setRetryInterval(retryInterval);
+        retryRecord.setOffset(offset);
         return retryRecord;
     }
 }

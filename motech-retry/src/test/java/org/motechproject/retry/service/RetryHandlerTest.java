@@ -65,7 +65,7 @@ public class RetryHandlerTest {
         RetryRequest request = retryRequestCaptor.getValue();
 
         assertThat(request.getName(), is(name));
-        assertThat(request.getStartTime(), is(referenceTime));
+        assertThat(request.getReferenceTime(), is(referenceTime));
     }
 
     @Test

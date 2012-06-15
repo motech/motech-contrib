@@ -5,13 +5,11 @@ import org.joda.time.DateTime;
 public class RetryRequest {
     private final String name;
     private final String externalId;
-    private DateTime startTime;
     private DateTime referenceTime;
 
-    public RetryRequest(String name, String externalId, DateTime startTime, DateTime referenceTime) {
+    public RetryRequest(String name, String externalId, DateTime referenceTime) {
         this.name = name;
         this.externalId = externalId;
-        this.startTime = startTime;
         this.referenceTime = referenceTime;
     }
 
@@ -21,10 +19,6 @@ public class RetryRequest {
 
     public String getExternalId() {
         return externalId;
-    }
-
-    public DateTime getStartTime() {
-        return startTime;
     }
 
     public DateTime getReferenceTime() {

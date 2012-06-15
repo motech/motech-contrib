@@ -1,6 +1,7 @@
 package org.motechproject.retry;
 
 import org.joda.time.DateTime;
+import org.joda.time.Period;
 import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -34,14 +35,13 @@ public class RetryServiceIT {
         String groupName = "campaign-retries";
         String name = "retry-every-2hrs-and-30mins";
         String externalId = "externalId";
-        DateTime startTime = DateTime.now();
         DateTime referenceTime = DateTime.now();
 
-        retryServiceImpl.schedule(new RetryRequest(name, externalId, startTime, referenceTime));
+        retryServiceImpl.schedule(new RetryRequest(name, externalId, referenceTime));
 
         Retry activeRetry = allRetries.getActiveRetry(externalId, name);
         assertThat(activeRetry.hasPendingRetires(), is(true));
-        assertThat(activeRetry.startTime(), is(startTime));
+        assertThat(activeRetry.startTime(), is(referenceTime.plus(Period.minutes(30))));
 
         retryServiceImpl.fulfill(externalId, groupName);
 

@@ -12,6 +12,7 @@ public class RetryRecord {
     private String name;
     private Integer retryCount;
     private List<String> retryInterval;
+    private String offset;
 
     public String name() {
         return name;
@@ -27,6 +28,14 @@ public class RetryRecord {
 
     public void setRetryCount(Integer retryCount) {
         this.retryCount = retryCount;
+    }
+
+    public Period offset() {
+        return parse(offset);
+    }
+
+    public void setOffset(String offset) {
+        this.offset = offset;
     }
 
     public Period retryInterval() {
