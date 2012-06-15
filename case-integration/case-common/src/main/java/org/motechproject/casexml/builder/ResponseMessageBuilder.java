@@ -5,24 +5,19 @@ import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
 import org.motechproject.casexml.exception.CaseParserException;
 import org.motechproject.casexml.service.exception.CaseException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.io.StringWriter;
-import java.util.Properties;
 
+@Component
 public class ResponseMessageBuilder {
+
     private VelocityEngine velocityEngine;
 
-    public ResponseMessageBuilder() {
-        this.velocityEngine = createVelocityEngine();
-    }
-
-    private VelocityEngine createVelocityEngine() {
-        Properties properties = new Properties();
-        properties.setProperty("resource.loader", "class");
-        properties.setProperty("class.resource.loader.class", "org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader");
-        VelocityEngine velocityEngine = new VelocityEngine(properties);
-        velocityEngine.init();
-        return velocityEngine;
+    @Autowired
+    public ResponseMessageBuilder(VelocityEngine velocityEngine) {
+        this.velocityEngine = velocityEngine;
     }
 
     public String createResponseMessage(CaseException exception) {

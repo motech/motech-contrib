@@ -23,10 +23,10 @@ public class ConfigurationDiagnostic {
         this.propertyFilesMap = propertyFilesMap;
     }
 
-    @Diagnostic(name = "configuration")
+    @Diagnostic(name = "CONFIGURATION")
     public DiagnosticsResult performDiagnosis() {
         if (propertyFilesMap == null) return null;
-        DiagnosticLog diagnosticLog = new DiagnosticLog("CONFIGURATION");
+        DiagnosticLog diagnosticLog = new DiagnosticLog();
 
         for (Map.Entry<String, Properties> propertiesMap : propertyFilesMap.entrySet())
             logPropertiesFileFor(diagnosticLog, propertiesMap.getKey(), propertiesMap.getValue());

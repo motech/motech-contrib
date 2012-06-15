@@ -1,0 +1,8 @@
+
+#foreach ($diagnosticsResponse in $diagnosticsResponses )
+!--------------------------------------! $diagnosticsResponse.name !--------------------------------------!
+
+Status : $diagnosticsResponse.result.status
+Message : $diagnosticsResponse.result.message
+
+#end

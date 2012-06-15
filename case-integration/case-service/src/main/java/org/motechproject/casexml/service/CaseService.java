@@ -1,10 +1,12 @@
 package org.motechproject.casexml.service;
 
 import org.apache.log4j.Logger;
+import org.apache.velocity.app.VelocityEngine;
 import org.motechproject.casexml.builder.ResponseMessageBuilder;
 import org.motechproject.casexml.exception.CaseParserException;
 import org.motechproject.casexml.parser.CommcareCaseParser;
 import org.motechproject.casexml.service.exception.CaseException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -12,14 +14,20 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import java.io.IOException;
 
 public abstract class CaseService<T> {
-    private static Logger logger = Logger.getLogger(CaseService.class);
-    private Class<T> clazz;
 
     private ResponseMessageBuilder responseMessageBuilder;
 
+    private static Logger logger = Logger.getLogger(CaseService.class);
+
+    private Class<T> clazz;
+
     public CaseService(Class<T> clazz) {
-        this.responseMessageBuilder = new ResponseMessageBuilder();
         this.clazz = clazz;
+    }
+
+    @Autowired
+    public void setResponseMessageBuilder(ResponseMessageBuilder responseMessageBuilder) {
+        this.responseMessageBuilder = responseMessageBuilder;
     }
 
     @RequestMapping(value = "/process", method = RequestMethod.POST)

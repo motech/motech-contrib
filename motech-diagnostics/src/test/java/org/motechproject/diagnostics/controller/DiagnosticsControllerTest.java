@@ -4,6 +4,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
+import org.motechproject.diagnostics.DiagnosticResponseBuilder;
 import org.motechproject.diagnostics.repository.AllDiagnosticMethods;
 import org.motechproject.diagnostics.response.DiagnosticsResponse;
 import org.motechproject.diagnostics.response.DiagnosticsResult;
@@ -28,12 +29,15 @@ public class DiagnosticsControllerTest {
     private HttpServletResponse httpResponse;
     @Mock
     ServletOutputStream servletOutputStream;
+    @Mock
+    private DiagnosticResponseBuilder allDiagnosticMessageBuilder;
+
     private DiagnosticsController diagnosticsController;
 
     @Before
     public void setUp() {
         initMocks(this);
-        diagnosticsController = new DiagnosticsController(allDiagnosticMethods);
+        diagnosticsController = new DiagnosticsController(allDiagnosticMethods,allDiagnosticMessageBuilder);
     }
 
     @Test
@@ -43,7 +47,7 @@ public class DiagnosticsControllerTest {
 
         when(allDiagnosticMethods.runAllDiagnosticMethods()).thenReturn(expectedDiagnosticsResponses);
         when(httpResponse.getOutputStream()).thenReturn(servletOutputStream);
-
+        when(allDiagnosticMessageBuilder.createResponseMessage(expectedDiagnosticsResponses)).thenReturn("Diagnostic Response");
         ArgumentCaptor<String> captor = ArgumentCaptor.forClass(String.class);
 
         diagnosticsController.getDiagnostics(httpResponse);
@@ -51,6 +55,6 @@ public class DiagnosticsControllerTest {
         verify(servletOutputStream).print(captor.capture());
         String responseValue = captor.getValue();
 
-        assertEquals("Name : Test diagnostic\nStatus : true\nTest diagnostic run", responseValue.trim());
+        assertEquals("Diagnostic Response", responseValue.trim());
     }
 }

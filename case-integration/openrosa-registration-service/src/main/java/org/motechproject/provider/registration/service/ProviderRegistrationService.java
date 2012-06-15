@@ -5,6 +5,7 @@ import org.motechproject.casexml.builder.ResponseMessageBuilder;
 import org.motechproject.provider.registration.exception.OpenRosaRegistrationParserException;
 import org.motechproject.provider.registration.exception.OpenRosaRegistrationValidationException;
 import org.motechproject.provider.registration.parser.RegistrationParser;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -15,13 +16,15 @@ public abstract class ProviderRegistrationService<T> {
 
     private static Logger logger = Logger.getLogger(ProviderRegistrationService.class);
     private ResponseMessageBuilder responseMessageBuilder;
-
-
     private Class<T> clazz;
+
+    @Autowired
+    public void setResponseMessageBuilder(ResponseMessageBuilder responseMessageBuilder) {
+        this.responseMessageBuilder = responseMessageBuilder;
+    }
 
     public ProviderRegistrationService(Class<T> clazz) {
         this.clazz = clazz;
-        responseMessageBuilder = new ResponseMessageBuilder();
     }
 
     @RequestMapping(value = "/process", method = RequestMethod.POST)
