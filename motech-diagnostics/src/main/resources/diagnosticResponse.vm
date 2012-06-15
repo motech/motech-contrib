@@ -1,8 +1,16 @@
+                    **************SUMMARY**************
+
+            #foreach ($diagnosticsResponse in $diagnosticsResponses )
+                $diagnosticsResponse.name - $diagnosticsResponse.result.status.toString().toUpperCase()
+            #end
+
+                    ***********************************
+
 
 #foreach ($diagnosticsResponse in $diagnosticsResponses )
-!--------------------------------------! $diagnosticsResponse.name !--------------------------------------!
+!----------------------------------! $diagnosticsResponse.name !----------------------------------!
 
-Status : $diagnosticsResponse.result.status
+Status : $diagnosticsResponse.result.status.toString().toUpperCase()
 Message : $diagnosticsResponse.result.message
 
 #end
