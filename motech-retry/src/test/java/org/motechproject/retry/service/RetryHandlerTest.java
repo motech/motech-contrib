@@ -23,8 +23,8 @@ import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 import static org.motechproject.retry.EventKeys.*;
 
-public class RetryInternalHandlerTest {
-    private RetryInternalHandler retryInternalHandler;
+public class RetryHandlerTest {
+    private RetryHandler retryHandler;
 
     @Mock
     private AllRetries mockAllRetries;
@@ -36,7 +36,7 @@ public class RetryInternalHandlerTest {
     @Before
     public void setUp() {
         initMocks(this);
-        retryInternalHandler = new RetryInternalHandler(mockAllRetries, mockOutboundGateway, mockRetryServiceImpl);
+        retryHandler = new RetryHandler(mockAllRetries, mockOutboundGateway, mockRetryServiceImpl);
     }
 
     @Test
@@ -52,16 +52,16 @@ public class RetryInternalHandlerTest {
 
         Retry retry = new Retry(name, externalId, DateTime.now(), 0, Period.millis(600));
         when(mockAllRetries.getActiveRetry(externalId, name)).thenReturn(retry);
-        when(mockRetryServiceImpl.scheduleNext(Matchers.<RetryRequest>any())).thenReturn(true);
+        when(mockRetryServiceImpl.scheduleNextGroup(Matchers.<RetryRequest>any())).thenReturn(true);
 
-        retryInternalHandler.handle(event);
+        retryHandler.handle(event);
 
         assertThat(retry.retryStatus(), is(RetryStatus.DEFAULTED));
 
         assertMotechEvent(true);
 
         ArgumentCaptor<RetryRequest> retryRequestCaptor = ArgumentCaptor.forClass(RetryRequest.class);
-        verify(mockRetryServiceImpl).scheduleNext(retryRequestCaptor.capture());
+        verify(mockRetryServiceImpl).scheduleNextGroup(retryRequestCaptor.capture());
         RetryRequest request = retryRequestCaptor.getValue();
 
         assertThat(request.getName(), is(name));
@@ -80,7 +80,7 @@ public class RetryInternalHandlerTest {
         Retry retry = new Retry(name, externalId, DateTime.now(), 2, Period.millis(600));
         when(mockAllRetries.getActiveRetry(externalId, name)).thenReturn(retry);
 
-        retryInternalHandler.handle(event);
+        retryHandler.handle(event);
 
         assertThat(retry.retryStatus(), is(RetryStatus.ACTIVE));
         assertThat(retry.retriesLeft(), is(1));

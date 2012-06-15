@@ -35,7 +35,7 @@ public class RetryServiceImpl implements RetryService {
     }
 
     public void schedule(RetryRequest retryRequest) {
-        RetryRecord retryRecord = createNewRetry(retryRequest);
+        RetryRecord retryRecord = createNewRetryBatch(retryRequest);
         String externalId = retryRequest.getExternalId();
         String groupName = allRetriesDefinition.getRetryGroupName(retryRequest.getName());
         String retryName = retryRequest.getName();
@@ -45,18 +45,18 @@ public class RetryServiceImpl implements RetryService {
                 endTime(retryRequest.getStartTime(), retryRecord.retryCount(), retryRecord.retryInterval()), retryRecord.retryCount(), intervalInMillis(retryRecord)));
     }
 
-    private RetryRecord createNewRetry(RetryRequest retryRequest) {
+    private RetryRecord createNewRetryBatch(RetryRequest retryRequest) {
         RetryRecord retryRecord = allRetriesDefinition.getRetryRecord(retryRequest.getName());
         allRetries.createRetry(new Retry(retryRequest.getName(), retryRequest.getExternalId(), retryRequest.getStartTime(), retryRecord.retryCount(), retryRecord.retryInterval()));
         return retryRecord;
     }
 
-    protected boolean scheduleNext(RetryRequest retryRequest) {
+    protected boolean scheduleNextGroup(RetryRequest retryRequest) {
         RetryRecord nextRetryRecord = allRetriesDefinition.getNextRetryRecord(retryRequest.getName());
-        boolean isLastRetryRecord = (null == nextRetryRecord);
-        if (!isLastRetryRecord)
+        boolean isLastRetryGroup = (null == nextRetryRecord);
+        if (!isLastRetryGroup)
             schedule(new RetryRequest(nextRetryRecord.name(), retryRequest.getExternalId(), retryRequest.getReferenceTime(), retryRequest.getReferenceTime()));
-        return isLastRetryRecord;
+        return isLastRetryGroup;
     }
 
     public void unscheduleRetryGroup(String externalId, String name) {

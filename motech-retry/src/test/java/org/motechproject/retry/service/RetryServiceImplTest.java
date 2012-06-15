@@ -93,7 +93,7 @@ public class RetryServiceImplTest {
 
         RetryServiceImpl service = spy(retryServiceImpl);
         doNothing().when(service).schedule(Matchers.<RetryRequest>any());
-        service.scheduleNext(new RetryRequest(name, externalId, startTime, referenceTime));
+        service.scheduleNextGroup(new RetryRequest(name, externalId, startTime, referenceTime));
 
         ArgumentCaptor<RetryRequest> requestCaptor = ArgumentCaptor.forClass(RetryRequest.class);
         verify(service).schedule(requestCaptor.capture());
@@ -121,7 +121,7 @@ public class RetryServiceImplTest {
 
         RetryServiceImpl service = spy(retryServiceImpl);
         doNothing().when(service).schedule(Matchers.<RetryRequest>any());
-        service.scheduleNext(new RetryRequest(name, externalId, startTime, referenceTime));
+        service.scheduleNextGroup(new RetryRequest(name, externalId, startTime, referenceTime));
 
         verify(service, never()).schedule(Matchers.<RetryRequest>any());
     }

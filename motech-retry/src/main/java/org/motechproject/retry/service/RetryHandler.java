@@ -9,18 +9,20 @@ import org.motechproject.retry.domain.RetryRequest;
 import org.motechproject.retry.domain.RetryStatus;
 import org.motechproject.server.event.annotations.MotechListener;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.Map;
 
 import static org.motechproject.retry.EventKeys.*;
 
-public class RetryInternalHandler {
+@Component
+public class RetryHandler {
     private AllRetries allRetries;
     private OutboundEventGateway outboundEventGateway;
     private RetryServiceImpl retryServiceImpl;
 
     @Autowired
-    public RetryInternalHandler(AllRetries allRetries, OutboundEventGateway outboundEventGateway, RetryServiceImpl retryServiceImpl) {
+    public RetryHandler(AllRetries allRetries, OutboundEventGateway outboundEventGateway, RetryServiceImpl retryServiceImpl) {
         this.allRetries = allRetries;
         this.outboundEventGateway = outboundEventGateway;
         this.retryServiceImpl = retryServiceImpl;
@@ -32,23 +34,23 @@ public class RetryInternalHandler {
         DateTime referenceTime = (DateTime) event.getParameters().get(REFERENCE_TIME);
         String retryRecordName = (String) event.getParameters().get(NAME);
 
-        boolean isLastEvent = updateRetriesLeft(externalId, retryRecordName);
-        boolean isLastEventRecord = false;
-        if (isLastEvent) {
-            isLastEventRecord = retryServiceImpl.scheduleNext(new RetryRequest(retryRecordName, externalId, referenceTime, referenceTime));
-        }
+        final Retry retry = decrementPendingRetryCount(externalId, retryRecordName);
+        boolean lastRetryWithinCurrentGroup = !retry.hasPendingRetires();
 
-        outboundEventGateway.sendEventMessage(motechEvent(RETRY_SUBJECT, event.getParameters(), isLastEventRecord));
+        boolean lastRetryBatch = false;
+        if (lastRetryWithinCurrentGroup) {
+             lastRetryBatch = retryServiceImpl.scheduleNextGroup(new RetryRequest(retryRecordName, externalId, referenceTime, referenceTime));
+        }
+        outboundEventGateway.sendEventMessage(motechEvent(RETRY_SUBJECT, event.getParameters(), lastRetryBatch));
     }
 
-    private boolean updateRetriesLeft(String externalId, String retryRecordName) {
+    private Retry decrementPendingRetryCount(String externalId, String retryRecordName) {
         Retry activeRetry = allRetries.getActiveRetry(externalId, retryRecordName);
         activeRetry.decrementRetriesLeft();
-
-        boolean isLastEvent = !activeRetry.hasRetriesLeft();
-        if (isLastEvent) activeRetry.setRetryStatus(RetryStatus.DEFAULTED);
+        if(!activeRetry.hasPendingRetires())
+            activeRetry.setRetryStatus(RetryStatus.DEFAULTED);
         allRetries.update(activeRetry);
-        return isLastEvent;
+        return activeRetry;
     }
 
     private MotechEvent motechEvent(String retrySubject, Map<String, Object> parameters, boolean lastEvent) {

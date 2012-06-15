@@ -18,17 +18,17 @@ public class Retry extends MotechBaseDataObject {
     @JsonProperty
     private DateTime startTime;
     @JsonProperty
-    private Integer retriesLeft;
+    private Integer pendingRetries;
     @JsonProperty
     private String retryInterval;
     @JsonProperty
     private RetryStatus retryStatus;
 
-    public Retry(String name, String externalId, DateTime startTime, Integer retriesLeft, Period retryInterval) {
+    public Retry(String name, String externalId, DateTime startTime, Integer pendingRetries, Period retryInterval) {
         this.name = name;
         this.externalId = externalId;
         this.startTime = startTime;
-        this.retriesLeft = retriesLeft;
+        this.pendingRetries = pendingRetries;
         this.retryInterval = retryInterval.toString(FORMATTER);
         this.retryStatus = RetryStatus.ACTIVE;
     }
@@ -48,8 +48,8 @@ public class Retry extends MotechBaseDataObject {
         this.startTime = startTime;
     }
 
-    public void setRetriesLeft(Integer retriesLeft) {
-        this.retriesLeft = retriesLeft;
+    public void setPendingRetries(Integer pendingRetries) {
+        this.pendingRetries = pendingRetries;
     }
 
     public void setRetryInterval(String retryInterval) {
@@ -76,8 +76,8 @@ public class Retry extends MotechBaseDataObject {
         this.retryStatus = retryStatus;
     }
 
-    public boolean hasRetriesLeft() {
-        return (retriesLeft > 0);
+    public boolean hasPendingRetires() {
+        return (pendingRetries > 0);
     }
 
     public RetryStatus retryStatus() {
@@ -85,10 +85,10 @@ public class Retry extends MotechBaseDataObject {
     }
 
     public Integer retriesLeft() {
-        return retriesLeft;
+        return pendingRetries;
     }
 
     public void decrementRetriesLeft() {
-        retriesLeft--;
+        pendingRetries--;
     }
 }

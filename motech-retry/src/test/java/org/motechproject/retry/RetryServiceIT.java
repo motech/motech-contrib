@@ -2,7 +2,6 @@ package org.motechproject.retry;
 
 import org.joda.time.DateTime;
 import org.junit.After;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.motechproject.retry.dao.AllRetries;
@@ -41,7 +40,7 @@ public class RetryServiceIT {
         retryServiceImpl.schedule(new RetryRequest(name, externalId, startTime, referenceTime));
 
         Retry activeRetry = allRetries.getActiveRetry(externalId, name);
-        assertThat(activeRetry.hasRetriesLeft(), is(true));
+        assertThat(activeRetry.hasPendingRetires(), is(true));
         assertThat(activeRetry.startTime(), is(startTime));
 
         retryServiceImpl.fulfill(externalId, groupName);
