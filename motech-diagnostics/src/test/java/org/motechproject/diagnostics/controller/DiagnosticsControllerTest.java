@@ -2,15 +2,22 @@ package org.motechproject.diagnostics.controller;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
+import org.motechproject.diagnostics.DiagnosticResponseBuilder;
 import org.motechproject.diagnostics.repository.AllDiagnosticMethods;
 import org.motechproject.diagnostics.response.DiagnosticsResponse;
+import org.motechproject.diagnostics.response.DiagnosticsResult;
 
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
 import static junit.framework.Assert.assertEquals;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
@@ -18,22 +25,36 @@ public class DiagnosticsControllerTest {
 
     @Mock
     private AllDiagnosticMethods allDiagnosticMethods;
+    @Mock
+    private HttpServletResponse httpResponse;
+    @Mock
+    ServletOutputStream servletOutputStream;
+    @Mock
+    private DiagnosticResponseBuilder allDiagnosticMessageBuilder;
 
     private DiagnosticsController diagnosticsController;
 
     @Before
     public void setUp() {
         initMocks(this);
-        diagnosticsController = new DiagnosticsController(allDiagnosticMethods);
+        diagnosticsController = new DiagnosticsController(allDiagnosticMethods,allDiagnosticMessageBuilder);
     }
 
     @Test
-    public void shouldInvokeAllTheDiagnosticMethods() throws InvocationTargetException, IllegalAccessException {
+    public void shouldInvokeAllTheDiagnosticMethods() throws InvocationTargetException, IllegalAccessException, IOException {
         List<DiagnosticsResponse> expectedDiagnosticsResponses = new ArrayList<DiagnosticsResponse>();
+        expectedDiagnosticsResponses.add(new DiagnosticsResponse("Test diagnostic", new DiagnosticsResult(true, "Test diagnostic run")));
+
         when(allDiagnosticMethods.runAllDiagnosticMethods()).thenReturn(expectedDiagnosticsResponses);
+        when(httpResponse.getOutputStream()).thenReturn(servletOutputStream);
+        when(allDiagnosticMessageBuilder.createResponseMessage(expectedDiagnosticsResponses)).thenReturn("Diagnostic Response");
+        ArgumentCaptor<String> captor = ArgumentCaptor.forClass(String.class);
 
-        List<DiagnosticsResponse> actualDiagnosticsResponses = diagnosticsController.get();
+        diagnosticsController.getDiagnostics(httpResponse);
 
-        assertEquals(expectedDiagnosticsResponses, actualDiagnosticsResponses);
+        verify(servletOutputStream).print(captor.capture());
+        String responseValue = captor.getValue();
+
+        assertEquals("Diagnostic Response", responseValue.trim());
     }
 }

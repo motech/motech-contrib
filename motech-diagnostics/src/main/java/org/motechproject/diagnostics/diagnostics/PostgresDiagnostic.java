@@ -21,10 +21,10 @@ public class PostgresDiagnostic {
         this.postgresProperties = postgresProperties;
     }
 
-    @Diagnostic(name = "postgres")
+    @Diagnostic(name = "POSTGRES")
     public DiagnosticsResult performDiagnosis() {
         if(postgresProperties == null) return null;
-        DiagnosticLog diagnosticLog = new DiagnosticLog("POSTGRES");
+        DiagnosticLog diagnosticLog = new DiagnosticLog();
         diagnosticLog.add("Opening session with database");
         try {
             getConnection();
@@ -38,7 +38,7 @@ public class PostgresDiagnostic {
     }
 
     protected Connection getConnection() throws SQLException {
-        String url = postgresProperties.getProperty("jdbc.diagnosticCheck.url");
+        String url = postgresProperties.getProperty("jdbc.url");
         String userName = postgresProperties.getProperty("jdbc.username");
         String password = postgresProperties.getProperty("jdbc.password");
         return DriverManager.getConnection(url, userName, password);

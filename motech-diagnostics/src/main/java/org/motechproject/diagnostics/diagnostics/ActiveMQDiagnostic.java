@@ -14,9 +14,11 @@ public class ActiveMQDiagnostic {
     @Autowired
     private CachingConnectionFactory connectionFactory;
 
-    @Diagnostic(name = "activeMq")
+    @Diagnostic(name = "ACTIVEMQ")
     public DiagnosticsResult performDiagnosis() throws JMSException {
-        DiagnosticLog diagnosticLog = new DiagnosticLog("ACTIVEMQ");
+        DiagnosticLog diagnosticLog = new DiagnosticLog();
+        diagnosticLog.add("Checking for Active MQ connection");
+
         boolean isSuccess = checkActiveMQConnection(diagnosticLog);
         return new DiagnosticsResult(isSuccess, diagnosticLog.toString());
     }
