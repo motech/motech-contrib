@@ -21,10 +21,10 @@ public class PostgresDiagnostic {
         this.postgresProperties = postgresProperties;
     }
 
-    @Diagnostic(name = "postgres")
+    @Diagnostic(name = "POSTGRES")
     public DiagnosticsResult performDiagnosis() {
         if(postgresProperties == null) return null;
-        DiagnosticLog diagnosticLog = new DiagnosticLog("POSTGRES");
+        DiagnosticLog diagnosticLog = new DiagnosticLog();
         diagnosticLog.add("Opening session with database");
         try {
             getConnection();

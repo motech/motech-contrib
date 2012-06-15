@@ -22,12 +22,13 @@ public class ActiveMQDiagnostic {
     @Autowired
     private ActiveMQQueue eventQueue;
 
-    @Diagnostic(name = "activeMq")
+    @Diagnostic(name = "ACTIVEMQ")
     public DiagnosticsResult performDiagnosis() throws JMSException {
+
         Connection connection = null;
         QueueBrowser browser = null;
 
-        DiagnosticLog diagnosticLog = new DiagnosticLog("ACTIVEMQ");
+        DiagnosticLog diagnosticLog = new DiagnosticLog();
         diagnosticLog.add("Checking for Active MQ connection");
 
         try {

@@ -21,7 +21,6 @@ public class ActiveMQDiagnosticIT {
     @Test
     public void shouldCheckActiveMQConnection() throws JMSException {
         DiagnosticsResult diagnosticsResult = activeMQDiagnostic.performDiagnosis();
-        System.out.println(diagnosticsResult.toString());
         assertNotNull(diagnosticsResult);
     }
 }

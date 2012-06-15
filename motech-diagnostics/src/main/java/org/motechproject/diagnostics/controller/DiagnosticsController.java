@@ -1,5 +1,6 @@
 package org.motechproject.diagnostics.controller;
 
+import org.motechproject.diagnostics.DiagnosticResponseBuilder;
 import org.motechproject.diagnostics.repository.AllDiagnosticMethods;
 import org.motechproject.diagnostics.response.DiagnosticsResponse;
 import org.motechproject.diagnostics.response.ExceptionResponse;
@@ -22,23 +23,19 @@ import java.util.List;
 public class DiagnosticsController {
 
     AllDiagnosticMethods allDiagnosticMethods;
+    private DiagnosticResponseBuilder diagnosticResponseBuilder;
 
     @Autowired
-    public DiagnosticsController(AllDiagnosticMethods allDiagnosticMethods) {
+    public DiagnosticsController(AllDiagnosticMethods allDiagnosticMethods,DiagnosticResponseBuilder diagnosticResponseBuilder) {
         this.allDiagnosticMethods = allDiagnosticMethods;
+        this.diagnosticResponseBuilder = diagnosticResponseBuilder;
     }
 
     @RequestMapping(method = RequestMethod.GET)
     public void getDiagnostics(HttpServletResponse response) throws InvocationTargetException, IllegalAccessException, IOException {
-        StringBuilder stringBuilder = new StringBuilder();
         List<DiagnosticsResponse> diagnosticsResponses = allDiagnosticMethods.runAllDiagnosticMethods();
-        for (DiagnosticsResponse diagnosticsResponse : diagnosticsResponses) {
-            stringBuilder.append("Name : " + diagnosticsResponse.getName() + "\n");
-            stringBuilder.append("Status : " + diagnosticsResponse.getResult().getStatus() + "\n");
-            stringBuilder.append(diagnosticsResponse.getResult().getMessage() + "\n");
-        }
-        response.getOutputStream().print(stringBuilder.toString());
-
+        String diagnosticsResponse = diagnosticResponseBuilder.createResponseMessage(diagnosticsResponses);
+        response.getOutputStream().print(diagnosticsResponse);
     }
 
     @ExceptionHandler(Exception.class)
