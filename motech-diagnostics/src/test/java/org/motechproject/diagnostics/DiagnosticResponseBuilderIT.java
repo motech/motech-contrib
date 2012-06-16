@@ -26,8 +26,18 @@ public class DiagnosticResponseBuilderIT {
     public void shouldVerifyTheMessageBuilt() {
         DiagnosticsResponse diagnosticsResponse = new DiagnosticsResponse("Aragorn", new DiagnosticsResult(true, "Hrithik"));
         String responseMessage = diagnosticResponseBuilder.createResponseMessage(Arrays.asList(diagnosticsResponse));
-        assertTrue(responseMessage.contains("Aragorn"));
-        assertTrue(responseMessage.contains("TRUE"));
-        assertTrue(responseMessage.contains("Hrithik"));
+
+        assertEquals("                    **************SUMMARY**************\n" +
+                "\n" +
+                "                            Aragorn - TRUE\n" +
+                "            \n" +
+                "                    ***********************************\n" +
+                "\n" +
+                "\n" +
+                "!----------------------------------! Aragorn !----------------------------------!\n" +
+                "\n" +
+                "Status : TRUE\n" +
+                "Message : Hrithik\n" +
+                "\n",responseMessage);
     }
 }
