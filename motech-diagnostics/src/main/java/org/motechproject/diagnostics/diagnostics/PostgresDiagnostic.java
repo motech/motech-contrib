@@ -21,7 +21,7 @@ public class PostgresDiagnostic {
         this.postgresProperties = postgresProperties;
     }
 
-    @Diagnostic(name = "POSTGRES")
+    @Diagnostic(name = "POSTGRES DATABASE CONNECTION")
     public DiagnosticsResult performDiagnosis() {
         if(postgresProperties == null) return null;
         DiagnosticLog diagnosticLog = new DiagnosticLog();
