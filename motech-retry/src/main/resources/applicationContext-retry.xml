@@ -7,7 +7,7 @@
                http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd
                http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.0.xsd">
 
-    <import resource="classpath:applicationPlatformScheduler.xml"/>
+    <import resource="classpath:applicationScheduler.xml"/>
     <import resource="classpath:applicationPlatformServerAPI.xml"/>
 
     <util:properties id="retryProperties" location="classpath:/retry_schedules.properties"/>

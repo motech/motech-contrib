@@ -6,9 +6,12 @@ import org.ei.commcare.listener.event.CommCareFormEvent;
 import org.ei.commcare.listener.event.FakeDrishtiController;
 import org.junit.Before;
 import org.mockito.Mock;
-import org.motechproject.model.MotechEvent;
+import org.motechproject.scheduler.domain.MotechEvent;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Random;
 
 import static org.ei.commcare.api.domain.CommCareFormContent.FORM_ID_FIELD;
 import static org.mockito.MockitoAnnotations.initMocks;

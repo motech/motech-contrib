@@ -2,7 +2,7 @@ package org.ei.commcare.listener;
 
 import org.ei.commcare.listener.event.FakeMotherRegistrationRequest;
 import org.junit.Test;
-import org.motechproject.model.MotechEvent;
+import org.motechproject.scheduler.domain.MotechEvent;
 
 import java.util.HashMap;
 

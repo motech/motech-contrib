@@ -10,7 +10,7 @@ import org.motechproject.http.client.components.CommunicationType;
 import org.motechproject.http.client.constants.EventDataKeys;
 import org.motechproject.http.client.constants.EventSubjects;
 import org.motechproject.http.client.service.HttpClientServiceImpl;
-import org.motechproject.model.MotechEvent;
+import org.motechproject.scheduler.domain.MotechEvent;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.HashMap;

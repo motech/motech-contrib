@@ -45,7 +45,12 @@
         </dependency>
         <dependency>
             <groupId>org.motechproject</groupId>
-            <artifactId>motech-platform-scheduler</artifactId>
+            <artifactId>motech-platform-server-api</artifactId>
+            <version>${motech.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.motechproject</groupId>
+            <artifactId>motech-scheduler</artifactId>
             <version>${motech.version}</version>
         </dependency>
         <dependency>

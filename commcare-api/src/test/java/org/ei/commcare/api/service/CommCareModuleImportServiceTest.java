@@ -7,7 +7,7 @@ import org.ei.commcare.api.util.CommCareImportProperties;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
-import org.motechproject.gateway.OutboundEventGateway;
+import org.motechproject.scheduler.gateway.OutboundEventGateway;
 
 import java.util.ArrayList;
 import java.util.Arrays;

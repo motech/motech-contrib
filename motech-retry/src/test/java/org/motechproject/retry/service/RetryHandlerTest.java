@@ -7,12 +7,12 @@ import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Matchers;
 import org.mockito.Mock;
-import org.motechproject.gateway.OutboundEventGateway;
-import org.motechproject.model.MotechEvent;
 import org.motechproject.retry.dao.AllRetries;
 import org.motechproject.retry.domain.Retry;
 import org.motechproject.retry.domain.RetryRequest;
 import org.motechproject.retry.domain.RetryStatus;
+import org.motechproject.scheduler.domain.MotechEvent;
+import org.motechproject.scheduler.gateway.OutboundEventGateway;
 
 import java.util.HashMap;
 

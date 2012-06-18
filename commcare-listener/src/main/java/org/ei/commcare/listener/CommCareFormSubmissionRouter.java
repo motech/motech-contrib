@@ -5,7 +5,7 @@ import com.google.gson.JsonParseException;
 import org.ei.commcare.api.domain.CommCareFormInstance;
 import org.ei.commcare.listener.event.CommCareFormEvent;
 import org.motechproject.dao.MotechJsonReader;
-import org.motechproject.model.MotechEvent;
+import org.motechproject.scheduler.domain.MotechEvent;
 import org.motechproject.server.event.annotations.MotechListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

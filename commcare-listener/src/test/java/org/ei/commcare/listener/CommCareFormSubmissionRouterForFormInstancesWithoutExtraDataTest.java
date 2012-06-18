@@ -7,7 +7,7 @@ import org.ei.commcare.listener.event.FakeMotherRegistrationRequest;
 import org.ei.commcare.listener.event.FakeRequestWithDate;
 import org.joda.time.DateTime;
 import org.junit.Test;
-import org.motechproject.model.MotechEvent;
+import org.motechproject.scheduler.domain.MotechEvent;
 
 import java.util.ArrayList;
 

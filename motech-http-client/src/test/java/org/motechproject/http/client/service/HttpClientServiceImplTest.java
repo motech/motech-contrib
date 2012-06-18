@@ -8,7 +8,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.motechproject.http.client.components.CommunicationType;
 import org.motechproject.http.client.constants.EventDataKeys;
-import org.motechproject.model.MotechEvent;
+import org.motechproject.scheduler.domain.MotechEvent;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.springframework.test.util.ReflectionTestUtils;
 
