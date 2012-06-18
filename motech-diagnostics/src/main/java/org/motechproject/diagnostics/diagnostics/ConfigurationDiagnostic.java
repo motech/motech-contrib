@@ -23,7 +23,7 @@ public class ConfigurationDiagnostic {
         this.propertyFilesMap = propertyFilesMap;
     }
 
-    @Diagnostic(name = "CONFIGURATION")
+    @Diagnostic(name = "CONFIGURATION PROPERTIES")
     public DiagnosticsResult performDiagnosis() {
         if (propertyFilesMap == null) return null;
         DiagnosticLog diagnosticLog = new DiagnosticLog();
