@@ -23,7 +23,7 @@ public class SampleExcelReportController {
     }
 
     @Report
-    public List<SampleData> sampleReport(int pageNumber) {
+    public List<SampleData> sampleExcelReports(int pageNumber) {
         isCalled = true;
         if (pageNumber == 1) {
             return sampleData1;

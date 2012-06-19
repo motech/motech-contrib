@@ -13,7 +13,8 @@ import java.util.Map;
 import static java.util.Arrays.asList;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertTrue;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertFalse;
 
 public class ExcelReportDataSourceTest {
 
@@ -29,35 +30,35 @@ public class ExcelReportDataSourceTest {
 
     @Test
     public void nameIsSpecifiedInReportAnnotation() {
-        assertEquals("sampleReports", new ExcelReportDataSource(new SampleExcelReportController()).name());
+        assertEquals("sampleExcelReports", new ExcelReportDataSource(new SampleExcelReportController()).name());
     }
 
     @Test
     public void shouldRetrieveDataFromDataSource() {
         assertArrayEquals(
                 new SampleData[]{new SampleData("id1"), new SampleData("id2")},
-                new ExcelReportDataSource(new SampleExcelReportController()).dataForPage("sampleReport", 1).toArray()
+                new ExcelReportDataSource(new SampleExcelReportController()).dataForPage("sampleExcelReports", 1).toArray()
         );
     }
 
     @Test
     public void shouldRetrieveEmptyListWhenDataMethodIsNotSpecified() {
-        assertEquals(0, new ExcelReportDataSource(new WithoutDataMethod()).dataForPage("sampleReport", 1).size());
+        assertEquals(0, new ExcelReportDataSource(new WithoutDataMethod()).dataForPage("sampleExcelReports", 1).size());
     }
 
     @Test(expected = RuntimeException.class)
     public void shouldThrowExceptionWhenDataMethodSpecifiedIsNotPublic() {
-        assertEquals(0, new ExcelReportDataSource(new WithPrivateDataMethod()).dataForPage("sampleReport", 1).size());
+        assertEquals(0, new ExcelReportDataSource(new WithPrivateDataMethod()).dataForPage("sampleExcelReports", 1).size());
     }
 
     @Test(expected = RuntimeException.class)
     public void shouldThrowExceptionWhenDataMethodDoesNotHavePageNumber() {
-        assertEquals(0, new ExcelReportDataSource(new WithInvalidDataMethod()).dataForPage("sampleReport", 1).size());
+        assertEquals(0, new ExcelReportDataSource(new WithInvalidDataMethod()).dataForPage("sampleExcelReports", 1).size());
     }
 
     @Test(expected = RuntimeException.class)
     public void shouldThrowExceptionWhenDataMethodDoesNotReturnAList() {
-        assertEquals(0, new ExcelReportDataSource(new WithInvalidReturnType()).dataForPage("sampleReport", 1).size());
+        assertEquals(0, new ExcelReportDataSource(new WithInvalidReturnType()).dataForPage("sampleExcelReports", 1).size());
     }
 
     @Test
@@ -67,40 +68,44 @@ public class ExcelReportDataSourceTest {
 
     @Test
     public void shouldReturnColumnHeaders() {
-        assertEquals(asList("Id", "Custom column name"), new ExcelReportDataSource(new ValidReportDataSource()).columnHeaders("sampleReport"));
+        assertEquals(asList("Id", "Custom column name", "Boolean Value"), new ExcelReportDataSource(new ValidReportDataSource()).columnHeaders("sampleExcelReports"));
     }
 
     @Test
-    public void shouldCreateAnEntireReportWithHeadersAndRows(){
+    public void shouldCreateAnEntireReportWithHeadersAndRows() {
         ExcelReportDataSource excelReportDataSource = new ExcelReportDataSource(new ValidReportDataSource());
         Map<String, String> criteria = new HashMap<String, String>();
-        ReportData report = excelReportDataSource.createEntireReport("sampleReport", criteria);
+        ReportData report = excelReportDataSource.createEntireReport("sampleExcelReports", criteria);
 
         List<String> columnHeaders = report.getColumnHeaders();
         List<List<String>> allRowData = report.getAllRowData();
 
-        assertTrue(columnHeaders.size() == 2);
+        assertTrue(columnHeaders.size() == 3);
         assertEquals("Id", columnHeaders.get(0));
-        assertEquals("Custom column name",columnHeaders.get(1));
-        assertTrue(allRowData.size()==1);
+        assertEquals("Custom column name", columnHeaders.get(1));
+        assertEquals("Boolean Value", columnHeaders.get(2));
+        assertTrue(allRowData.size() == 1);
         assertTrue(allRowData.get(0).contains("id"));
         assertTrue(allRowData.get(0).contains("title"));
+        assertTrue(allRowData.get(0).contains("true"));
     }
 
     @Test
-    public void shouldCreateAPagedReportWithHeadersAndRows(){
+    public void shouldCreateAPagedReportWithHeadersAndRows() {
         ExcelReportDataSource excelReportDataSource = new ExcelReportDataSource(new ValidPagedReportDataSource());
-        ReportData report = excelReportDataSource.createPagedReport("sampleReport");
+        ReportData report = excelReportDataSource.createPagedReport("sampleExcelReports");
 
         List<String> columnHeaders = report.getColumnHeaders();
         List<List<String>> allRowData = report.getAllRowData();
 
-        assertTrue(columnHeaders.size() == 2);
+        assertTrue(columnHeaders.size() == 3);
         assertEquals("Id", columnHeaders.get(0));
-        assertEquals("Custom column name",columnHeaders.get(1));
-        assertTrue(allRowData.size()==1);
+        assertEquals("Custom column name", columnHeaders.get(1));
+        assertEquals("Boolean Value", columnHeaders.get(2));
+        assertTrue(allRowData.size() == 1);
         assertTrue(allRowData.get(0).contains("id"));
         assertTrue(allRowData.get(0).contains("title"));
+        assertTrue(allRowData.get(0).contains("true"));
     }
 
 }
@@ -109,7 +114,7 @@ public class ExcelReportDataSourceTest {
 class ValidReportDataSource {
 
     @Report
-    public List<SampleData> sampleReport(Map<String, String> criteria) {
+    public List<SampleData> sampleExcelReports(Map<String, String> criteria) {
         return asList(new SampleData("id"));
     }
 }
@@ -118,8 +123,8 @@ class ValidReportDataSource {
 class ValidPagedReportDataSource {
 
     @Report
-    public List<SampleData> sampleReport(int pageNumber) {
-        if(pageNumber == 2)
+    public List<SampleData> sampleExcelReports(int pageNumber) {
+        if (pageNumber == 2)
             return null;
         return asList(new SampleData("id"));
     }
@@ -134,7 +139,7 @@ class WithoutDataMethod {
 class WithPrivateDataMethod {
 
     @Report
-    private List<SampleData> sampleReport(int pageNumber) {
+    private List<SampleData> sampleExcelReports(int pageNumber) {
         return asList(new SampleData("id"));
     }
 
@@ -144,7 +149,7 @@ class WithPrivateDataMethod {
 class WithInvalidDataMethod {
 
     @Report
-    public List<SampleData> sampleReport() {
+    public List<SampleData> sampleExcelReports() {
         return asList(new SampleData("id"));
     }
 
@@ -154,7 +159,7 @@ class WithInvalidDataMethod {
 class WithInvalidReturnType {
 
     @Report
-    public SampleData sampleReport() {
+    public SampleData sampleExcelReports() {
         return new SampleData("id");
     }
 }

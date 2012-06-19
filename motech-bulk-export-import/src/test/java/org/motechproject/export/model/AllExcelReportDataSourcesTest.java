@@ -17,7 +17,7 @@ public class AllExcelReportDataSourcesTest extends SpringIntegrationTest {
 
     @Test
     public void shouldReturnCorrectReportDataSource() {
-        assertEquals("sampleReports", allExcelReportDataSources.get("sampleReports").name());
+        assertEquals("sampleExcelReports", allExcelReportDataSources.get("sampleExcelReports").name());
     }
 
     @Test
