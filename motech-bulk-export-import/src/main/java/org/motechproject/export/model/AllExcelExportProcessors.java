@@ -7,14 +7,14 @@ import org.springframework.stereotype.Repository;
 import java.util.Hashtable;
 import java.util.Map;
 
-import static org.motechproject.export.model.ExcelReportDataSource.isValidDataSource;
+import static org.motechproject.export.model.ExcelExportProcessor.isValidDataSource;
 
 @Repository
-public class AllExcelReportDataSources implements BeanPostProcessor {
+public class AllExcelExportProcessors implements BeanPostProcessor {
 
-    private Map<String, ExcelReportDataSource> reportDataSources = new Hashtable<String, ExcelReportDataSource>();
+    private Map<String, ExcelExportProcessor> reportDataSources = new Hashtable<String, ExcelExportProcessor>();
 
-    public ExcelReportDataSource get(String groupName) {
+    public ExcelExportProcessor get(String groupName) {
         return reportDataSources.get(groupName);
     }
 
@@ -26,8 +26,8 @@ public class AllExcelReportDataSources implements BeanPostProcessor {
     @Override
     public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
         if (isValidDataSource(bean.getClass())) {
-            ExcelReportDataSource dataSource = new ExcelReportDataSource(bean);
-            reportDataSources.put(dataSource.name(), dataSource);
+            ExcelExportProcessor exportProcessor = new ExcelExportProcessor(bean);
+            reportDataSources.put(exportProcessor.name(), exportProcessor);
         }
         return bean;
     }

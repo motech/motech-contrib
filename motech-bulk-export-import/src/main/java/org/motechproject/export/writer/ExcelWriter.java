@@ -1,28 +1,23 @@
 package org.motechproject.export.writer;
 
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.motechproject.export.builder.excel.PagedReportBuilder;
-import org.motechproject.export.model.ExcelReportDataSource;
+import org.motechproject.export.builder.excel.PagedExcelBuilder;
+import org.motechproject.export.model.ExcelExportProcessor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
-import javax.servlet.ServletOutputStream;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.OutputStream;
 
 @Component
 public class ExcelWriter {
 
-    public static final String APPLICATION_VND_MS_EXCEL = "application/vnd.ms-excel";
-    public static final String CONTENT_DISPOSITION = "Content-Disposition";
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    public void writeExcelToResponse(HttpServletResponse response, ExcelReportDataSource excelReportDataSource, String reportName, String fileName) {
+    public void writeExcelToResponse(OutputStream outputStream, ExcelExportProcessor excelExportProcessor, String reportName, String fileName) {
         try {
-            initializeExcelResponse(response, fileName);
-            ServletOutputStream outputStream = response.getOutputStream();
-            HSSFWorkbook excelWorkbook = createExcelWorkBook(excelReportDataSource, reportName);
+            HSSFWorkbook excelWorkbook = createExcelWorkBook(excelExportProcessor, reportName);
             if (null != excelWorkbook)
                 excelWorkbook.write(outputStream);
             outputStream.flush();
@@ -31,19 +26,12 @@ public class ExcelWriter {
         }
     }
 
-
-    private HSSFWorkbook createExcelWorkBook(ExcelReportDataSource excelReportDataSource, String reportName) {
+    private HSSFWorkbook createExcelWorkBook(ExcelExportProcessor excelExportProcessor, String reportName) {
         try {
-            return new PagedReportBuilder(excelReportDataSource, reportName).build();
+            return new PagedExcelBuilder(excelExportProcessor, reportName).build();
         } catch (Exception e) {
             logger.error("Error while generating excel report: " + e.getMessage());
             return null;
         }
-    }
-
-
-    private void initializeExcelResponse(HttpServletResponse response, String fileName) {
-        response.setHeader(CONTENT_DISPOSITION, "inline; filename=" + fileName);
-        response.setContentType(APPLICATION_VND_MS_EXCEL);
     }
 }

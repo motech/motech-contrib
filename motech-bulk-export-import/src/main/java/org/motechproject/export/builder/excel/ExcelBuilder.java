@@ -5,11 +5,11 @@ import org.motechproject.export.builder.excel.model.Workbook;
 
 import java.util.List;
 
-public abstract class ReportBuilder<T> {
+public abstract class ExcelBuilder<T> {
 
     private Workbook workbook;
 
-    protected ReportBuilder(String title, List<String> columnHeaders) {
+    protected ExcelBuilder(String title, List<String> columnHeaders) {
         workbook = new Workbook(title, columnHeaders);
     }
 

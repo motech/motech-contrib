@@ -8,11 +8,11 @@ import java.util.List;
 import static java.util.Arrays.asList;
 import static junit.framework.Assert.assertEquals;
 
-public class ReportBuilderTest {
+public class ExcelBuilderTest {
 
-    public static class TestReportBuilder extends ReportBuilder<String> {
+    public static class TestExcelBuilder extends ExcelBuilder<String> {
 
-        protected TestReportBuilder() {
+        protected TestExcelBuilder() {
             super("Test", asList("Column 1", "Column 2"));
         }
 
@@ -29,20 +29,20 @@ public class ReportBuilderTest {
 
     @Test
     public void shouldAddTitle() {
-        HSSFWorkbook workbook = new TestReportBuilder().build();
+        HSSFWorkbook workbook = new TestExcelBuilder().build();
         assertEquals("Test", workbook.getSheetAt(0).getRow(0).getCell(0).getStringCellValue());
     }
 
     @Test
     public void shouldAddColumnHeaders() {
-        HSSFWorkbook workbook = new TestReportBuilder().build();
+        HSSFWorkbook workbook = new TestExcelBuilder().build();
         assertEquals("Column 1", workbook.getSheetAt(0).getRow(1).getCell(0).getStringCellValue());
         assertEquals("Column 2", workbook.getSheetAt(0).getRow(1).getCell(1).getStringCellValue());
     }
 
     @Test
     public void shouldAddRowData() {
-        HSSFWorkbook workbook = new TestReportBuilder().build();
+        HSSFWorkbook workbook = new TestExcelBuilder().build();
         assertEquals("Row1", workbook.getSheetAt(0).getRow(2).getCell(0).getStringCellValue());
         assertEquals("Row2", workbook.getSheetAt(0).getRow(3).getCell(0).getStringCellValue());
     }

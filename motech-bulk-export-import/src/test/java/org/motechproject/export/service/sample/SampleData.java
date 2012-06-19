@@ -1,6 +1,6 @@
-package org.motechproject.export.controller.sample;
+package org.motechproject.export.service.sample;
 
-import org.motechproject.export.annotation.ReportValue;
+import org.motechproject.export.annotation.ExportValue;
 
 public class SampleData {
 
@@ -10,17 +10,17 @@ public class SampleData {
         this.id = id;
     }
 
-    @ReportValue(index = 0)
+    @ExportValue(index = 0)
     public String getId() {
         return id;
     }
 
-    @ReportValue(column = "Custom column name", index = 1)
+    @ExportValue(column = "Custom column name", index = 1)
     public String columnWithTitle() {
         return "title";
     }
 
-    @ReportValue(column = "Boolean Value", index = 2)
+    @ExportValue(column = "Boolean Value", index = 2)
     public boolean booleanValue() {
         return true;
     }

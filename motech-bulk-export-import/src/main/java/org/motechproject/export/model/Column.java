@@ -1,7 +1,7 @@
 package org.motechproject.export.model;
 
 import org.apache.commons.lang.StringUtils;
-import org.motechproject.export.annotation.ReportValue;
+import org.motechproject.export.annotation.ExportValue;
 
 import java.lang.reflect.Method;
 
@@ -14,7 +14,7 @@ public class Column implements Comparable<Column> {
 
     public Column(Method method) {
         this.method = method;
-        order = method.getAnnotation(ReportValue.class).index();
+        order = method.getAnnotation(ExportValue.class).index();
     }
 
     public String name() {
@@ -45,9 +45,9 @@ public class Column implements Comparable<Column> {
     }
 
     private String nameFromAnnotation(Method method) {
-        ReportValue reportValue = method.getAnnotation(ReportValue.class);
-        if (reportValue != null && StringUtils.isNotBlank(reportValue.column())) {
-            return reportValue.column();
+        ExportValue exportValue = method.getAnnotation(ExportValue.class);
+        if (exportValue != null && StringUtils.isNotBlank(exportValue.column())) {
+            return exportValue.column();
         }
         return null;
     }

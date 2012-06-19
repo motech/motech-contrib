@@ -1,10 +1,10 @@
 package org.motechproject.export.model;
 
 import org.junit.Test;
-import org.motechproject.export.annotation.ExcelReportGroup;
-import org.motechproject.export.annotation.Report;
-import org.motechproject.export.controller.sample.SampleData;
-import org.motechproject.export.controller.sample.SampleExcelReportController;
+import org.motechproject.export.annotation.DataProvider;
+import org.motechproject.export.annotation.ExcelDataSource;
+import org.motechproject.export.service.sample.SampleData;
+import org.motechproject.export.service.sample.SampleExcelDataSource;
 
 import java.util.HashMap;
 import java.util.List;
@@ -16,69 +16,69 @@ import static junit.framework.Assert.assertTrue;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertFalse;
 
-public class ExcelReportDataSourceTest {
+public class ExcelExportProcessorTest {
 
     @Test
     public void isValidDataSourceIfAnnotatedWithReport() {
-        assertTrue(ExcelReportDataSource.isValidDataSource(SampleExcelReportController.class));
+        assertTrue(ExcelExportProcessor.isValidDataSource(SampleExcelDataSource.class));
     }
 
     @Test
     public void isNotValidDataSourceIfNotAnnotatedWithReport() {
-        assertFalse(ExcelReportDataSource.isValidDataSource(ExcelReportDataSourceTest.class));
+        assertFalse(ExcelExportProcessor.isValidDataSource(ExcelExportProcessorTest.class));
     }
 
     @Test
     public void nameIsSpecifiedInReportAnnotation() {
-        assertEquals("sampleExcelReports", new ExcelReportDataSource(new SampleExcelReportController()).name());
+        assertEquals("sampleExcel", new ExcelExportProcessor(new SampleExcelDataSource()).name());
     }
 
     @Test
     public void shouldRetrieveDataFromDataSource() {
         assertArrayEquals(
                 new SampleData[]{new SampleData("id1"), new SampleData("id2")},
-                new ExcelReportDataSource(new SampleExcelReportController()).dataForPage("sampleExcelReports", 1).toArray()
+                new ExcelExportProcessor(new SampleExcelDataSource()).dataForPage("sampleExcel", 1).toArray()
         );
     }
 
     @Test
     public void shouldRetrieveEmptyListWhenDataMethodIsNotSpecified() {
-        assertEquals(0, new ExcelReportDataSource(new WithoutDataMethod()).dataForPage("sampleExcelReports", 1).size());
+        assertEquals(0, new ExcelExportProcessor(new WithoutDataMethod()).dataForPage("sampleExcel", 1).size());
     }
 
     @Test(expected = RuntimeException.class)
     public void shouldThrowExceptionWhenDataMethodSpecifiedIsNotPublic() {
-        assertEquals(0, new ExcelReportDataSource(new WithPrivateDataMethod()).dataForPage("sampleExcelReports", 1).size());
+        assertEquals(0, new ExcelExportProcessor(new WithPrivateDataMethod()).dataForPage("sampleExcel", 1).size());
     }
 
     @Test(expected = RuntimeException.class)
     public void shouldThrowExceptionWhenDataMethodDoesNotHavePageNumber() {
-        assertEquals(0, new ExcelReportDataSource(new WithInvalidDataMethod()).dataForPage("sampleExcelReports", 1).size());
+        assertEquals(0, new ExcelExportProcessor(new WithInvalidDataMethod()).dataForPage("sampleExcel", 1).size());
     }
 
     @Test(expected = RuntimeException.class)
     public void shouldThrowExceptionWhenDataMethodDoesNotReturnAList() {
-        assertEquals(0, new ExcelReportDataSource(new WithInvalidReturnType()).dataForPage("sampleExcelReports", 1).size());
+        assertEquals(0, new ExcelExportProcessor(new WithInvalidReturnType()).dataForPage("sampleExcel", 1).size());
     }
 
     @Test
     public void shouldReturnNameForTitle() {
-        assertEquals("Without Data Method", new ExcelReportDataSource(new WithoutDataMethod()).title());
+        assertEquals("Without Data Method", new ExcelExportProcessor(new WithoutDataMethod()).title());
     }
 
     @Test
     public void shouldReturnColumnHeaders() {
-        assertEquals(asList("Id", "Custom column name", "Boolean Value"), new ExcelReportDataSource(new ValidReportDataSource()).columnHeaders("sampleExcelReports"));
+        assertEquals(asList("Id", "Custom column name", "Boolean Value"), new ExcelExportProcessor(new ValidReportDataSource()).columnHeaders("sampleExcel"));
     }
 
     @Test
     public void shouldCreateAnEntireReportWithHeadersAndRows() {
-        ExcelReportDataSource excelReportDataSource = new ExcelReportDataSource(new ValidReportDataSource());
+        ExcelExportProcessor excelExportProcessor = new ExcelExportProcessor(new ValidReportDataSource());
         Map<String, String> criteria = new HashMap<String, String>();
-        ReportData report = excelReportDataSource.createEntireReport("sampleExcelReports", criteria);
+        ExportData export = excelExportProcessor.createEntireReport("sampleExcel", criteria);
 
-        List<String> columnHeaders = report.getColumnHeaders();
-        List<List<String>> allRowData = report.getAllRowData();
+        List<String> columnHeaders = export.getColumnHeaders();
+        List<List<String>> allRowData = export.getAllRowData();
 
         assertTrue(columnHeaders.size() == 3);
         assertEquals("Id", columnHeaders.get(0));
@@ -92,11 +92,11 @@ public class ExcelReportDataSourceTest {
 
     @Test
     public void shouldCreateAPagedReportWithHeadersAndRows() {
-        ExcelReportDataSource excelReportDataSource = new ExcelReportDataSource(new ValidPagedReportDataSource());
-        ReportData report = excelReportDataSource.createPagedReport("sampleExcelReports");
+        ExcelExportProcessor excelExportProcessor = new ExcelExportProcessor(new ValidPagedReportDataSource());
+        ExportData export = excelExportProcessor.createPagedReport("sampleExcel");
 
-        List<String> columnHeaders = report.getColumnHeaders();
-        List<List<String>> allRowData = report.getAllRowData();
+        List<String> columnHeaders = export.getColumnHeaders();
+        List<List<String>> allRowData = export.getAllRowData();
 
         assertTrue(columnHeaders.size() == 3);
         assertEquals("Id", columnHeaders.get(0));
@@ -110,20 +110,20 @@ public class ExcelReportDataSourceTest {
 
 }
 
-@ExcelReportGroup(name = "validReportDataSource")
+@ExcelDataSource(name = "validReportDataSource")
 class ValidReportDataSource {
 
-    @Report
-    public List<SampleData> sampleExcelReports(Map<String, String> criteria) {
+    @DataProvider
+    public List<SampleData> sampleExcel(Map<String, String> criteria) {
         return asList(new SampleData("id"));
     }
 }
 
-@ExcelReportGroup(name = "validPagedReportDataSource")
+@ExcelDataSource(name = "validPagedReportDataSource")
 class ValidPagedReportDataSource {
 
-    @Report
-    public List<SampleData> sampleExcelReports(int pageNumber) {
+    @DataProvider
+    public List<SampleData> sampleExcel(int pageNumber) {
         if (pageNumber == 2)
             return null;
         return asList(new SampleData("id"));
@@ -131,35 +131,35 @@ class ValidPagedReportDataSource {
 }
 
 
-@ExcelReportGroup(name = "withoutDataMethod")
+@ExcelDataSource(name = "withoutDataMethod")
 class WithoutDataMethod {
 }
 
-@ExcelReportGroup(name = "withPrivateDataMethod")
+@ExcelDataSource(name = "withPrivateDataMethod")
 class WithPrivateDataMethod {
 
-    @Report
-    private List<SampleData> sampleExcelReports(int pageNumber) {
+    @DataProvider
+    private List<SampleData> sampleExcel(int pageNumber) {
         return asList(new SampleData("id"));
     }
 
 }
 
-@ExcelReportGroup(name = "withInvalidDataMethod")
+@ExcelDataSource(name = "withInvalidDataMethod")
 class WithInvalidDataMethod {
 
-    @Report
-    public List<SampleData> sampleExcelReports() {
+    @DataProvider
+    public List<SampleData> sampleExcel() {
         return asList(new SampleData("id"));
     }
 
 }
 
-@ExcelReportGroup(name = "withInvalidReturnType")
+@ExcelDataSource(name = "withInvalidReturnType")
 class WithInvalidReturnType {
 
-    @Report
-    public SampleData sampleExcelReports() {
+    @DataProvider
+    public SampleData sampleExcel() {
         return new SampleData("id");
     }
 }

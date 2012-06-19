@@ -1,6 +1,6 @@
 package org.motechproject.export.model;
 
-import org.motechproject.export.annotation.ReportValue;
+import org.motechproject.export.annotation.ExportValue;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -10,7 +10,7 @@ public class Columns extends ArrayList<Column> {
 
     public Columns(Class typeParameter) {
         for (Method declaredMethod : typeParameter.getDeclaredMethods()) {
-            if (declaredMethod.isAnnotationPresent(ReportValue.class)) {
+            if (declaredMethod.isAnnotationPresent(ExportValue.class)) {
                 validateValueMethod(declaredMethod);
                 this.add(new Column(declaredMethod));
             }

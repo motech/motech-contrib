@@ -1,7 +1,7 @@
 package org.motechproject.export.model;
 
-import org.motechproject.export.annotation.CSVReportGroup;
-import org.motechproject.export.annotation.Report;
+import org.motechproject.export.annotation.CSVDataSource;
+import org.motechproject.export.annotation.DataProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -10,29 +10,29 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CSVReportDataSource {
+public class CSVExportProcessor {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    private Object controller;
+    private Object csvDataSource;
 
-    public CSVReportDataSource(Object controller) {
-        this.controller = controller;
+    public CSVExportProcessor(Object csvDataSource) {
+        this.csvDataSource = csvDataSource;
     }
 
     public String name() {
-        return controller.getClass().getAnnotation(CSVReportGroup.class).name();
+        return csvDataSource.getClass().getAnnotation(CSVDataSource.class).name();
     }
 
     public static boolean isValidDataSource(Class<?> beanClass) {
-        return beanClass.isAnnotationPresent(CSVReportGroup.class);
+        return beanClass.isAnnotationPresent(CSVDataSource.class);
     }
 
     public List<Object> data() {
         try {
             Method method = getDataMethod();
             if (method != null) {
-                return (List<Object>) method.invoke(controller);
+                return (List<Object>) method.invoke(csvDataSource);
             }
         } catch (IllegalAccessException e) {
             logger.error("Data method should be public" + e.getMessage());
@@ -51,14 +51,14 @@ public class CSVReportDataSource {
     }
 
     public List<String> columnHeaders() {
-        return new ReportDataModel(getDataMethod().getGenericReturnType()).columnHeaders();
+        return new ExportDataModel(getDataMethod().getGenericReturnType()).columnHeaders();
     }
 
     public List<String> rowData(Object model) {
-        return new ReportDataModel(getDataMethod().getGenericReturnType()).rowData(model);
+        return new ExportDataModel(getDataMethod().getGenericReturnType()).rowData(model);
     }
 
-    public ReportData createEntireReport() {
+    public ExportData createEntireReport() {
         List<String> headers = columnHeaders();
         List<List<String>> allRowData = new ArrayList();
         List<Object> data = data();
@@ -67,12 +67,12 @@ public class CSVReportDataSource {
                 allRowData.add(rowData(datum));
             }
         }
-        return new ReportData(headers, allRowData);
+        return new ExportData(headers, allRowData);
     }
 
     private Method getDataMethod() {
-        for (Method method : controller.getClass().getDeclaredMethods()) {
-            if (method.isAnnotationPresent(Report.class)) {
+        for (Method method : csvDataSource.getClass().getDeclaredMethods()) {
+            if (method.isAnnotationPresent(DataProvider.class)) {
                 return method;
             }
         }

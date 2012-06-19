@@ -5,11 +5,11 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ReportDataModel {
+public class ExportDataModel {
 
     private final Columns columns;
 
-    public ReportDataModel(Type returnType) {
+    public ExportDataModel(Type returnType) {
         Type[] typeParameters = ((ParameterizedType) returnType).getActualTypeArguments();
         assertHasSingleTypeParameter(typeParameters);
 

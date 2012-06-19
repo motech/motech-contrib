@@ -2,28 +2,28 @@ package org.motechproject.export.builder.excel;
 
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.junit.Test;
-import org.motechproject.export.controller.sample.SampleExcelReportController;
-import org.motechproject.export.model.ExcelReportDataSource;
+import org.motechproject.export.model.ExcelExportProcessor;
+import org.motechproject.export.service.sample.SampleExcelDataSource;
 
 import static org.junit.Assert.assertEquals;
 
-public class PagedReportBuilderTest {
+public class PagedExcelBuilderTest {
 
     @Test
     public void shouldAddTitle() {
-        HSSFWorkbook workbook = new PagedReportBuilder(new ExcelReportDataSource(new SampleExcelReportController()), "sampleExcelReports").build();
-        assertEquals("Sample Excel Reports", workbook.getSheetAt(0).getRow(0).getCell(0).getStringCellValue());
+        HSSFWorkbook workbook = new PagedExcelBuilder(new ExcelExportProcessor(new SampleExcelDataSource()), "sampleExcel").build();
+        assertEquals("Sample Excel", workbook.getSheetAt(0).getRow(0).getCell(0).getStringCellValue());
     }
 
     @Test
     public void shouldAddColumnHeaders() {
-        HSSFWorkbook workbook = new PagedReportBuilder(new ExcelReportDataSource(new SampleExcelReportController()), "sampleExcelReports").build();
+        HSSFWorkbook workbook = new PagedExcelBuilder(new ExcelExportProcessor(new SampleExcelDataSource()), "sampleExcel").build();
         assertEquals("Id", workbook.getSheetAt(0).getRow(1).getCell(0).getStringCellValue());
     }
 
     @Test
     public void shouldPageRowData() {
-        HSSFWorkbook workbook = new PagedReportBuilder(new ExcelReportDataSource(new SampleExcelReportController()), "sampleExcelReports").build();
+        HSSFWorkbook workbook = new PagedExcelBuilder(new ExcelExportProcessor(new SampleExcelDataSource()), "sampleExcel").build();
         assertDataInFirstPageAdded(workbook);
         assertDataInSecondPageAdded(workbook);
     }

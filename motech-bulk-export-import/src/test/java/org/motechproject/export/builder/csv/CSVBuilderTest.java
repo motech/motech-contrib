@@ -6,8 +6,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.motechproject.export.model.ReportData;
-import org.motechproject.export.model.ExcelReportDataSource;
+import org.motechproject.export.model.ExcelExportProcessor;
+import org.motechproject.export.model.ExportData;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -21,10 +21,10 @@ import static junit.framework.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
-public class CsvReportBuilderTest{
+public class CSVBuilderTest {
 
     @Mock
-    private ExcelReportDataSource excelReportDataSource;
+    private ExcelExportProcessor excelExportProcessor;
 
     @Test
     public void shouldReturnAFileThatHasCSVData() throws IOException {
@@ -33,14 +33,14 @@ public class CsvReportBuilderTest{
         List<String> columnHeaders = Arrays.asList("Header1", "Header2");
         List<List<String>> allRowData = Arrays.asList(Arrays.asList("Flw1", "Location1"), Arrays.asList("Flw2", "Location2"));
         Map<String, String> criteria = new HashMap<String, String>();
-        when(excelReportDataSource.createEntireReport(reportName, criteria)).thenReturn(new ReportData(columnHeaders,allRowData));
+        when(excelExportProcessor.createEntireReport(reportName, criteria)).thenReturn(new ExportData(columnHeaders, allRowData));
 
-        CsvReportBuilder csvReportBuilder = new CsvReportBuilder(fileName, reportName, excelReportDataSource, criteria);
-        File file = csvReportBuilder.build();
+        CSVBuilder CSVBuilder = new CSVBuilder(fileName, reportName, excelExportProcessor, criteria);
+        File file = CSVBuilder.build();
 
         FileInputStream fileInputStream = new FileInputStream(file);
         String fileContents = IOUtils.toString(fileInputStream);
-        String expectedString  =  "Header1,Header2\nFlw1,Location1\nFlw2,Location2\n";
+        String expectedString = "Header1,Header2\nFlw1,Location1\nFlw2,Location2\n";
         assertEquals(fileName, file.getName());
         assertEquals(expectedString, fileContents);
         FileUtils.deleteQuietly(new File(fileName));
@@ -52,15 +52,15 @@ public class CsvReportBuilderTest{
         List<String> columnHeaders = Arrays.asList("Header1", "Header2");
         List<List<String>> allRowData = Arrays.asList(Arrays.asList("Flw1", "Location1"), Arrays.asList("Flw2", "Location2"));
         Map<String, String> criteria = new HashMap<String, String>();
-        when(excelReportDataSource.createEntireReport(reportName, criteria)).thenReturn(new ReportData(columnHeaders,allRowData));
-        when(excelReportDataSource.name()).thenReturn("SampleData");
+        when(excelExportProcessor.createEntireReport(reportName, criteria)).thenReturn(new ExportData(columnHeaders, allRowData));
+        when(excelExportProcessor.name()).thenReturn("SampleData");
 
-        CsvReportBuilder csvReportBuilder = new CsvReportBuilder(null, reportName, excelReportDataSource, criteria);
-        File file = csvReportBuilder.build();
+        CSVBuilder CSVBuilder = new CSVBuilder(null, reportName, excelExportProcessor, criteria);
+        File file = CSVBuilder.build();
 
         FileInputStream fileInputStream = new FileInputStream(file);
         String fileContents = IOUtils.toString(fileInputStream);
-        String expectedString  =  "Header1,Header2\nFlw1,Location1\nFlw2,Location2\n";
+        String expectedString = "Header1,Header2\nFlw1,Location1\nFlw2,Location2\n";
         assertEquals("SampleData-report.csv", file.getName());
         assertEquals(expectedString, fileContents);
         FileUtils.deleteQuietly(new File("SampleData-report.csv"));

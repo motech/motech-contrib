@@ -1,7 +1,7 @@
 package org.motechproject.export.builder.csv;
 
-import org.motechproject.export.model.ReportData;
-import org.motechproject.export.model.ExcelReportDataSource;
+import org.motechproject.export.model.ExcelExportProcessor;
+import org.motechproject.export.model.ExportData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -12,20 +12,21 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
-public class CsvReportBuilder {
+//To be used if data is to be written to a file
+public class CSVBuilder {
 
     private File file;
-    private ExcelReportDataSource excelReportDataSource;
+    private ExcelExportProcessor excelExportProcessor;
     private Map<String, String> criteria;
     private String reportName;
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 
-    public CsvReportBuilder(String fileName, String reportName, ExcelReportDataSource excelReportDataSource, Map<String, String> criteria) {
+    public CSVBuilder(String fileName, String reportName, ExcelExportProcessor excelExportProcessor, Map<String, String> criteria) {
         this.reportName = reportName;
-        this.excelReportDataSource = excelReportDataSource;
+        this.excelExportProcessor = excelExportProcessor;
         this.criteria = criteria;
-        file = (fileName == null) ? new File(excelReportDataSource.name() + "-report.csv") : new File(fileName);
+        file = (fileName == null) ? new File(excelExportProcessor.name() + "-report.csv") : new File(fileName);
     }
 
     public File build() {
@@ -41,10 +42,10 @@ public class CsvReportBuilder {
 
     private void writeCsvReportToFile() throws IOException {
         BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file));
-        ReportData report = excelReportDataSource.createEntireReport(reportName, criteria);
-        bufferedWriter.write(getCsvRow(report.getColumnHeaders()));
+        ExportData export = excelExportProcessor.createEntireReport(reportName, criteria);
+        bufferedWriter.write(getCsvRow(export.getColumnHeaders()));
 
-        for (List<String> row : report.getAllRowData())
+        for (List<String> row : export.getAllRowData())
             bufferedWriter.write(getCsvRow(row));
 
         bufferedWriter.close();

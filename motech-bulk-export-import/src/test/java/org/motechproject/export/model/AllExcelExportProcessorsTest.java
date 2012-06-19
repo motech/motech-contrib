@@ -10,19 +10,19 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
 @ContextConfiguration(locations = "classpath*:/applicationBulkExportContext.xml")
-public class AllExcelReportDataSourcesTest extends SpringIntegrationTest {
+public class AllExcelExportProcessorsTest extends SpringIntegrationTest {
 
     @Autowired
-    private AllExcelReportDataSources allExcelReportDataSources;
+    private AllExcelExportProcessors allExcelExportProcessors;
 
     @Test
     public void shouldReturnCorrectReportDataSource() {
-        assertEquals("sampleExcelReports", allExcelReportDataSources.get("sampleExcelReports").name());
+        assertEquals("sampleExcel", allExcelExportProcessors.get("sampleExcel").name());
     }
 
     @Test
     public void shouldReturnNullForIncorrectReportPath() {
-        assertNull(allExcelReportDataSources.get("incorrectReportPath"));
+        assertNull(allExcelExportProcessors.get("incorrectReportPath"));
     }
 
     @Override
