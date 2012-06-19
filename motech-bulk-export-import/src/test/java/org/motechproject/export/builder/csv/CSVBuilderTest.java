@@ -33,7 +33,7 @@ public class CSVBuilderTest {
         List<String> columnHeaders = Arrays.asList("Header1", "Header2");
         List<List<String>> allRowData = Arrays.asList(Arrays.asList("Flw1", "Location1"), Arrays.asList("Flw2", "Location2"));
         Map<String, String> criteria = new HashMap<String, String>();
-        when(excelExportProcessor.createEntireReport(reportName, criteria)).thenReturn(new ExportData(columnHeaders, allRowData));
+        when(excelExportProcessor.getEntirExcelData(reportName, criteria)).thenReturn(new ExportData(columnHeaders, allRowData));
 
         CSVBuilder CSVBuilder = new CSVBuilder(fileName, reportName, excelExportProcessor, criteria);
         File file = CSVBuilder.build();
@@ -52,7 +52,7 @@ public class CSVBuilderTest {
         List<String> columnHeaders = Arrays.asList("Header1", "Header2");
         List<List<String>> allRowData = Arrays.asList(Arrays.asList("Flw1", "Location1"), Arrays.asList("Flw2", "Location2"));
         Map<String, String> criteria = new HashMap<String, String>();
-        when(excelExportProcessor.createEntireReport(reportName, criteria)).thenReturn(new ExportData(columnHeaders, allRowData));
+        when(excelExportProcessor.getEntirExcelData(reportName, criteria)).thenReturn(new ExportData(columnHeaders, allRowData));
         when(excelExportProcessor.name()).thenReturn("SampleData");
 
         CSVBuilder CSVBuilder = new CSVBuilder(null, reportName, excelExportProcessor, criteria);

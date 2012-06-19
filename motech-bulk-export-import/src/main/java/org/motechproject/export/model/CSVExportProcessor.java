@@ -58,7 +58,7 @@ public class CSVExportProcessor {
         return new ExportDataModel(getDataMethod().getGenericReturnType()).rowData(model);
     }
 
-    public ExportData createEntireReport() {
+    public ExportData getCSVData() {
         List<String> headers = columnHeaders();
         List<List<String>> allRowData = new ArrayList();
         List<Object> data = data();

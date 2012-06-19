@@ -35,6 +35,7 @@ public class ExportService {
         excelWriter.writeExcelToResponse(outputStream, excelExportProcessor, reportName, reportName + ".xls");
     }
 
+    //This method does not support pagination for csv file.
     public void exportAsCSV(String dataSourceName, Writer writer) {
         CSVExportProcessor csvExportProcessor = allCSVExportProcessors.get(dataSourceName);
         csvWriter.writeCSVData(writer, csvExportProcessor);

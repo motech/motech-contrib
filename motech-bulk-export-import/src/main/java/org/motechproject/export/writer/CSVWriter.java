@@ -2,8 +2,6 @@ package org.motechproject.export.writer;
 
 import org.motechproject.export.model.CSVExportProcessor;
 import org.motechproject.export.model.ExportData;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.io.Writer;
@@ -16,11 +14,8 @@ import static au.com.bytecode.opencsv.CSVWriter.NO_QUOTE_CHARACTER;
 @Component
 public class CSVWriter {
 
-
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
-
     public void writeCSVData(Writer writer, CSVExportProcessor csvExportProcessor) {
-        ExportData exportData = csvExportProcessor.createEntireReport();
+        ExportData exportData = csvExportProcessor.getCSVData();
         au.com.bytecode.opencsv.CSVWriter csvWriter = new au.com.bytecode.opencsv.CSVWriter(writer, DEFAULT_SEPARATOR, NO_QUOTE_CHARACTER);
         csvWriter.writeNext(exportData.getColumnHeaders().toArray(new String[]{}));
         csvWriter.writeAll(getData(exportData.getAllRowData()));

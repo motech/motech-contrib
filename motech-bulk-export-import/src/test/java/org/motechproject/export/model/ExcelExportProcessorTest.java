@@ -75,7 +75,7 @@ public class ExcelExportProcessorTest {
     public void shouldCreateAnEntireReportWithHeadersAndRows() {
         ExcelExportProcessor excelExportProcessor = new ExcelExportProcessor(new ValidReportDataSource());
         Map<String, String> criteria = new HashMap<String, String>();
-        ExportData export = excelExportProcessor.createEntireReport("sampleExcel", criteria);
+        ExportData export = excelExportProcessor.getEntirExcelData("sampleExcel", criteria);
 
         List<String> columnHeaders = export.getColumnHeaders();
         List<List<String>> allRowData = export.getAllRowData();
@@ -93,7 +93,7 @@ public class ExcelExportProcessorTest {
     @Test
     public void shouldCreateAPagedReportWithHeadersAndRows() {
         ExcelExportProcessor excelExportProcessor = new ExcelExportProcessor(new ValidPagedReportDataSource());
-        ExportData export = excelExportProcessor.createPagedReport("sampleExcel");
+        ExportData export = excelExportProcessor.getPaginatedExcelData("sampleExcel");
 
         List<String> columnHeaders = export.getColumnHeaders();
         List<List<String>> allRowData = export.getAllRowData();

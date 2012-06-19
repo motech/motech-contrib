@@ -87,7 +87,7 @@ public class ExcelExportProcessor {
         return new ExportDataModel(getDataMethod(reportName).getGenericReturnType()).rowData(model);
     }
 
-    public ExportData createEntireReport(String reportName, Map<String, String> criteria) {
+    public ExportData getEntirExcelData(String reportName, Map<String, String> criteria) {
         List<String> headers = columnHeaders(reportName);
         List<List<String>> allRowData = new ArrayList<List<String>>();
         List<Object> data = data(reportName, criteria);
@@ -100,7 +100,7 @@ public class ExcelExportProcessor {
         return new ExportData(headers, allRowData);
     }
 
-    public ExportData createPagedReport(String reportName) {
+    public ExportData getPaginatedExcelData(String reportName) {
         boolean doneBuilding = false;
         int pageNumber = 1;
         List<String> headers = columnHeaders(reportName);
