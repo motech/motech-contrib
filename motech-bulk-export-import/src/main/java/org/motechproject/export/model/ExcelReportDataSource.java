@@ -1,7 +1,7 @@
 package org.motechproject.export.model;
 
+import org.motechproject.export.annotation.ExcelReportGroup;
 import org.motechproject.export.annotation.Report;
-import org.motechproject.export.annotation.ReportGroup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -13,18 +13,18 @@ import java.util.Map;
 
 import static org.apache.commons.lang.StringUtils.*;
 
-public class ReportDataSource {
+public class ExcelReportDataSource {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     private Object controller;
 
-    public ReportDataSource(Object controller) {
+    public ExcelReportDataSource(Object controller) {
         this.controller = controller;
     }
 
     public String name() {
-        return controller.getClass().getAnnotation(ReportGroup.class).name();
+        return controller.getClass().getAnnotation(ExcelReportGroup.class).name();
     }
 
     public String title() {
@@ -32,7 +32,7 @@ public class ReportDataSource {
     }
 
     public static boolean isValidDataSource(Class<?> beanClass) {
-        return beanClass.isAnnotationPresent(ReportGroup.class);
+        return beanClass.isAnnotationPresent(ExcelReportGroup.class);
     }
 
     public List<Object> dataForPage(String reportName, int pageNumber) {

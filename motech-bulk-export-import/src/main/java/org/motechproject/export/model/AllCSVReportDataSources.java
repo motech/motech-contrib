@@ -7,14 +7,14 @@ import org.springframework.stereotype.Repository;
 import java.util.Hashtable;
 import java.util.Map;
 
-import static org.motechproject.export.model.ReportDataSource.isValidDataSource;
+import static org.motechproject.export.model.CSVReportDataSource.isValidDataSource;
 
 @Repository
-public class AllReportDataSources implements BeanPostProcessor {
+public class AllCSVReportDataSources implements BeanPostProcessor {
 
-    private Map<String, ReportDataSource> reportDataSources = new Hashtable<String, ReportDataSource>();
+    private Map<String, CSVReportDataSource> reportDataSources = new Hashtable<String, CSVReportDataSource>();
 
-    public ReportDataSource get(String groupName) {
+    public CSVReportDataSource get(String groupName) {
         return reportDataSources.get(groupName);
     }
 
@@ -26,7 +26,7 @@ public class AllReportDataSources implements BeanPostProcessor {
     @Override
     public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
         if (isValidDataSource(bean.getClass())) {
-            ReportDataSource dataSource = new ReportDataSource(bean);
+            CSVReportDataSource dataSource = new CSVReportDataSource(bean);
             reportDataSources.put(dataSource.name(), dataSource);
         }
         return bean;

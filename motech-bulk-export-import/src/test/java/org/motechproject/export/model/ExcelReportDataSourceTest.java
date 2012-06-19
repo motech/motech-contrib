@@ -1,10 +1,10 @@
 package org.motechproject.export.model;
 
 import org.junit.Test;
+import org.motechproject.export.annotation.ExcelReportGroup;
 import org.motechproject.export.annotation.Report;
-import org.motechproject.export.annotation.ReportGroup;
 import org.motechproject.export.controller.sample.SampleData;
-import org.motechproject.export.controller.sample.SampleReportController;
+import org.motechproject.export.controller.sample.SampleExcelReportController;
 
 import java.util.HashMap;
 import java.util.List;
@@ -15,66 +15,66 @@ import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertTrue;
 import static org.junit.Assert.*;
 
-public class ReportDataSourceTest {
+public class ExcelReportDataSourceTest {
 
     @Test
     public void isValidDataSourceIfAnnotatedWithReport() {
-        assertTrue(ReportDataSource.isValidDataSource(SampleReportController.class));
+        assertTrue(ExcelReportDataSource.isValidDataSource(SampleExcelReportController.class));
     }
 
     @Test
     public void isNotValidDataSourceIfNotAnnotatedWithReport() {
-        assertFalse(ReportDataSource.isValidDataSource(ReportDataSourceTest.class));
+        assertFalse(ExcelReportDataSource.isValidDataSource(ExcelReportDataSourceTest.class));
     }
 
     @Test
     public void nameIsSpecifiedInReportAnnotation() {
-        assertEquals("sampleReports", new ReportDataSource(new SampleReportController()).name());
+        assertEquals("sampleReports", new ExcelReportDataSource(new SampleExcelReportController()).name());
     }
 
     @Test
     public void shouldRetrieveDataFromDataSource() {
         assertArrayEquals(
                 new SampleData[]{new SampleData("id1"), new SampleData("id2")},
-                new ReportDataSource(new SampleReportController()).dataForPage("sampleReport", 1).toArray()
+                new ExcelReportDataSource(new SampleExcelReportController()).dataForPage("sampleReport", 1).toArray()
         );
     }
 
     @Test
     public void shouldRetrieveEmptyListWhenDataMethodIsNotSpecified() {
-        assertEquals(0, new ReportDataSource(new WithoutDataMethod()).dataForPage("sampleReport", 1).size());
+        assertEquals(0, new ExcelReportDataSource(new WithoutDataMethod()).dataForPage("sampleReport", 1).size());
     }
 
     @Test(expected = RuntimeException.class)
     public void shouldThrowExceptionWhenDataMethodSpecifiedIsNotPublic() {
-        assertEquals(0, new ReportDataSource(new WithPrivateDataMethod()).dataForPage("sampleReport", 1).size());
+        assertEquals(0, new ExcelReportDataSource(new WithPrivateDataMethod()).dataForPage("sampleReport", 1).size());
     }
 
     @Test(expected = RuntimeException.class)
     public void shouldThrowExceptionWhenDataMethodDoesNotHavePageNumber() {
-        assertEquals(0, new ReportDataSource(new WithInvalidDataMethod()).dataForPage("sampleReport", 1).size());
+        assertEquals(0, new ExcelReportDataSource(new WithInvalidDataMethod()).dataForPage("sampleReport", 1).size());
     }
 
     @Test(expected = RuntimeException.class)
     public void shouldThrowExceptionWhenDataMethodDoesNotReturnAList() {
-        assertEquals(0, new ReportDataSource(new WithInvalidReturnType()).dataForPage("sampleReport", 1).size());
+        assertEquals(0, new ExcelReportDataSource(new WithInvalidReturnType()).dataForPage("sampleReport", 1).size());
     }
 
     @Test
     public void shouldReturnNameForTitle() {
-        assertEquals("Without Data Method", new ReportDataSource(new WithoutDataMethod()).title());
+        assertEquals("Without Data Method", new ExcelReportDataSource(new WithoutDataMethod()).title());
     }
 
     @Test
     public void shouldReturnColumnHeaders() {
-        assertEquals(asList("Id", "Custom column name"), new ReportDataSource(new ValidReportDataSource()).columnHeaders("sampleReport"));
+        assertEquals(asList("Id", "Custom column name"), new ExcelReportDataSource(new ValidReportDataSource()).columnHeaders("sampleReport"));
     }
 
     @Test
     public void shouldCreateAnEntireReportWithHeadersAndRows(){
-        ReportDataSource reportDataSource = new ReportDataSource(new ValidReportDataSource());
+        ExcelReportDataSource excelReportDataSource = new ExcelReportDataSource(new ValidReportDataSource());
         Map<String, String> criteria = new HashMap<String, String>();
-        ReportData report = reportDataSource.createEntireReport("sampleReport", criteria);
+        ReportData report = excelReportDataSource.createEntireReport("sampleReport", criteria);
 
         List<String> columnHeaders = report.getColumnHeaders();
         List<List<String>> allRowData = report.getAllRowData();
@@ -89,8 +89,8 @@ public class ReportDataSourceTest {
 
     @Test
     public void shouldCreateAPagedReportWithHeadersAndRows(){
-        ReportDataSource reportDataSource = new ReportDataSource(new ValidPagedReportDataSource());
-        ReportData report = reportDataSource.createPagedReport("sampleReport");
+        ExcelReportDataSource excelReportDataSource = new ExcelReportDataSource(new ValidPagedReportDataSource());
+        ReportData report = excelReportDataSource.createPagedReport("sampleReport");
 
         List<String> columnHeaders = report.getColumnHeaders();
         List<List<String>> allRowData = report.getAllRowData();
@@ -105,7 +105,7 @@ public class ReportDataSourceTest {
 
 }
 
-@ReportGroup(name = "validReportDataSource")
+@ExcelReportGroup(name = "validReportDataSource")
 class ValidReportDataSource {
 
     @Report
@@ -114,7 +114,7 @@ class ValidReportDataSource {
     }
 }
 
-@ReportGroup(name = "validPagedReportDataSource")
+@ExcelReportGroup(name = "validPagedReportDataSource")
 class ValidPagedReportDataSource {
 
     @Report
@@ -126,11 +126,11 @@ class ValidPagedReportDataSource {
 }
 
 
-@ReportGroup(name = "withoutDataMethod")
+@ExcelReportGroup(name = "withoutDataMethod")
 class WithoutDataMethod {
 }
 
-@ReportGroup(name = "withPrivateDataMethod")
+@ExcelReportGroup(name = "withPrivateDataMethod")
 class WithPrivateDataMethod {
 
     @Report
@@ -140,7 +140,7 @@ class WithPrivateDataMethod {
 
 }
 
-@ReportGroup(name = "withInvalidDataMethod")
+@ExcelReportGroup(name = "withInvalidDataMethod")
 class WithInvalidDataMethod {
 
     @Report
@@ -150,7 +150,7 @@ class WithInvalidDataMethod {
 
 }
 
-@ReportGroup(name = "withInvalidReturnType")
+@ExcelReportGroup(name = "withInvalidReturnType")
 class WithInvalidReturnType {
 
     @Report

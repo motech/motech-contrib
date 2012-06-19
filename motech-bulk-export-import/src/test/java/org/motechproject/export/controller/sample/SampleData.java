@@ -20,6 +20,11 @@ public class SampleData {
         return "title";
     }
 
+    @ReportValue(column = "Boolean Value", index = 2)
+    public boolean booleanValue() {
+        return true;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

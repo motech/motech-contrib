@@ -1,7 +1,7 @@
 package org.motechproject.export.builder.csv;
 
 import org.motechproject.export.model.ReportData;
-import org.motechproject.export.model.ReportDataSource;
+import org.motechproject.export.model.ExcelReportDataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,17 +15,17 @@ import java.util.Map;
 public class CsvReportBuilder {
 
     private File file;
-    private ReportDataSource reportDataSource;
+    private ExcelReportDataSource excelReportDataSource;
     private Map<String, String> criteria;
     private String reportName;
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 
-    public CsvReportBuilder(String fileName, String reportName, ReportDataSource reportDataSource, Map<String, String> criteria) {
+    public CsvReportBuilder(String fileName, String reportName, ExcelReportDataSource excelReportDataSource, Map<String, String> criteria) {
         this.reportName = reportName;
-        this.reportDataSource = reportDataSource;
+        this.excelReportDataSource = excelReportDataSource;
         this.criteria = criteria;
-        file = (fileName == null) ? new File(reportDataSource.name() + "-report.csv") : new File(fileName);
+        file = (fileName == null) ? new File(excelReportDataSource.name() + "-report.csv") : new File(fileName);
     }
 
     public File build() {
@@ -41,7 +41,7 @@ public class CsvReportBuilder {
 
     private void writeCsvReportToFile() throws IOException {
         BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file));
-        ReportData report = reportDataSource.createEntireReport(reportName, criteria);
+        ReportData report = excelReportDataSource.createEntireReport(reportName, criteria);
         bufferedWriter.write(getCsvRow(report.getColumnHeaders()));
 
         for (List<String> row : report.getAllRowData())
