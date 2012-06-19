@@ -1,0 +1,28 @@
+[
+    {
+        "case_id": "743d1878-92e0-4632-b5b0-b5773bcedab8",
+        "closed": false,
+        "date_closed": null,
+        "date_modified": "2012-06-14T14:02:00Z",
+        "domain": "mysore-team-testing",
+        "indices": {},
+        "properties": {
+            "Mother_Property": "1"
+        },
+        "reverse_indices": {
+            "parent": {
+                "case_id": "CHILD-CASE-X",
+                "case_type": "child"
+            }
+        },
+        "server_date_modified": "2012-06-14T08:31:58Z",
+        "server_date_opened": "2012-06-14T08:31:58Z",
+        "user_id": "993993d2506b112bb4f855e83d41c75f",
+        "version": "2.0",
+        "xform_ids": [
+            "7899fc1e-43ce-47a6-a2f7-e22e515ba802",
+            "d8965e89-fd66-4f6a-8a4c-c1a3b9707610",
+            "c0372a4a-36f2-401e-9b74-cd51e1bbd645"
+        ]
+    }
+]

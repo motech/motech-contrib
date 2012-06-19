@@ -9,6 +9,7 @@ import java.util.List;
 public class CommCareModuleDefinitions {
     private String userName;
     private String password;
+    private String caseFetchURLBase;
     private List<CommCareModuleDefinition> modules;
 
     public String userName() {
@@ -21,6 +22,10 @@ public class CommCareModuleDefinitions {
 
     public List<CommCareModuleDefinition> modules() {
         return modules;
+    }
+
+    public String caseFetchURLBase() {
+        return caseFetchURLBase;
     }
 
     @Override

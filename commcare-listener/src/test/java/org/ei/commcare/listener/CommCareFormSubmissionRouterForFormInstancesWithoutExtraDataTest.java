@@ -15,6 +15,7 @@ import static com.ibm.icu.impl.Assert.fail;
 import static java.util.Arrays.asList;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
 
 public class CommCareFormSubmissionRouterForFormInstancesWithoutExtraDataTest extends CommCareFormSubmissionRouterTestBase {
@@ -85,9 +86,15 @@ public class CommCareFormSubmissionRouterForFormInstancesWithoutExtraDataTest ex
             fail("Should have thrown an exception");
         } catch (FormDispatchFailedException e) {
             assertThat(e.innerExceptions().size(), is(2));
-            assertThat(e.innerExceptions().get(0).getMessage(), is("Failed during dispatch. Info: Form ID: FORM-ID-1, Method: methodWhichThrowsAnException, Parameter JSON: {\"age\":\"23\",\"name\":\"Mom\"}"));
+
+            assertTrue(e.innerExceptions().get(0).getMessage().startsWith("Failed during dispatch. Info: Form ID: FORM-ID-1, Method: methodWhichThrowsAnException, Parameter JSON: "));
+            assertTrue(e.innerExceptions().get(0).getMessage().endsWith("{\"age\":\"23\",\"name\":\"Mom\"}") || e.innerExceptions().get(0).getMessage().endsWith("{\"name\":\"Mom\",\"age\":\"23\"}"));
+
             assertThat(e.innerExceptions().get(0).getCause().getMessage(), is("boo"));
-            assertThat(e.innerExceptions().get(1).getMessage(), is("Failed during dispatch. Info: Form ID: FORM-ID-1, Method: methodWhichThrowsAnException, Parameter JSON: {\"age\":\"23\",\"name\":\"Mom\"}"));
+
+            assertTrue(e.innerExceptions().get(1).getMessage().startsWith("Failed during dispatch. Info: Form ID: FORM-ID-1, Method: methodWhichThrowsAnException, Parameter JSON: "));
+            assertTrue(e.innerExceptions().get(1).getMessage().endsWith("{\"age\":\"23\",\"name\":\"Mom\"}") || e.innerExceptions().get(1).getMessage().endsWith("{\"name\":\"Mom\",\"age\":\"23\"}"));
+
             assertThat(e.innerExceptions().get(1).getCause().getMessage(), is("boo"));
         }
 
