@@ -75,7 +75,7 @@ public class RetryServiceImplTest {
         assertThat(actualJob.getStartTime(), is(referenceTime.plus(expectedOffset).toDate()));
         assertThat(actualJob.getEndTime(), is(referenceTime.plus(expectedOffset).plusHours(4).toDate()));
         assertThat(actualJob.getRepeatCount(), is(2));
-        assertThat(actualJob.getRepeatInterval(), is(Period.parse("2 hours", FORMATTER).toStandardDuration().getMillis()));
+        assertThat(actualJob.getRepeatIntervalInMilliSeconds(), is(Period.parse("2 hours", FORMATTER).toStandardDuration().getMillis()));
     }
 
     @Test
