@@ -111,6 +111,11 @@
             <version>3.3</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.quartz-scheduler</groupId>
+            <artifactId>quartz</artifactId>
+            <version>2.1.5</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -178,6 +183,7 @@
                                     <path>
                                         <fileset dir="../build/sql">
                                             <include name="tables_mysql_innodb.sql"/>
+                                            <include name="upgrade_db_schema_quartz_from_v1.8_to_v2.1.sql"/>
                                         </fileset>
                                     </path>
                                 </sql>
