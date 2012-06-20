@@ -12,7 +12,6 @@ import org.motechproject.retry.service.RetryServiceImpl;
 import org.quartz.JobKey;
 import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
-import org.quartz.impl.matchers.GroupMatcher;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.quartz.SchedulerFactoryBean;
 import org.springframework.test.context.ContextConfiguration;
@@ -24,6 +23,7 @@ import java.util.Set;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
+import static org.quartz.impl.matchers.GroupMatcher.jobGroupEquals;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("classpath:applicationContext-retry.xml")
@@ -62,9 +62,9 @@ public class RetryServiceIT {
     private void removeQuartzJobs() {
         try {
             Scheduler scheduler = schedulerFactoryBean.getScheduler();
-            List<String> jobGroupNames = scheduler.getJobGroupNames();
-            for (String groupName : jobGroupNames) {
-                Set<JobKey> jobNames = scheduler.getJobKeys(GroupMatcher.jobGroupEquals(groupName));
+            List<String> groupNames = scheduler.getJobGroupNames();
+            for (String group : groupNames) {
+                Set<JobKey> jobNames = scheduler.getJobKeys(jobGroupEquals(group));
                 for (JobKey jobKey : jobNames)
                     scheduler.deleteJob(jobKey);
             }

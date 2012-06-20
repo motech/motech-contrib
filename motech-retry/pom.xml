@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.motechproject</groupId>
@@ -111,6 +112,11 @@
             <version>3.3</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.quartz-scheduler</groupId>
+            <artifactId>quartz</artifactId>
+            <version>2.1.5</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -154,6 +160,7 @@
                                      password="${mysql.password}"
                                      onerror="continue">
                                     drop database if exists ${mysql.dbQuartz};
+                                    create database ${mysql.dbQuartz};
                                 </sql>
                             </target>
                         </configuration>
@@ -171,13 +178,13 @@
                                     <fileset file="../build/lib/mysql-connector-java-5.1.13.jar"/>
                                 </path>
                                 <sql driver="${mysql.driver}"
-                                     url="jdbc:mysql://${mysql.server}:${mysql.port}?autoReconnect=true"
+                                     url="jdbc:mysql://${mysql.server}:${mysql.port}/${mysql.dbQuartz}?autoReconnect=true"
                                      userid="${mysql.user}"
                                      classpathref="dependencies"
                                      password="${mysql.password}">
                                     <path>
                                         <fileset dir="../build/sql">
-                                            <include name="tables_mysql_innodb.sql"/>
+                                            <include name="tables_mysql_innodb_qrtz.2.1.sql"/>
                                         </fileset>
                                     </path>
                                 </sql>
