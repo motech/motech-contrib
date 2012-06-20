@@ -34,7 +34,6 @@ public class RetryHandler {
         String externalId = (String) event.getParameters().get(EXTERNAL_ID);
         DateTime referenceTime = (DateTime) event.getParameters().get(REFERENCE_TIME);
         String retryRecordName = (String) event.getParameters().get(NAME);
-        Period offset = (Period) event.getParameters().get(OFFSET);
 
         final Retry retry = decrementPendingRetryCount(externalId, retryRecordName);
         boolean lastRetryWithinCurrentGroup = !retry.hasPendingRetires();
