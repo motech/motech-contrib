@@ -5,7 +5,7 @@
     <artifactId>motech-flash-scope</artifactId>
     <packaging>jar</packaging>
     <name>motech-flash-scope</name>
-    <version>0.10.5-SNAPSHOT</version>
+    <version>0.10.5</version>
 
     <properties>
         <spring-security.version>3.0.5.RELEASE</spring-security.version>
@@ -15,7 +15,7 @@
     <parent>
         <artifactId>motech-contrib</artifactId>
         <groupId>org.motechproject</groupId>
-        <version>0.10.5-SNAPSHOT</version>
+        <version>0.10.5</version>
     </parent>
 
     <repositories>

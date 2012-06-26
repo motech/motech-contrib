@@ -9,7 +9,7 @@
     <parent>
         <artifactId>motech-contrib</artifactId>
         <groupId>org.motechproject</groupId>
-        <version>0.10.5-SNAPSHOT</version>
+        <version>0.10.5</version>
     </parent>
 
     <properties>
@@ -21,7 +21,7 @@
         <dependency>
             <groupId>org.motechproject</groupId>
             <artifactId>motech-common</artifactId>
-            <version>0.10.5-SNAPSHOT</version>
+            <version>0.10.5</version>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
