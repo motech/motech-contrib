@@ -9,7 +9,7 @@
     <parent>
         <artifactId>motech-contrib</artifactId>
         <groupId>org.motechproject</groupId>
-        <version>0.10.5</version>
+        <version>0.10.6-SNAPSHOT</version>
     </parent>
 
     <properties>
