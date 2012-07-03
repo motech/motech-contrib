@@ -3,14 +3,14 @@
     <parent>
         <artifactId>case-integration</artifactId>
         <groupId>org.motechproject</groupId>
-        <version>0.11</version>
+        <version>0.11-SNAPSHOT</version>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.motechproject</groupId>
     <artifactId>case-parser</artifactId>
-    <version>0.11</version>
+    <version>0.11-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>case-parser</name>
    <dependencies>
