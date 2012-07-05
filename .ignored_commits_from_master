@@ -1,10 +1,12 @@
-6d8d95e Aravind | #00 | Removed commented out schema creation.
-80d3c7e Sharvani/Aravind | #00 | Made all poms to point to ananya group id.
-b99225b Vandana/Aravind | #00 | Pointing contrib to 10.6 snapshot.
-fb9ed90 [maven-release-plugin] prepare release motech-contrib-0.10.5
-b3b8f3e [maven-release-plugin] prepare for next development iteration
-9a3746e [maven-release-plugin] prepare release motech-contrib-0.10.4
-43c6e5e [maven-release-plugin] prepare for next development iteration
-b2ca800 [maven-release-plugin] prepare release motech-contrib-0.10.3
-5722743 [maven-release-plugin] prepare for next development iteration
-b0a5d38 [maven-release-plugin] prepare release motech-contrib-0.10.2
+68e4a85
+b5bbbc2
+6d8d95e
+80d3c7e
+b99225b
+fb9ed90
+b3b8f3e
+9a3746e
+43c6e5e
+b2ca800
+5722743
+b0a5d38
