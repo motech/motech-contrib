@@ -4,11 +4,11 @@
 
     <name>motech-validation</name>
     <artifactId>motech-validation</artifactId>
-    <groupId>org.motechproject</groupId>
+    <groupId>org.motechproject.contrib-ananya</groupId>
 
     <parent>
         <artifactId>motech-contrib</artifactId>
-        <groupId>org.motechproject</groupId>
+        <groupId>org.motechproject.contrib-ananya</groupId>
         <version>0.10.6-SNAPSHOT</version>
     </parent>
 

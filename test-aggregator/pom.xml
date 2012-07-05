@@ -4,13 +4,13 @@
 
     <parent>
         <artifactId>motech-contrib</artifactId>
-        <groupId>org.motechproject</groupId>
+        <groupId>org.motechproject.contrib-ananya</groupId>
         <version>0.10.6-SNAPSHOT</version>
     </parent>
 
     <name>test-aggregator</name>
     <artifactId>test-aggregator</artifactId>
-    <groupId>org.motechproject</groupId>
+    <groupId>org.motechproject.contrib-ananya</groupId>
     <version>0.10.6-SNAPSHOT</version>
 
     <properties>
@@ -24,7 +24,7 @@
             <version>3.0.5.RELEASE</version>
         </dependency>
         <dependency>
-            <groupId>org.motechproject</groupId>
+            <groupId>org.motechproject.contrib-ananya</groupId>
             <artifactId>message-aggregator</artifactId>
             <version>0.10.6-SNAPSHOT</version>
             <scope>provided</scope>
