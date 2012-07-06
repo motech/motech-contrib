@@ -26,7 +26,7 @@ import static org.junit.Assert.assertThat;
 import static org.quartz.impl.matchers.GroupMatcher.jobGroupEquals;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration("classpath:applicationContext-retry.xml")
+@ContextConfiguration("classpath:testApplicationContext.xml")
 public class RetryServiceIT {
     @Autowired
     private RetryServiceImpl retryServiceImpl;

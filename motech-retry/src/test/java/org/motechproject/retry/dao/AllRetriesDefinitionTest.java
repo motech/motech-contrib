@@ -20,7 +20,7 @@ import static org.unitils.reflectionassert.ReflectionAssert.assertReflectionEqua
 
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration("classpath:applicationContext-retry.xml")
+@ContextConfiguration("classpath:testApplicationContext.xml")
 public class AllRetriesDefinitionTest {
 
     @Autowired

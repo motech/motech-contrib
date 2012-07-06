@@ -18,7 +18,7 @@ import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration("classpath:applicationContext-retry.xml")
+@ContextConfiguration("classpath:testApplicationContext.xml")
 public class AllRetriesTest {
     @Autowired
     private AllRetries allRetries;
