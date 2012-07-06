@@ -24,7 +24,7 @@
             <version>3.1.0.RELEASE</version>
         </dependency>
         <dependency>
-            <groupId>org.motechproject</groupId>
+            <groupId>org.motechproject.contrib-ghana-national</groupId>
             <artifactId>message-aggregator</artifactId>
             <version>0.12-SNAPSHOT</version>
             <scope>provided</scope>

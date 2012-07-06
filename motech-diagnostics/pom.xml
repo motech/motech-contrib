@@ -20,7 +20,7 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.motechproject</groupId>
+            <groupId>org.motechproject.contrib-ghana-national</groupId>
             <artifactId>motech-common</artifactId>
             <version>0.12-SNAPSHOT</version>
         </dependency>
