@@ -4,7 +4,7 @@
 
     <name>motech-contrib</name>
     <artifactId>motech-contrib</artifactId>
-    <groupId>org.motechproject</groupId>
+    <groupId>org.motechproject.contrib-ghana-national</groupId>
     <version>0.12-SNAPSHOT</version>
 
     <packaging>pom</packaging>

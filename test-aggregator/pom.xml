@@ -4,13 +4,13 @@
 
     <parent>
         <artifactId>motech-contrib</artifactId>
-        <groupId>org.motechproject</groupId>
+        <groupId>org.motechproject.contrib-ghana-national</groupId>
         <version>0.12-SNAPSHOT</version>
     </parent>
 
     <name>test-aggregator</name>
     <artifactId>test-aggregator</artifactId>
-    <groupId>org.motechproject</groupId>
+    <groupId>org.motechproject.contrib-ghana-national</groupId>
     <version>0.12-SNAPSHOT</version>
 
     <properties>
