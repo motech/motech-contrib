@@ -47,6 +47,16 @@ public class MotechAuthenticationService {
         }
     }
 
+    public boolean resetPassword(String userName, String newPassword) {
+        MotechWebUser motechWebUser = allMotechWebUsers.findByUserName(userName);
+        if (motechWebUser != null) {
+            motechWebUser.setPassword(passwordEncoder.encodePassword(newPassword));
+            allMotechWebUsers.update(motechWebUser);
+            return true;
+        }
+        return false;
+    }
+
     public MotechUser retrieveUserByCredentials(String username, String password) {
         MotechWebUser user = allMotechWebUsers.findByUserName(username);
         if (user != null && passwordEncoder.isPasswordValid(user.getPassword(), password)) {
@@ -78,7 +88,7 @@ public class MotechAuthenticationService {
     public List<MotechUser> findByRole(String role) {
         List<MotechWebUser> result = allMotechWebUsers.findByRole(role);
         List<MotechUser> users = new ArrayList<MotechUser>();
-        for(MotechWebUser user : result) {
+        for (MotechWebUser user : result) {
             users.add(new MotechUser(user));
         }
         return users;

@@ -20,6 +20,7 @@ import java.util.List;
 
 import static java.util.Arrays.asList;
 import static junit.framework.Assert.*;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -149,9 +150,26 @@ public class MotechAuthenticationServiceTest extends SpringIntegrationTest {
         motechAuthenticationService.register("username3", "password", "12346", asList("IT_ADMIN"));
 
         List<MotechUser> users = motechAuthenticationService.findByRole("IT_ADMIN");
-        assertEquals(2,users.size());
-        assertEquals("username1",users.get(0).getUserName());
-        assertEquals("username3",users.get(1).getUserName());
+        assertEquals(2, users.size());
+        assertEquals("username1", users.get(0).getUserName());
+        assertEquals("username3", users.get(1).getUserName());
+    }
+
+    @Test
+    public void shouldSetResetPassword() throws WebSecurityException {
+        String username = "username";
+        String newPassword = "newPassword";
+        motechAuthenticationService.register(username, "password", "", asList("PROVIDER"));
+
+        boolean isResetSuccessful = motechAuthenticationService.resetPassword(username, newPassword);
+
+        assertTrue(isResetSuccessful);
+        assertNotNull(motechAuthenticationService.retrieveUserByCredentials(username, newPassword));
+    }
+
+    @Test
+    public void ResetPasswordShouldReturnFalseIfUserDoesNotExists() {
+        assertFalse(motechAuthenticationService.resetPassword("username", "newPassword"));
     }
 
     @After
