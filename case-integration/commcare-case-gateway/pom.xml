@@ -34,8 +34,8 @@
             <version>4.8.2</version>
         </dependency>
         <dependency>
+            <groupId>org.motechproject.contrib-ghana-national</groupId>
             <artifactId>motech-http-client</artifactId>
-            <groupId>org.motechproject</groupId>
             <version>0.12-SNAPSHOT</version>
         </dependency>
         <dependency>
