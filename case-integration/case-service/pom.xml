@@ -2,7 +2,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>org.motechproject</groupId>
+    <groupId>org.motechproject.contrib-ananya-kilkari</groupId>
     <artifactId>case-service</artifactId>
     <version>0.12-SNAPSHOT</version>
     <packaging>jar</packaging>
@@ -18,7 +18,7 @@
 
     <parent>
         <artifactId>case-integration</artifactId>
-        <groupId>org.motechproject</groupId>
+        <groupId>org.motechproject.contrib-ananya-kilkari</groupId>
         <version>0.12-SNAPSHOT</version>
     </parent>
 
@@ -62,7 +62,7 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.motechproject</groupId>
+            <groupId>org.motechproject.contrib-ananya-kilkari</groupId>
             <artifactId>case-common</artifactId>
             <version>0.12-SNAPSHOT</version>
         </dependency>
@@ -77,7 +77,7 @@
             <version>1.8.3</version>
         </dependency>
         <dependency>
-            <groupId>org.motechproject</groupId>
+            <groupId>org.motechproject.contrib-ananya-kilkari</groupId>
             <artifactId>case-parser</artifactId>
             <version>0.12-SNAPSHOT</version>
         </dependency>
