@@ -5,7 +5,7 @@
     <name>motech-retry</name>
     <groupId>org.motechproject.contrib-whp</groupId>
     <artifactId>motech-retry</artifactId>
-    <version>0.12-SNAPSHOT</version>
+    <version>0.13-SNAPSHOT</version>
 
     <properties>
         <spring.version>3.1.0.RELEASE</spring.version>
@@ -14,7 +14,7 @@
     <parent>
         <artifactId>motech-contrib</artifactId>
         <groupId>org.motechproject.contrib-whp</groupId>
-        <version>0.12-SNAPSHOT</version>
+        <version>0.13-SNAPSHOT</version>
     </parent>
 
     <repositories>
