@@ -16,7 +16,6 @@
         <module>message-aggregator</module>
         <module>test-aggregator</module>
         <module>case-integration</module>
-        <module>motech-tb-adherence</module>
         <module>commcare-api</module>
         <module>commcare-listener</module>
         <module>motech-http-client</module>
