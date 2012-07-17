@@ -6,11 +6,14 @@ import org.motechproject.retry.domain.RetryGroupRecord;
 import org.motechproject.retry.domain.RetryRecord;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.CollectionUtils;
 
 import java.io.File;
 import java.io.FilenameFilter;
+import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
@@ -37,22 +40,22 @@ public class AllRetriesDefinition {
         }.getType();
 
         MotechJsonReader motechJsonReader = new MotechJsonReader();
-        String schedulesDirectoryPath = getClass().getResource(definitionsDirectoryName).getPath();
-        File[] definitionFiles = new File(schedulesDirectoryPath).listFiles(new FilenameFilter() {
-            @Override
-            public boolean accept(File file, String filename) {
-                return filename.endsWith(json_extension);
-            }
-        });
 
-        List<String> definitionFileNames = extract(definitionFiles, on(File.class).getName());
-
-        for (String definitionFileName : definitionFileNames) {
-            RetryGroupRecord retryRecord = (RetryGroupRecord) motechJsonReader.readFromFile(
-                    definitionsDirectoryName + "/" + definitionFileName,
-                    type);
-            retryGroupRecords.add(retryRecord);
+        if(definitionsDirectoryName.startsWith("/")) {
+            definitionsDirectoryName = definitionsDirectoryName.substring(1);
         }
+        String locationPattern = String.format("classpath*:%s/*%s", definitionsDirectoryName, json_extension);
+
+        try {
+            Resource[] resources = new PathMatchingResourcePatternResolver().getResources(locationPattern);
+            for (Resource resource : resources) {
+                RetryGroupRecord retryRecord = (RetryGroupRecord) motechJsonReader.readFromStream(resource.getInputStream(), type);
+                retryGroupRecords.add(retryRecord);
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
     }
 
     public RetryRecord getRetryRecord(String retryScheduleName) {
