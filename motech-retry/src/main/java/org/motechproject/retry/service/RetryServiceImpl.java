@@ -22,7 +22,7 @@ import static org.motechproject.retry.EventKeys.*;
 
 @Service
 public class RetryServiceImpl implements RetryService {
-    public static final String RETRY_INTERNAL_SUBJECT = "org.motechproject.retry.internal";
+
     private MotechSchedulerService schedulerService;
     private AllRetries allRetries;
     private AllRetriesDefinition allRetriesDefinition;
@@ -68,7 +68,7 @@ public class RetryServiceImpl implements RetryService {
     }
 
     private void unscheduleRetryJob(String externalId, String name, String retryName) {
-        schedulerService.safeUnscheduleJob(RETRY_INTERNAL_SUBJECT, jobIdKey(externalId, name, retryName) + "-repeat");
+        schedulerService.safeUnscheduleJob(RetryService.RETRY_INTERNAL_SUBJECT, jobIdKey(externalId, name, retryName) + "-repeat");
     }
 
     public void fulfill(String externalId, String groupName) {
@@ -93,7 +93,7 @@ public class RetryServiceImpl implements RetryService {
     }
 
     private MotechEvent motechEvent(final RetryRecord retryRecord, final RetryRequest retryRequest, final String jobId) {
-        return new MotechEvent(RETRY_INTERNAL_SUBJECT, new HashMap<String, Object>() {{
+        return new MotechEvent(RetryService.RETRY_INTERNAL_SUBJECT, new HashMap<String, Object>() {{
             put(EXTERNAL_ID, retryRequest.getExternalId());
             put(NAME, retryRecord.name());
             put(REFERENCE_TIME, retryRequest.getReferenceTime());

@@ -1,0 +1,12 @@
+{
+    "groupName" : "retry-every-second-group",
+    "eventSubject": "retry.every.second",
+    "retries" : [
+        {
+            "name" : "retry-every-second",
+            "retryCount" : "1",
+            "retryInterval" : ["1 Minutes"],
+            "offset": ["0 Minutes"]
+        }
+    ]
+}
