@@ -1,5 +1,6 @@
 {
     "groupName" : "simple-campaign",
+    "eventSubject" : "simple-campaign-event",
     "retries" : [
         {
             "name" : "Simple-Retry",

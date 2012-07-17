@@ -9,10 +9,7 @@ import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.motechproject.retry.dao.AllRetries;
 import org.motechproject.retry.dao.AllRetriesDefinition;
-import org.motechproject.retry.domain.Retry;
-import org.motechproject.retry.domain.RetryRecord;
-import org.motechproject.retry.domain.RetryRequest;
-import org.motechproject.retry.domain.RetryStatus;
+import org.motechproject.retry.domain.*;
 import org.motechproject.scheduler.MotechSchedulerService;
 import org.motechproject.scheduler.domain.MotechEvent;
 import org.motechproject.scheduler.domain.RepeatingSchedulableJob;
@@ -55,7 +52,9 @@ public class RetryServiceImplTest {
 
         RetryRecord retryRecord = retryRecord(name, 2, asList("2 hours"), offset);
         when(mockAllRetriesDef.getRetryRecord(name)).thenReturn(retryRecord);
-        when(mockAllRetriesDef.getRetryGroupName(name)).thenReturn(groupName);
+        RetryGroupRecord retryGroupRecord = new RetryGroupRecord();
+        retryGroupRecord.setName(groupName);
+        when(mockAllRetriesDef.getRetryGroup(name)).thenReturn(retryGroupRecord);
 
         retryServiceImpl.schedule(new RetryRequest(name, externalId, referenceTime));
 

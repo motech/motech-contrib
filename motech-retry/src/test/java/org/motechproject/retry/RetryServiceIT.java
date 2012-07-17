@@ -35,6 +35,7 @@ public class RetryServiceIT {
     @Autowired
     private SchedulerFactoryBean schedulerFactoryBean;
 
+
     @Test
     public void shouldCreateRetryEvent() {
         String groupName = "campaign-retries";

@@ -37,7 +37,7 @@ public class RetryServiceImpl implements RetryService {
     public void schedule(RetryRequest retryRequest) {
         RetryRecord retryRecord = createNewRetryGroup(retryRequest);
         String externalId = retryRequest.getExternalId();
-        String groupName = allRetriesDefinition.getRetryGroupName(retryRequest.getName());
+        String groupName = allRetriesDefinition.getRetryGroup(retryRequest.getName()).getName();
         String retryName = retryRequest.getName();
 
         unscheduleRetryJob(externalId, groupName, retryName);
@@ -60,10 +60,10 @@ public class RetryServiceImpl implements RetryService {
         return isLastRetryGroup;
     }
 
-    public void unscheduleRetryGroup(String externalId, String name) {
-        List<String> allRetryNames = allRetriesDefinition.getAllRetryRecordNames(name);
+    public void unscheduleRetryGroup(String externalId, String groupName) {
+        List<String> allRetryNames = allRetriesDefinition.getAllRetryRecordNames(groupName);
         for (String retryName : allRetryNames) {
-            unscheduleRetryJob(externalId, name, retryName);
+            unscheduleRetryJob(externalId, groupName, retryName);
         }
     }
 

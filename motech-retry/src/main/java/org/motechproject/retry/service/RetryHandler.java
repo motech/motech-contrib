@@ -3,6 +3,7 @@ package org.motechproject.retry.service;
 import org.joda.time.DateTime;
 import org.joda.time.Period;
 import org.motechproject.retry.dao.AllRetries;
+import org.motechproject.retry.dao.AllRetriesDefinition;
 import org.motechproject.retry.domain.Retry;
 import org.motechproject.retry.domain.RetryRequest;
 import org.motechproject.retry.domain.RetryStatus;
@@ -19,12 +20,14 @@ import static org.motechproject.retry.EventKeys.*;
 @Component
 public class RetryHandler {
     private AllRetries allRetries;
+    private AllRetriesDefinition allRetriesDefinition;
     private OutboundEventGateway outboundEventGateway;
     private RetryServiceImpl retryServiceImpl;
 
     @Autowired
-    public RetryHandler(AllRetries allRetries, OutboundEventGateway outboundEventGateway, RetryServiceImpl retryServiceImpl) {
+    public RetryHandler(AllRetries allRetries, AllRetriesDefinition allRetriesDefinition, OutboundEventGateway outboundEventGateway, RetryServiceImpl retryServiceImpl) {
         this.allRetries = allRetries;
+        this.allRetriesDefinition = allRetriesDefinition;
         this.outboundEventGateway = outboundEventGateway;
         this.retryServiceImpl = retryServiceImpl;
     }
@@ -35,6 +38,7 @@ public class RetryHandler {
         DateTime referenceTime = (DateTime) event.getParameters().get(REFERENCE_TIME);
         String retryRecordName = (String) event.getParameters().get(NAME);
 
+
         final Retry retry = decrementPendingRetryCount(externalId, retryRecordName);
         boolean lastRetryWithinCurrentGroup = !retry.hasPendingRetires();
 
@@ -42,7 +46,8 @@ public class RetryHandler {
         if (lastRetryWithinCurrentGroup) {
              lastRetryBatch = retryServiceImpl.scheduleNextGroup(new RetryRequest(retryRecordName, externalId, referenceTime));
         }
-        outboundEventGateway.sendEventMessage(motechEvent(RETRY_SUBJECT, event.getParameters(), lastRetryBatch));
+        String retryEventSubject = allRetriesDefinition.getRetryGroup(retryRecordName).getEventSubject();
+        outboundEventGateway.sendEventMessage(motechEvent(retryEventSubject, event.getParameters(), lastRetryBatch));
     }
 
     private Retry decrementPendingRetryCount(String externalId, String retryRecordName) {
