@@ -62,7 +62,7 @@ public class RetryServiceIT {
     }
 
 
-    @MotechListener(subjects = RetryServiceImpl.RETRY_INTERNAL_SUBJECT)
+    @MotechListener(subjects = "retry.every.second")
     public void handleEvent(MotechEvent motechEvent) {
         eventFired = true;
     }
