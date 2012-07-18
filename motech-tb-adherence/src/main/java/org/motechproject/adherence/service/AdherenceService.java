@@ -49,4 +49,8 @@ public class AdherenceService {
     public List<AdherenceRecord> allTakenLogsFrom(String patientId, String treatmentId, LocalDate startDate) {
         return allAdherenceLogs.allTakenLogsFrom(patientId, treatmentId, startDate);
     }
+
+    public List<AdherenceRecord> allTakenLogs(String patientId, String treatmentId) {
+        return allAdherenceLogs.allTakenLogs(patientId, treatmentId);
+    }
 }

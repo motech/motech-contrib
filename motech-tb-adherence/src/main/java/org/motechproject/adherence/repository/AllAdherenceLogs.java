@@ -96,6 +96,15 @@ public class AllAdherenceLogs extends MotechBaseRepository<AdherenceLog> {
         return viewResult.getRows().get(0).getValueAsInt();
     }
 
+    public List<AdherenceRecord> allTakenLogs(String patientId, String treatmentId) {
+        int status = 1;
+        ComplexKey startKey = ComplexKey.of(patientId, treatmentId, status);
+        ComplexKey endKey = ComplexKey.of(patientId, treatmentId, status, ComplexKey.emptyObject());
+
+        ViewQuery q = createQuery("all_taken_logs").startKey(startKey).endKey(endKey).inclusiveEnd(true).reduce(false);
+        return db.queryView(q, AdherenceRecord.class);
+    }
+
     @View(name = "all_taken_logs", map = "function(doc) {if (doc.type == 'AdherenceLog') {emit([doc.externalId, doc.treatmentId, doc.status, doc.doseDate], {externalId:doc.externalId, treatmentId:doc.treatmentId, doseDate:doc.doseDate, status:doc.status, meta:doc.meta});}}", reduce ="_count")
     public List<AdherenceRecord> allTakenLogsFrom(String patientId, String treatmentId, LocalDate startDate) {
         int status = 1;
