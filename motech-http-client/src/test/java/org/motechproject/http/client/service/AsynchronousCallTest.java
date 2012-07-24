@@ -22,7 +22,7 @@ public class AsynchronousCallTest {
     @Test
     public void shouldSendThroughEventRelay() throws Exception {
         initMocks(this);
-        asynchronousCall = new AsynchronousCall(mockEventRelay, mockHttpEventListener);
+        asynchronousCall = new AsynchronousCall(mockEventRelay);
         MotechEvent motechEvent = new MotechEvent("subject");
         asynchronousCall.send(motechEvent);
 

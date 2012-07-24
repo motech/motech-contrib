@@ -11,13 +11,9 @@ public class AsynchronousCall implements CommunicationType {
 
     private EventRelay eventRelay;
 
-    private HttpClientEventListener httpClientEventListener;
-
-
     @Autowired
-    public AsynchronousCall(EventRelay eventRelay, HttpClientEventListener httpClientEventListener) {
+    public AsynchronousCall(EventRelay eventRelay) {
         this.eventRelay = eventRelay;
-        this.httpClientEventListener = httpClientEventListener;
     }
 
     public void send(MotechEvent motechEvent) {
