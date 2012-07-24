@@ -17,7 +17,7 @@ public class HttpClientServiceImpl implements HttpClientService {
     private CommunicationType communicationType;
 
     @Override
-    public void post(String url, String data) {
+    public void post(String url, Object data) {
         HashMap<String, Object> parameters = new HashMap<String, Object>();
         parameters.put(EventDataKeys.URL, url);
         parameters.put(EventDataKeys.DATA, data);
