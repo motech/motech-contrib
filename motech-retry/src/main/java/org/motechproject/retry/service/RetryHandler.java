@@ -1,7 +1,6 @@
 package org.motechproject.retry.service;
 
 import org.joda.time.DateTime;
-import org.joda.time.Period;
 import org.motechproject.retry.dao.AllRetries;
 import org.motechproject.retry.domain.Retry;
 import org.motechproject.retry.domain.RetryRequest;
@@ -29,7 +28,7 @@ public class RetryHandler {
         this.retryServiceImpl = retryServiceImpl;
     }
 
-    @MotechListener(subjects = "org.motechproject.internal.retry")
+    @MotechListener(subjects = RetryServiceImpl.RETRY_INTERNAL_SUBJECT)
     public void handle(MotechEvent event) {
         String externalId = (String) event.getParameters().get(EXTERNAL_ID);
         DateTime referenceTime = (DateTime) event.getParameters().get(REFERENCE_TIME);
