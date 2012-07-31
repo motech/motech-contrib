@@ -2,9 +2,9 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>org.motechproject</groupId>
     <artifactId>motech-retry</artifactId>
-    <version>0.10.1</version>
+    <groupId>org.motechproject.contrib-ananya-care</groupId>
+    <version>0.5-SNAPSHOT</version>
 
     <properties>
         <spring.version>3.0.5.RELEASE</spring.version>
@@ -12,8 +12,8 @@
 
     <parent>
         <artifactId>motech-contrib</artifactId>
-        <groupId>org.motechproject</groupId>
-        <version>0.10.1</version>
+        <groupId>org.motechproject.contrib-ananya-care</groupId>
+        <version>0.5-SNAPSHOT</version>
     </parent>
 
     <repositories>

@@ -4,14 +4,14 @@
 
     <parent>
         <artifactId>motech-contrib</artifactId>
-        <groupId>org.motechproject</groupId>
-        <version>0.10.1</version>
+        <groupId>org.motechproject.contrib-ananya-care</groupId>
+        <version>0.5-SNAPSHOT</version>
     </parent>
 
     <name>test-aggregator</name>
     <artifactId>test-aggregator</artifactId>
-    <groupId>org.motechproject</groupId>
-    <version>0.10.1</version>
+    <groupId>org.motechproject.contrib-ananya-care</groupId>
+    <version>0.5-SNAPSHOT</version>
 
     <properties>
         <spring.version>3.0.5.RELEASE</spring.version>
@@ -24,9 +24,9 @@
             <version>3.0.5.RELEASE</version>
         </dependency>
         <dependency>
-            <groupId>org.motechproject</groupId>
             <artifactId>message-aggregator</artifactId>
-            <version>0.10.1</version>
+            <groupId>org.motechproject.contrib-ananya-care</groupId>
+            <version>0.5-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <dependency>

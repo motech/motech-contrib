@@ -4,8 +4,8 @@
 
     <name>motech-contrib</name>
     <artifactId>motech-contrib</artifactId>
-    <groupId>org.motechproject</groupId>
-    <version>0.10.1</version>
+    <groupId>org.motechproject.contrib-ananya-care</groupId>
+    <version>0.5-SNAPSHOT</version>
 
     <packaging>pom</packaging>
     <properties>

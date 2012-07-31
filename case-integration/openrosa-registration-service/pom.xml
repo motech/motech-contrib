@@ -2,12 +2,14 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <artifactId>case-integration</artifactId>
-        <groupId>org.motechproject</groupId>
-        <version>0.10.1</version>
+        <groupId>org.motechproject.contrib-ananya-care</groupId>
+        <version>0.5-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>openrosa-registration-service</artifactId>
+    <groupId>org.motechproject.contrib-ananya-care</groupId>
+    <version>0.5-SNAPSHOT</version>
     <name>openrosa-registration-service</name>
 
     <properties>
@@ -75,14 +77,14 @@
             <version>${spring.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.motechproject</groupId>
             <artifactId>case-parser</artifactId>
-            <version>0.10.1</version>
+            <groupId>org.motechproject.contrib-ananya-care</groupId>
+            <version>0.5-SNAPSHOT</version>
         </dependency>
         <dependency>
-            <groupId>org.motechproject</groupId>
             <artifactId>case-common</artifactId>
-            <version>0.10.1</version>
+            <groupId>org.motechproject.contrib-ananya-care</groupId>
+            <version>0.5-SNAPSHOT</version>
         </dependency>
     </dependencies>
 
