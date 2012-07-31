@@ -132,11 +132,10 @@ public class AllAdherenceLogsIT extends SpringIntegrationTest {
     public void shouldAddBulkObjects() {
         AdherenceLog log1 = new AdherenceLog("externalId", "treatmentId", new LocalDate(2012, 1, 1));
         AdherenceLog log2 = new AdherenceLog("externalId", "treatmentId", new LocalDate(2012, 5, 5));
-        AdherenceLog log3 = new AdherenceLog("externalId", "treatmentId", new LocalDate(2012, 5, 5));
 
-        allAdherenceLogs.addOrUpdateLogsForExternalIdByDoseDate(asList(log1, log2, log3),"externalId");
+        allAdherenceLogs.addOrUpdateLogsForExternalIdByDoseDate(asList(log1, log2), "externalId");
 
-        assertEquals(3,allAdherenceLogs.getAll().size());
+        assertEquals(2, allAdherenceLogs.getAll().size());
     }
 
     @Test
@@ -148,11 +147,19 @@ public class AllAdherenceLogsIT extends SpringIntegrationTest {
         AdherenceLog log3 = new AdherenceLog("externalId", "treatmentId2", new LocalDate(2012, 5, 5));
 
         allAdherenceLogs.add(log1);
-        allAdherenceLogs.addOrUpdateLogsForExternalIdByDoseDate(asList(log2,log3),"externalId");
+        allAdherenceLogs.addOrUpdateLogsForExternalIdByDoseDate(asList(log2, log3), "externalId");
 
-        assertEquals(2,allAdherenceLogs.getAll().size());
-        assertEquals(2,allAdherenceLogs.findLogBy("externalId","treatmentId2",new LocalDate(2012,1,1)).status());
+        assertEquals(2, allAdherenceLogs.getAll().size());
+        assertEquals(2, allAdherenceLogs.findLogBy("externalId", "treatmentId2", new LocalDate(2012, 1, 1)).status());
 
+    }
+
+    @Test
+    public void shouldHandleDuplicateNewLogs() {
+        AdherenceLog log1 = new AdherenceLog("externalId", "treatmentId1", new LocalDate(2012, 1, 1));
+        AdherenceLog log2 = new AdherenceLog("externalId", "treatmentId1", new LocalDate(2012, 1, 1));
+        allAdherenceLogs.addOrUpdateLogsForExternalIdByDoseDate(asList(log1, log2), "externalId");
+        assertEquals(1, allAdherenceLogs.getAll().size());
     }
 
     @Test
@@ -231,10 +238,10 @@ public class AllAdherenceLogsIT extends SpringIntegrationTest {
         allAdherenceLogs.add(logAfterRange);
 
         List<AdherenceLog> result = allAdherenceLogs.findAllLogsForExternalIdInDoseDateRange("externalId1", startDate, endDate);
-        assertEquals(3,result.size());
-        assertEquals(startDate,result.get(0).doseDate());
-        assertEquals(dateInBetweenRange,result.get(1).doseDate());
-        assertEquals(endDate,result.get(2).doseDate());
+        assertEquals(3, result.size());
+        assertEquals(startDate, result.get(0).doseDate());
+        assertEquals(dateInBetweenRange, result.get(1).doseDate());
+        assertEquals(endDate, result.get(2).doseDate());
 
     }
 

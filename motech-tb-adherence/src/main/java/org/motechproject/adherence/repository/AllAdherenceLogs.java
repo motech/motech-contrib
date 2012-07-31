@@ -14,7 +14,9 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 import static ch.lambdaj.Lambda.extract;
 import static ch.lambdaj.Lambda.on;
@@ -77,7 +79,7 @@ public class AllAdherenceLogs extends MotechBaseRepository<AdherenceLog> {
     @View(name = "by_externalId_dosageDate", map = "function(doc) {if (doc.type =='AdherenceLog') {emit([doc.externalId,doc.doseDate], doc._id);}}")
     public List<AdherenceLog> findAllLogsForExternalIdInDoseDateRange(String externalId, LocalDate startDate, LocalDate endDate) {
         final ComplexKey startKey = ComplexKey.of(externalId, startDate);
-        final ComplexKey endKey = ComplexKey.of(externalId,endDate);
+        final ComplexKey endKey = ComplexKey.of(externalId, endDate);
 
         ViewQuery q = createQuery("by_externalId_dosageDate").startKey(startKey).endKey(endKey).includeDocs(true).inclusiveEnd(true);
         return db.queryView(q, AdherenceLog.class);
@@ -105,7 +107,7 @@ public class AllAdherenceLogs extends MotechBaseRepository<AdherenceLog> {
         return db.queryView(q, AdherenceRecord.class);
     }
 
-    @View(name = "all_taken_logs", map = "function(doc) {if (doc.type == 'AdherenceLog') {emit([doc.externalId, doc.treatmentId, doc.status, doc.doseDate], {externalId:doc.externalId, treatmentId:doc.treatmentId, doseDate:doc.doseDate, status:doc.status, meta:doc.meta});}}", reduce ="_count")
+    @View(name = "all_taken_logs", map = "function(doc) {if (doc.type == 'AdherenceLog') {emit([doc.externalId, doc.treatmentId, doc.status, doc.doseDate], {externalId:doc.externalId, treatmentId:doc.treatmentId, doseDate:doc.doseDate, status:doc.status, meta:doc.meta});}}", reduce = "_count")
     public List<AdherenceRecord> allTakenLogsFrom(String patientId, String treatmentId, LocalDate startDate) {
         int status = 1;
         ComplexKey startKey = ComplexKey.of(patientId, treatmentId, status, startDate);
@@ -115,19 +117,20 @@ public class AllAdherenceLogs extends MotechBaseRepository<AdherenceLog> {
         return db.queryView(q, AdherenceRecord.class);
     }
 
-    public void addOrUpdateLogsForExternalIdByDoseDate(List<AdherenceLog> adherenceLogs,String externalId){
-        if (adherenceLogs.size() <= 0) {
+    public void addOrUpdateLogsForExternalIdByDoseDate(List<AdherenceLog> adherenceLogs, String externalId) {
+        if (null != adherenceLogs && adherenceLogs.isEmpty()) {
             return;
         }
-        List<AdherenceLog> logsInDb = findAllLogsForExternalIdInDoseDateRange(externalId,adherenceLogs.get(0).doseDate(),adherenceLogs.get(adherenceLogs.size()-1).doseDate());
-        ArrayList<AdherenceLog> tobeStoredLogs = mapLogToDbLogsIfExists(adherenceLogs, logsInDb);
+        Set<AdherenceLog> logs = new LinkedHashSet<>(adherenceLogs);
+        List<AdherenceLog> logsInDb = findAllLogsForExternalIdInDoseDateRange(externalId, adherenceLogs.get(0).doseDate(), adherenceLogs.get(adherenceLogs.size() - 1).doseDate());
+        ArrayList<AdherenceLog> tobeStoredLogs = mapLogToDbLogsIfExists(logs, logsInDb);
         db.executeAllOrNothing(tobeStoredLogs);
     }
 
-    private ArrayList<AdherenceLog> mapLogToDbLogsIfExists(List<AdherenceLog> logsToMap, List<AdherenceLog> dbLogs) {
+    private ArrayList<AdherenceLog> mapLogToDbLogsIfExists(Set<AdherenceLog> logsToMap, List<AdherenceLog> dbLogs) {
         ArrayList<AdherenceLog> tobeStoredLogs = new ArrayList<AdherenceLog>();
-        List<LocalDate> doseDatesToBeMappedWith= extract(dbLogs,on(AdherenceLog.class).doseDate());
-        for(AdherenceLog log : logsToMap) {
+        List<LocalDate> doseDatesToBeMappedWith = extract(dbLogs, on(AdherenceLog.class).doseDate());
+        for (AdherenceLog log : logsToMap) {
             int logPos = doseDatesToBeMappedWith.indexOf(log.doseDate());
             if (logPos < 0) {
                 tobeStoredLogs.add(log);
