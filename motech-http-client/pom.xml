@@ -1,21 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
     <parent>
         <artifactId>motech-contrib</artifactId>
         <groupId>org.motechproject.contrib-ananya-kilkari</groupId>
-        <version>0.12-SNAPSHOT</version>
+        <version>0.1-SNAPSHOT</version>
     </parent>
-    <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>motech-http-client</artifactId>
-    <groupId>org.motechproject.contrib-ananya-kilkari</groupId>
-    <version>0.12-SNAPSHOT</version>
-    <packaging>jar</packaging>
     <name>motech-http-client</name>
-
-    <properties>
-        <spring.version>3.1.0.RELEASE</spring.version>
-    </properties>
+    <groupId>org.motechproject.contrib-ananya-kilkari</groupId>
+    <artifactId>motech-http-client</artifactId>
+    <version>0.1-SNAPSHOT</version>
 
     <dependencies>
         <dependency>

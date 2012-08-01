@@ -3,22 +3,15 @@
     <parent>
         <artifactId>case-integration</artifactId>
         <groupId>org.motechproject.contrib-ananya-kilkari</groupId>
-        <version>0.12-SNAPSHOT</version>
+        <version>0.1-SNAPSHOT</version>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
 
+    <name>case-common</name>
     <groupId>org.motechproject.contrib-ananya-kilkari</groupId>
     <artifactId>case-common</artifactId>
-    <version>0.12-SNAPSHOT</version>
-    <packaging>jar</packaging>
-    <name>case-common</name>
-
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <spring.version>3.1.0.RELEASE</spring.version>
-    </properties>
-
+    <version>0.1-SNAPSHOT</version>
 
     <dependencies>
         <dependency>
@@ -29,7 +22,7 @@
         <dependency>
             <groupId>org.motechproject.contrib-ananya-kilkari</groupId>
             <artifactId>motech-common</artifactId>
-            <version>0.12-SNAPSHOT</version>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
