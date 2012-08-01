@@ -43,7 +43,7 @@ public class RetryServiceImpl implements RetryService {
         unscheduleRetryJob(externalId, groupName, retryName);
         final DateTime retryStartTime = retryRequest.getReferenceTime().plus(retryRecord.offset());
         schedulerService.scheduleRepeatingJob(new RepeatingSchedulableJob(motechEvent(retryRecord, retryRequest, jobIdKey(externalId, groupName, retryName)), retryStartTime.toDate(),
-                endTime(retryStartTime, retryRecord.retryCount(), retryRecord.retryInterval()), retryRecord.retryCount(), intervalInMillis(retryRecord)));
+                endTime(retryStartTime, retryRecord.retryCount(), retryRecord.retryInterval()), retryRecord.retryCount(), intervalInMillis(retryRecord), false));
     }
 
     private RetryRecord createNewRetryGroup(RetryRequest retryRequest) {
