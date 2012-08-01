@@ -3,14 +3,14 @@
     <parent>
         <artifactId>case-integration</artifactId>
         <groupId>org.motechproject.contrib-ananya-care</groupId>
-        <version>0.5-SNAPSHOT</version>
+        <version>0.6-SNAPSHOT</version>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>case-parser</artifactId>
     <groupId>org.motechproject.contrib-ananya-care</groupId>
-    <version>0.5-SNAPSHOT</version>
+    <version>0.6-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>case-parser</name>
    <dependencies>
