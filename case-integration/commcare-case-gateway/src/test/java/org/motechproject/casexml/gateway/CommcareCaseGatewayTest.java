@@ -45,7 +45,7 @@ public class CommcareCaseGatewayTest {
         when(caseTaskXmlConverter.convertToCaseXml(task)).thenReturn(data);
         commcareCaseGateway.submitCase(url, task);
         verify(caseTaskXmlConverter).convertToCaseXml(task);
-        HashMap<String, Object> parameters = new HashMap<String, Object>();
+        HashMap<String, Object> parameters = new HashMap<>();
         parameters.put(EventDataKeys.URL, url);
         parameters.put(EventDataKeys.DATA, data);
         parameters.put(EventDataKeys.METHOD, Method.POST);

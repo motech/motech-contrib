@@ -4,6 +4,6 @@ import org.springframework.stereotype.Component;
 
 @Component
 public interface HttpClientService {
-    void post(String url, String data);
-    void put(String url, String data);
+    void post(String url, Object data);
+    void put(String url, Object data);
 }
