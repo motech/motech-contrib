@@ -9,6 +9,7 @@ import java.io.StringWriter;
 
 public class MotechHttpResponse extends HttpServletResponseWrapper {
     private StringWriter stringWriter;
+    private String _contentType;
 
     public MotechHttpResponse(ServletResponse response) {
         super((HttpServletResponse) response);
@@ -22,5 +23,21 @@ public class MotechHttpResponse extends HttpServletResponseWrapper {
 
     public String responseBody() {
         return stringWriter.toString();
+    }
+
+    public void setContentType(String contentType) {
+        super.getResponse().setContentType(contentType);
+        this._contentType = contentType;
+    }
+
+    public String getContentType() {
+        String contentType = super.getContentType();
+        if (contentType == null) {
+            contentType = super.getResponse().getContentType();
+        }
+        if (contentType == null) {
+            return _contentType;
+        }
+        return contentType;
     }
 }

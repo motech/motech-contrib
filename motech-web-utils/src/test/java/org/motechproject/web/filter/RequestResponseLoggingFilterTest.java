@@ -64,4 +64,51 @@ public class RequestResponseLoggingFilterTest {
 
         assertFalse(logStream.toString().contains("Response"));
     }
+
+    @Test
+    public void shouldLogResponseOnlyIfContentTypeIsPlainText() throws IOException, ServletException {
+        when(response.getContentType()).thenReturn("text/plain");
+
+        requestResponseLoggingFilter.doFilterInternal(request, response, chain);
+
+        assertTrue(logStream.toString().contains("Response"));
+    }
+
+    @Test
+    public void shouldLogResponseOnlyIfContentTypeIsXml() throws IOException, ServletException {
+        when(response.getContentType()).thenReturn("application/xml");
+
+        requestResponseLoggingFilter.doFilterInternal(request, response, chain);
+
+        assertTrue(logStream.toString().contains("Response"));
+    }
+
+    @Test
+    public void shouldLogResponseOnlyIfContentTypeIsJavaScript() throws IOException, ServletException {
+        when(response.getContentType()).thenReturn("application/javascript");
+
+        requestResponseLoggingFilter.doFilterInternal(request, response, chain);
+
+        assertTrue(logStream.toString().contains("Response"));
+    }
+
+    @Test
+    public void shouldNotLogResponseIfContentTypeIsNotTextBased() throws IOException, ServletException {
+        requestResponseLoggingFilter = new RequestResponseLoggingFilter();
+        when(response.getContentType()).thenReturn("multipart");
+
+        requestResponseLoggingFilter.doFilterInternal(request, response, chain);
+
+        assertFalse(logStream.toString().contains("Response"));
+    }
+
+    @Test
+    public void shouldNotLogResponseIfContentTypeIsNull() throws IOException, ServletException {
+        requestResponseLoggingFilter = new RequestResponseLoggingFilter();
+        when(response.getContentType()).thenReturn(null);
+
+        requestResponseLoggingFilter.doFilterInternal(request, response, chain);
+
+        assertFalse(logStream.toString().contains("Response"));
+    }
 }
