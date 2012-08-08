@@ -7,6 +7,7 @@ import org.motechproject.http.client.domain.EventSubjects;
 import org.motechproject.http.client.domain.Method;
 import org.motechproject.scheduler.domain.MotechEvent;
 import org.motechproject.server.event.annotations.MotechListener;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
@@ -18,12 +19,9 @@ public class HttpClientEventListener {
     private RestTemplate restTemplate;
     Logger logger = Logger.getLogger(HttpClientEventListener.class);
 
+    @Autowired
     public HttpClientEventListener(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
-    }
-
-    public HttpClientEventListener() {
-        this(new RestTemplate());
     }
 
     @MotechListener(subjects = EventSubjects.HTTP_REQUEST)
