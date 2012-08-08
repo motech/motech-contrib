@@ -29,16 +29,10 @@ public class RequestResponseLoggingFilter extends AbstractRequestLoggingFilter {
         String responseBody = "";
         MotechHttpResponse motechHttpResponse = (MotechHttpResponse) response;
 
-        if (canResponseBeLogged(response) && isIncludePayload()) {
+        if (isIncludePayload()) {
             responseBody = String.format(" Response :%s", motechHttpResponse.responseBody());
         }
         LOGGER.info(message + " " + responseBody);
-    }
-
-    private boolean canResponseBeLogged(HttpServletResponse response) {
-        return response.getContentType().contains("application/json")
-                || response.getContentType().contains("plain/text")
-                || response.getContentType().contains("application/xml");
     }
 
     @Override

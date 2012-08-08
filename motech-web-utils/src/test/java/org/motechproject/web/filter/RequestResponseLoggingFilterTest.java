@@ -47,7 +47,7 @@ public class RequestResponseLoggingFilterTest {
     }
 
     @Test
-    public void shouldLogResponseOnlyIfContentTypeIsJson() throws IOException, ServletException {
+    public void shouldLogResponse() throws IOException, ServletException {
         when(response.getContentType()).thenReturn("application/json");
 
         requestResponseLoggingFilter.doFilterInternal(request, response, chain);
@@ -56,37 +56,9 @@ public class RequestResponseLoggingFilterTest {
     }
 
     @Test
-    public void shouldNotLogResponse_IfIncludePayloadIsNotSetEvenIfContentTypeIsJson() throws IOException, ServletException {
+    public void shouldNotLogResponse_IfIncludePayloadIsNotSet() throws IOException, ServletException {
         requestResponseLoggingFilter.setIncludePayload(false);
         when(response.getContentType()).thenReturn("application/json");
-
-        requestResponseLoggingFilter.doFilterInternal(request, response, chain);
-
-        assertFalse(logStream.toString().contains("Response"));
-    }
-
-    @Test
-    public void shouldLogResponseOnlyIfContentTypeIsPlainText() throws IOException, ServletException {
-        when(response.getContentType()).thenReturn("plain/text");
-
-        requestResponseLoggingFilter.doFilterInternal(request, response, chain);
-
-        assertTrue(logStream.toString().contains("Response"));
-    }
-
-    @Test
-    public void shouldLogResponseOnlyIfContentTypeIsXml() throws IOException, ServletException {
-        when(response.getContentType()).thenReturn("application/xml");
-
-        requestResponseLoggingFilter.doFilterInternal(request, response, chain);
-
-        assertTrue(logStream.toString().contains("Response"));
-    }
-
-    @Test
-    public void shouldNotLogResponseIfContentTypeIsNotTextBased() throws IOException, ServletException {
-        requestResponseLoggingFilter = new RequestResponseLoggingFilter();
-        when(response.getContentType()).thenReturn("multipart");
 
         requestResponseLoggingFilter.doFilterInternal(request, response, chain);
 
