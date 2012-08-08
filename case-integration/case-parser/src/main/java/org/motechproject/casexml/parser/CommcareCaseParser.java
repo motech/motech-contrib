@@ -97,6 +97,7 @@ public class CommcareCaseParser<T> {
 
     private void populateValuesFor(Case ccCase, Element item, String tagName) {
         Node matchingNode = getMatchingNode(item, tagName);
+        if(matchingNode == null) return;
         NodeList childNodes = matchingNode.getChildNodes();
 
         for (int i = 0; i < childNodes.getLength(); i++) {

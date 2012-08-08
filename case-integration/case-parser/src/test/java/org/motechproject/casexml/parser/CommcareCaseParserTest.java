@@ -59,6 +59,13 @@ public class CommcareCaseParserTest extends TestCase {
     }
 
     @Test
+    public void testShouldIgnoreUpdateTagIfNotPresentInCreateAction() throws FileNotFoundException, CaseParserException {
+        CommcareCaseParser<Case> parser = new CommcareCaseParser<Case>(Case.class, caseXmlWithOnlyCreate());
+        Case aCase = parser.parseCase();
+        Assert.assertEquals("CREATE", aCase.getAction());
+    }
+
+    @Test
     public void testShouldParseIndexElementCorrectly() throws FileNotFoundException, CaseParserException {
         CommcareCaseParser<Case> parser = new CommcareCaseParser<Case>(Case.class, childXml());
         Case aCase = parser.parseCase();
@@ -81,6 +88,18 @@ public class CommcareCaseParserTest extends TestCase {
                 "<primary_contact_name>Tom Smith</primary_contact_name>" +
                 "<visit_number>1</visit_number>" +
                 "</update>" +
+                "</case>";
+
+        return caseXml;  //To change body of created methods use File | Settings | File Templates.
+    }
+
+    private String caseXmlWithOnlyCreate() {
+        String caseXml = "<case xmlns=\"http://commcarehq.org/case/transaction/v2\" case_id=\"3F2504E04F8911D39A0C0305E82C3301\" user_id=\"F0183EDA012765103CB106821BBA51A0\" date_modified=\"2011-12-08T13:34:30\" api_key=\"API_KEY\" >\n" +
+                "<create>" +
+                "<case_type>houshold_rollout_ONICAF</case_type>" +
+                "<case_name>Smith</case_name>" +
+                "<owner_id>2Z2504E04F8911D39A0C0305E82C3000</owner_id>" +
+                "</create>" +
                 "</case>";
 
         return caseXml;  //To change body of created methods use File | Settings | File Templates.
