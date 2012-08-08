@@ -33,6 +33,7 @@
         <module>motech-diagnostics</module>
         <module>motech-retry</module>
         <module>motech-flash-scope</module>
+        <module>motech-web-utils</module>
     </modules>
 
     <distributionManagement>
