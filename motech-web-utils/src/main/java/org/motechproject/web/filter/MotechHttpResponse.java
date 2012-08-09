@@ -7,22 +7,22 @@ import javax.servlet.http.HttpServletResponseWrapper;
 import java.io.IOException;
 import java.io.StringWriter;
 
-public class MotechHttpResponse extends HttpServletResponseWrapper {
-    private StringWriter stringWriter;
+class MotechHttpResponse extends HttpServletResponseWrapper {
+    private StringBuilder stringBuilder;
     private String _contentType;
 
     public MotechHttpResponse(ServletResponse response) {
         super((HttpServletResponse) response);
-        stringWriter = new StringWriter();
+        stringBuilder = new StringBuilder();
     }
 
     @Override
     public ServletOutputStream getOutputStream() throws IOException {
-        return new TeeServletOutputStream(super.getOutputStream(), stringWriter);
+        return new TeeServletOutputStream(super.getOutputStream(), stringBuilder);
     }
 
     public String responseBody() {
-        return stringWriter.toString();
+        return stringBuilder.toString();
     }
 
     public void setContentType(String contentType) {

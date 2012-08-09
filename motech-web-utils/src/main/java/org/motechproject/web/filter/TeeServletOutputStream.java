@@ -5,21 +5,20 @@ import org.springframework.util.Assert;
 import javax.servlet.ServletOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.StringWriter;
 
-public class TeeServletOutputStream extends ServletOutputStream {
+class TeeServletOutputStream extends ServletOutputStream {
     private final OutputStream targetStream;
-    private StringWriter stringWriter;
+    private StringBuilder stringBuilder;
 
-    public TeeServletOutputStream(OutputStream targetStream, StringWriter stringWriter) {
-        this.stringWriter = stringWriter;
+    public TeeServletOutputStream(OutputStream targetStream, StringBuilder stringBuilder) {
+        this.stringBuilder = stringBuilder;
         Assert.notNull(targetStream, "Target OutputStream must not be null");
         this.targetStream = targetStream;
     }
 
     public void write(int b) throws IOException {
         this.targetStream.write(b);
-        stringWriter.write(b);
+        stringBuilder.append((char) b);
     }
 
     public void flush() throws IOException {

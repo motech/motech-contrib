@@ -1,5 +1,6 @@
 package org.motechproject.web.filter;
 
+import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.apache.log4j.SimpleLayout;
 import org.apache.log4j.WriterAppender;
@@ -29,9 +30,11 @@ public class RequestResponseLoggingFilterTest {
     private HttpServletResponse response;
     @Mock
     private FilterChain chain;
+
     private ByteArrayOutputStream logStream;
     private WriterAppender appender;
     private org.apache.log4j.Logger logger;
+    private String responseContent;
 
     @Before
     public void setUp() throws Exception {
@@ -41,9 +44,11 @@ public class RequestResponseLoggingFilterTest {
         logStream = new ByteArrayOutputStream();
         appender = new WriterAppender(new SimpleLayout(), logStream);
         logger.addAppender(appender);
+        logger.setLevel(Level.DEBUG);
 
         requestResponseLoggingFilter = new RequestResponseLoggingFilter();
-        requestResponseLoggingFilter.setIncludePayload(true);
+        requestResponseLoggingFilter.setIncludeResponsePayload(true);
+        responseContent = "with response";
     }
 
     @Test
@@ -52,17 +57,17 @@ public class RequestResponseLoggingFilterTest {
 
         requestResponseLoggingFilter.doFilterInternal(request, response, chain);
 
-        assertTrue(logStream.toString().contains("Response"));
+        assertTrue(logStream.toString().contains(responseContent));
     }
 
     @Test
     public void shouldNotLogResponse_IfIncludePayloadIsNotSet() throws IOException, ServletException {
-        requestResponseLoggingFilter.setIncludePayload(false);
+        requestResponseLoggingFilter.setIncludeResponsePayload(false);
         when(response.getContentType()).thenReturn("application/json");
 
         requestResponseLoggingFilter.doFilterInternal(request, response, chain);
 
-        assertFalse(logStream.toString().contains("Response"));
+        assertFalse(logStream.toString().contains(responseContent));
     }
 
     @Test
@@ -71,7 +76,7 @@ public class RequestResponseLoggingFilterTest {
 
         requestResponseLoggingFilter.doFilterInternal(request, response, chain);
 
-        assertTrue(logStream.toString().contains("Response"));
+        assertTrue(logStream.toString().contains(responseContent));
     }
 
     @Test
@@ -80,7 +85,7 @@ public class RequestResponseLoggingFilterTest {
 
         requestResponseLoggingFilter.doFilterInternal(request, response, chain);
 
-        assertTrue(logStream.toString().contains("Response"));
+        assertTrue(logStream.toString().contains(responseContent));
     }
 
     @Test
@@ -89,26 +94,96 @@ public class RequestResponseLoggingFilterTest {
 
         requestResponseLoggingFilter.doFilterInternal(request, response, chain);
 
-        assertTrue(logStream.toString().contains("Response"));
+        assertTrue(logStream.toString().contains(responseContent));
     }
 
     @Test
     public void shouldNotLogResponseIfContentTypeIsNotTextBased() throws IOException, ServletException {
-        requestResponseLoggingFilter = new RequestResponseLoggingFilter();
         when(response.getContentType()).thenReturn("multipart");
 
         requestResponseLoggingFilter.doFilterInternal(request, response, chain);
 
-        assertFalse(logStream.toString().contains("Response"));
+        assertFalse(logStream.toString().contains(responseContent));
     }
 
     @Test
     public void shouldNotLogResponseIfContentTypeIsNull() throws IOException, ServletException {
-        requestResponseLoggingFilter = new RequestResponseLoggingFilter();
         when(response.getContentType()).thenReturn(null);
 
         requestResponseLoggingFilter.doFilterInternal(request, response, chain);
 
-        assertFalse(logStream.toString().contains("Response"));
+        assertFalse(logStream.toString().contains(responseContent));
+    }
+
+    @Test
+    public void shouldLogResponsePayloadOnlyInDebugMode() throws IOException, ServletException {
+        logger.setLevel(Level.INFO);
+        when(response.getContentType()).thenReturn("application/javascript");
+
+        requestResponseLoggingFilter.doFilterInternal(request, response, chain);
+
+        assertFalse(logStream.toString().contains(responseContent));
+    }
+
+    @Test
+    public void shouldLogRequestURI() throws IOException, ServletException {
+        when(request.getRequestURI()).thenReturn("uri");
+
+        requestResponseLoggingFilter.doFilterInternal(request, response, chain);
+
+        assertTrue(logStream.toString().contains("uri"));
+    }
+
+    @Test
+    public void shouldLogRequestURIOnlyInDebugMode() throws IOException, ServletException {
+        logger.setLevel(Level.INFO);
+        when(request.getRequestURI()).thenReturn("uri");
+
+        requestResponseLoggingFilter.doFilterInternal(request, response, chain);
+
+        assertFalse(logStream.toString().contains("uri"));
+    }
+
+    @Test
+    public void shouldLogRequestPayloadOnlyIfEnabled() throws IOException, ServletException {
+        requestResponseLoggingFilter.setIncludeRequestPayload(true);
+        when(request.getRequestURI()).thenReturn("uri");
+        when(request.getContentType()).thenReturn("application/json");
+
+        requestResponseLoggingFilter.doFilterInternal(request, response, chain);
+
+        assertTrue(logStream.toString().contains("payload"));
+    }
+
+    @Test
+    public void shouldNotLogRequestPayloadIfEnabledDisabled() throws IOException, ServletException {
+        requestResponseLoggingFilter.setIncludeRequestPayload(false);
+        when(request.getRequestURI()).thenReturn("uri");
+
+        requestResponseLoggingFilter.doFilterInternal(request, response, chain);
+
+        assertFalse(logStream.toString().contains("payload"));
+    }
+
+    @Test
+    public void shouldLogRequestPayloadOnlyForTextBasedContentTypes() throws IOException, ServletException {
+        requestResponseLoggingFilter.setIncludeRequestPayload(true);
+        when(request.getRequestURI()).thenReturn("uri");
+        when(request.getContentType()).thenReturn("application/json");
+
+        requestResponseLoggingFilter.doFilterInternal(request, response, chain);
+
+        assertTrue(logStream.toString().contains("payload"));
+    }
+
+    @Test
+    public void shouldNotLogRequestPayloadForNonTextBasedContentTypes() throws IOException, ServletException {
+        requestResponseLoggingFilter.setIncludeRequestPayload(true);
+        when(request.getRequestURI()).thenReturn("uri");
+        when(request.getContentType()).thenReturn("multipart");
+
+        requestResponseLoggingFilter.doFilterInternal(request, response, chain);
+
+        assertFalse(logStream.toString().contains("payload"));
     }
 }
