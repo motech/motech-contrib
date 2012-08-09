@@ -4,8 +4,8 @@
 
   <parent>
     <artifactId>motech-contrib</artifactId>
-    <groupId>org.motechproject</groupId>
-    <version>0.12-SNAPSHOT</version>
+    <groupId>org.motechproject.contrib-drishti</groupId>
+    <version>0.1-SNAPSHOT</version>
   </parent>
 
   <artifactId>commcare-listener</artifactId>
@@ -19,9 +19,9 @@
 
   <dependencies>
     <dependency>
-      <groupId>org.motechproject</groupId>
+      <groupId>${motech.contrib.group}</groupId>
       <artifactId>commcare-api</artifactId>
-      <version>0.12-SNAPSHOT</version>
+      <version>${motech.contrib.version}</version>
     </dependency>
     <dependency>
       <groupId>org.motechproject</groupId>

@@ -16,8 +16,8 @@
 
     <parent>
         <artifactId>case-integration</artifactId>
-        <groupId>org.motechproject</groupId>
-        <version>0.12-SNAPSHOT</version>
+        <groupId>org.motechproject.contrib-drishti</groupId>
+        <version>0.1-SNAPSHOT</version>
     </parent>
 
     <dependencies>
@@ -60,9 +60,9 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.motechproject</groupId>
+            <groupId>${motech.contrib.group}</groupId>
             <artifactId>case-common</artifactId>
-            <version>0.12-SNAPSHOT</version>
+            <version>${motech.contrib.version}</version>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
@@ -75,9 +75,9 @@
             <version>1.8.3</version>
         </dependency>
         <dependency>
-            <groupId>org.motechproject</groupId>
+            <groupId>${motech.contrib.group}</groupId>
             <artifactId>case-parser</artifactId>
-            <version>0.12-SNAPSHOT</version>
+            <version>${motech.contrib.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.velocity</groupId>
