@@ -4,7 +4,6 @@
 
     <name>motech-bulk-export-import</name>
     <artifactId>motech-bulk-export-import</artifactId>
-    <groupId>org.motechproject</groupId>
 
     <parent>
         <artifactId>motech-contrib</artifactId>

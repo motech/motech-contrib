@@ -8,8 +8,6 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>motech-ivr-kookoo-v1</artifactId>
-    <groupId>org.motechproject</groupId>
-    <version>0.12-SNAPSHOT</version>
     <packaging>bundle</packaging>
     <name>motech-ivr-kookoo-v1</name>
 
