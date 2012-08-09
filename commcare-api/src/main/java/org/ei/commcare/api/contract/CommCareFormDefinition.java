@@ -11,9 +11,9 @@ public class CommCareFormDefinition {
     private CommCareExportUrl url;
     private String name;
     private final Map<String, String> mappings;
-    private Map<String, String> extraMappings;
+    private Map<String, Map<String, String>> extraMappings;
 
-    public CommCareFormDefinition(String name, CommCareExportUrl url, Map<String, String> mappings, Map<String, String> extraMappings) {
+    public CommCareFormDefinition(String name, CommCareExportUrl url, Map<String, String> mappings, Map<String, Map<String, String>> extraMappings) {
         this.url = url;
         this.name = name;
         this.mappings = mappings;
@@ -32,8 +32,8 @@ public class CommCareFormDefinition {
         return mappings;
     }
 
-    public Map<String, String> extraMappings() {
-        return extraMappings == null ? new HashMap<String, String>() : extraMappings;
+    public Map<String, Map<String, String>> extraMappings() {
+        return extraMappings == null ? new HashMap<String, Map<String, String>>() : extraMappings;
     }
 
     public String nameSpace() {

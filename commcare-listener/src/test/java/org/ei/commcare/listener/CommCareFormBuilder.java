@@ -12,11 +12,11 @@ public class CommCareFormBuilder {
     private String formName;
     private HashMap<String, String> mappings;
     private CommCareFormContent content;
-    private Map<String, String> extraMappings;
+    private Map<String, Map<String, String>> extraMappings;
 
     public CommCareFormBuilder() {
-        this.mappings = new HashMap<String, String>();
-        this.extraMappings = new HashMap<String, String>();
+        this.mappings = new HashMap<>();
+        this.extraMappings = new HashMap<>();
     }
 
     public CommCareFormBuilder withName(String formName) {
@@ -30,7 +30,10 @@ public class CommCareFormBuilder {
     }
 
     public CommCareFormBuilder withExtraMapping(String pathToField, String parameterToBeMappedTo) {
-        extraMappings.put(pathToField, parameterToBeMappedTo);
+        if (extraMappings.get("typeOfExtraData") == null) {
+            extraMappings.put("typeOfExtraData", new HashMap<String, String>());
+        }
+        extraMappings.get("typeOfExtraData").put(pathToField, parameterToBeMappedTo);
         return this;
     }
 

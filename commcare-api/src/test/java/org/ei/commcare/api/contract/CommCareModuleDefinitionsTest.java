@@ -33,7 +33,7 @@ public class CommCareModuleDefinitionsTest {
         validatingForm(definitionsOfFirstModule.get(1), "2_");
         validatingForm(definitionsOfSecondModule.get(0), "3_");
 
-        assertThat(definitionsOfFirstModule.get(0).extraMappings().get("form|path|to|extra|field"), is("1_ExtraFieldInOutput"));
+        assertThat(definitionsOfFirstModule.get(0).extraMappings().get("typeOfExtraData").get("form|path|to|extra|field"), is("1_ExtraFieldInOutput"));
         assertTrue(definitionsOfFirstModule.get(1).extraMappings().isEmpty());
         assertTrue(definitionsOfSecondModule.get(0).extraMappings().isEmpty());
     }

@@ -3,6 +3,7 @@ package org.ei.commcare.api.domain;
 import org.ei.commcare.api.contract.CommCareFormDefinition;
 
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.Map;
 
 public class CommCareFormInstance implements Serializable {
@@ -11,7 +12,7 @@ public class CommCareFormInstance implements Serializable {
     private String formName;
     private String formId;
     private Map<String, String> fieldsWeCareAbout;
-    private Map<String, String> extraData;
+    private Map<String, Map<String, String>> extraData;
     private boolean hasExtraDataEnabled;
 
     public CommCareFormInstance(CommCareFormDefinition formDefinition, CommCareFormContent content) {
@@ -19,7 +20,10 @@ public class CommCareFormInstance implements Serializable {
         this.fieldsWeCareAbout = content.getValuesOfFieldsSpecifiedByPath(formDefinition.mappings());
         this.formId = content.formId();
 
-        this.extraData = content.getValuesOfFieldsSpecifiedByPath(formDefinition.extraMappings());
+        this.extraData = new HashMap<>();
+        for (String extraMappingKey : formDefinition.extraMappings().keySet()) {
+            extraData.put(extraMappingKey, content.getValuesOfFieldsSpecifiedByPath(formDefinition.extraMappings().get(extraMappingKey)));
+        }
         this.hasExtraDataEnabled = !formDefinition.extraMappings().isEmpty();
     }
 
@@ -35,7 +39,7 @@ public class CommCareFormInstance implements Serializable {
         return fieldsWeCareAbout;
     }
 
-    public Map<String, String> extraData() {
+    public Map<String, Map<String, String>> extraData() {
         return extraData;
     }
 

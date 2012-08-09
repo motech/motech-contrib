@@ -5,6 +5,7 @@ import org.junit.Test;
 import org.motechproject.scheduler.domain.MotechEvent;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import static java.util.Arrays.asList;
 import static org.mockito.Mockito.verify;
@@ -18,8 +19,9 @@ public class CommCareFormSubmissionRouterForFormInstancesWithExtraDataTest exten
 
         commCareFormSubmissionRouter.handle(event);
 
-        HashMap<String, String> expectedExtraData = new HashMap<String, String>();
-        expectedExtraData.put("extraFieldFromCommCare", "booValueInFormSubmission");
+        Map<String, Map<String, String>> expectedExtraData = new HashMap<>();
+        expectedExtraData.put("typeOfExtraData", new HashMap<String, String>());
+        expectedExtraData.get("typeOfExtraData").put("extraFieldFromCommCare", "booValueInFormSubmission");
         verify(drishtiController).methodWithTwoArguments(new FakeMotherRegistrationRequest("Mom", 23), expectedExtraData);
     }
 }

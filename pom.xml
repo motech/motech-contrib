@@ -4,8 +4,8 @@
 
     <name>motech-contrib</name>
     <artifactId>motech-contrib</artifactId>
-    <groupId>org.motechproject</groupId>
-    <version>0.12-SNAPSHOT</version>
+    <groupId>org.motechproject.contrib-drishti</groupId>
+    <version>0.1-SNAPSHOT</version>
 
     <packaging>pom</packaging>
     <properties>

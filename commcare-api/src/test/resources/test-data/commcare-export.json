@@ -17,7 +17,9 @@
                         "form|path|to|another|field": "1_AnotherFieldInOutput"
                     },
                     "extraMappings": {
-                        "form|path|to|extra|field": "1_ExtraFieldInOutput"
+                        "typeOfExtraData": {
+                            "form|path|to|extra|field": "1_ExtraFieldInOutput"
+                        }
                     }
                 },
                 {
