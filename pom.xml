@@ -10,6 +10,8 @@
     <packaging>pom</packaging>
     <properties>
         <motech.version>0.11</motech.version>
+        <motech.contrib.version>0.1-SNAPSHOT</motech.contrib.version>
+        <motech.contrib.group>org.motechproject.contrib-drishti</motech.contrib.group>
     </properties>
 
     <modules>
