@@ -188,6 +188,6 @@ public class CommCareFormImportServiceTest {
         assertEquals(2, data.size());
         assertThat(data.get("FieldInOutput"), is(expectedValuesOfForm[0]));
         assertThat(data.get("AnotherFieldInOutput"), is(expectedValuesOfForm[1]));
-        assertThat(actualFormInstance.extraData().get("extraDataFieldName"), is(expectedExtraDataValue));
+        assertThat(actualFormInstance.extraData().get("typeOfExtraData").get("extraDataFieldName"), is(expectedExtraDataValue));
     }
 }

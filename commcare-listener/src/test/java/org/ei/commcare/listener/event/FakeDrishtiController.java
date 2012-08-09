@@ -12,7 +12,7 @@ public class FakeDrishtiController {
     public void methodWithoutArguments() {
     }
 
-    public void methodWithTwoArguments(FakeMotherRegistrationRequest request, Map<String, String> extraData) {
+    public void methodWithTwoArguments(FakeMotherRegistrationRequest request, Map<String, Map<String, String>> extraData) {
     }
 
     public void methodWithThreeArguments(int a, int b, int c) {

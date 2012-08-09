@@ -62,7 +62,7 @@ public class CommCareFormSubmissionRouter {
         }
     }
 
-    public void dispatch(String formId, String methodName, String parameterJson, boolean hasExtraDataEnabled, Map<String, String> extraData) throws Exception {
+    public void dispatch(String formId, String methodName, String parameterJson, boolean hasExtraDataEnabled, Map<String, Map<String, String>> extraData) throws Exception {
         Method method = findMethodForName(methodName, hasExtraDataEnabled);
         if (method == null) {
             logger.warn("Cannot dispatch: Unable to find method: " + methodName + " in " + routeEventsHere.getClass());
