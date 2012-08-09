@@ -9,8 +9,6 @@
     </parent>
 
     <artifactId>commcare-api</artifactId>
-    <groupId>org.motechproject</groupId>
-    <version>0.12-SNAPSHOT</version>
     <name>commcare-api</name>
 
     <properties>

@@ -3,9 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <name>motech-retry</name>
-    <groupId>org.motechproject</groupId>
     <artifactId>motech-retry</artifactId>
-    <version>0.12-SNAPSHOT</version>
 
     <properties>
         <spring.version>3.1.0.RELEASE</spring.version>
