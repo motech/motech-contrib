@@ -55,7 +55,7 @@ public class RetryServiceIT {
             if(eventFired) {
                 return;
             }
-            if(counter >= 60) {
+            if(counter >= 120) {
                 fail("Retry listener should have been invoked");
             }
             counter++;

@@ -6,7 +6,7 @@
             "name" : "retry-every-second",
             "retryCount" : "1",
             "retryInterval" : ["1 Minutes"],
-            "offset": ["0 Minutes"]
+            "offset": ["1 Minutes"]
         }
     ]
 }
