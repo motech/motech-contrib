@@ -27,6 +27,5 @@ public class AsynchronousCallTest {
         asynchronousCall.send(motechEvent);
 
         verify(mockEventRelay).sendEventMessage(motechEvent);
-
     }
 }

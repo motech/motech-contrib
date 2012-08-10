@@ -9,13 +9,9 @@
   </parent>
 
   <artifactId>commcare-listener</artifactId>
-
   <name>commcare-listener</name>
-  <url>http://github.com/modilabs/dristhi</url>
 
-  <properties>
-    <spring.version>3.1.0.RELEASE</spring.version>
-  </properties>
+  <url>http://github.com/modilabs/dristhi</url>
 
   <dependencies>
     <dependency>

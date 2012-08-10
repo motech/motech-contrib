@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <name>motech-contrib</name>
@@ -8,10 +9,16 @@
     <version>0.12-SNAPSHOT</version>
 
     <packaging>pom</packaging>
+
     <properties>
-        <motech.version>0.11</motech.version>
+        <motech.version>0.12-SNAPSHOT</motech.version>
         <motech.contrib.version>0.12-SNAPSHOT</motech.contrib.version>
         <motech.contrib.group>org.motechproject</motech.contrib.group>
+        <spring-security.version>3.1.0.RELEASE</spring-security.version>
+        <spring.version>3.1.0.RELEASE</spring.version>
+        <spring.integration.version>2.1.1.RELEASE</spring.integration.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <build.dir>../build</build.dir>
     </properties>
 
     <modules>
@@ -27,8 +34,8 @@
         <module>motech-diagnostics</module>
         <module>motech-retry</module>
         <module>motech-flash-scope</module>
-        <module>motech-common</module>
         <module>motech-ivr-kookoo-v1</module>
+        <module>motech-web-utils</module>
     </modules>
 
     <distributionManagement>

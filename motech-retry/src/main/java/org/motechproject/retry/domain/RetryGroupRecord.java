@@ -2,9 +2,10 @@ package org.motechproject.retry.domain;
 
 import java.util.List;
 
-public class RetryJsonRecord {
+public class RetryGroupRecord {
     private String groupName;
     private List<RetryRecord> retries;
+    private String eventSubject;
 
     public List<RetryRecord> getRetries() {
         return retries;
@@ -20,5 +21,13 @@ public class RetryJsonRecord {
 
     public void setName(String name) {
         this.groupName = name;
+    }
+
+    public void setEventSubject(String eventSubject) {
+        this.eventSubject = eventSubject;
+    }
+
+    public String getEventSubject() {
+        return eventSubject;
     }
 }

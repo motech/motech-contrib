@@ -79,8 +79,8 @@ public class AllRetriesDefinitionTest {
     }
 
     @Test
-    public void shouldGetRetryGrouName() {
-        assertThat(allRetriesDefinition.getRetryGroupName("retry-every-2hrs-and-30mins"), is("campaign-retries"));
+    public void shouldGetRetryGroupName() {
+        assertThat(allRetriesDefinition.getRetryGroup("retry-every-2hrs-and-30mins").getName(), is("campaign-retries"));
     }
 
 }

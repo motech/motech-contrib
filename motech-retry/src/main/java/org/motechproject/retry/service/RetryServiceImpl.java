@@ -22,7 +22,7 @@ import static org.motechproject.retry.EventKeys.*;
 
 @Service
 public class RetryServiceImpl implements RetryService {
-    public static final String RETRY_INTERNAL_SUBJECT = "org.motechproject.retry.internal";
+
     private MotechSchedulerService schedulerService;
     private AllRetries allRetries;
     private AllRetriesDefinition allRetriesDefinition;
@@ -37,13 +37,13 @@ public class RetryServiceImpl implements RetryService {
     public void schedule(RetryRequest retryRequest) {
         RetryRecord retryRecord = createNewRetryGroup(retryRequest);
         String externalId = retryRequest.getExternalId();
-        String groupName = allRetriesDefinition.getRetryGroupName(retryRequest.getName());
+        String groupName = allRetriesDefinition.getRetryGroup(retryRequest.getName()).getName();
         String retryName = retryRequest.getName();
 
         unscheduleRetryJob(externalId, groupName, retryName);
         final DateTime retryStartTime = retryRequest.getReferenceTime().plus(retryRecord.offset());
         schedulerService.scheduleRepeatingJob(new RepeatingSchedulableJob(motechEvent(retryRecord, retryRequest, jobIdKey(externalId, groupName, retryName)), retryStartTime.toDate(),
-                endTime(retryStartTime, retryRecord.retryCount(), retryRecord.retryInterval()), retryRecord.retryCount(), intervalInMillis(retryRecord)));
+                endTime(retryStartTime, retryRecord.retryCount(), retryRecord.retryInterval()), retryRecord.retryCount(), intervalInMillis(retryRecord), false));
     }
 
     private RetryRecord createNewRetryGroup(RetryRequest retryRequest) {
@@ -60,15 +60,15 @@ public class RetryServiceImpl implements RetryService {
         return isLastRetryGroup;
     }
 
-    public void unscheduleRetryGroup(String externalId, String name) {
-        List<String> allRetryNames = allRetriesDefinition.getAllRetryRecordNames(name);
+    public void unscheduleRetryGroup(String externalId, String groupName) {
+        List<String> allRetryNames = allRetriesDefinition.getAllRetryRecordNames(groupName);
         for (String retryName : allRetryNames) {
-            unscheduleRetryJob(externalId, name, retryName);
+            unscheduleRetryJob(externalId, groupName, retryName);
         }
     }
 
     private void unscheduleRetryJob(String externalId, String name, String retryName) {
-        schedulerService.safeUnscheduleJob(RETRY_INTERNAL_SUBJECT, jobIdKey(externalId, name, retryName) + "-repeat");
+        schedulerService.safeUnscheduleJob(RetryService.RETRY_INTERNAL_SUBJECT, jobIdKey(externalId, name, retryName) + "-repeat");
     }
 
     public void fulfill(String externalId, String groupName) {
@@ -93,7 +93,7 @@ public class RetryServiceImpl implements RetryService {
     }
 
     private MotechEvent motechEvent(final RetryRecord retryRecord, final RetryRequest retryRequest, final String jobId) {
-        return new MotechEvent(RETRY_INTERNAL_SUBJECT, new HashMap<String, Object>() {{
+        return new MotechEvent(RetryService.RETRY_INTERNAL_SUBJECT, new HashMap<String, Object>() {{
             put(EXTERNAL_ID, retryRequest.getExternalId());
             put(NAME, retryRecord.name());
             put(REFERENCE_TIME, retryRequest.getReferenceTime());

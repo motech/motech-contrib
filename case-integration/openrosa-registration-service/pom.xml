@@ -1,30 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
     <parent>
         <artifactId>case-integration</artifactId>
         <groupId>org.motechproject</groupId>
         <version>0.12-SNAPSHOT</version>
     </parent>
-    <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>openrosa-registration-service</artifactId>
     <name>openrosa-registration-service</name>
+    <artifactId>openrosa-registration-service</artifactId>
 
     <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <spring.version>3.1.0.RELEASE</spring.version>
         <db.server>localhost</db.server>
         <db.port>5984</db.port>
         <db.name>commcare</db.name>
     </properties>
 
-
     <dependencies>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-webmvc</artifactId>
-            <version>${spring.version}</version>
-        </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-web</artifactId>
@@ -46,7 +39,6 @@
             <artifactId>jackson-core-asl</artifactId>
             <version>1.7.3</version>
         </dependency>
-
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
@@ -85,6 +77,4 @@
             <version>${motech.contrib.version}</version>
         </dependency>
     </dependencies>
-
-
 </project>

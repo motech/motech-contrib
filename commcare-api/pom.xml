@@ -11,10 +11,6 @@
     <artifactId>commcare-api</artifactId>
     <name>commcare-api</name>
 
-    <properties>
-        <spring.version>3.1.0.RELEASE</spring.version>
-    </properties>
-
     <dependencies>
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>

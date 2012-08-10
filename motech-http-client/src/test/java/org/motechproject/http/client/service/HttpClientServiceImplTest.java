@@ -7,7 +7,8 @@ import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.motechproject.http.client.components.CommunicationType;
-import org.motechproject.http.client.constants.EventDataKeys;
+import org.motechproject.http.client.domain.EventDataKeys;
+import org.motechproject.http.client.domain.Method;
 import org.motechproject.scheduler.domain.MotechEvent;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.springframework.test.util.ReflectionTestUtils;
@@ -41,9 +42,23 @@ public class HttpClientServiceImplTest {
         verify(mockCommunicationType).send(motechEventArgumentCaptor.capture());
         MotechEvent eventMessageSent = motechEventArgumentCaptor.getValue();
 
+        assertEquals(Method.POST, eventMessageSent.getParameters().get(EventDataKeys.METHOD));
         assertEquals(data, (String) eventMessageSent.getParameters().get(EventDataKeys.DATA));
         assertEquals(url, eventMessageSent.getParameters().get(EventDataKeys.URL));
-
     }
 
+    @Test
+    public void shouldInvokePutRequests() {
+        String url = "someurl";
+        String data = "data";
+        httpClientService.put(url, data);
+
+        ArgumentCaptor<MotechEvent> motechEventArgumentCaptor = ArgumentCaptor.forClass(MotechEvent.class);
+        verify(mockCommunicationType).send(motechEventArgumentCaptor.capture());
+        MotechEvent eventMessageSent = motechEventArgumentCaptor.getValue();
+
+        assertEquals(Method.PUT, eventMessageSent.getParameters().get(EventDataKeys.METHOD));
+        assertEquals(data, (String) eventMessageSent.getParameters().get(EventDataKeys.DATA));
+        assertEquals(url, eventMessageSent.getParameters().get(EventDataKeys.URL));
+    }
 }

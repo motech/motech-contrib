@@ -1,4 +1,4 @@
-package org.motechproject.common.logAppender;
+package org.motechproject.web.logger;
 
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.log4j.Layout;
@@ -57,8 +57,8 @@ public class EmailAppender extends SMTPAppender {
         if (strings == null || strings.length == 0) return "";
 
         StringBuffer sb = new StringBuffer();
-        for(int i =1 ; i< strings.length ; i++) {
-            sb.append(strings[i]);
+        for(String str : strings) {
+            sb.append(str);
         }
         return DigestUtils.md5Hex(sb.toString());
     }

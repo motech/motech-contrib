@@ -7,8 +7,9 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.motechproject.casexml.domain.CaseTask;
 import org.motechproject.http.client.components.CommunicationType;
-import org.motechproject.http.client.constants.EventDataKeys;
-import org.motechproject.http.client.constants.EventSubjects;
+import org.motechproject.http.client.domain.EventDataKeys;
+import org.motechproject.http.client.domain.EventSubjects;
+import org.motechproject.http.client.domain.Method;
 import org.motechproject.http.client.service.HttpClientServiceImpl;
 import org.motechproject.scheduler.domain.MotechEvent;
 import org.springframework.test.util.ReflectionTestUtils;
@@ -44,9 +45,10 @@ public class CommcareCaseGatewayTest {
         when(caseTaskXmlConverter.convertToCaseXml(task)).thenReturn(data);
         commcareCaseGateway.submitCase(url, task);
         verify(caseTaskXmlConverter).convertToCaseXml(task);
-        HashMap<String, Object> parameters = new HashMap<String, Object>();
+        HashMap<String, Object> parameters = new HashMap<>();
         parameters.put(EventDataKeys.URL, url);
         parameters.put(EventDataKeys.DATA, data);
+        parameters.put(EventDataKeys.METHOD, Method.POST);
         verify(mockCommunicationType).send(new MotechEvent(EventSubjects.HTTP_REQUEST, parameters));
     }
 
@@ -61,6 +63,7 @@ public class CommcareCaseGatewayTest {
         HashMap<String, Object> parameters = new HashMap<String, Object>();
         parameters.put(EventDataKeys.URL, url);
         parameters.put(EventDataKeys.DATA, data);
+        parameters.put(EventDataKeys.METHOD, Method.POST);
         verify(mockCommunicationType).send(new MotechEvent(EventSubjects.HTTP_REQUEST, parameters));
     }
 }

@@ -1,9 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>case-integration</artifactId>
-    <packaging>pom</packaging>
+
+    <parent>
+        <artifactId>motech-contrib</artifactId>
+        <groupId>org.motechproject</groupId>
+        <version>0.12-SNAPSHOT</version>
+    </parent>
+
     <name>case-integration</name>
+    <artifactId>case-integration</artifactId>
+
+    <packaging>pom</packaging>
 
     <modules>
         <module>case-parser</module>
@@ -12,13 +20,6 @@
         <module>commcare-case-gateway</module>
         <module>openrosa-registration-service</module>
     </modules>
-
-    <parent>
-        <artifactId>motech-contrib</artifactId>
-        <groupId>org.motechproject</groupId>
-        <version>0.12-SNAPSHOT</version>
-    </parent>
-
 
     <repositories>
         <repository>
@@ -58,8 +59,8 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>2.3.2</version>
                 <configuration>
-                    <source>1.6</source>
-                    <target>1.6</target>
+                    <source>1.7</source>
+                    <target>1.7</target>
                     <encoding>UTF-8</encoding>
                 </configuration>
             </plugin>
