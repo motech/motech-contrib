@@ -9,9 +9,7 @@
     </parent>
 
     <name>openrosa-registration-service</name>
-    <groupId>org.motechproject.contrib-ananya-kilkari</groupId>
     <artifactId>openrosa-registration-service</artifactId>
-    <version>0.1-SNAPSHOT</version>
 
     <properties>
         <db.server>localhost</db.server>
@@ -69,14 +67,14 @@
             <version>${spring.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.motechproject.contrib-ananya-kilkari</groupId>
+            <groupId>${motech.contrib.group}</groupId>
             <artifactId>case-parser</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.motechproject.contrib-ananya-kilkari</groupId>
+            <groupId>${motech.contrib.group}</groupId>
             <artifactId>case-common</artifactId>
-            <version>${project.version}</version>
+            <version>${motech.contrib.version}</version>
         </dependency>
     </dependencies>
 </project>

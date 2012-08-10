@@ -12,6 +12,8 @@
 
     <properties>
         <motech.version>0.12-SNAPSHOT</motech.version>
+        <motech.contrib.group>org.motechproject.contrib-ananya-kilkari</motech.contrib.group>
+        <motech.contrib.version>0.1-SNAPSHOT</motech.contrib.version>
         <spring-security.version>3.1.0.RELEASE</spring-security.version>
         <spring.version>3.1.0.RELEASE</spring.version>
         <spring.integration.version>2.1.1.RELEASE</spring.integration.version>

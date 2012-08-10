@@ -9,17 +9,15 @@
   </parent>
 
   <artifactId>commcare-listener</artifactId>
-  <groupId>org.motechproject.contrib-ananya-kilkari</groupId>
-  <version>0.1-SNAPSHOT</version>
   <name>commcare-listener</name>
 
   <url>http://github.com/modilabs/dristhi</url>
 
   <dependencies>
     <dependency>
-      <groupId>org.motechproject.contrib-ananya-kilkari</groupId>
+      <groupId>${motech.contrib.group}</groupId>
       <artifactId>commcare-api</artifactId>
-      <version>${project.version}</version>
+      <version>${motech.contrib.version}</version>
     </dependency>
     <dependency>
       <groupId>org.motechproject</groupId>

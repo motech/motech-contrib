@@ -9,9 +9,7 @@
     </parent>
 
     <name>motech-web-security</name>
-    <groupId>org.motechproject.contrib-ananya-kilkari</groupId>
     <artifactId>motech-web-security</artifactId>
-    <version>0.1-SNAPSHOT</version>
 
     <repositories>
         <repository>

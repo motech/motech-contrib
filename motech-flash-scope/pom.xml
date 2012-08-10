@@ -9,9 +9,7 @@
     </parent>
 
     <name>motech-flash-scope</name>
-    <groupId>org.motechproject.contrib-ananya-kilkari</groupId>
     <artifactId>motech-flash-scope</artifactId>
-    <version>0.1-SNAPSHOT</version>
 
     <repositories>
         <repository>

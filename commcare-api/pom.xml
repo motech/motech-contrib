@@ -9,8 +9,6 @@
     </parent>
 
     <artifactId>commcare-api</artifactId>
-    <groupId>org.motechproject.contrib-ananya-kilkari</groupId>
-    <version>0.1-SNAPSHOT</version>
     <name>commcare-api</name>
 
     <dependencies>

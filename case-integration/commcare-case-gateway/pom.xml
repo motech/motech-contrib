@@ -9,9 +9,7 @@
     </parent>
 
     <name>commcare-case-gateway</name>
-    <groupId>org.motechproject.contrib-ananya-kilkari</groupId>
     <artifactId>commcare-case-gateway</artifactId>
-    <version>0.1-SNAPSHOT</version>
 
     <dependencies>
         <dependency>
@@ -25,9 +23,9 @@
             <version>4.8.2</version>
         </dependency>
         <dependency>
+            <groupId>${motech.contrib.group}</groupId>
             <artifactId>motech-http-client</artifactId>
-            <groupId>org.motechproject.contrib-ananya-kilkari</groupId>
-            <version>${project.version}</version>
+            <version>${motech.contrib.version}</version>
         </dependency>
         <dependency>
             <groupId>xerces</groupId>

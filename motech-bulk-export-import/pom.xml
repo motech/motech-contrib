@@ -9,9 +9,7 @@
     </parent>
 
     <name>motech-bulk-export-import</name>
-    <groupId>org.motechproject.contrib-ananya-kilkari</groupId>
     <artifactId>motech-bulk-export-import</artifactId>
-    <version>0.1-SNAPSHOT</version>
 
     <dependencies>
         <dependency>

@@ -9,9 +9,7 @@
     </parent>
 
     <name>motech-retry</name>
-    <groupId>org.motechproject.contrib-ananya-kilkari</groupId>
     <artifactId>motech-retry</artifactId>
-    <version>0.1-SNAPSHOT</version>
 
     <repositories>
         <repository>

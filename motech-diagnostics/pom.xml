@@ -10,14 +10,12 @@
 
     <name>motech-diagnostics</name>
     <artifactId>motech-diagnostics</artifactId>
-    <groupId>org.motechproject.contrib-ananya-kilkari</groupId>
-    <version>0.1-SNAPSHOT</version>
 
     <dependencies>
         <dependency>
-            <groupId>org.motechproject.contrib-ananya-kilkari</groupId>
+            <groupId>${motech.contrib.group}</groupId>
             <artifactId>motech-common</artifactId>
-            <version>${project.version}</version>
+            <version>${motech.contrib.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>

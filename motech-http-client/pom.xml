@@ -9,9 +9,7 @@
     </parent>
 
     <name>motech-http-client</name>
-    <groupId>org.motechproject.contrib-ananya-kilkari</groupId>
     <artifactId>motech-http-client</artifactId>
-    <version>0.1-SNAPSHOT</version>
 
     <dependencies>
         <dependency>

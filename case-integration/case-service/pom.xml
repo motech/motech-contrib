@@ -9,9 +9,7 @@
     </parent>
 
     <name>case-service</name>
-    <groupId>org.motechproject.contrib-ananya-kilkari</groupId>
     <artifactId>case-service</artifactId>
-    <version>0.1-SNAPSHOT</version>
 
     <properties>
         <db.server>localhost</db.server>
@@ -59,9 +57,9 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.motechproject.contrib-ananya-kilkari</groupId>
+            <groupId>${motech.contrib.group}</groupId>
             <artifactId>case-common</artifactId>
-            <version>${project.version}</version>
+            <version>${motech.contrib.version}</version>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
@@ -74,9 +72,9 @@
             <version>1.8.3</version>
         </dependency>
         <dependency>
-            <groupId>org.motechproject.contrib-ananya-kilkari</groupId>
+            <groupId>${motech.contrib.group}</groupId>
             <artifactId>case-parser</artifactId>
-            <version>${project.version}</version>
+            <version>${motech.contrib.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.velocity</groupId>

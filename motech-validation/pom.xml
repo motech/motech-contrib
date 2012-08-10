@@ -9,9 +9,7 @@
     </parent>
 
     <name>motech-validation</name>
-    <groupId>org.motechproject.contrib-ananya-kilkari</groupId>
     <artifactId>motech-validation</artifactId>
-    <version>0.1-SNAPSHOT</version>
 
     <dependencies>
         <dependency>

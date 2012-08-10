@@ -9,20 +9,13 @@
     <modelVersion>4.0.0</modelVersion>
 
     <name>case-common</name>
-    <groupId>org.motechproject.contrib-ananya-kilkari</groupId>
     <artifactId>case-common</artifactId>
-    <version>0.1-SNAPSHOT</version>
 
     <dependencies>
         <dependency>
             <groupId>org.apache.velocity</groupId>
             <artifactId>velocity</artifactId>
             <version>1.7</version>
-        </dependency>
-        <dependency>
-            <groupId>org.motechproject.contrib-ananya-kilkari</groupId>
-            <artifactId>motech-common</artifactId>
-            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>

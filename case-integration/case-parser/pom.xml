@@ -9,9 +9,7 @@
     </parent>
 
     <name>case-parser</name>
-    <groupId>org.motechproject.contrib-ananya-kilkari</groupId>
     <artifactId>case-parser</artifactId>
-    <version>0.1-SNAPSHOT</version>
 
    <dependencies>
     <dependency>
