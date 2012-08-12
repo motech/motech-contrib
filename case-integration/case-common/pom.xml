@@ -19,11 +19,6 @@
             <version>1.7</version>
         </dependency>
         <dependency>
-            <groupId>${motech.contrib.group}</groupId>
-            <artifactId>motech-common</artifactId>
-            <version>${motech.contrib.version}</version>
-        </dependency>
-        <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-webmvc</artifactId>
             <version>${spring.version}</version>
