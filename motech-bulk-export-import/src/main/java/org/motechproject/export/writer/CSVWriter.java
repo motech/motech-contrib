@@ -15,10 +15,15 @@ import static au.com.bytecode.opencsv.CSVWriter.NO_QUOTE_CHARACTER;
 public class CSVWriter {
 
     public void writeCSVData(Writer writer, CSVExportProcessor csvExportProcessor, Object parameters) {
-        ExportData exportData = csvExportProcessor.getCSVData(parameters);
-        au.com.bytecode.opencsv.CSVWriter csvWriter = new au.com.bytecode.opencsv.CSVWriter(writer, DEFAULT_SEPARATOR, NO_QUOTE_CHARACTER);
-        csvWriter.writeNext(exportData.getColumnHeaders().toArray(new String[]{}));
-        csvWriter.writeAll(getData(exportData.getAllRowData()));
+        try {
+            ExportData exportData = csvExportProcessor.getCSVData(parameters);
+            au.com.bytecode.opencsv.CSVWriter csvWriter = new au.com.bytecode.opencsv.CSVWriter(writer, DEFAULT_SEPARATOR, NO_QUOTE_CHARACTER);
+            csvWriter.writeNext(exportData.getColumnHeaders().toArray(new String[]{}));
+            csvWriter.writeAll(getData(exportData.getAllRowData()));
+            csvWriter.close();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private List<String[]> getData(List<List<String>> allRowData) {
