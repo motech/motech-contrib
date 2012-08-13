@@ -69,7 +69,7 @@ public class RetryServiceIT {
 
     @Test
     public void shouldInvokeRetrySubjectListener() throws InterruptedException {
-        retryService.schedule(new RetryRequest("retry-every-second", UUID.randomUUID().toString(), DateTime.now()));
+        retryService.schedule(new RetryRequest("retry-every-second", UUID.randomUUID().toString(), DateTime.now().plusSeconds(4)));
         int counter = 0;
         while(true) {
             if(eventFired) {
