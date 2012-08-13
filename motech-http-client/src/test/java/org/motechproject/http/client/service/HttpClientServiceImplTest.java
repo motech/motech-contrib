@@ -61,4 +61,19 @@ public class HttpClientServiceImplTest {
         assertEquals(data, (String) eventMessageSent.getParameters().get(EventDataKeys.DATA));
         assertEquals(url, eventMessageSent.getParameters().get(EventDataKeys.URL));
     }
+
+    @Test
+    public void shouldExecuteRequestsBasedOnMethod() {
+        String url = "someurl";
+        String data = "data";
+        httpClientService.execute(url, data, Method.POST);
+
+        ArgumentCaptor<MotechEvent> motechEventArgumentCaptor = ArgumentCaptor.forClass(MotechEvent.class);
+        verify(mockCommunicationType).send(motechEventArgumentCaptor.capture());
+        MotechEvent eventMessageSent = motechEventArgumentCaptor.getValue();
+
+        assertEquals(Method.POST, eventMessageSent.getParameters().get(EventDataKeys.METHOD));
+        assertEquals(data, (String) eventMessageSent.getParameters().get(EventDataKeys.DATA));
+        assertEquals(url, eventMessageSent.getParameters().get(EventDataKeys.URL));
+    }
 }

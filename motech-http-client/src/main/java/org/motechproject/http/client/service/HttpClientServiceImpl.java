@@ -20,15 +20,19 @@ public class HttpClientServiceImpl implements HttpClientService {
     @Override
     public void post(String url, Object data) {
         HashMap<String, Object> parameters = constructParametersFrom(url, data, Method.POST);
-        MotechEvent motechEvent = new MotechEvent(EventSubjects.HTTP_REQUEST, parameters);
-        communicationType.send(motechEvent);
+        sendMessage(parameters);
     }
 
     @Override
     public void put(String url, Object data) {
         HashMap<String, Object> parameters = constructParametersFrom(url, data, Method.PUT);
-        MotechEvent motechEvent = new MotechEvent(EventSubjects.HTTP_REQUEST, parameters);
-        communicationType.send(motechEvent);
+        sendMessage(parameters);
+    }
+
+    @Override
+    public void execute(String url, Object data, Method method) {
+        HashMap<String, Object> parameters = constructParametersFrom(url, data, method);
+        sendMessage(parameters);
     }
 
     private HashMap<String, Object> constructParametersFrom(String url, Object data, Method method) {
@@ -37,5 +41,10 @@ public class HttpClientServiceImpl implements HttpClientService {
         parameters.put(EventDataKeys.METHOD, method);
         parameters.put(EventDataKeys.DATA, data);
         return parameters;
+    }
+
+    private void sendMessage(HashMap<String, Object> parameters) {
+        MotechEvent motechEvent = new MotechEvent(EventSubjects.HTTP_REQUEST, parameters);
+        communicationType.send(motechEvent);
     }
 }
