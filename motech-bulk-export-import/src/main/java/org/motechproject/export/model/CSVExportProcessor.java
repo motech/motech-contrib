@@ -28,11 +28,11 @@ public class CSVExportProcessor {
         return beanClass.isAnnotationPresent(CSVDataSource.class);
     }
 
-    public List<Object> data() {
+    public List<Object> data(Object parameters) {
         try {
             Method method = getDataMethod();
             if (method != null) {
-                return (List<Object>) method.invoke(csvDataSource);
+                return parameters != null ? (List<Object>) method.invoke(csvDataSource, parameters) : (List<Object>) method.invoke(csvDataSource);
             }
         } catch (IllegalAccessException e) {
             logger.error("Data method should be public" + e.getMessage());
@@ -58,10 +58,10 @@ public class CSVExportProcessor {
         return new ExportDataModel(getDataMethod().getGenericReturnType()).rowData(model);
     }
 
-    public ExportData getCSVData() {
+    public ExportData getCSVData(Object parameters) {
         List<String> headers = columnHeaders();
         List<List<String>> allRowData = new ArrayList();
-        List<Object> data = data();
+        List<Object> data = data(parameters);
         if (data != null && !data.isEmpty()) {
             for (Object datum : data) {
                 allRowData.add(rowData(datum));

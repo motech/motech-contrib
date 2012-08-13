@@ -37,7 +37,11 @@ public class ExportService {
 
     //This method does not support pagination for csv file.
     public void exportAsCSV(String dataSourceName, Writer writer) {
+        exportAsCSV(dataSourceName, writer, null);
+    }
+
+    public void exportAsCSV(String dataSourceName, Writer writer, Object parameters) {
         CSVExportProcessor csvExportProcessor = allCSVExportProcessors.get(dataSourceName);
-        csvWriter.writeCSVData(writer, csvExportProcessor);
+        csvWriter.writeCSVData(writer, csvExportProcessor, parameters);
     }
 }
