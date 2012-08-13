@@ -4,6 +4,7 @@ import org.ektorp.CouchDbConnector;
 import org.junit.Before;
 import org.junit.Test;
 import org.motechproject.export.service.sample.SampleCSVDataSource;
+import org.motechproject.export.service.sample.SampleCSVDataSourceWithParameter;
 import org.motechproject.export.service.sample.SampleExcelDataSource;
 import org.motechproject.testing.utils.SpringIntegrationTest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,7 @@ import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.context.ContextConfiguration;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 
 import static org.junit.Assert.*;
 
@@ -22,6 +24,8 @@ public class ExportServiceIT extends SpringIntegrationTest {
     private ExportService exportService;
     @Autowired
     private SampleExcelDataSource sampleExcelDataSource;
+    @Autowired
+    private SampleCSVDataSourceWithParameter sampleCSVDataSourceWithParameter;
     @Autowired
     private SampleCSVDataSource sampleCSVDataSource;
     private MockHttpServletResponse mockHttpServletResponse;
@@ -43,6 +47,16 @@ public class ExportServiceIT extends SpringIntegrationTest {
         assertFalse(sampleCSVDataSource.isCalled);
         exportService.exportAsCSV("sampleCSV", mockHttpServletResponse.getWriter());
         assertTrue(sampleCSVDataSource.isCalled);
+        assertEquals(expectedContent(), mockHttpServletResponse.getContentAsString());
+    }
+
+    @Test
+    public void shouldExportAsCSVWithTheAppropriateParametersPassedToTheDataProviderMethod() throws UnsupportedEncodingException {
+        Object parameterMap = new Object();
+        assertFalse(sampleCSVDataSourceWithParameter.isCalled);
+        exportService.exportAsCSV("sampleCSVWithParameter", mockHttpServletResponse.getWriter(), parameterMap);
+        assertTrue(sampleCSVDataSourceWithParameter.isCalled);
+        assertEquals(parameterMap, sampleCSVDataSourceWithParameter.parameters);
         assertEquals(expectedContent(), mockHttpServletResponse.getContentAsString());
     }
 
