@@ -11,11 +11,12 @@ import javax.jms.JMSException;
 @Component
 public class ActiveMQDiagnostic {
 
-    @Autowired
+    @Autowired(required = false)
     private CachingConnectionFactory connectionFactory;
 
     @Diagnostic(name = "ACTIVEMQ")
     public DiagnosticsResult performDiagnosis() throws JMSException {
+        if(connectionFactory == null) return null;
         DiagnosticLog diagnosticLog = new DiagnosticLog();
         diagnosticLog.add("Checking for Active MQ connection");
 

@@ -13,7 +13,7 @@ import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertTrue;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration("classpath:applicationContext-Diagnostics.xml")
+@ContextConfiguration("classpath:applicationContext-DiagnosticsTest.xml")
 public class ActiveMQDiagnosticIT {
 
     @Autowired

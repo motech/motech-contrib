@@ -1,26 +1,24 @@
 package org.motechproject.diagnostics.repository;
 
 
-import ch.lambdaj.function.matcher.HasArgumentWithValue;
 import org.ektorp.CouchDbConnector;
+import org.hamcrest.Matchers;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.hamcrest.Matchers;
 import org.motechproject.diagnostics.response.DiagnosticsResponse;
 import org.motechproject.diagnostics.util.TestClass;
 import org.motechproject.testing.utils.SpringIntegrationTest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 
-import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 import static ch.lambdaj.Lambda.*;
 import static junit.framework.Assert.*;
 
-@ContextConfiguration(locations = "classpath*:/applicationContext-Diagnostics.xml")
+@ContextConfiguration(locations = "classpath*:/applicationContext-DiagnosticsTest.xml")
 public class AllDiagnosticMethodsTest extends SpringIntegrationTest {
     @Before
     @After
