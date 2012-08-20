@@ -33,8 +33,7 @@ public class DiagnosticResponseBuilderIT {
                 "\n" +
                 "!----------------------------------! Aragorn !----------------------------------!\n" +
                 "\n" +
-                "Status : TRUE\n" +
-                "Message : Hrithik\n" +
+                "Hrithik\n" +
                 "\n", responseMessage);
     }
 }

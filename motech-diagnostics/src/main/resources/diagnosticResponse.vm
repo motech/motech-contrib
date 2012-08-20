@@ -10,7 +10,6 @@
 #foreach ($diagnosticsResponse in $diagnosticsResponses )
 !----------------------------------! $diagnosticsResponse.name !----------------------------------!
 
-Status : $diagnosticsResponse.result.status.toString().toUpperCase()
-Message : $diagnosticsResponse.result.message
+$diagnosticsResponse.result.message
 
 #end
