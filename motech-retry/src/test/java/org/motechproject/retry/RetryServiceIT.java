@@ -9,9 +9,7 @@ import org.motechproject.retry.dao.AllRetries;
 import org.motechproject.retry.domain.Retry;
 import org.motechproject.retry.domain.RetryRequest;
 import org.motechproject.retry.service.RetryService;
-import org.motechproject.retry.service.RetryServiceImpl;
-import org.motechproject.scheduler.domain.MotechEvent;
-import org.motechproject.server.event.annotations.MotechListener;
+import org.motechproject.retry.utils.EventHandler;
 import org.quartz.JobKey;
 import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
@@ -20,15 +18,12 @@ import org.springframework.scheduling.quartz.SchedulerFactoryBean;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import java.security.PublicKey;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
 import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 import static org.quartz.impl.matchers.GroupMatcher.jobGroupEquals;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -40,8 +35,10 @@ public class RetryServiceIT {
     private AllRetries allRetries;
     @Autowired
     private SchedulerFactoryBean schedulerFactoryBean;
+    @Autowired
+    private EventHandler eventHandler;
 
-    private boolean eventFired;
+    private transient boolean eventFired;
 
     @Test
     public void shouldCreateRetryEvent() {
@@ -61,18 +58,14 @@ public class RetryServiceIT {
         assertNull(allRetries.getActiveRetry(externalId, name));
     }
 
-
-    @MotechListener(subjects = "retry.every.second")
-    public void handleEvent(MotechEvent motechEvent) {
-        eventFired = true;
-    }
-
     @Test
     public void shouldInvokeRetrySubjectListener() throws InterruptedException {
-        retryService.schedule(new RetryRequest("retry-every-second", UUID.randomUUID().toString(), DateTime.now()));
+        String externalId = UUID.randomUUID().toString();
+        retryService.schedule(new RetryRequest("retry-every-second", externalId, DateTime.now()));
         int counter = 0;
         while(true) {
-            if(eventFired) {
+            if(eventHandler.hasEventBeenFired()) {
+                retryService.fulfill(externalId, "retry-every-second");
                 return;
             }
             if(counter >= 70) {
@@ -85,7 +78,7 @@ public class RetryServiceIT {
 
     @After
     public void tearDown() {
-        eventFired = false;
+        eventHandler.reset();
         allRetries.removeAll();
         removeQuartzJobs();
     }
