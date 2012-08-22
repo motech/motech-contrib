@@ -1,7 +1,7 @@
 package org.motechproject.retry.utils;
 
-import org.motechproject.scheduler.domain.MotechEvent;
-import org.motechproject.server.event.annotations.MotechListener;
+import org.motechproject.event.MotechEvent;
+import org.motechproject.event.annotations.MotechListener;
 import org.springframework.stereotype.Component;
 
 @Component

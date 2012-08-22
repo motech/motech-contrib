@@ -11,7 +11,7 @@ import org.motechproject.http.client.domain.EventDataKeys;
 import org.motechproject.http.client.domain.EventSubjects;
 import org.motechproject.http.client.domain.Method;
 import org.motechproject.http.client.service.HttpClientServiceImpl;
-import org.motechproject.scheduler.domain.MotechEvent;
+import org.motechproject.event.MotechEvent;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.HashMap;

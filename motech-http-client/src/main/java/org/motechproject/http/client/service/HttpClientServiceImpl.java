@@ -1,12 +1,12 @@
 package org.motechproject.http.client.service;
 
 
+import org.motechproject.event.MotechEvent;
 import org.motechproject.http.client.components.CommunicationType;
 import org.motechproject.http.client.components.SynchronousCall;
 import org.motechproject.http.client.domain.EventDataKeys;
 import org.motechproject.http.client.domain.EventSubjects;
 import org.motechproject.http.client.domain.Method;
-import org.motechproject.scheduler.domain.MotechEvent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

@@ -13,8 +13,8 @@ import org.motechproject.retry.domain.Retry;
 import org.motechproject.retry.domain.RetryGroupRecord;
 import org.motechproject.retry.domain.RetryRequest;
 import org.motechproject.retry.domain.RetryStatus;
-import org.motechproject.scheduler.domain.MotechEvent;
-import org.motechproject.scheduler.gateway.OutboundEventGateway;
+import org.motechproject.event.MotechEvent;
+import org.motechproject.event.OutboundEventGateway;
 
 import java.util.HashMap;
 

@@ -6,7 +6,7 @@ import org.ei.commcare.listener.event.CommCareFormEvent;
 import org.ei.commcare.listener.event.FakeDrishtiController;
 import org.junit.Before;
 import org.mockito.Mock;
-import org.motechproject.scheduler.domain.MotechEvent;
+import org.motechproject.event.MotechEvent;
 
 import java.util.ArrayList;
 import java.util.Arrays;

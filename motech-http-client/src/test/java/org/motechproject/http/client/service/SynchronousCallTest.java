@@ -4,7 +4,7 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.motechproject.http.client.components.SynchronousCall;
 import org.motechproject.http.client.listener.HttpClientEventListener;
-import org.motechproject.scheduler.domain.MotechEvent;
+import org.motechproject.event.MotechEvent;
 
 import static org.mockito.Mockito.verify;
 import static org.mockito.MockitoAnnotations.initMocks;
