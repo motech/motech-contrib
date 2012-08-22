@@ -41,16 +41,11 @@ public class HttpClientServiceImpl implements HttpClientService {
     }
 
     @Override
-    public void postSync(String url, Object data){
-        HashMap<String, Object> parameters = constructParametersFrom(url, data, Method.POST);
+    public void executeSync(String url, Object data, Method method) {
+        HashMap<String, Object> parameters = constructParametersFrom(url, data, method);
         sendMessageSync(parameters);
     }
 
-    @Override
-    public void putSync(String url, String data) {
-        HashMap<String, Object> parameters = constructParametersFrom(url, data, Method.PUT);
-        sendMessageSync(parameters);
-    }
 
     private HashMap<String, Object> constructParametersFrom(String url, Object data, Method method) {
         HashMap<String, Object> parameters = new HashMap<>();

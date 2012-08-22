@@ -9,7 +9,5 @@ public interface HttpClientService {
 
     void execute(String url, Object data, Method method);
 
-    void postSync(String url, Object data);
-
-    void putSync(String url, String data);
+    void executeSync(String url, Object data, Method method);
 }

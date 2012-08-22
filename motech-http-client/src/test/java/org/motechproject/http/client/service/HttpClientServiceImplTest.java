@@ -82,33 +82,17 @@ public class HttpClientServiceImplTest {
     }
 
     @Test
-    public void shouldPostSynchronousCalls(){
+    public void shouldExecuteSynchronousCalls(){
         String url = "someurl";
         String data = "data";
 
-        httpClientService.postSync(url, data);
+        httpClientService.executeSync(url, data, Method.POST);
 
         ArgumentCaptor<MotechEvent> motechEventArgumentCaptor = ArgumentCaptor.forClass(MotechEvent.class);
         verify(synchronousCall).send(motechEventArgumentCaptor.capture());
         MotechEvent eventMessageSent = motechEventArgumentCaptor.getValue();
 
         assertEquals(Method.POST, eventMessageSent.getParameters().get(EventDataKeys.METHOD));
-        assertEquals(data, (String) eventMessageSent.getParameters().get(EventDataKeys.DATA));
-        assertEquals(url, eventMessageSent.getParameters().get(EventDataKeys.URL));
-    }
-
-    @Test
-    public void shouldPutSynchronousCalls(){
-        String url = "someurl";
-        String data = "data";
-
-        httpClientService.putSync(url, data);
-
-        ArgumentCaptor<MotechEvent> motechEventArgumentCaptor = ArgumentCaptor.forClass(MotechEvent.class);
-        verify(synchronousCall).send(motechEventArgumentCaptor.capture());
-        MotechEvent eventMessageSent = motechEventArgumentCaptor.getValue();
-
-        assertEquals(Method.PUT, eventMessageSent.getParameters().get(EventDataKeys.METHOD));
         assertEquals(data, (String) eventMessageSent.getParameters().get(EventDataKeys.DATA));
         assertEquals(url, eventMessageSent.getParameters().get(EventDataKeys.URL));
     }
