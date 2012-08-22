@@ -2,10 +2,12 @@ package org.motechproject.http.client.service;
 
 
 import org.motechproject.http.client.components.CommunicationType;
+import org.motechproject.http.client.components.SynchronousCall;
 import org.motechproject.http.client.domain.EventDataKeys;
 import org.motechproject.http.client.domain.EventSubjects;
 import org.motechproject.http.client.domain.Method;
 import org.motechproject.scheduler.domain.MotechEvent;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -16,6 +18,9 @@ public class HttpClientServiceImpl implements HttpClientService {
 
     @Resource(name = "${communication.type}")
     private CommunicationType communicationType;
+
+    @Autowired
+    private SynchronousCall synchronousCall;
 
     @Override
     public void post(String url, Object data) {
@@ -35,6 +40,18 @@ public class HttpClientServiceImpl implements HttpClientService {
         sendMessage(parameters);
     }
 
+    @Override
+    public void postSync(String url, Object data){
+        HashMap<String, Object> parameters = constructParametersFrom(url, data, Method.POST);
+        sendMessageSync(parameters);
+    }
+
+    @Override
+    public void putSync(String url, String data) {
+        HashMap<String, Object> parameters = constructParametersFrom(url, data, Method.PUT);
+        sendMessageSync(parameters);
+    }
+
     private HashMap<String, Object> constructParametersFrom(String url, Object data, Method method) {
         HashMap<String, Object> parameters = new HashMap<>();
         parameters.put(EventDataKeys.URL, url);
@@ -46,5 +63,10 @@ public class HttpClientServiceImpl implements HttpClientService {
     private void sendMessage(HashMap<String, Object> parameters) {
         MotechEvent motechEvent = new MotechEvent(EventSubjects.HTTP_REQUEST, parameters);
         communicationType.send(motechEvent);
+    }
+
+    private void sendMessageSync(HashMap<String, Object> parameters) {
+        MotechEvent motechEvent = new MotechEvent(EventSubjects.HTTP_REQUEST, parameters);
+        synchronousCall.send(motechEvent);
     }
 }

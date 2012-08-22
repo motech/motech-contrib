@@ -8,4 +8,8 @@ public interface HttpClientService {
     void put(String url, Object data);
 
     void execute(String url, Object data, Method method);
+
+    void postSync(String url, Object data);
+
+    void putSync(String url, String data);
 }
