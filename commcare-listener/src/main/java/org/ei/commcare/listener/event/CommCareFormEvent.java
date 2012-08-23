@@ -1,7 +1,7 @@
 package org.ei.commcare.listener.event;
 
 import org.ei.commcare.api.domain.CommCareFormInstance;
-import org.motechproject.scheduler.domain.MotechEvent;
+import org.motechproject.event.MotechEvent;
 
 import java.util.HashMap;
 import java.util.List;

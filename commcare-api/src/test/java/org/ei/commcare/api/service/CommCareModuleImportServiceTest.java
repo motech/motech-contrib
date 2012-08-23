@@ -7,7 +7,6 @@ import org.ei.commcare.api.util.CommCareImportProperties;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
-import org.motechproject.scheduler.gateway.OutboundEventGateway;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -24,8 +23,6 @@ import static org.mockito.MockitoAnnotations.initMocks;
 public class CommCareModuleImportServiceTest {
     @Mock
     private CommCareFormImportService commcareFormImportService;
-    @Mock
-    private OutboundEventGateway outboundEventGateway;
 
     @Before
     public void setUp() throws Exception {

@@ -1,6 +1,8 @@
 package org.motechproject.ivr.kookoo.service;
 
 import org.apache.commons.lang.StringUtils;
+import org.motechproject.event.EventRelay;
+import org.motechproject.event.MotechEvent;
 import org.motechproject.ivr.event.CallEvent;
 import org.motechproject.ivr.event.IVREvent;
 import org.motechproject.ivr.kookoo.domain.KookooCallDetailRecord;
@@ -9,8 +11,6 @@ import org.motechproject.ivr.kookoo.repository.AllKooKooCallDetailRecords;
 import org.motechproject.ivr.model.CallDetailRecord;
 import org.motechproject.ivr.model.CallDirection;
 import org.motechproject.scheduler.context.EventContext;
-import org.motechproject.scheduler.domain.MotechEvent;
-import org.motechproject.scheduler.event.EventRelay;
 import org.motechproject.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

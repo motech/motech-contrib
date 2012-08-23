@@ -7,11 +7,11 @@ import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Matchers;
 import org.mockito.Mock;
+import org.motechproject.event.MotechEvent;
 import org.motechproject.retry.dao.AllRetries;
 import org.motechproject.retry.dao.AllRetriesDefinition;
 import org.motechproject.retry.domain.*;
 import org.motechproject.scheduler.MotechSchedulerService;
-import org.motechproject.scheduler.domain.MotechEvent;
 import org.motechproject.scheduler.domain.RepeatingSchedulableJob;
 import org.motechproject.util.DateUtil;
 

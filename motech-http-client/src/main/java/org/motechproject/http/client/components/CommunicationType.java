@@ -1,6 +1,6 @@
 package org.motechproject.http.client.components;
 
-import org.motechproject.scheduler.domain.MotechEvent;
+import org.motechproject.event.MotechEvent;
 
 public interface CommunicationType {
 

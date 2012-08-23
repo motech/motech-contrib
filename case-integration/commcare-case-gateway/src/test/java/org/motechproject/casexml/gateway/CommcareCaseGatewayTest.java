@@ -6,12 +6,12 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.motechproject.casexml.domain.CaseTask;
+import org.motechproject.event.MotechEvent;
 import org.motechproject.http.client.components.CommunicationType;
 import org.motechproject.http.client.domain.EventDataKeys;
 import org.motechproject.http.client.domain.EventSubjects;
 import org.motechproject.http.client.domain.Method;
 import org.motechproject.http.client.service.HttpClientServiceImpl;
-import org.motechproject.scheduler.domain.MotechEvent;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.HashMap;

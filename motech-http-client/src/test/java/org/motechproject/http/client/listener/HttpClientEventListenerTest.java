@@ -5,10 +5,10 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.motechproject.event.MotechEvent;
 import org.motechproject.http.client.domain.EventDataKeys;
 import org.motechproject.http.client.domain.EventSubjects;
 import org.motechproject.http.client.domain.Method;
-import org.motechproject.scheduler.domain.MotechEvent;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
