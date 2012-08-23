@@ -1,10 +1,10 @@
 package org.motechproject.http.client.service;
 
 
+import org.motechproject.event.MotechEvent;
 import org.motechproject.http.client.components.CommunicationType;
 import org.motechproject.http.client.constants.EventDataKeys;
 import org.motechproject.http.client.constants.EventSubjects;
-import org.motechproject.scheduler.domain.MotechEvent;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;

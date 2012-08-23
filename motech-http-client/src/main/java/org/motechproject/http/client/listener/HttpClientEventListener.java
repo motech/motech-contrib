@@ -2,10 +2,10 @@ package org.motechproject.http.client.listener;
 
 
 import org.apache.log4j.Logger;
+import org.motechproject.event.MotechEvent;
+import org.motechproject.event.annotations.MotechListener;
 import org.motechproject.http.client.constants.EventDataKeys;
 import org.motechproject.http.client.constants.EventSubjects;
-import org.motechproject.scheduler.domain.MotechEvent;
-import org.motechproject.server.event.annotations.MotechListener;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 

@@ -6,9 +6,9 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.motechproject.event.MotechEvent;
 import org.motechproject.http.client.constants.EventDataKeys;
 import org.motechproject.http.client.constants.EventSubjects;
-import org.motechproject.scheduler.domain.MotechEvent;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
