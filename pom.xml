@@ -22,8 +22,6 @@
     </properties>
 
     <modules>
-        <module>message-aggregator</module>
-        <module>test-aggregator</module>
         <module>case-integration</module>
         <module>commcare-api</module>
         <module>commcare-listener</module>
