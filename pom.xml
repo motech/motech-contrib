@@ -36,6 +36,7 @@
         <module>motech-retry</module>
         <module>motech-flash-scope</module>
         <module>motech-web-utils</module>
+        <module>motech-performance-tests</module>
     </modules>
 
     <distributionManagement>

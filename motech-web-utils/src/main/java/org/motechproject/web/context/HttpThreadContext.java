@@ -1,7 +1,6 @@
 package org.motechproject.web.context;
 
 public class HttpThreadContext {
-
     private static final ThreadLocal<String> httpThreadLocal = new ThreadLocal();
 
     public static void set(String contextVar) {
