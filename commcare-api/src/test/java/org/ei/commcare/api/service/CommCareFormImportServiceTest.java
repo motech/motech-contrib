@@ -63,6 +63,19 @@ public class CommCareFormImportServiceTest {
     }
 
     @Test
+    public void shouldConvertNullValuesInCommCareFormExportAsEmptyStrings() throws Exception {
+        String urlOfExport = "http://baseURL__FORM__?export_tag=%22" + NAMESPACE2 + "%22&format=json&previous_export=";
+        CommCareFormDefinition formDefinition = setupForm("__FORM__", "", formResponse(200, "/test-data/form.3.dump.json", "NEW-TOKEN"));
+
+        List<CommCareFormInstance> formInstances = formImportService.fetchForms(asList(formDefinition), "user", "password");
+
+        verify(httpClient).get(urlOfExport, "user", "password");
+        assertEquals(2, formInstances.size());
+        assertForm(formInstances.get(0), new String[]{"form-1-instance-1-value-1", ""}, "__FORM__", "extraFieldValue-1-1");
+        assertForm(formInstances.get(1), new String[]{"form-1-instance-2-value-1", "form-1-instance-2-value-2"}, "__FORM__", "");
+    }
+
+    @Test
     public void shouldFetchMultipleFormsWithMultipleInstancesFromCommCare() throws Exception {
         String urlOfFirstExport = "http://baseURL__FORM1__?export_tag=%22" + NAMESPACE + "%22&format=json&previous_export=OLD-TOKEN";
         String urlOfSecondExport = "http://baseURL__FORM2__?export_tag=%22" + NAMESPACE2 + "%22&format=json&previous_export=OLD-TOKEN";

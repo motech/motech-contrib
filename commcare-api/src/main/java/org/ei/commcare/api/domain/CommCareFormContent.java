@@ -20,7 +20,9 @@ public class CommCareFormContent {
 
         for (int i = 0; i < headers().size(); i++) {
             if (mappingFromFieldNameInFormToKeyInResult.containsKey(headers().get(i))) {
-                map.put(mappingFromFieldNameInFormToKeyInResult.get(headers().get(i)), values().get(i));
+                String key = mappingFromFieldNameInFormToKeyInResult.get(headers().get(i));
+                String value = values().get(i);
+                map.put(key, value == null ? "" : value);
             }
         }
 
