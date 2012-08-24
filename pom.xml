@@ -6,7 +6,7 @@
     <name>motech-contrib</name>
     <artifactId>motech-contrib</artifactId>
     <groupId>org.motechproject.tama-motech-contrib</groupId>
-    <version>0.12-SNAPSHOT</version>
+    <version>0.10-SNAPSHOT</version>
 
     <packaging>pom</packaging>
 
