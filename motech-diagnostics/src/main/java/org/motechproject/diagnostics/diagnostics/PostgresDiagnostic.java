@@ -17,24 +17,27 @@ public class PostgresDiagnostic {
     private Properties postgresProperties;
 
     @Autowired(required = false)
-    public void setPostgresProperties(@Qualifier("postgresProperties")Properties postgresProperties) {
+    public void setPostgresProperties(@Qualifier("postgresProperties") Properties postgresProperties) {
         this.postgresProperties = postgresProperties;
     }
 
     @Diagnostic(name = "POSTGRES DATABASE CONNECTION")
-    public DiagnosticsResult performDiagnosis() {
-        if(postgresProperties == null) return null;
+    public DiagnosticsResult performDiagnosis() throws SQLException {
+        if (postgresProperties == null) return null;
         DiagnosticLog diagnosticLog = new DiagnosticLog();
         diagnosticLog.add("Opening session with database");
+        Connection connection = null;
         try {
-            getConnection();
+            connection = getConnection();
         } catch (SQLException e) {
             diagnosticLog.add("Opening session Failed");
             diagnosticLog.add(e.toString());
-            return new DiagnosticsResult(false,diagnosticLog.toString());
+            return new DiagnosticsResult(false, diagnosticLog.toString());
+        } finally {
+            if (connection != null) connection.close();
         }
         diagnosticLog.add("Opening session Successful");
-        return new DiagnosticsResult(true,diagnosticLog.toString());
+        return new DiagnosticsResult(true, diagnosticLog.toString());
     }
 
     protected Connection getConnection() throws SQLException {
