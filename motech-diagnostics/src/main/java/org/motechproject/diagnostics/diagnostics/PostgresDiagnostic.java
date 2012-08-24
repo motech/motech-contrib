@@ -26,8 +26,7 @@ public class PostgresDiagnostic {
         if(postgresProperties == null) return null;
         DiagnosticLog diagnosticLog = new DiagnosticLog();
         diagnosticLog.add("Opening session with database");
-        try {
-            getConnection();
+        try (Connection connection = getConnection()){
         } catch (SQLException e) {
             diagnosticLog.add("Opening session Failed");
             diagnosticLog.add(e.toString());
