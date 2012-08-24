@@ -22,28 +22,22 @@ public class PostgresDiagnostic {
     }
 
     @Diagnostic(name = "POSTGRES DATABASE CONNECTION")
-    public DiagnosticsResult performDiagnosis() throws SQLException {
+    public DiagnosticsResult performDiagnosis() {
         if (postgresProperties == null) return null;
         DiagnosticLog diagnosticLog = new DiagnosticLog();
         diagnosticLog.add("Opening session with database");
-        Connection connection = null;
-        try {
-            connection = getConnection();
+
+        String url = postgresProperties.getProperty("jdbc.url");
+        String userName = postgresProperties.getProperty("jdbc.username");
+        String password = postgresProperties.getProperty("jdbc.password");
+        try (Connection connection = DriverManager.getConnection(url, userName, password)) {
         } catch (SQLException e) {
             diagnosticLog.add("Opening session Failed");
             diagnosticLog.add(e.toString());
             return new DiagnosticsResult(false, diagnosticLog.toString());
-        } finally {
-            if (connection != null) connection.close();
         }
         diagnosticLog.add("Opening session Successful");
         return new DiagnosticsResult(true, diagnosticLog.toString());
     }
 
-    protected Connection getConnection() throws SQLException {
-        String url = postgresProperties.getProperty("jdbc.url");
-        String userName = postgresProperties.getProperty("jdbc.username");
-        String password = postgresProperties.getProperty("jdbc.password");
-        return DriverManager.getConnection(url, userName, password);
-    }
 }
