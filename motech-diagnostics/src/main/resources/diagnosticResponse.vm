@@ -1,16 +1,12 @@
-                    **************SUMMARY**************
-
-            #foreach ($diagnosticsResponse in $diagnosticsResponses )
-                $diagnosticsResponse.name - $diagnosticsResponse.result.status.toString().toUpperCase()
-            #end
-
-                    ***********************************
-
-
-#foreach ($diagnosticsResponse in $diagnosticsResponses )
-!----------------------------------! $diagnosticsResponse.name !----------------------------------!
-
-Status : $diagnosticsResponse.result.status.toString().toUpperCase()
-Message : $diagnosticsResponse.result.message
+#macro( print, $result , $namePrefix )
+        #if( $result.value.class.simpleName == "DiagnosticsResult" )
+            #print($result.value , $result.name, $namePrefix $result.name)
+        #else
+            $namePrefix $result.name $result.value
+        #end
 
 #end
+#foreach( $diagnosticResponse in $diagnosticsResponses )
+    #print( $diagnosticResponse , "" ) #if ( $foreach.hasNext ) , #end
+#end
+

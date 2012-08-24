@@ -11,30 +11,30 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Properties;
 
+import static org.hibernate.exception.ExceptionUtils.getFullStackTrace;
+
 @Component
 public class PostgresDiagnostic {
 
     private Properties postgresProperties;
 
     @Autowired(required = false)
-    public void setPostgresProperties(@Qualifier("postgresProperties")Properties postgresProperties) {
+    public void setPostgresProperties(@Qualifier("postgresProperties") Properties postgresProperties) {
         this.postgresProperties = postgresProperties;
     }
 
     @Diagnostic(name = "POSTGRES DATABASE CONNECTION")
-    public DiagnosticsResult performDiagnosis() {
-        if(postgresProperties == null) return null;
-        DiagnosticLog diagnosticLog = new DiagnosticLog();
-        diagnosticLog.add("Opening session with database");
+    public DiagnosticsResult<String> performDiagnosis() {
+        if (postgresProperties == null) return null;
+        Connection connection = null;
         try {
-            getConnection();
+            connection = getConnection();
+            if(connection != null)
+                connection.close();
         } catch (SQLException e) {
-            diagnosticLog.add("Opening session Failed");
-            diagnosticLog.add(e.toString());
-            return new DiagnosticsResult(false,diagnosticLog.toString());
+            return new DiagnosticsResult<String>("POSTGRES DATABASE CONNECTION EXCEPTION", getFullStackTrace(e));
         }
-        diagnosticLog.add("Opening session Successful");
-        return new DiagnosticsResult(true,diagnosticLog.toString());
+        return new DiagnosticsResult<String>("POSTGRES DATABASE CONNECTION OPENED", "true");
     }
 
     protected Connection getConnection() throws SQLException {

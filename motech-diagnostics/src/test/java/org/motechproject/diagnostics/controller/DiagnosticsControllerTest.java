@@ -6,7 +6,6 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.motechproject.diagnostics.DiagnosticResponseBuilder;
 import org.motechproject.diagnostics.repository.AllDiagnosticMethods;
-import org.motechproject.diagnostics.response.DiagnosticsResponse;
 import org.motechproject.diagnostics.response.DiagnosticsResult;
 
 import javax.servlet.ServletOutputStream;
@@ -42,8 +41,8 @@ public class DiagnosticsControllerTest {
 
     @Test
     public void shouldInvokeAllTheDiagnosticMethods() throws InvocationTargetException, IllegalAccessException, IOException {
-        List<DiagnosticsResponse> expectedDiagnosticsResponses = new ArrayList<DiagnosticsResponse>();
-        expectedDiagnosticsResponses.add(new DiagnosticsResponse("Test diagnostic", new DiagnosticsResult(true, "Test diagnostic run")));
+        List<DiagnosticsResult> expectedDiagnosticsResponses = new ArrayList<DiagnosticsResult>();
+        expectedDiagnosticsResponses.add(new DiagnosticsResult("Test diagnostic run", true));
 
         when(allDiagnosticMethods.runAllDiagnosticMethods()).thenReturn(expectedDiagnosticsResponses);
         when(httpResponse.getOutputStream()).thenReturn(servletOutputStream);

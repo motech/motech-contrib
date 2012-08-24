@@ -4,14 +4,12 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.motechproject.diagnostics.response.DiagnosticsResult;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.Properties;
 
 import static junit.framework.Assert.*;
 
@@ -27,7 +25,7 @@ public class PostgresDiagnosticIT {
         postGresDiagnosticStub.setConnectionIsSuccessful(true);
         DiagnosticsResult diagnosticsResult = postGresDiagnosticStub.performDiagnosis();
         assertNotNull(diagnosticsResult);
-        assertTrue(diagnosticsResult.getMessage().contains("Opening session Successful"));
+        assertTrue(diagnosticsResult.getName().contains("POSTGRES DATABASE CONNECTION OPENED"));
     }
 
     @Test
@@ -35,7 +33,7 @@ public class PostgresDiagnosticIT {
         postGresDiagnosticStub.setConnectionIsSuccessful(false);
         DiagnosticsResult diagnosticsResult = postGresDiagnosticStub.performDiagnosis();
         assertNotNull(diagnosticsResult);
-        assertTrue(diagnosticsResult.getMessage().contains("Opening session Failed"));
+        assertTrue(diagnosticsResult.getName().contains("POSTGRES DATABASE CONNECTION EXCEPTION"));
     }
 
     @Test

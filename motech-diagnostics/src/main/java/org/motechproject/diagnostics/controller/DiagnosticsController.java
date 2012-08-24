@@ -2,7 +2,7 @@ package org.motechproject.diagnostics.controller;
 
 import org.motechproject.diagnostics.DiagnosticResponseBuilder;
 import org.motechproject.diagnostics.repository.AllDiagnosticMethods;
-import org.motechproject.diagnostics.response.DiagnosticsResponse;
+import org.motechproject.diagnostics.response.DiagnosticsResult;
 import org.motechproject.diagnostics.response.ExceptionResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -26,14 +26,14 @@ public class DiagnosticsController {
     private DiagnosticResponseBuilder diagnosticResponseBuilder;
 
     @Autowired
-    public DiagnosticsController(AllDiagnosticMethods allDiagnosticMethods,DiagnosticResponseBuilder diagnosticResponseBuilder) {
+    public DiagnosticsController(AllDiagnosticMethods allDiagnosticMethods, DiagnosticResponseBuilder diagnosticResponseBuilder) {
         this.allDiagnosticMethods = allDiagnosticMethods;
         this.diagnosticResponseBuilder = diagnosticResponseBuilder;
     }
 
     @RequestMapping(method = RequestMethod.GET)
     public void getDiagnostics(HttpServletResponse response) throws InvocationTargetException, IllegalAccessException, IOException {
-        List<DiagnosticsResponse> diagnosticsResponses = allDiagnosticMethods.runAllDiagnosticMethods();
+        List<DiagnosticsResult> diagnosticsResponses = allDiagnosticMethods.runAllDiagnosticMethods();
         String diagnosticsResponse = diagnosticResponseBuilder.createResponseMessage(diagnosticsResponses);
         response.getOutputStream().print(diagnosticsResponse);
     }

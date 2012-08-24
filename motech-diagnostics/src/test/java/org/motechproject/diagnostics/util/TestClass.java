@@ -11,16 +11,16 @@ public class TestClass {
     public static boolean methodWithAnnotationRun = false;
 
     @Diagnostic(name = "testDiagnostics1")
-    public DiagnosticsResult method1WithAnnotation() {
+    public DiagnosticsResult<Boolean> method1WithAnnotation() {
         methodExecutionCount++;
         methodWithAnnotationRun = true;
-        return new DiagnosticsResult(true, "test message 1");
+        return new DiagnosticsResult<Boolean>("test message 1", true);
     }
 
     @Diagnostic(name = "testDiagnostics2")
-    public DiagnosticsResult method2WithAnnotation() {
+    public DiagnosticsResult<Boolean> method2WithAnnotation() {
         methodExecutionCount++;
-        return new DiagnosticsResult(false, "test message 2");
+        return new DiagnosticsResult<Boolean>("test message 2", false);
     }
 
     @Diagnostic(name = "testDiagnosticsWithNullResult")

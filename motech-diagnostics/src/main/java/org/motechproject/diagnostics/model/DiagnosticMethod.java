@@ -1,7 +1,6 @@
 package org.motechproject.diagnostics.model;
 
 import org.motechproject.diagnostics.annotation.Diagnostic;
-import org.motechproject.diagnostics.response.DiagnosticsResponse;
 import org.motechproject.diagnostics.response.DiagnosticsResult;
 
 import java.lang.reflect.InvocationTargetException;
@@ -22,8 +21,8 @@ public class DiagnosticMethod {
         return method.isAnnotationPresent(Diagnostic.class);
     }
 
-    public DiagnosticsResponse run() throws InvocationTargetException, IllegalAccessException {
+    public DiagnosticsResult run() throws InvocationTargetException, IllegalAccessException {
         DiagnosticsResult result = (DiagnosticsResult) method.invoke(bean, null);
-        return result == null ? null : new DiagnosticsResponse(name, result);
+        return result == null ? null : result;
     }
 }

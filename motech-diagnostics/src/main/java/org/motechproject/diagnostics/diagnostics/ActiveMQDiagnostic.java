@@ -15,23 +15,16 @@ public class ActiveMQDiagnostic {
     private CachingConnectionFactory connectionFactory;
 
     @Diagnostic(name = "ACTIVEMQ")
-    public DiagnosticsResult performDiagnosis() throws JMSException {
-        DiagnosticLog diagnosticLog = new DiagnosticLog();
-        diagnosticLog.add("Checking for Active MQ connection");
-
-        boolean isSuccess = checkActiveMQConnection(diagnosticLog);
-        return new DiagnosticsResult(isSuccess, diagnosticLog.toString());
+    public DiagnosticsResult<String> performDiagnosis() throws JMSException {
+        Boolean isSuccess = checkActiveMQConnection();
+        return new DiagnosticsResult<String>("Is Active", isSuccess.toString());
     }
 
-    private boolean checkActiveMQConnection(DiagnosticLog diagnosticLog) {
-        diagnosticLog.add("Checking for Active MQ connection ...");
+    private boolean checkActiveMQConnection() {
         try {
             connectionFactory.getTargetConnectionFactory().createConnection().start();
-            diagnosticLog.add("Successfully opened connection.");
             return true;
         } catch (Exception ex) {
-            diagnosticLog.add("Error connecting to ActiveMQ.");
-            diagnosticLog.addError(ex);
         }
         return false;
     }

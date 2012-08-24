@@ -2,7 +2,7 @@ package org.motechproject.diagnostics.repository;
 
 import org.motechproject.diagnostics.annotation.Diagnostic;
 import org.motechproject.diagnostics.model.DiagnosticMethod;
-import org.motechproject.diagnostics.response.DiagnosticsResponse;
+import org.motechproject.diagnostics.response.DiagnosticsResult;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.stereotype.Repository;
@@ -32,10 +32,10 @@ public class AllDiagnosticMethods implements BeanPostProcessor {
         return bean;
     }
 
-    public List<DiagnosticsResponse> runAllDiagnosticMethods() throws InvocationTargetException, IllegalAccessException {
-        List<DiagnosticsResponse> diagnosticsResponses = new ArrayList<DiagnosticsResponse>();
+    public List<DiagnosticsResult> runAllDiagnosticMethods() throws InvocationTargetException, IllegalAccessException {
+        List<DiagnosticsResult> diagnosticsResponses = new ArrayList<DiagnosticsResult>();
         for (DiagnosticMethod diagnosticMethod : diagnosticMethods) {
-            DiagnosticsResponse response = diagnosticMethod.run();
+            DiagnosticsResult response = diagnosticMethod.run();
             if (response != null)
                 diagnosticsResponses.add(response);
         }
