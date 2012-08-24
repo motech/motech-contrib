@@ -46,15 +46,13 @@ public class PostgresDiagnosticIT {
 
 @Component
 class PostGresDiagnosticStub extends PostgresDiagnostic {
-
     private boolean shouldBeSuccessful;
 
     public void setConnectionIsSuccessful(boolean shouldBeSuccessful) {
-
         this.shouldBeSuccessful = shouldBeSuccessful;
     }
 
-    protected Connection getConnection() throws SQLException {
+    protected Connection getConnection(String url, String username, String password) throws SQLException {
         if (shouldBeSuccessful)
             return null;
         throw new SQLException("Connection failed");

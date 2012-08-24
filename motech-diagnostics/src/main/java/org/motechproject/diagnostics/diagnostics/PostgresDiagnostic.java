@@ -30,7 +30,7 @@ public class PostgresDiagnostic {
         String url = postgresProperties.getProperty("jdbc.url");
         String userName = postgresProperties.getProperty("jdbc.username");
         String password = postgresProperties.getProperty("jdbc.password");
-        try (Connection connection = DriverManager.getConnection(url, userName, password)) {
+        try (Connection connection = getConnection(url, userName, password)) {
         } catch (SQLException e) {
             diagnosticLog.add("Opening session Failed");
             diagnosticLog.add(e.toString());
@@ -38,6 +38,10 @@ public class PostgresDiagnostic {
         }
         diagnosticLog.add("Opening session Successful");
         return new DiagnosticsResult(true, diagnosticLog.toString());
+    }
+
+    protected Connection getConnection(String url, String userName, String password) throws SQLException {
+        return DriverManager.getConnection(url, userName, password);
     }
 
 }
