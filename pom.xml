@@ -5,35 +5,24 @@
 
     <name>motech-contrib</name>
     <artifactId>motech-contrib</artifactId>
-    <groupId>org.motechproject</groupId>
+    <groupId>org.motechproject.tama-motech-contrib</groupId>
     <version>0.12-SNAPSHOT</version>
 
     <packaging>pom</packaging>
 
     <properties>
-        <motech.version>0.12-SNAPSHOT</motech.version>
+        <motech.version>0.10</motech.version>
         <motech.contrib.version>0.12-SNAPSHOT</motech.contrib.version>
-        <motech.contrib.group>org.motechproject</motech.contrib.group>
-        <spring-security.version>3.1.0.RELEASE</spring-security.version>
-        <spring.version>3.1.0.RELEASE</spring.version>
+        <motech.contrib.group>org.motechproject.tama-motech-contrib</motech.contrib.group>
+        <spring.version>3.0.5.RELEASE</spring.version>
+        <spring.version>3.0.5.RELEASE</spring.version>
         <spring.integration.version>2.1.1.RELEASE</spring.integration.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <build.dir>../build</build.dir>
     </properties>
 
     <modules>
-        <module>case-integration</module>
-        <module>commcare-api</module>
-        <module>commcare-listener</module>
-        <module>motech-http-client</module>
-        <module>motech-web-security</module>
-        <module>motech-validation</module>
-        <module>motech-bulk-export-import</module>
         <module>motech-diagnostics</module>
-        <module>motech-retry</module>
-        <module>motech-flash-scope</module>
-        <module>motech-ivr-kookoo-v1</module>
-        <module>motech-web-utils</module>
     </modules>
 
     <distributionManagement>
@@ -95,7 +84,7 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>2.9</version>
                 <configuration>
-                    <argLine>-XX:MaxPermSize=1024M -ea</argLine>
+                    <argLine>-XX:MaxPermSize=512M -ea</argLine>
                     <printSummary>true</printSummary>
                 </configuration>
             </plugin>
