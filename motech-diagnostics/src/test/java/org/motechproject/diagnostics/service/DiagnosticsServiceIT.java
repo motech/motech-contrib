@@ -19,7 +19,7 @@ import static ch.lambdaj.Lambda.*;
 import static junit.framework.Assert.*;
 
 @ContextConfiguration(locations = "classpath*:/applicationContext-Diagnostics.xml")
-public class DiagnosticServiceIT extends SpringIntegrationTest {
+public class DiagnosticsServiceIT extends SpringIntegrationTest {
 
     @Before
     @After
