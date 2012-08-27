@@ -10,7 +10,7 @@
     <artifactId>motech-performance-tests</artifactId>
     <packaging>jar</packaging>
 
-    <name>motech-performance</name>
+    <name>motech-performance-tests</name>
     <url>http://maven.apache.org</url>
 
     <properties>
