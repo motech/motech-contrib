@@ -27,7 +27,7 @@ public class DiagnosticsController {
         this.diagnosticResponseBuilder = diagnosticResponseBuilder;
     }
 
-    @RequestMapping(value = "diagnose/{serviceName}", method = RequestMethod.GET)
+    @RequestMapping(value = "{serviceName}", method = RequestMethod.GET)
     public void runDiagnostics(@PathVariable("serviceName") String name, HttpServletResponse response) throws IOException {
         List<DiagnosticsResult> diagnosticsResponses = diagnosticsService.run(name);
         String diagnosticsResponse = diagnosticResponseBuilder.createResponseMessage(diagnosticsResponses);
