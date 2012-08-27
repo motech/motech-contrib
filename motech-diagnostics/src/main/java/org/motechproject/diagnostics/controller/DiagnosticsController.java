@@ -6,16 +6,12 @@ import org.motechproject.diagnostics.response.ExceptionResponse;
 import org.motechproject.diagnostics.service.DiagnosticsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 @Controller
@@ -31,9 +27,9 @@ public class DiagnosticsController {
         this.diagnosticResponseBuilder = diagnosticResponseBuilder;
     }
 
-    @RequestMapping(method = RequestMethod.GET)
-    public void getDiagnostics(HttpServletResponse response) throws InvocationTargetException, IllegalAccessException, IOException {
-        List<DiagnosticsResult> diagnosticsResponses = diagnosticsService.runAll();
+    @RequestMapping(value = "diagnose/{serviceName}", method = RequestMethod.GET)
+    public void runDiagnostics(@RequestParam("serviceName") String name, HttpServletResponse response) throws IOException {
+        List<DiagnosticsResult> diagnosticsResponses = diagnosticsService.run(name);
         String diagnosticsResponse = diagnosticResponseBuilder.createResponseMessage(diagnosticsResponses);
         response.getOutputStream().print(diagnosticsResponse);
     }
