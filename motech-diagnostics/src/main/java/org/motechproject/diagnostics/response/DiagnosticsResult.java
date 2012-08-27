@@ -1,15 +1,16 @@
 package org.motechproject.diagnostics.response;
 
 public class DiagnosticsResult {
-    private boolean status;
+    public static DiagnosticsResult NULL = new DiagnosticsResult(DiagnosticsStatus.UNKNOWN, "Null Result");
+    private DiagnosticsStatus status;
     private String message;
 
-    public DiagnosticsResult(boolean status, String message) {
+    public DiagnosticsResult(DiagnosticsStatus status, String message) {
         this.status = status;
         this.message = message;
     }
 
-    public boolean getStatus() {
+    public DiagnosticsStatus getStatus() {
         return status;
     }
 

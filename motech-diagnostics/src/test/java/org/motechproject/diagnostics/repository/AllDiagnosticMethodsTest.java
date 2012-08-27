@@ -7,6 +7,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.motechproject.diagnostics.response.DiagnosticsResponse;
+import org.motechproject.diagnostics.response.DiagnosticsStatus;
 import org.motechproject.diagnostics.util.TestClass;
 import org.motechproject.testing.utils.SpringIntegrationTest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,13 +39,15 @@ public class AllDiagnosticMethodsTest extends SpringIntegrationTest {
     public void shouldInvokeAllDiagnosticMethods() throws InvocationTargetException, IllegalAccessException {
         List<DiagnosticsResponse> diagnosticsResponses = allDiagnosticMethods.runAllDiagnosticMethods();
 
-        List<DiagnosticsResponse> testDiagnostics1Response = filter(having(on(DiagnosticsResponse.class).getName(), Matchers.equalTo("testDiagnostics1")), diagnosticsResponses);
-        List<DiagnosticsResponse> testDiagnostics2Response = filter(having(on(DiagnosticsResponse.class).getName(), Matchers.equalTo("testDiagnostics2")), diagnosticsResponses);
-        List<DiagnosticsResponse> nullDiagnosticResponse = filter(having(on(DiagnosticsResponse.class).getResult(), Matchers.equalTo(null)), diagnosticsResponses);
+        List<DiagnosticsResponse> passedResponses = filter(having(on(DiagnosticsResponse.class).getResult().getStatus(), Matchers.equalTo(DiagnosticsStatus.PASS)), diagnosticsResponses);
+        List<DiagnosticsResponse> failedResponses = filter(having(on(DiagnosticsResponse.class).getResult().getStatus(), Matchers.equalTo(DiagnosticsStatus.FAIL)), diagnosticsResponses);
+        List<DiagnosticsResponse> unknownResponses = filter(having(on(DiagnosticsResponse.class).getResult().getStatus(), Matchers.equalTo(DiagnosticsStatus.UNKNOWN)), diagnosticsResponses);
+        List<DiagnosticsResponse> warnResponses = filter(having(on(DiagnosticsResponse.class).getResult().getStatus(), Matchers.equalTo(DiagnosticsStatus.WARN)), diagnosticsResponses);
 
-        assertEquals(3, TestClass.methodExecutionCount);
-        assertTrue(testDiagnostics1Response.get(0).getResult().getStatus());
-        assertFalse(testDiagnostics2Response.get(0).getResult().getStatus());
-        assertTrue(nullDiagnosticResponse.isEmpty());
+        assertEquals(7, TestClass.methodExecutionCount);
+        assertEquals(5, passedResponses.size());
+        assertEquals(3, failedResponses.size());
+        assertEquals(2, unknownResponses.size());
+        assertEquals(1, warnResponses.size());
     }
 }

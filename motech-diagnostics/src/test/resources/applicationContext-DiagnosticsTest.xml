@@ -10,24 +10,18 @@
 
     <import resource="classpath:applicationContext-Diagnostics-Couch.xml"/>
     <import resource="classpath:applicationContext-Diagnostics-Queues.xml"/>
+    <import resource="classpath:applicationContext-Diagnostics-Postgres.xml"/>
+    <import resource="classpath:applicationContext-Diagnostics-Configuration.xml"/>
 
-    <bean id="configurationDiagnostic" class="org.motechproject.diagnostics.diagnostics.ConfigurationDiagnostic">
-        <constructor-arg>
-            <map>
-                <entry key="activemq"><util:properties location="classpath:activemq.properties"/></entry>
-                <entry key="postgres"><util:properties location="classpath:postgres.properties"/></entry>
-                <entry key="couchdb"><util:properties location="classpath:couchdb.properties"/></entry>
-            </map>
-        </constructor-arg>
-    </bean>
+    <util:map id="configurationFilesMap">
+        <entry key="activemq"><util:properties location="classpath:activemq.properties"/></entry>
+        <entry key="postgres"><util:properties location="classpath:postgres.properties"/></entry>
+        <entry key="couchdb"><util:properties location="classpath:couchdb.properties"/></entry>
+    </util:map>
 
-    <bean id="couchDBDiagnostic" class="org.motechproject.diagnostics.diagnostics.CouchDBDiagnostic">
-        <constructor-arg>
-            <map>
-                <entry key="database1" value="http://%s:%s/_utils/database.html?database1"/>
-                <entry key="database2" value="http://%s:%s/_utils/database.html?database2"/>
-            </map>
-        </constructor-arg>
-    </bean>
+    <util:list id="couchDatabasesList">
+        <value>_users</value>
+        <value>unknown-database</value>
+    </util:list>
 
 </beans>

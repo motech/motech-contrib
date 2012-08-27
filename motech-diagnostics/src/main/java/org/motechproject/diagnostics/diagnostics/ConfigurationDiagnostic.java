@@ -2,24 +2,19 @@ package org.motechproject.diagnostics.diagnostics;
 
 import org.motechproject.diagnostics.annotation.Diagnostic;
 import org.motechproject.diagnostics.response.DiagnosticsResult;
+import org.motechproject.diagnostics.response.DiagnosticsStatus;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 import java.util.TreeSet;
 
-@Component
 public class ConfigurationDiagnostic {
 
-    private HashMap<String, Properties> propertyFilesMap;
+    private Map<String, Properties> propertyFilesMap;
 
-    public ConfigurationDiagnostic() {
-    }
-
-    @Autowired(required = false)
-    public ConfigurationDiagnostic(HashMap<String, Properties> propertyFilesMap) {
+    @Autowired
+    public ConfigurationDiagnostic(Map<String, Properties> propertyFilesMap) {
         this.propertyFilesMap = propertyFilesMap;
     }
 
@@ -31,7 +26,7 @@ public class ConfigurationDiagnostic {
         for (Map.Entry<String, Properties> propertiesMap : propertyFilesMap.entrySet())
             logPropertiesFileFor(diagnosticLog, propertiesMap.getKey(), propertiesMap.getValue());
 
-        return new DiagnosticsResult(true, diagnosticLog.toString());
+        return new DiagnosticsResult(DiagnosticsStatus.PASS, diagnosticLog.toString());
     }
 
     private void logPropertiesFileFor(DiagnosticLog diagnosticLog, String file, Properties properties) {

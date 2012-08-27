@@ -4,6 +4,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.motechproject.diagnostics.response.DiagnosticsResponse;
+import org.motechproject.diagnostics.response.DiagnosticsStatus;
 import org.motechproject.diagnostics.util.TestClass;
 
 import java.lang.reflect.InvocationTargetException;
@@ -20,32 +21,43 @@ public class DiagnosticMethodTest {
 
     @Test
     public void shouldSayIfAMethodIsADiagnosticMethod() throws NoSuchMethodException {
-        assertTrue(isValidDiagnosticMethod(TestClass.class.getMethod("method1WithAnnotation")));
+        assertTrue(isValidDiagnosticMethod(TestClass.class.getMethod("passDiagnostics1")));
         assertFalse(isValidDiagnosticMethod(TestClass.class.getMethod("methodWithoutAnnotation")));
     }
 
     @Test
     public void shouldInvokeAllDiagnosticsMethods() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
         TestClass testClass = new TestClass();
-        String methodName = "testMethod1";
-        DiagnosticMethod diagnosticMethod = new DiagnosticMethod(methodName, testClass, testClass.getClass().getMethod("method1WithAnnotation"));
+        String diagnosticsName = "pass diagnostics 1";
+        DiagnosticMethod diagnosticMethod = new DiagnosticMethod(diagnosticsName, testClass, testClass.getClass().getMethod("passDiagnostics1"));
 
         DiagnosticsResponse diagnosticsResponse = diagnosticMethod.run();
 
-        assertTrue(testClass.methodWithAnnotationRun);
-        assertEquals(methodName, diagnosticsResponse.getName());
-        assertTrue(diagnosticsResponse.getResult().getStatus());
-        assertEquals("test message 1", diagnosticsResponse.getResult().getMessage());
+        assertEquals(diagnosticsName, diagnosticsResponse.getName());
+        assertEquals(DiagnosticsStatus.PASS, diagnosticsResponse.getResult().getStatus());
+        assertEquals("pass message 1", diagnosticsResponse.getResult().getMessage());
     }
 
     @Test
-    public void shouldReturnResponseAsNullIfResultIsNull() throws InvocationTargetException, IllegalAccessException, NoSuchMethodException {
+    public void shouldReturnResponseAsUnknownIfResultIsNull() throws InvocationTargetException, IllegalAccessException, NoSuchMethodException {
         TestClass testClass = new TestClass();
-        String methodName = "testMethod3";
-        DiagnosticMethod diagnosticMethod = new DiagnosticMethod(methodName, testClass, testClass.getClass().getMethod("method3WithNullResult"));
+        String diagnosticsName = "null diagnostics";
+        DiagnosticMethod diagnosticMethod = new DiagnosticMethod(diagnosticsName, testClass, testClass.getClass().getMethod("nullDiagnostics"));
 
         DiagnosticsResponse diagnosticsResponse = diagnosticMethod.run();
 
-        assertNull(diagnosticsResponse);
+        assertEquals(DiagnosticsStatus.UNKNOWN, diagnosticsResponse.getResult().getStatus());
+        assertEquals("Null Result", diagnosticsResponse.getResult().getMessage());
+    }
+
+    @Test
+    public void shouldCatchExceptionAndReturnFailedResult() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+        TestClass testClass = new TestClass();
+        String diagnosticsName = "exceptiob diagnostics";
+        DiagnosticMethod diagnosticMethod = new DiagnosticMethod(diagnosticsName, testClass, testClass.getClass().getMethod("exceptionDiagnostics"));
+
+        DiagnosticsResponse diagnosticsResponse = diagnosticMethod.run();
+
+        assertEquals(DiagnosticsStatus.FAIL, diagnosticsResponse.getResult().getStatus());
     }
 }

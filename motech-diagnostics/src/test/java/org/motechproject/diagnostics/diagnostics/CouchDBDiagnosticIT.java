@@ -3,12 +3,14 @@ package org.motechproject.diagnostics.diagnostics;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.motechproject.diagnostics.response.DiagnosticsResult;
+import org.motechproject.diagnostics.response.DiagnosticsStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.jms.JMSException;
 
+import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertTrue;
 
@@ -30,8 +32,9 @@ public class CouchDBDiagnosticIT {
     public void shouldPrintAllDatabases() throws JMSException {
         DiagnosticsResult diagnosticsResult = couchDBDiagnostic.performDiagnosis();
 
-        assertTrue(diagnosticsResult.getStatus());
-        assertTrue(diagnosticsResult.getMessage().contains("database1"));
-        assertTrue(diagnosticsResult.getMessage().contains("database2"));
+        assertEquals(DiagnosticsStatus.FAIL, diagnosticsResult.getStatus());
+        String diagnosticsMessage = diagnosticsResult.getMessage();
+        assertTrue(diagnosticsMessage.contains("_users : HTTP Status Code: 200"));
+        assertTrue(diagnosticsMessage.contains("unknown-database : HTTP Status Code: 404"));
     }
 }

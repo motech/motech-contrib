@@ -39,9 +39,8 @@ public class DiagnosticsController {
     }
 
     @ExceptionHandler(Exception.class)
-    public
     @ResponseBody
-    String handleException(final Exception exception, HttpServletResponse response) {
+    public String handleException(final Exception exception, HttpServletResponse response) {
         response.setHeader("Content-Type", "application/json");
         response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 

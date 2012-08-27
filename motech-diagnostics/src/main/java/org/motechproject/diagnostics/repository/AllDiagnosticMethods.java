@@ -36,8 +36,7 @@ public class AllDiagnosticMethods implements BeanPostProcessor {
         List<DiagnosticsResponse> diagnosticsResponses = new ArrayList<DiagnosticsResponse>();
         for (DiagnosticMethod diagnosticMethod : diagnosticMethods) {
             DiagnosticsResponse response = diagnosticMethod.run();
-            if (response != null)
-                diagnosticsResponses.add(response);
+            diagnosticsResponses.add(response);
         }
         return diagnosticsResponses;
     }

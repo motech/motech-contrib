@@ -1,8 +1,10 @@
 package org.motechproject.diagnostics.model;
 
 import org.motechproject.diagnostics.annotation.Diagnostic;
+import org.motechproject.diagnostics.diagnostics.DiagnosticLog;
 import org.motechproject.diagnostics.response.DiagnosticsResponse;
 import org.motechproject.diagnostics.response.DiagnosticsResult;
+import org.motechproject.diagnostics.response.DiagnosticsStatus;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -23,7 +25,24 @@ public class DiagnosticMethod {
     }
 
     public DiagnosticsResponse run() throws InvocationTargetException, IllegalAccessException {
-        DiagnosticsResult result = (DiagnosticsResult) method.invoke(bean, null);
-        return result == null ? null : new DiagnosticsResponse(name, result);
+        DiagnosticsResult result;
+        try {
+            result = (DiagnosticsResult) method.invoke(bean, null);
+        } catch (Exception e) {
+            result = exceptionResult(e);
+        }
+
+        if(result == null) {
+            result = DiagnosticsResult.NULL;
+        }
+
+        return new DiagnosticsResponse(name, result);
+    }
+
+    private DiagnosticsResult exceptionResult(Exception e) {
+        DiagnosticLog diagnosticLog = new DiagnosticLog();
+        diagnosticLog.add("Exception occurred.");
+        diagnosticLog.addError(e);
+        return new DiagnosticsResult(DiagnosticsStatus.FAIL, diagnosticLog.toString());
     }
 }

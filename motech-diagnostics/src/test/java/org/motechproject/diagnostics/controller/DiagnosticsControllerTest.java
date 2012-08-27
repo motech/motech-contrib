@@ -8,6 +8,7 @@ import org.motechproject.diagnostics.DiagnosticResponseBuilder;
 import org.motechproject.diagnostics.repository.AllDiagnosticMethods;
 import org.motechproject.diagnostics.response.DiagnosticsResponse;
 import org.motechproject.diagnostics.response.DiagnosticsResult;
+import org.motechproject.diagnostics.response.DiagnosticsStatus;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
@@ -43,7 +44,7 @@ public class DiagnosticsControllerTest {
     @Test
     public void shouldInvokeAllTheDiagnosticMethods() throws InvocationTargetException, IllegalAccessException, IOException {
         List<DiagnosticsResponse> expectedDiagnosticsResponses = new ArrayList<DiagnosticsResponse>();
-        expectedDiagnosticsResponses.add(new DiagnosticsResponse("Test diagnostic", new DiagnosticsResult(true, "Test diagnostic run")));
+        expectedDiagnosticsResponses.add(new DiagnosticsResponse("Test diagnostic", new DiagnosticsResult(DiagnosticsStatus.PASS, "Test diagnostic run")));
 
         when(allDiagnosticMethods.runAllDiagnosticMethods()).thenReturn(expectedDiagnosticsResponses);
         when(httpResponse.getOutputStream()).thenReturn(servletOutputStream);

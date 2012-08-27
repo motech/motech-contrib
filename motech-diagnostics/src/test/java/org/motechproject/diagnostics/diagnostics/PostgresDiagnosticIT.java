@@ -4,49 +4,50 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.motechproject.diagnostics.response.DiagnosticsResult;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.Properties;
 
-import static junit.framework.Assert.*;
+import static junit.framework.Assert.assertNotNull;
+import static junit.framework.Assert.assertTrue;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("classpath:applicationContext-DiagnosticsTest.xml")
 public class PostgresDiagnosticIT {
 
     @Autowired
-    private PostGresDiagnosticStub postGresDiagnosticStub;
+    private PostgresDiagnosticStub postgresDiagnosticStub;
 
     @Test
     public void shouldReturnSuccessfulMessageWhenPostgresConnectionIsSuccessful() throws SQLException {
-        postGresDiagnosticStub.setConnectionIsSuccessful(true);
-        DiagnosticsResult diagnosticsResult = postGresDiagnosticStub.performDiagnosis();
+        postgresDiagnosticStub.setConnectionIsSuccessful(true);
+        DiagnosticsResult diagnosticsResult = postgresDiagnosticStub.performDiagnosis();
         assertNotNull(diagnosticsResult);
-        assertTrue(diagnosticsResult.getMessage().contains("Opening session Successful"));
+        assertTrue(diagnosticsResult.getMessage().contains("Successfully opened a session."));
     }
 
     @Test
     public void shouldReturnErrorMessageWhenPostgresConnectionFailed() throws SQLException {
-        postGresDiagnosticStub.setConnectionIsSuccessful(false);
-        DiagnosticsResult diagnosticsResult = postGresDiagnosticStub.performDiagnosis();
-        assertNotNull(diagnosticsResult);
-        assertTrue(diagnosticsResult.getMessage().contains("Opening session Failed"));
-    }
-
-    @Test
-    public void shouldReturnNullResultWhenPropertyFileDoesNotExist() throws SQLException {
-        PostGresDiagnosticStub postgresDiagnosticStub = new PostGresDiagnosticStub();
+        postgresDiagnosticStub.setConnectionIsSuccessful(false);
         DiagnosticsResult diagnosticsResult = postgresDiagnosticStub.performDiagnosis();
-        assertNull(diagnosticsResult);
+        assertNotNull(diagnosticsResult);
+        assertTrue(diagnosticsResult.getMessage().contains("Could not open a session."));
     }
 }
 
 @Component
-class PostGresDiagnosticStub extends PostgresDiagnostic {
+class PostgresDiagnosticStub extends PostgresDiagnostic {
     private boolean shouldBeSuccessful;
+
+    @Autowired
+    public PostgresDiagnosticStub(@Qualifier("postgresProperties") Properties postgresProperties) {
+        super(postgresProperties);
+    }
 
     public void setConnectionIsSuccessful(boolean shouldBeSuccessful) {
         this.shouldBeSuccessful = shouldBeSuccessful;

@@ -4,6 +4,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.motechproject.diagnostics.response.DiagnosticsResponse;
 import org.motechproject.diagnostics.response.DiagnosticsResult;
+import org.motechproject.diagnostics.response.DiagnosticsStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -21,12 +22,12 @@ public class DiagnosticResponseBuilderIT {
 
     @Test
     public void shouldVerifyTheMessageBuilt() {
-        DiagnosticsResponse diagnosticsResponse = new DiagnosticsResponse("Aragorn", new DiagnosticsResult(true, "Hrithik"));
+        DiagnosticsResponse diagnosticsResponse = new DiagnosticsResponse("Aragorn", new DiagnosticsResult(DiagnosticsStatus.PASS, "Hrithik"));
         String responseMessage = diagnosticResponseBuilder.createResponseMessage(Arrays.asList(diagnosticsResponse));
 
         assertEquals("                    **************SUMMARY**************\n" +
                 "\n" +
-                "                            Aragorn - TRUE\n" +
+                "                            Aragorn - PASS\n" +
                 "            \n" +
                 "                    ***********************************\n" +
                 "\n" +
