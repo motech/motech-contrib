@@ -20,9 +20,9 @@ public class DiagnosticResponseBuilderIT {
 
     @Test
     public void shouldVerifyTheMessageBuilt() {
-        DiagnosticsResult diagnosticsResponse = new DiagnosticsResult("Aragorn", new DiagnosticsResult("Hrithik", true));
+        DiagnosticsResult diagnosticsResponse = new DiagnosticsResult("Aragorn", true);
         String responseMessage = diagnosticResponseBuilder.createResponseMessage(Arrays.asList(diagnosticsResponse));
 
-        assertTrue(responseMessage.contains("Aragorn Hrithik true"));
+        assertTrue(responseMessage.contains("Aragorn true"));
     }
 }

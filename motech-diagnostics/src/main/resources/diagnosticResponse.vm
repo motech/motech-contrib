@@ -1,6 +1,8 @@
 #macro( print, $result , $namePrefix )
-        #if( $result.value.class.simpleName == "DiagnosticsResult" )
-            #print($result.value , $result.name, $namePrefix $result.name)
+        #if( $result.value.class.simpleName.contains("List") )
+            #foreach( $subResult in $result.value )
+                #print($subResult , $namePrefix $result.name)
+            #end
         #else
             $namePrefix $result.name $result.value
         #end
