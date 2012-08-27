@@ -1,5 +1,6 @@
 package org.motechproject.diagnostics.model;
 
+import org.motechproject.diagnostics.Diagnostics;
 import org.motechproject.diagnostics.annotation.Diagnostic;
 import org.motechproject.diagnostics.response.DiagnosticsResult;
 
@@ -7,6 +8,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 public class DiagnosticMethod {
+
     private String name;
     private Method method;
     private Object bean;

@@ -1,4 +1,4 @@
-package org.motechproject.diagnostics.repository;
+package org.motechproject.diagnostics.service;
 
 
 import org.ektorp.CouchDbConnector;
@@ -19,7 +19,7 @@ import static ch.lambdaj.Lambda.*;
 import static junit.framework.Assert.*;
 
 @ContextConfiguration(locations = "classpath*:/applicationContext-Diagnostics.xml")
-public class AllDiagnosticMethodsTest extends SpringIntegrationTest {
+public class DiagnosticServiceIT extends SpringIntegrationTest {
 
     @Before
     @After
@@ -28,7 +28,7 @@ public class AllDiagnosticMethodsTest extends SpringIntegrationTest {
     }
 
     @Autowired
-    private AllDiagnosticMethods allDiagnosticMethods;
+    private DiagnosticsService diagnosticService;
 
     @Override
     public CouchDbConnector getDBConnector() {
@@ -37,7 +37,7 @@ public class AllDiagnosticMethodsTest extends SpringIntegrationTest {
 
     @Test
     public void shouldInvokeAllDiagnosticMethods() throws InvocationTargetException, IllegalAccessException {
-        List<DiagnosticsResult> diagnosticsResponses = allDiagnosticMethods.runAllDiagnosticMethods();
+        List<DiagnosticsResult> diagnosticsResponses = diagnosticService.runAll();
 
         List<DiagnosticsResult> testDiagnostics1Response = filter(having(on(DiagnosticsResult.class).getName(), Matchers.equalTo("test message 1")), diagnosticsResponses);
         List<DiagnosticsResult> testDiagnostics2Response = filter(having(on(DiagnosticsResult.class).getName(), Matchers.equalTo("test message 2")), diagnosticsResponses);

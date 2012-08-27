@@ -1,11 +1,8 @@
-package org.motechproject.diagnostics.repository;
+package org.motechproject.diagnostics.service;
 
 import org.motechproject.diagnostics.annotation.Diagnostic;
 import org.motechproject.diagnostics.model.DiagnosticMethod;
 import org.motechproject.diagnostics.response.DiagnosticsResult;
-import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.config.BeanPostProcessor;
-import org.springframework.stereotype.Repository;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -14,22 +11,14 @@ import java.util.List;
 
 import static org.motechproject.diagnostics.model.DiagnosticMethod.isValidDiagnosticMethod;
 
-@Repository
-public class AllDiagnosticMethods implements BeanPostProcessor {
+public class AllDiagnosticMethods {
 
     List<DiagnosticMethod> diagnosticMethods = new ArrayList<DiagnosticMethod>();
 
-    @Override
-    public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
-        return bean;
-    }
-
-    @Override
-    public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
+    public AllDiagnosticMethods(Object bean) {
         for (Method method : bean.getClass().getDeclaredMethods())
             if (isValidDiagnosticMethod(method))
                 diagnosticMethods.add(new DiagnosticMethod(method.getAnnotation(Diagnostic.class).name(), bean, method));
-        return bean;
     }
 
     public List<DiagnosticsResult> runAllDiagnosticMethods() throws InvocationTargetException, IllegalAccessException {

@@ -1,11 +1,12 @@
 package org.motechproject.diagnostics.util;
 
+import org.motechproject.diagnostics.Diagnostics;
 import org.motechproject.diagnostics.annotation.Diagnostic;
 import org.motechproject.diagnostics.response.DiagnosticsResult;
 import org.springframework.stereotype.Component;
 
 @Component
-public class TestClass {
+public class TestClass implements Diagnostics {
 
     public static int methodExecutionCount = 0;
     public static boolean methodWithAnnotationRun = false;
@@ -31,5 +32,10 @@ public class TestClass {
 
     public void methodWithoutAnnotation() {
         methodExecutionCount++;
+    }
+
+    @Override
+    public String name() {
+        return "testDiagnostics";
     }
 }

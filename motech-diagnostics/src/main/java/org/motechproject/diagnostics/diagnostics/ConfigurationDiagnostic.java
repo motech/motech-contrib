@@ -1,5 +1,6 @@
 package org.motechproject.diagnostics.diagnostics;
 
+import org.motechproject.diagnostics.Diagnostics;
 import org.motechproject.diagnostics.annotation.Diagnostic;
 import org.motechproject.diagnostics.response.DiagnosticsResult;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,7 +9,7 @@ import org.springframework.stereotype.Component;
 import java.util.*;
 
 @Component
-public class ConfigurationDiagnostic {
+public class ConfigurationDiagnostic implements Diagnostics {
 
     private HashMap<String, Properties> propertyFilesMap;
 
@@ -20,7 +21,7 @@ public class ConfigurationDiagnostic {
         this.propertyFilesMap = propertyFilesMap;
     }
 
-    @Diagnostic(name = "CONFIGURATION PROPERTIES")
+    @Diagnostic(name = "All properties")
     public DiagnosticsResult<List<DiagnosticsResult>> performDiagnosis() {
         if (propertyFilesMap == null) return null;
         List<DiagnosticsResult> results = new ArrayList<DiagnosticsResult>();
@@ -43,5 +44,10 @@ public class ConfigurationDiagnostic {
             properties.add(new DiagnosticsResult<String>(entry.getKey().toString(), entry.getValue().toString()));
         }
         return properties;
+    }
+
+    @Override
+    public String name() {
+        return "CONFIGURATION PROPERTIES";
     }
 }

@@ -1,5 +1,6 @@
 package org.motechproject.diagnostics.diagnostics;
 
+import org.motechproject.diagnostics.Diagnostics;
 import org.motechproject.diagnostics.annotation.Diagnostic;
 import org.motechproject.diagnostics.response.DiagnosticsResult;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +15,7 @@ import java.util.Properties;
 import static org.hibernate.exception.ExceptionUtils.getFullStackTrace;
 
 @Component
-public class PostgresDiagnostic {
+public class PostgresDiagnostic implements Diagnostics {
 
     private Properties postgresProperties;
 
@@ -23,13 +24,13 @@ public class PostgresDiagnostic {
         this.postgresProperties = postgresProperties;
     }
 
-    @Diagnostic(name = "POSTGRES DATABASE CONNECTION")
+    @Diagnostic(name = "Can create connection")
     public DiagnosticsResult<String> performDiagnosis() {
         if (postgresProperties == null) return null;
         Connection connection = null;
         try {
             connection = getConnection();
-            if(connection != null)
+            if (connection != null)
                 connection.close();
         } catch (SQLException e) {
             return new DiagnosticsResult<String>("POSTGRES DATABASE CONNECTION EXCEPTION", getFullStackTrace(e));
@@ -42,5 +43,10 @@ public class PostgresDiagnostic {
         String userName = postgresProperties.getProperty("jdbc.username");
         String password = postgresProperties.getProperty("jdbc.password");
         return DriverManager.getConnection(url, userName, password);
+    }
+
+    @Override
+    public String name() {
+        return "POSTGRES DATABASE CONNECTION";
     }
 }

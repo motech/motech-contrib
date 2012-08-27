@@ -5,8 +5,8 @@ import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.motechproject.diagnostics.DiagnosticResponseBuilder;
-import org.motechproject.diagnostics.repository.AllDiagnosticMethods;
 import org.motechproject.diagnostics.response.DiagnosticsResult;
+import org.motechproject.diagnostics.service.DiagnosticsService;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
@@ -23,7 +23,7 @@ import static org.mockito.MockitoAnnotations.initMocks;
 public class DiagnosticsControllerTest {
 
     @Mock
-    private AllDiagnosticMethods allDiagnosticMethods;
+    private DiagnosticsService diagnosticsService;
     @Mock
     private HttpServletResponse httpResponse;
     @Mock
@@ -36,7 +36,7 @@ public class DiagnosticsControllerTest {
     @Before
     public void setUp() {
         initMocks(this);
-        diagnosticsController = new DiagnosticsController(allDiagnosticMethods,allDiagnosticMessageBuilder);
+        diagnosticsController = new DiagnosticsController(diagnosticsService,allDiagnosticMessageBuilder);
     }
 
     @Test
@@ -44,7 +44,7 @@ public class DiagnosticsControllerTest {
         List<DiagnosticsResult> expectedDiagnosticsResponses = new ArrayList<DiagnosticsResult>();
         expectedDiagnosticsResponses.add(new DiagnosticsResult("Test diagnostic run", true));
 
-        when(allDiagnosticMethods.runAllDiagnosticMethods()).thenReturn(expectedDiagnosticsResponses);
+        when(diagnosticsService.runAll()).thenReturn(expectedDiagnosticsResponses);
         when(httpResponse.getOutputStream()).thenReturn(servletOutputStream);
         when(allDiagnosticMessageBuilder.createResponseMessage(expectedDiagnosticsResponses)).thenReturn("Diagnostic Response");
         ArgumentCaptor<String> captor = ArgumentCaptor.forClass(String.class);
