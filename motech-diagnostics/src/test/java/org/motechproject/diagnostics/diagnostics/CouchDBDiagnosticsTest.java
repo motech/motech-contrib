@@ -1,30 +1,24 @@
 package org.motechproject.diagnostics.diagnostics;
 
 import org.ektorp.CouchDbConnector;
-import org.ektorp.CouchDbInstance;
+import org.ektorp.impl.StdCouchDbConnector;
 import org.junit.Test;
 import org.motechproject.diagnostics.response.DiagnosticsResult;
 import org.motechproject.testing.utils.SpringIntegrationTest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.test.context.ContextConfiguration;
 
 import java.util.List;
 
 import static junit.framework.Assert.assertEquals;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static junit.framework.Assert.fail;
 
 @ContextConfiguration(locations = "classpath*:/applicationContext-DiagnosticsTest.xml")
 public class CouchDBDiagnosticsTest extends SpringIntegrationTest {
 
 
     @Autowired
-    @Qualifier("couchDbInstance")
-    private CouchDbInstance instance;
-
-    @Autowired
-    private List<CouchDbInstance> allInstances;
+    private List<StdCouchDbConnector> allConnectors;
 
     @Autowired
     private CouchDBDiagnostics diagnostics;
@@ -32,7 +26,7 @@ public class CouchDBDiagnosticsTest extends SpringIntegrationTest {
     @Test
     public void eachInstanceHasResult() {
         List<DiagnosticsResult> results = diagnostics.isActive().getValue();
-        assertEquals(allInstances.size(), results.size());
+        assertEquals(allConnectors.size(), results.size());
     }
 
     @Test
@@ -43,11 +37,16 @@ public class CouchDBDiagnosticsTest extends SpringIntegrationTest {
 
     @Test
     public void shouldReturnNegativeReturnWhenNotAbleToConnectToInstance() {
-        CouchDbInstance instance = mock(CouchDbInstance.class);
-        when(instance.getConnection()).thenReturn(null);
-
         List<DiagnosticsResult> results = diagnostics.isActive().getValue();
-        assertEquals("error", results.get(1).getValue().toString());
+        assertResultsContainError(results);
+    }
+
+    private void assertResultsContainError(List<DiagnosticsResult> results) {
+        for (DiagnosticsResult result : results) {
+            if ("error".equals(result.getValue().toString()))
+                return;
+        }
+        fail("Expected a result with an error. But none found");
     }
 
     @Override
