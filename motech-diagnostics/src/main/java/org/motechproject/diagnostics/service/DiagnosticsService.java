@@ -20,7 +20,9 @@ public class DiagnosticsService {
     public DiagnosticsService(List<Diagnostics> diagnostics) {
         this.diagnostics = new HashMap<String, Diagnostics>();
         for (Diagnostics diagnostic : diagnostics) {
-            this.diagnostics.put(diagnostic.name(), diagnostic);
+            if (diagnostic.canPerformDiagnostics()) {
+                this.diagnostics.put(diagnostic.name(), diagnostic);
+            }
         }
     }
 

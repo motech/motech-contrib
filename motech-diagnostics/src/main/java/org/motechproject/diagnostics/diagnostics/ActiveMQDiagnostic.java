@@ -13,11 +13,12 @@ import javax.jms.JMSException;
 @Component
 public class ActiveMQDiagnostic implements Diagnostics {
 
-    @Autowired
+    @Autowired(required = false)
     private CachingConnectionFactory connectionFactory;
 
     @Diagnostic(name = "Port active")
     public DiagnosticsResult<String> performDiagnosis() throws JMSException {
+
         Boolean isSuccess = checkActiveMQConnection();
         return new DiagnosticsResult<String>("Is Active", isSuccess.toString());
     }
@@ -34,5 +35,10 @@ public class ActiveMQDiagnostic implements Diagnostics {
     @Override
     public String name() {
         return DiagnosticServiceName.ACTIVE_MQ;
+    }
+
+    @Override
+    public boolean canPerformDiagnostics() {
+        return connectionFactory != null;
     }
 }

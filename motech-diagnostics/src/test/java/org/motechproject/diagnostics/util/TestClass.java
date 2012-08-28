@@ -38,4 +38,9 @@ public class TestClass implements Diagnostics {
     public String name() {
         return "testDiagnostics";
     }
+
+    @Override
+    public boolean canPerformDiagnostics() {
+        return true;
+    }
 }

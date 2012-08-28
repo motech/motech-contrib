@@ -51,6 +51,11 @@ public class DiagnosticsServiceTest {
             return "testDiagnostic";
         }
 
+        @Override
+        public boolean canPerformDiagnostics() {
+            return true;
+        }
+
         @Diagnostic(name = "diagnosticMethod")
         public DiagnosticsResult run() {
             isCalled = true;
@@ -69,6 +74,11 @@ public class DiagnosticsServiceTest {
         @Override
         public String name() {
             return "anotherTestDiagnostic";
+        }
+
+        @Override
+        public boolean canPerformDiagnostics() {
+            return true;
         }
 
         @Diagnostic(name = "diagnosticMethod")

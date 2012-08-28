@@ -27,7 +27,6 @@ public class PostgresDiagnostic implements Diagnostics {
 
     @Diagnostic(name = "Can create connection")
     public DiagnosticsResult<String> performDiagnosis() {
-        if (postgresProperties == null) return null;
         Connection connection = null;
         try {
             connection = getConnection();
@@ -49,5 +48,10 @@ public class PostgresDiagnostic implements Diagnostics {
     @Override
     public String name() {
         return DiagnosticServiceName.POSTGRES;
+    }
+
+    @Override
+    public boolean canPerformDiagnostics() {
+        return postgresProperties != null;
     }
 }

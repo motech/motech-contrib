@@ -24,7 +24,6 @@ public class ConfigurationDiagnostic implements Diagnostics {
 
     @Diagnostic(name = "All properties")
     public DiagnosticsResult<List<DiagnosticsResult>> performDiagnosis() {
-        if (propertyFilesMap == null) return null;
         List<DiagnosticsResult> results = new ArrayList<DiagnosticsResult>();
         results.add(new DiagnosticsResult("Is Active", "true"));
         results.addAll(propertiesInAllFiles());
@@ -50,5 +49,10 @@ public class ConfigurationDiagnostic implements Diagnostics {
     @Override
     public String name() {
         return DiagnosticServiceName.CONFIGURATION;
+    }
+
+    @Override
+    public boolean canPerformDiagnostics() {
+        return propertyFilesMap != null;
     }
 }

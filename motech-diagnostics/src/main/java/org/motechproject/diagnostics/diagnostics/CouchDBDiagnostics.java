@@ -16,9 +16,12 @@ import java.util.List;
 @Component
 public class CouchDBDiagnostics implements Diagnostics {
 
+    @Autowired(required = false)
     private List<StdCouchDbConnector> allConnectors;
 
-    @Autowired
+    public CouchDBDiagnostics() {
+    }
+
     public CouchDBDiagnostics(List<StdCouchDbConnector> allConnectors) {
         this.allConnectors = allConnectors;
     }
@@ -49,5 +52,11 @@ public class CouchDBDiagnostics implements Diagnostics {
     @Override
     public String name() {
         return DiagnosticServiceName.COUCHDB;
+    }
+
+    @Override
+    public boolean canPerformDiagnostics() {
+        return allConnectors != null && !allConnectors.isEmpty();
+
     }
 }
