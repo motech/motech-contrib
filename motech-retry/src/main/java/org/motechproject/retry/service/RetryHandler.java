@@ -3,7 +3,7 @@ package org.motechproject.retry.service;
 import org.joda.time.DateTime;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.OutboundEventGateway;
-import org.motechproject.event.annotations.MotechListener;
+import org.motechproject.event.listener.annotations.MotechListener;
 import org.motechproject.retry.dao.AllRetries;
 import org.motechproject.retry.domain.Retry;
 import org.motechproject.retry.domain.RetryRequest;

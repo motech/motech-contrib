@@ -52,6 +52,11 @@
             <version>${motech.version}</version>
         </dependency>
         <dependency>
+            <groupId>org.motechproject</groupId>
+            <artifactId>motech-event</artifactId>
+            <version>${motech.version}</version>
+        </dependency>
+        <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-beans</artifactId>
             <version>${spring.version}</version>
