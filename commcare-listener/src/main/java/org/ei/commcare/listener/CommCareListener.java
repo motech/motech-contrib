@@ -3,7 +3,7 @@ package org.ei.commcare.listener;
 import org.ei.commcare.api.domain.CommCareFormInstance;
 import org.ei.commcare.api.service.CommCareModuleImportService;
 import org.ei.commcare.listener.event.CommCareFormEvent;
-import org.motechproject.scheduler.gateway.OutboundEventGateway;
+import org.motechproject.event.OutboundEventGateway;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

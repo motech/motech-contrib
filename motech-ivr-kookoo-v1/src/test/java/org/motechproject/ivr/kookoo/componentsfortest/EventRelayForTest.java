@@ -1,7 +1,7 @@
 package org.motechproject.ivr.kookoo.componentsfortest;
 
-import org.motechproject.scheduler.domain.MotechEvent;
-import org.motechproject.scheduler.event.EventRelay;
+import org.motechproject.event.EventRelay;
+import org.motechproject.event.MotechEvent;
 
 public class EventRelayForTest implements EventRelay {
     @Override
