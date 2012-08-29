@@ -11,7 +11,6 @@ import java.util.List;
 
 import static java.util.Arrays.asList;
 import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
@@ -25,6 +24,7 @@ public class BatchJobDiagnosticTest {
     @Before
     public void setup() {
         initMocks(this);
+        when(allBatchJobs.canFetchData()).thenReturn(true);
         batchJobDiagnostics = new BatchJobDiagnostic(allBatchJobs);
     }
 
@@ -43,16 +43,6 @@ public class BatchJobDiagnosticTest {
         DiagnosticsResult<List<DiagnosticsResult<String>>> results = batchJobDiagnostics.performDiagnosis();
         assertEquals("false", results.getValue().get(0).getValue());
         assertEquals("true", results.getValue().get(1).getValue());
-    }
-
-    @Test
-    public void shouldDiagnoseAllTheJobsMentionedInTheProperties() {
-
-    }
-
-    @Test
-    public void shouldDiagnoseJobWhenDiagnosisForPredecessorFails() {
-
     }
 
     private BatchJob createSpringBatchJob(String jobName, String... jobStatuses) {

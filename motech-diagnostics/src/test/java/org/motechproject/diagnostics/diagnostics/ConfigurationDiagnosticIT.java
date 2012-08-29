@@ -30,13 +30,6 @@ public class ConfigurationDiagnosticIT {
         assertTrue(containsNestedResultWithName("jdbc.username", "postgres", diagnosticsResults.getValue()));
     }
 
-    @Test
-    public void shouldNotPerformDiagnosisIfPropertyFileMapIsNull() throws JMSException {
-        ConfigurationDiagnostic configurationDiagnostic = new ConfigurationDiagnostic();
-        DiagnosticsResult diagnosticsResult = configurationDiagnostic.performDiagnosis();
-        assertNull(diagnosticsResult);
-    }
-
     private boolean containsResultWithName(String name, List<DiagnosticsResult> results) {
         for (DiagnosticsResult result : results) {
             if (result.getName().equalsIgnoreCase(name)) {

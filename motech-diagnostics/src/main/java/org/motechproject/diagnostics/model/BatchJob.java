@@ -1,9 +1,12 @@
 package org.motechproject.diagnostics.model;
 
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class BatchJob {
 
     private String name;
@@ -34,6 +37,7 @@ public class BatchJob {
             return jobInstances.lastExecution().isFailure();
     }
 
+    @JsonIgnoreProperties(ignoreUnknown = true)
     public static class JobInstances extends HashMap<String, JobInstance> {
 
         public JobInstance lastExecution() {
@@ -46,6 +50,7 @@ public class BatchJob {
         }
     }
 
+    @JsonIgnoreProperties(ignoreUnknown = true)
     public static class JobInstance {
 
         private String lastJobExecutionStatus;

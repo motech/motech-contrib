@@ -35,13 +35,6 @@ public class PostgresDiagnosticIT {
         assertNotNull(diagnosticsResult);
         assertTrue(diagnosticsResult.getName().contains("POSTGRES DATABASE CONNECTION EXCEPTION"));
     }
-
-    @Test
-    public void shouldReturnNullResultWhenPropertyFileDoesNotExist() {
-        PostGresDiagnosticStub postgresDiagnosticStub = new PostGresDiagnosticStub();
-        DiagnosticsResult diagnosticsResult = postgresDiagnosticStub.performDiagnosis();
-        assertNull(diagnosticsResult);
-    }
 }
 
 @Component

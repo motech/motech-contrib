@@ -7,8 +7,6 @@
        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd">
 
 
-    <context:property-placeholder location="classpath*:*.properties"/>
-
     <context:annotation-config/>
 
     <context:component-scan base-package="org.motechproject.diagnostics">
@@ -22,5 +20,23 @@
                 class.resource.loader.class=org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader
             </value>
         </property>
+    </bean>
+
+
+    <bean id="springBatchDiagnosticsHttpClient" class="org.apache.commons.httpclient.HttpClient">
+        <property name="state" ref="springBatchDiagnosticsHttpState"/>
+    </bean>
+
+    <bean id="springBatchDiagnosticsHttpState" class="org.motechproject.diagnostics.model.BatchHttpState">
+        <property name="credentials" ref="springBatchDiagnosticsCredentials"/>
+    </bean>
+
+    <bean id="springBatchDiagnosticsCredentials" class="org.apache.commons.httpclient.UsernamePasswordCredentials">
+        <constructor-arg value="${spring.batch.username}"/>
+        <constructor-arg value="${spring.batch.password}"/>
+    </bean>
+
+    <bean id="springBatchDiagnosticsHttpClientFactory" class="org.springframework.http.client.CommonsClientHttpRequestFactory">
+        <constructor-arg ref="springBatchDiagnosticsHttpClient"/>
     </bean>
 </beans>

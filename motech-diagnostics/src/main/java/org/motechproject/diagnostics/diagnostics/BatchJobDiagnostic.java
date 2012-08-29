@@ -8,7 +8,6 @@ import org.motechproject.diagnostics.response.DiagnosticsResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,10 +24,15 @@ public class BatchJobDiagnostic implements Diagnostics {
     @Diagnostic(name = "Batch job diagnostics")
     public DiagnosticsResult<List<DiagnosticsResult<String>>> performDiagnosis() {
         List<DiagnosticsResult<String>> results = new ArrayList<DiagnosticsResult<String>>();
-        for (BatchJob  batchJob: allBatchJobs.fetchAll()) {
-            String value  = batchJob.lastExecutionFailed() ? "false" : "true";
-            results.add(new DiagnosticsResult<String>(batchJob.getName(), value));
+        try {
+            for (BatchJob batchJob : allBatchJobs.fetchAll()) {
+                String value = batchJob.lastExecutionFailed() ? "false" : "true";
+                results.add(new DiagnosticsResult<String>(batchJob.getName(), value));
+            }
+        } catch (Exception e) {
+            results.add(new DiagnosticsResult<String>("Connecting to batch", "false"));
         }
+
         return new DiagnosticsResult<List<DiagnosticsResult<String>>>("Batch Job", results);
     }
 
@@ -39,6 +43,6 @@ public class BatchJobDiagnostic implements Diagnostics {
 
     @Override
     public boolean canPerformDiagnostics() {
-        return true;
+        return allBatchJobs.canFetchData();
     }
 }
