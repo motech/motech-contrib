@@ -2,8 +2,8 @@ package org.motechproject.http.client.service;
 
 import org.junit.Test;
 import org.mockito.Mock;
+import org.motechproject.event.EventRelay;
 import org.motechproject.event.MotechEvent;
-import org.motechproject.event.listener.EventRelay;
 import org.motechproject.http.client.components.AsynchronousCall;
 import org.motechproject.http.client.listener.HttpClientEventListener;
 
