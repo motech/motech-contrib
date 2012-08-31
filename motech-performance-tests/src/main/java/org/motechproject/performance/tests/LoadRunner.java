@@ -3,7 +3,6 @@ package org.motechproject.performance.tests;
 import junit.framework.TestResult;
 import junit.framework.TestSuite;
 import junit.textui.TestRunner;
-import org.junit.internal.runners.model.EachTestNotifier;
 import org.junit.runner.Description;
 import org.junit.runner.notification.RunNotifier;
 import org.junit.runners.BlockJUnit4ClassRunner;
@@ -42,12 +41,6 @@ public class LoadRunner extends BlockJUnit4ClassRunner {
                 assertTrue(testResult.failureCount()==0 && testResult.errorCount()==0);
             }
         };
-    }
-
-    private EachTestNotifier makeNotifier(FrameworkMethod method,
-                                          RunNotifier notifier) {
-        Description description = describeChild(method);
-        return new EachTestNotifier(notifier, description);
     }
 
     @Override
