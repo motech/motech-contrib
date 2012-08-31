@@ -16,8 +16,7 @@ import static java.lang.Integer.parseInt;
 @RequestMapping(value = "/page")
 public class PaginationController {
 
-    @Value( value = "${paginator.rowsPerPage:10}")
-    private String rowsPerPage;
+    private String rowsPerPage = "10";
 
     @Resource(name = "pagingServiceMap")
     Map<String, Paging> pagingServiceMap;
