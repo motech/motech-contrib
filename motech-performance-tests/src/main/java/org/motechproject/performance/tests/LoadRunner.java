@@ -9,7 +9,11 @@ import org.junit.runners.BlockJUnit4ClassRunner;
 import org.junit.runners.model.FrameworkMethod;
 import org.junit.runners.model.InitializationError;
 import org.junit.runners.model.Statement;
+import org.junit.runners.model.TestClass;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import static org.junit.Assert.assertTrue;
@@ -35,22 +39,68 @@ public class LoadRunner extends BlockJUnit4ClassRunner {
         return new Statement() {
             @Override
             public void evaluate() throws Throwable {
-                LoadTest loadTest = method.getAnnotation(LoadTest.class);
-                TestSuite testSuite = TestSuiteUtils.createTestSuite(loadTest.concurrentUsers(), method.getMethod().getDeclaringClass(), method.getMethod().getName());
+                runLoadSetUp();
+                TestSuite testSuite = getTestSuite(method);
                 TestResult testResult = TestRunner.run(testSuite);
-                assertTrue(testResult.failureCount()==0 && testResult.errorCount()==0);
+                assertTrue(testResult.wasSuccessful());
             }
         };
     }
 
+    private void runLoadSetUp() {
+        List<FrameworkMethod> beforeMethods = getTestClass().getAnnotatedMethods(LoadPerfBefore.class);
+        if(beforeMethods==null)return;
+        sortBeforeMethodsBasedOnPriority(beforeMethods);
+        for(FrameworkMethod method : beforeMethods){
+            TestSuite testSuite = TestSuiteUtils.createTestSuite(1, method);
+            TestResult testResult = TestRunner.run(testSuite);
+            assertTrue(testResult.wasSuccessful());
+        }
+
+    }
+
+    private void sortBeforeMethodsBasedOnPriority(List<FrameworkMethod> beforeMethods) {
+        Collections.sort(beforeMethods, new Comparator<FrameworkMethod>() {
+            @Override
+            public int compare(FrameworkMethod o1, FrameworkMethod o2) {
+                LoadPerfBefore loadPerfBefore1 = o1.getAnnotation(LoadPerfBefore.class);
+                LoadPerfBefore loadPerfBefore2 = o2.getAnnotation(LoadPerfBefore.class);
+                return loadPerfBefore1.priority() - loadPerfBefore2.priority();
+
+            }
+        });
+    }
+
+    private TestSuite getTestSuite(FrameworkMethod method) {
+        LoadPerf loadPerf = method.getAnnotation(LoadPerf.class);
+        if (loadPerf != null)
+            return TestSuiteUtils.createTestSuite(loadPerf.concurrentUsers(), method);
+        else {
+            LoadPerfStaggered loadPerfStaggered = method.getAnnotation(LoadPerfStaggered.class);
+            return TestSuiteUtils.createStaggeredLoadTestSuite(loadPerfStaggered, method);
+        }
+    }
+
     @Override
     protected List<FrameworkMethod> computeTestMethods() {
-        return getTestClass().getAnnotatedMethods(LoadTest.class);
+        ArrayList<FrameworkMethod> testMethods = new ArrayList<FrameworkMethod>();
+        TestClass testClass = getTestClass();
+        addTestMethods(testMethods, testClass, LoadPerf.class);
+        addTestMethods(testMethods, testClass, LoadPerfStaggered.class);
+        return testMethods;
+
+    }
+
+    private void addTestMethods(ArrayList<FrameworkMethod> testMethods, TestClass testClass, Class annotationClass) {
+        List<FrameworkMethod> loadTestMethods = testClass.getAnnotatedMethods(annotationClass);
+        if (loadTestMethods != null)
+            testMethods.addAll(loadTestMethods);
     }
 
     @Override
     protected void validateTestMethods(List<Throwable> errors) {
-        validatePublicVoidNoArgMethods(LoadTest.class, false, errors);
+        validatePublicVoidNoArgMethods(LoadPerf.class, false, errors);
+        validatePublicVoidNoArgMethods(LoadPerfStaggered.class, false, errors);
     }
 
     @Override

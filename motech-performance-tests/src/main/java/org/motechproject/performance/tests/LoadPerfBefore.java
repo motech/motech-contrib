@@ -7,6 +7,7 @@ import java.lang.annotation.Target;
 
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface LoadTest {
-    int concurrentUsers();
+public @interface LoadPerfBefore {
+    /*Higher the value, lower the priority*/
+    int priority();
 }
