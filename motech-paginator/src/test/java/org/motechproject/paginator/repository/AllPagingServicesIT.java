@@ -22,8 +22,8 @@ public class AllPagingServicesIT {
 
     @Test
     public void shouldIncludeAllPagingServiceBeansInTheGeneralPagingServiceMap() {
-        assertNotNull(allPagingServices.getPagingServiceFor("pagingServiceStub"));
-        assertNull(allPagingServices.getPagingServiceFor("notAPagingService"));
+        assertNotNull(allPagingServices.getPagingServiceFor("testEntity"));
+        assertNull(allPagingServices.getPagingServiceFor("notAPagedEntity"));
     }
 }
 
@@ -33,5 +33,10 @@ class PagingServiceStub implements Paging {
     @Override
     public PageResults page(Integer pageNo, Integer rowsPerPage) {
         return null;
+    }
+
+    @Override
+    public String entityName() {
+        return "testEntity";
     }
 }

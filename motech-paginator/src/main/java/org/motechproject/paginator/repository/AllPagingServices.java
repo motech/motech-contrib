@@ -24,8 +24,9 @@ public class AllPagingServices implements BeanPostProcessor {
 
     @Override
     public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
-        if (bean instanceof Paging)
-            pagingServiceMap.put(beanName, (Paging) bean);
+        if (bean instanceof Paging) {
+            pagingServiceMap.put(((Paging) bean).entityName(), (Paging) bean);
+        }
         return bean;
     }
 
