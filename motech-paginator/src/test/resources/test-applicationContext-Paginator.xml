@@ -10,13 +10,6 @@
         <constructor-arg value="entity1"></constructor-arg>
     </bean>
 
-    <mockito:mock id="pagingService1" class="org.motechproject.paginator.service.Paging"/>
-    <mockito:mock id="pagingService2" class="org.motechproject.paginator.service.Paging"/>
+    <mockito:mock id="notAPagingService" class="java.lang.String"/>
 
-    <util:map id="pagingServiceMap"
-              key-type="java.lang.String"
-              value-type="org.motechproject.paginator.service.Paging">
-        <entry key="entity1" value-ref="pagingService1"/>
-        <entry key="entity2" value-ref="pagingService2"/>
-    </util:map>
 </beans>
