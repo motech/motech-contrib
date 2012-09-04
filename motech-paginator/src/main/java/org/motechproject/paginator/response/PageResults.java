@@ -1,13 +1,12 @@
 package org.motechproject.paginator.response;
 
-import org.codehaus.jackson.annotate.JsonProperty;
-
 import java.util.List;
 
 public class PageResults<E> {
 
     private Integer pageNo;
     private Integer totalRows;
+    private Integer rowsPerPage;
     private List<E> results;
 
     public Integer getPageNo() {
@@ -32,5 +31,13 @@ public class PageResults<E> {
 
     public void setResults(List<E> results) {
         this.results = results;
+    }
+
+    public Integer getRowsPerPage() {
+        return rowsPerPage;
+    }
+
+    public void setRowsPerPage(Integer rowsPerPage) {
+        this.rowsPerPage = rowsPerPage;
     }
 }

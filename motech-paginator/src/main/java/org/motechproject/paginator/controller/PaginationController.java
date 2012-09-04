@@ -13,8 +13,6 @@ import static java.lang.Integer.parseInt;
 @RequestMapping(value = "/page")
 public class PaginationController {
 
-    private String rowsPerPage = "10";
-
     private AllPagingServices allPagingServices;
 
     @Autowired
@@ -28,8 +26,10 @@ public class PaginationController {
         PageResults results = null;
         Paging pagingService = allPagingServices.getPagingServiceFor(entity);
 
-        if (pagingService != null)
-            results = pagingService.page(parseInt(pageNo), parseInt(rowsPerPage));
+        if (pagingService != null) {
+            results = pagingService.page(parseInt(pageNo), 5);
+            results.setRowsPerPage(5);
+        }
 
         return results;
     }
