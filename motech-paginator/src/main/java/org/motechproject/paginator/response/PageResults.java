@@ -1,8 +1,11 @@
 package org.motechproject.paginator.response;
 
+import org.codehaus.jackson.annotate.JsonProperty;
+
 import java.util.List;
 
 public class PageResults<E> {
+
     private Integer pageNo;
     private Integer totalRows;
     private List<E> results;

@@ -13,8 +13,4 @@
 
     <context:component-scan base-package="org.motechproject.paginator"/>
 
-    <!--<util:map id="pagingServiceMap"-->
-              <!--key-type="java.lang.String"-->
-              <!--value-type="org.motechproject.paginator.service.Paging">-->
-    <!--</util:map>-->
 </beans>

@@ -7,8 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Map;
-
 import static java.lang.Integer.parseInt;
 
 @Controller
@@ -30,8 +28,8 @@ public class PaginationController {
         PageResults results = null;
         Paging pagingService = allPagingServices.getPagingServiceFor(entity);
 
-        if(pagingService != null)
-            pagingService.page(parseInt(pageNo), parseInt(rowsPerPage));
+        if (pagingService != null)
+            results = pagingService.page(parseInt(pageNo), parseInt(rowsPerPage));
 
         return results;
     }

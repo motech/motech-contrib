@@ -13,6 +13,6 @@
     </div>
 </div>
 
-<script type="text/javascript" src="<@spring.url '${jsPath}/paginator/motech-paginator-angular.js'/>"></script>
-<script type="text/javascript" src="<@spring.url '${jsPath}/paginator/motech-paginator-pagination.js'/>"></script>
+<script type="text/javascript" src="<@spring.url '${jsPath}/motech-paginator-angular.js'/>"></script>
+<script type="text/javascript" src="<@spring.url '${jsPath}/motech-paginator-pagination.js'/>"></script>
 </#macro>
