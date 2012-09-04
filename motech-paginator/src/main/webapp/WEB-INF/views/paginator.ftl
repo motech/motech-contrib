@@ -1,8 +1,8 @@
-<#macro paginate entity contextRoot stylePath="" jsPath="">
+<#macro paginate entity contextRoot rowsPerPage="10" stylePath="" jsPath="">
 
 <link rel="stylesheet" type="text/css" href="<@spring.url '${stylePath}/motech-paginator-pagination.css'/>"/>
 
-<div ng-init="entity='${entity}';contextRoot='${contextRoot}'">
+<div ng-init="entity='${entity}';contextRoot='${contextRoot}';rowsPerPage='${rowsPerPage}'">
     <div class="paginator"  ng-controller="PaginationCtrl" >
         <div class="paginator-content">
             <#nested>

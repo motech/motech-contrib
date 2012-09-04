@@ -41,7 +41,7 @@ public class PaginationControllerTest {
         when(pagingService.page(any(Integer.class), any(Integer.class))).thenReturn(results);
 
         standaloneSetup(paginationController).build()
-                .perform(get("/page/entity1").param("pageNo", "1"))
+                .perform(get("/page/entity1").param("pageNo", "1").param("rowsPerPage", "2"))
                 .andExpect(status().isOk())
                 .andExpect(content().type("application/json;charset=UTF-8"))
                 .andExpect(content().string("{\"pageNo\":0,\"totalRows\":1,\"results\":[\"someString\"]}"));

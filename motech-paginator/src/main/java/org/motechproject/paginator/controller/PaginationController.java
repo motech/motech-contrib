@@ -22,13 +22,12 @@ public class PaginationController {
 
     @RequestMapping(method = RequestMethod.GET, value = "/{entity}")
     @ResponseBody
-    public PageResults page(@PathVariable String entity, @RequestParam(defaultValue = "1") String pageNo) {
+    public PageResults page(@PathVariable String entity, @RequestParam(value = "pageNo", defaultValue = "1") String pageNo,@RequestParam("rowsPerPage") String rowsPerPage) {
         PageResults results = null;
         Paging pagingService = allPagingServices.getPagingServiceFor(entity);
 
         if (pagingService != null) {
-            results = pagingService.page(parseInt(pageNo), 5);
-            results.setRowsPerPage(5);
+            results = pagingService.page(parseInt(pageNo), parseInt(rowsPerPage));
         }
 
         return results;

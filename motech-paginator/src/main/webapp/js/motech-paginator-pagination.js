@@ -4,11 +4,10 @@ function PaginationCtrl($scope, $http) {
     $scope.currentPage = 1;
 
     $scope.loadPage = function (){
-        $http.get($scope.contextRoot + '/page/' + $scope.entity + '?pageNo=' + $scope.currentPage).success(function(data) {
+        $http.get($scope.contextRoot + '/page/' + $scope.entity + '?pageNo=' + $scope.currentPage + '&rowsPerPage=' + $scope.rowsPerPage).success(function(data) {
             $scope.data = data;
-            $scope.pageSize = data.rowsPerPage;
             $scope.numberOfPages=function(){
-                return Math.ceil($scope.data.totalRows/$scope.pageSize);
+                return Math.ceil($scope.data.totalRows/$scope.rowsPerPage);
             }
         });
     }
