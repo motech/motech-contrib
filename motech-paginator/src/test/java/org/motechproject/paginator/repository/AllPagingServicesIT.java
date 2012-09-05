@@ -10,6 +10,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import java.util.Properties;
+
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
@@ -30,8 +32,9 @@ public class AllPagingServicesIT {
 @Component
 class PagingServiceStub implements Paging {
 
+
     @Override
-    public PageResults page(Integer pageNo, Integer rowsPerPage) {
+    public PageResults<Object> page(Integer pageNo, Integer rowsPerPage, Properties criteria) {
         return null;
     }
 
