@@ -1,36 +1,41 @@
-var app=angular.module('paginator', []);
+var app = angular.module('paginator', []);
 
-function PaginationCtrl($scope, $http) {
+function PaginationCtrl($scope, $http, $rootScope) {
+
     $scope.currentPage = 1;
 
-    $scope.loadPage = function (){
-        $http.get($scope.contextRoot + '/page/' + $scope.entity + '?pageNo=' + $scope.currentPage + '&rowsPerPage=' + $scope.rowsPerPage).success(function(data) {
+    $scope.loadPage = function (searchCriteria) {
+        $http.get($scope.buildURL(searchCriteria)).success(function (data) {
             $scope.data = data;
-            $scope.numberOfPages=function(){
-                return Math.ceil($scope.data.totalRows/$scope.rowsPerPage);
+            $scope.numberOfPages = function () {
+                return Math.ceil($scope.data.totalRows / $scope.rowsPerPage);
             }
         });
     }
 
-    $scope.loadPage();
-
-    $scope.prevPage = function(){
+    $scope.prevPage = function () {
         $scope.currentPage--;
         $scope.loadPage();
     }
 
-    $scope.nextPage = function(){
+    $scope.buildURL = function (searchCriteria) {
+        var url = $scope.contextRoot + '/page/' + $scope.entity +
+            '?pageNo=' + $scope.currentPage +
+            '&rowsPerPage=' + $scope.rowsPerPage;
+        if (searchCriteria) {
+            url += '&searchCriteria=' + JSON.stringify(searchCriteria);
+        }
+        return url;
+    }
+
+    $scope.nextPage = function () {
         $scope.currentPage++;
         $scope.loadPage();
     }
+
+    $rootScope.$on('filterUpdated', function (evt, searchCriteria) {
+        $scope.loadPage(searchCriteria);
+    });
+
+    $scope.loadPage();
 }
-
-//We already have a limitTo filter built-in to angular,
-//let's make a startFrom filter
-app.filter('startFrom', function() {
-    return function(input, start) {
-        start = +start; //parse to int
-        return input.slice(start);
-    }
-});
-
