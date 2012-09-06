@@ -1,7 +1,6 @@
 var app = angular.module('paginator', []);
 
 function FilterCtrl($scope, $http, $rootScope) {
-    $scope.currentPage = 1;
 
     $scope.applyFilter = function () {
         $rootScope.$broadcast("filterUpdated", $scope.getCriteria());
