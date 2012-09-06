@@ -27,6 +27,7 @@
         <module>motech-flash-scope</module>
         <module>motech-common</module>
         <module>motech-paginator</module>
+        <module>motech-time-series</module>
     </modules>
 
     <distributionManagement>
