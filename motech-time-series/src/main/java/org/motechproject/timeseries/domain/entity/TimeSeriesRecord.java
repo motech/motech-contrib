@@ -1,9 +1,9 @@
-package org.motechproject.timeseries.domain.entities;
+package org.motechproject.timeseries.domain.entity;
 
 import org.ektorp.support.TypeDiscriminator;
 import org.motechproject.model.MotechBaseDataObject;
-import org.motechproject.timeseries.domain.valueobjects.DataPoint;
-import org.motechproject.timeseries.domain.valueobjects.DateRange;
+import org.motechproject.timeseries.domain.valueobject.DataPoint;
+import org.motechproject.timeseries.domain.valueobject.DateRange;
 
 import java.util.ArrayList;
 import java.util.List;

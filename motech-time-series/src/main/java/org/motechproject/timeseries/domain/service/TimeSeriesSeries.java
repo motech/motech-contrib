@@ -1,7 +1,7 @@
 package org.motechproject.timeseries.domain.service;
 
 import org.motechproject.timeseries.domain.collections.AllTimeSeriesRecords;
-import org.motechproject.timeseries.domain.entities.TimeSeriesRecord;
+import org.motechproject.timeseries.domain.entity.TimeSeriesRecord;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

@@ -1,10 +1,10 @@
-package org.motechproject.timeseries.domain.collections;
+package org.motechproject.timeseries.domain.collection;
 
 import org.ektorp.CouchDbConnector;
 import org.ektorp.ViewQuery;
 import org.ektorp.support.View;
 import org.motechproject.dao.MotechBaseRepository;
-import org.motechproject.timeseries.domain.entities.TimeSeriesRecord;
+import org.motechproject.timeseries.domain.entity.TimeSeriesRecord;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;

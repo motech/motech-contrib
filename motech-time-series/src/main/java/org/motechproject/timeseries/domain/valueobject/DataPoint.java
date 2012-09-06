@@ -1,4 +1,4 @@
-package org.motechproject.timeseries.domain.valueobjects;
+package org.motechproject.timeseries.domain.valueobject;
 
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.joda.time.DateTime;

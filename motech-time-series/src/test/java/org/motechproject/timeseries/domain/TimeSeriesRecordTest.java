@@ -3,9 +3,9 @@ package org.motechproject.timeseries.domain;
 
 import org.joda.time.DateTime;
 import org.junit.Test;
-import org.motechproject.timeseries.domain.valueobjects.DataPoint;
-import org.motechproject.timeseries.domain.valueobjects.DateRange;
-import org.motechproject.timeseries.domain.entities.TimeSeriesRecord;
+import org.motechproject.timeseries.domain.valueobject.DataPoint;
+import org.motechproject.timeseries.domain.valueobject.DateRange;
+import org.motechproject.timeseries.domain.entity.TimeSeriesRecord;
 
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
