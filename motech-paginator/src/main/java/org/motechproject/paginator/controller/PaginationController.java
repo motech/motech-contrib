@@ -9,8 +9,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Properties;
 
 import static java.lang.Integer.parseInt;
@@ -32,13 +30,25 @@ public class PaginationController {
                             @RequestParam(value = "pageNo", defaultValue = "1") String pageNo,
                             @RequestParam("rowsPerPage") String rowsPerPage,
                             @RequestParam("searchCriteria") String searchCriteria) throws IOException {
-        PageResults results = null;
+        Paging pagingService = getPagingService(entity);
+        Properties criteria = createCriteria(searchCriteria);
+        return fetchData(pageNo, rowsPerPage, criteria, pagingService);
+    }
+
+    private PageResults fetchData(String pageNo, String rowsPerPage, Properties criteria, Paging pagingService) {
+        return (pagingService != null) ? pagingService.page(parseInt(pageNo), parseInt(rowsPerPage), criteria) : null;
+    }
+
+    private Properties createCriteria(String searchCriteria) throws IOException {
+        return new ObjectMapper().readValue(searchCriteria, Properties.class);
+    }
+
+    private Paging getPagingService(String entity) {
         Paging pagingService = allPagingServices.getPagingServiceFor(entity);
-        Properties criteria = new ObjectMapper().readValue(searchCriteria, Properties.class);
-
-        if (pagingService != null)
-            results = pagingService.page(parseInt(pageNo), parseInt(rowsPerPage), criteria);
-
-        return results;
+        if (pagingService != null) {
+            return pagingService;
+        } else {
+            throw new RuntimeException("No service found which provides paging for " + entity);
+        }
     }
 }

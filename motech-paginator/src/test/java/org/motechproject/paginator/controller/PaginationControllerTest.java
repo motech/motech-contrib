@@ -8,12 +8,10 @@ import org.motechproject.paginator.repository.AllPagingServices;
 import org.motechproject.paginator.response.PageResults;
 import org.motechproject.paginator.service.Paging;
 
-import java.util.Map;
 import java.util.Properties;
 
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
@@ -55,4 +53,5 @@ public class PaginationControllerTest {
         verify(pagingService).page(eq(1), eq(2), captor.capture());
         assertEquals("goodName", captor.getValue().getProperty("name"));
     }
+
 }
