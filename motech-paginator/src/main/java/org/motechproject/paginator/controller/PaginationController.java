@@ -29,7 +29,7 @@ public class PaginationController {
     public PageResults page(@PathVariable String entity,
                             @RequestParam(value = "pageNo", defaultValue = "1") String pageNo,
                             @RequestParam("rowsPerPage") String rowsPerPage,
-                            @RequestParam("searchCriteria") String searchCriteria) throws IOException {
+                            @RequestParam(value = "searchCriteria", required = false, defaultValue = "{}") String searchCriteria) throws IOException {
         Paging pagingService = getPagingService(entity);
         Properties criteria = createCriteria(searchCriteria);
         return fetchData(pageNo, rowsPerPage, criteria, pagingService);
