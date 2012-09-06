@@ -1,0 +1,26 @@
+{
+
+    "name":"simplePipeLine",
+    "cron":{
+        "expression":"cron",
+        "body":{
+            "head":{
+                "name":"summarization",
+                "dateRange":[
+                    {
+                        "relativeFrom":"{date}",
+                        "from":"2y1m1d1h1n1s",
+                        "to":"1y1m1d1h1n1s"
+                    }
+                ]
+            },
+            "line":[
+                {
+                    "name":"threshold",
+                    "value":"70",
+                    "operation":"GREATER-THAN"
+                }
+            ]
+        }
+    }
+}

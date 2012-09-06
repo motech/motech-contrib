@@ -1,0 +1,5 @@
+1. Summarizer ( +, - , * , /)
+2. Grouper. splits a given List into a set of lists where each of the sub list items are continuously the same
+3. Percentager - reads from two data sources and calcualtes the percentage of all the items
+4. Thresholder - finds is value is greater than less than or equal to a threshold
+5. Trender splits a given list into a set of lists where every subsquent value if greater than or less than the previous value

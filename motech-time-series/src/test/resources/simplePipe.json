@@ -1,0 +1,19 @@
+{
+
+    "name":"simplePipeLine",
+    "onRecordEvent":{
+        "head":{
+            "name":"summarization",
+            "point":{
+                "number":"1"
+            }
+        },
+        "line":[
+            {
+                "name":"threshold",
+                "value":"70",
+                "operation":"GREATER-THAN"
+            }
+        ]
+    }
+}

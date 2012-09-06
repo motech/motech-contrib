@@ -1,0 +1,22 @@
+{
+
+    "name":"simplePipeLine",
+    "onRecordEvent":{
+        "head":{
+            "name":"summarization",
+            "dateRange":[
+                {
+                    "from":"25-01-1989",
+                    "to":"31-01-1989"
+                }
+            ]
+        },
+        "line":[
+            {
+                "name":"threshold",
+                "value":"70",
+                "operation":"GREATER-THAN"
+            }
+        ]
+    }
+}
