@@ -3,13 +3,13 @@
     <parent>
         <artifactId>case-integration</artifactId>
         <groupId>org.motechproject.contrib-whp</groupId>
-        <version>0.3</version>
+        <version>0.3-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.motechproject.contrib-whp</groupId>
     <artifactId>commcare-case-gateway</artifactId>
-    <version>0.3</version>
+    <version>0.3-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>commcare-case-gateway</name>
 
@@ -36,7 +36,7 @@
         <dependency>
             <artifactId>motech-http-client</artifactId>
             <groupId>org.motechproject.contrib-whp</groupId>
-            <version>0.3</version>
+            <version>0.3-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.motechproject</groupId>

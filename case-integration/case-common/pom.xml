@@ -3,14 +3,14 @@
     <parent>
         <artifactId>case-integration</artifactId>
         <groupId>org.motechproject.contrib-whp</groupId>
-        <version>0.3</version>
+        <version>0.3-SNAPSHOT</version>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.motechproject.contrib-whp</groupId>
     <artifactId>case-common</artifactId>
-    <version>0.3</version>
+    <version>0.3-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>case-common</name>
 
@@ -29,7 +29,7 @@
         <dependency>
             <groupId>org.motechproject.contrib-whp</groupId>
             <artifactId>motech-common</artifactId>
-            <version>0.3</version>
+            <version>0.3-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>

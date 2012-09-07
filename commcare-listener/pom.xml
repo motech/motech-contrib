@@ -5,12 +5,12 @@
   <parent>
     <artifactId>motech-contrib</artifactId>
     <groupId>org.motechproject.contrib-whp</groupId>
-    <version>0.3</version>
+    <version>0.3-SNAPSHOT</version>
   </parent>
 
   <artifactId>commcare-listener</artifactId>
   <groupId>org.motechproject.contrib-whp</groupId>
-  <version>0.3</version>
+  <version>0.3-SNAPSHOT</version>
 
   <name>commcare-listener</name>
   <url>http://github.com/modilabs/dristhi</url>
@@ -23,7 +23,7 @@
     <dependency>
       <groupId>org.motechproject.contrib-whp</groupId>
       <artifactId>commcare-api</artifactId>
-      <version>0.3</version>
+      <version>0.3-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>org.motechproject</groupId>
