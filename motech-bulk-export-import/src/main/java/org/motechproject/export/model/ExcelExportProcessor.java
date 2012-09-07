@@ -38,50 +38,6 @@ public class ExcelExportProcessor {
         return beanClass.isAnnotationPresent(ExcelDataSource.class);
     }
 
-    public List<Object> dataForPage(String reportName, int pageNumber) {
-        try {
-            Method method = getDataMethod(reportName);
-            if (method != null) {
-                return (List<Object>) method.invoke(excelDataSource, pageNumber);
-            }
-        } catch (IllegalAccessException e1) {
-            logger.error("Data method should be public" + e1.getMessage());
-            throw new RuntimeException("Data method should be public" + e1.getMessage());
-        } catch (InvocationTargetException e) {
-            logger.error("Format of data method is invalid." + e.getMessage());
-            throw new RuntimeException("Format of data method is invalid." + e.getMessage());
-        } catch (IllegalArgumentException e) {
-            logger.error("Format of data method is invalid." + e.getMessage());
-            throw new RuntimeException("Format of data method is invalid." + e.getMessage());
-        } catch (ClassCastException e) {
-            logger.error("Format of data method is invalid." + e.getMessage());
-            throw new RuntimeException("Format of data method is invalid." + e.getMessage());
-        }
-        return new ArrayList<Object>();
-    }
-
-    public List<Object> data(String reportName, Map<String, String> criteria) {
-        try {
-            Method method = getDataMethod(reportName);
-            if (method != null) {
-                return (List<Object>) method.invoke(excelDataSource, criteria);
-            }
-        } catch (IllegalAccessException e) {
-            logger.error("Data method should be public" + e.getMessage());
-            throw new RuntimeException("Data method should be public" + e.getMessage());
-        } catch (InvocationTargetException e) {
-            logger.error("Format of data method is invalid." + e.getMessage());
-            throw new RuntimeException("Format of data method is invalid." + e.getMessage());
-        } catch (IllegalArgumentException e) {
-            logger.error("Format of data method is invalid." + e.getMessage());
-            throw new RuntimeException("Format of data method is invalid." + e.getMessage());
-        } catch (ClassCastException e) {
-            logger.error("Format of data method is invalid." + e.getMessage());
-            throw new RuntimeException("Format of data method is invalid." + e.getMessage());
-        }
-        return new ArrayList<Object>();
-    }
-
     public List<String> columnHeaders(String reportName) {
         return new ExportDataModel(getDataMethod(reportName).getGenericReturnType()).columnHeaders();
     }
@@ -153,49 +109,52 @@ public class ExcelExportProcessor {
         return null;
     }
 
+    public List<Object> dataForPage(String reportName, int pageNumber) {
+        return new MethodInvocationBroker().invokeSafely(getDataMethod(reportName), pageNumber);
+    }
+
+    public List<Object> data(String reportName, Map<String, String> criteria) {
+        return new MethodInvocationBroker().invokeSafely(getDataMethod(reportName), criteria);
+    }
+
     public List<String> customHeaders(String reportName) {
-        Method headerMethod = getHeaderMethod(reportName);
-        if (headerMethod != null) {
-            try {
-                return (List<String>) headerMethod.invoke(excelDataSource);
-            } catch (IllegalAccessException e) {
-                logger.error("Data method should be public" + e.getMessage());
-                throw new RuntimeException("Data method should be public" + e.getMessage());
-            } catch (InvocationTargetException e) {
-                logger.error("Format of data method is invalid." + e.getMessage());
-                throw new RuntimeException("Format of data method is invalid." + e.getMessage());
-            } catch (IllegalArgumentException e) {
-                logger.error("Format of data method is invalid." + e.getMessage());
-                throw new RuntimeException("Format of data method is invalid." + e.getMessage());
-            } catch (ClassCastException e) {
-                logger.error("Format of data method is invalid." + e.getMessage());
-                throw new RuntimeException("Format of data method is invalid." + e.getMessage());
-            }
-        } else {
-            return Collections.emptyList();
-        }
+        return new MethodInvocationBroker().invokeSafely(getHeaderMethod(reportName), null);
     }
 
     public List<String> customFooters(String reportName) {
-        Method footerMethod = getFooterMethod(reportName);
-        if (footerMethod != null) {
-            try {
-                return (List<String>) footerMethod.invoke(excelDataSource);
-            } catch (IllegalAccessException e) {
-                logger.error("Data method should be public" + e.getMessage());
-                throw new RuntimeException("Data method should be public" + e.getMessage());
-            } catch (InvocationTargetException e) {
-                logger.error("Format of data method is invalid." + e.getMessage());
-                throw new RuntimeException("Format of data method is invalid." + e.getMessage());
-            } catch (IllegalArgumentException e) {
-                logger.error("Format of data method is invalid." + e.getMessage());
-                throw new RuntimeException("Format of data method is invalid." + e.getMessage());
-            } catch (ClassCastException e) {
-                logger.error("Format of data method is invalid." + e.getMessage());
-                throw new RuntimeException("Format of data method is invalid." + e.getMessage());
+        return new MethodInvocationBroker().invokeSafely(getFooterMethod(reportName), null);
+    }
+
+    private class MethodInvocationBroker {
+
+        List invokeSafely(Method method, Object parameters) {
+            if (method != null) {
+                try {
+                    if (parameters != null) {
+                        return (List) method.invoke(excelDataSource, parameters);
+                    } else {
+                        return (List) method.invoke(excelDataSource);
+                    }
+                } catch (IllegalAccessException e) {
+                    String message = "Data method should be public" + e.getMessage();
+                    logger.error(message);
+                    throw new RuntimeException(message);
+                } catch (InvocationTargetException e) {
+                    String message = "Format of data method is invalid." + e.getMessage();
+                    logger.error(message);
+                    throw new RuntimeException(message);
+                } catch (IllegalArgumentException e) {
+                    String message = "Format of data method is invalid." + e.getMessage();
+                    logger.error(message);
+                    throw new RuntimeException(message);
+                } catch (ClassCastException e) {
+                    String message = "Format of data method is invalid." + e.getMessage();
+                    logger.error(message);
+                    throw new RuntimeException(message);
+                }
+            } else {
+                return Collections.emptyList();
             }
-        } else {
-            return Collections.emptyList();
         }
     }
 }
