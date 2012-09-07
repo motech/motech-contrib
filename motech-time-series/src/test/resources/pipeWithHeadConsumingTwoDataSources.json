@@ -6,20 +6,17 @@
             "name":"summarization",
             "multiSource":{
                 "name_of_source":{
-                    "dateRange":[
-                        {
-                            "from":"2y1m1d1h1n1s",
-                            "to":"1y1m1d1h1n1s"
-                        }
-                    ]
+                    "dateRange":{
+                        "from":"2y1m1d1h1n1s",
+                        "to":"1y1m1d1h1n1s"
+                    }
+
                 },
-                "name_of_another_source" : {
-                    "dateRange":[
-                        {
-                            "from":"1h1n1s",
-                            "to":"1s"
-                        }
-                    ]
+                "name_of_another_source":{
+                    "dateRange":{
+                        "from":"1h1n1s",
+                        "to":"1s"
+                    }
                 }
             }
         },

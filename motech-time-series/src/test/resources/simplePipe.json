@@ -4,9 +4,7 @@
     "onRecordEvent":{
         "head":{
             "name":"summarization",
-            "point":{
-                "number":"1"
-            }
+            "points":"1"
         },
         "line":[
             {

@@ -1,6 +1,4 @@
-package org.motechproject.timeseries.pipeline.entity;
-
-import org.motechproject.timeseries.pipeline.valueobject.TimeSeriesSet;
+package org.motechproject.timeseries.pipeline.contract;
 
 import java.util.Map;
 

@@ -4,12 +4,12 @@
     "onRecordEvent":{
         "head":{
             "name":"summarization",
-            "dateRange":[
-                {
+            "dataSourceName":{
+                "dateRange":{
                     "from":"25-01-1989",
                     "to":"31-01-1989"
                 }
-            ]
+            }
         },
         "line":[
             {

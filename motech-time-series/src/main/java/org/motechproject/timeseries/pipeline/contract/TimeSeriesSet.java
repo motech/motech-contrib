@@ -1,4 +1,4 @@
-package org.motechproject.timeseries.pipeline.valueobject;
+package org.motechproject.timeseries.pipeline.contract;
 
 
 /**
