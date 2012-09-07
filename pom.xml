@@ -26,7 +26,6 @@
         <module>motech-retry</module>
         <module>motech-flash-scope</module>
         <module>motech-common</module>
-        <module>motech-paginator</module>
     </modules>
 
     <distributionManagement>
