@@ -1,17 +1,17 @@
 package org.motechproject.timeseries.domain.service;
 
-import org.motechproject.timeseries.domain.collections.AllTimeSeriesRecords;
+import org.motechproject.timeseries.domain.collection.AllTimeSeriesRecords;
 import org.motechproject.timeseries.domain.entity.TimeSeriesRecord;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class TimeSeriesSeries {
+public class TimeSeriesService {
 
     private AllTimeSeriesRecords allTimeSeriesRecords;
 
     @Autowired
-    public TimeSeriesSeries(AllTimeSeriesRecords allTimeSeriesRecords) {
+    public TimeSeriesService(AllTimeSeriesRecords allTimeSeriesRecords) {
         this.allTimeSeriesRecords = allTimeSeriesRecords;
     }
 
