@@ -10,7 +10,7 @@
 
     <artifactId>commcare-api</artifactId>
     <groupId>org.motechproject.contrib-whp</groupId>
-    <version>0.13-SNAPSHOT</version>
+    <version>0.3</version>
     <name>commcare-api</name>
 
     <properties>
