@@ -3,7 +3,7 @@ package org.motechproject.diagnostics;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
-import org.motechproject.diagnostics.response.DiagnosticsResponse;
+import org.motechproject.diagnostics.response.DiagnosticsResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -20,7 +20,7 @@ public class DiagnosticResponseBuilder {
         this.velocityEngine = velocityEngine;
     }
 
-    public String createResponseMessage(List<DiagnosticsResponse> diagnosticsResponses) {
+    public String createResponseMessage(List<DiagnosticsResult> diagnosticsResponses) {
         Template template = velocityEngine.getTemplate("/diagnosticResponse.vm");
         VelocityContext context = new VelocityContext();
         context.put("diagnosticsResponses", diagnosticsResponses);

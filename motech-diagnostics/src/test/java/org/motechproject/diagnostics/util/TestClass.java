@@ -1,26 +1,27 @@
 package org.motechproject.diagnostics.util;
 
+import org.motechproject.diagnostics.Diagnostics;
 import org.motechproject.diagnostics.annotation.Diagnostic;
 import org.motechproject.diagnostics.response.DiagnosticsResult;
 import org.springframework.stereotype.Component;
 
 @Component
-public class TestClass {
+public class TestClass implements Diagnostics {
 
     public static int methodExecutionCount = 0;
     public static boolean methodWithAnnotationRun = false;
 
     @Diagnostic(name = "testDiagnostics1")
-    public DiagnosticsResult method1WithAnnotation() {
+    public DiagnosticsResult<Boolean> method1WithAnnotation() {
         methodExecutionCount++;
         methodWithAnnotationRun = true;
-        return new DiagnosticsResult(true, "test message 1");
+        return new DiagnosticsResult<Boolean>("test message 1", true);
     }
 
     @Diagnostic(name = "testDiagnostics2")
-    public DiagnosticsResult method2WithAnnotation() {
+    public DiagnosticsResult<Boolean> method2WithAnnotation() {
         methodExecutionCount++;
-        return new DiagnosticsResult(false, "test message 2");
+        return new DiagnosticsResult<Boolean>("test message 2", false);
     }
 
     @Diagnostic(name = "testDiagnosticsWithNullResult")
@@ -31,5 +32,15 @@ public class TestClass {
 
     public void methodWithoutAnnotation() {
         methodExecutionCount++;
+    }
+
+    @Override
+    public String name() {
+        return "testDiagnostics";
+    }
+
+    @Override
+    public boolean canPerformDiagnostics() {
+        return true;
     }
 }

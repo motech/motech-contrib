@@ -5,7 +5,13 @@
     <name>motech-diagnostics</name>
     <artifactId>motech-diagnostics</artifactId>
     <groupId>org.motechproject.contrib-whp</groupId>
+    <packaging>jar</packaging>
     <version>0.3-SNAPSHOT</version>
+
+    <properties>
+        <spring-security.version>3.1.0.RELEASE</spring-security.version>
+        <spring.version>3.1.0.RELEASE</spring.version>
+    </properties>
 
     <parent>
         <artifactId>motech-contrib</artifactId>
@@ -13,21 +19,26 @@
         <version>0.3-SNAPSHOT</version>
     </parent>
 
-    <properties>
-        <build.dir>../build</build.dir>
-        <spring.version>3.1.0.RELEASE</spring.version>
-    </properties>
-
     <dependencies>
-        <dependency>
-            <groupId>org.motechproject.contrib-whp</groupId>
-            <artifactId>motech-common</artifactId>
-            <version>0.3-SNAPSHOT</version>
-        </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-orm</artifactId>
             <version>${spring.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-collections</groupId>
+            <artifactId>commons-collections</artifactId>
+            <version>3.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.velocity</groupId>
+            <artifactId>velocity</artifactId>
+            <version>1.7</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-httpclient</groupId>
+            <artifactId>commons-httpclient</artifactId>
+            <version>3.1</version>
         </dependency>
         <dependency>
             <groupId>postgresql</groupId>
@@ -79,6 +90,12 @@
             <groupId>org.motechproject</groupId>
             <artifactId>motech-testing-utils</artifactId>
             <version>${motech.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mortbay.jetty</groupId>
+            <artifactId>jetty</artifactId>
+            <version>6.1.2</version>
             <scope>test</scope>
         </dependency>
         <dependency>

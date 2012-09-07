@@ -1,0 +1,34 @@
+{"job" : {
+    "resource" : "http://localhost:8080/tama-batch/jobs/dbCompactorJob.json",
+    "name" : "dbCompactorJob",
+    "jobInstances" : {
+        "3" : {
+            "resource" : "http://localhost:8080/tama-batch/jobs/dbCompactorJob/772/executions.json",
+            "executionCount" : 1,
+            "lastJobExecution" : "http://localhost:8080/tama-batch/jobs/executions/772.json",
+            "lastJobExecutionStatus" : "COMPLETED",
+            "jobParameters" : {
+               "id" : "-2995357532562042845"
+            }
+        },
+        "2" : {
+            "resource" : "http://localhost:8080/tama-batch/jobs/dbCompactorJob/675/executions.json",
+            "executionCount" : 1,
+            "lastJobExecution" : "http://localhost:8080/tama-batch/jobs/executions/675.json",
+            "lastJobExecutionStatus" : "COMPLETED",
+            "jobParameters" : {
+               "id" : "-2077047183289606220"
+            }
+        },
+        "1" : {
+            "resource" : "http://localhost:8080/tama-batch/jobs/dbCompactorJob/578/executions.json",
+            "executionCount" : 1,
+            "lastJobExecution" : "http://localhost:8080/tama-batch/jobs/executions/578.json",
+            "lastJobExecutionStatus" : "COMPLETED",
+            "jobParameters" : {
+               "id" : "-5867392712777472269"
+            }
+        }
+    }
+    }
+}

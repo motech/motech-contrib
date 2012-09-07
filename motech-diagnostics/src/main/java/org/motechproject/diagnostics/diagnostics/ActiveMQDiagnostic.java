@@ -1,6 +1,8 @@
 package org.motechproject.diagnostics.diagnostics;
 
+import org.motechproject.diagnostics.Diagnostics;
 import org.motechproject.diagnostics.annotation.Diagnostic;
+import org.motechproject.diagnostics.controller.DiagnosticServiceName;
 import org.motechproject.diagnostics.response.DiagnosticsResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jms.connection.CachingConnectionFactory;
@@ -9,30 +11,34 @@ import org.springframework.stereotype.Component;
 import javax.jms.JMSException;
 
 @Component
-public class ActiveMQDiagnostic {
+public class ActiveMQDiagnostic implements Diagnostics {
 
-    @Autowired
+    @Autowired(required = false)
     private CachingConnectionFactory connectionFactory;
 
-    @Diagnostic(name = "ACTIVEMQ")
-    public DiagnosticsResult performDiagnosis() throws JMSException {
-        DiagnosticLog diagnosticLog = new DiagnosticLog();
-        diagnosticLog.add("Checking for Active MQ connection");
+    @Diagnostic(name = "Port active")
+    public DiagnosticsResult<String> performDiagnosis() throws JMSException {
 
-        boolean isSuccess = checkActiveMQConnection(diagnosticLog);
-        return new DiagnosticsResult(isSuccess, diagnosticLog.toString());
+        Boolean isSuccess = checkActiveMQConnection();
+        return new DiagnosticsResult<String>("Is Active", isSuccess.toString());
     }
 
-    private boolean checkActiveMQConnection(DiagnosticLog diagnosticLog) {
-        diagnosticLog.add("Checking for Active MQ connection ...");
+    private boolean checkActiveMQConnection() {
         try {
             connectionFactory.getTargetConnectionFactory().createConnection().start();
-            diagnosticLog.add("Successfully opened connection.");
             return true;
         } catch (Exception ex) {
-            diagnosticLog.add("Error connecting to ActiveMQ.");
-            diagnosticLog.addError(ex);
         }
         return false;
+    }
+
+    @Override
+    public String name() {
+        return DiagnosticServiceName.ACTIVE_MQ;
+    }
+
+    @Override
+    public boolean canPerformDiagnostics() {
+        return connectionFactory != null;
     }
 }

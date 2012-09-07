@@ -1,17 +1,16 @@
 package org.motechproject.diagnostics.diagnostics;
 
+import org.motechproject.diagnostics.Diagnostics;
 import org.motechproject.diagnostics.annotation.Diagnostic;
+import org.motechproject.diagnostics.controller.DiagnosticServiceName;
 import org.motechproject.diagnostics.response.DiagnosticsResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Properties;
-import java.util.TreeSet;
+import java.util.*;
 
 @Component
-public class ConfigurationDiagnostic {
+public class ConfigurationDiagnostic implements Diagnostics {
 
     private HashMap<String, Properties> propertyFilesMap;
 
@@ -23,22 +22,37 @@ public class ConfigurationDiagnostic {
         this.propertyFilesMap = propertyFilesMap;
     }
 
-    @Diagnostic(name = "CONFIGURATION PROPERTIES")
-    public DiagnosticsResult performDiagnosis() {
-        if (propertyFilesMap == null) return null;
-        DiagnosticLog diagnosticLog = new DiagnosticLog();
-
-        for (Map.Entry<String, Properties> propertiesMap : propertyFilesMap.entrySet())
-            logPropertiesFileFor(diagnosticLog, propertiesMap.getKey(), propertiesMap.getValue());
-
-        return new DiagnosticsResult(true, diagnosticLog.toString());
+    @Diagnostic(name = "All properties")
+    public DiagnosticsResult<List<DiagnosticsResult>> performDiagnosis() {
+        List<DiagnosticsResult> results = new ArrayList<DiagnosticsResult>();
+        results.add(new DiagnosticsResult("Is Active", "true"));
+        results.addAll(propertiesInAllFiles());
+        return new DiagnosticsResult<List<DiagnosticsResult>>("CONFIGURATION PROPERTIES", results);
     }
 
-    private void logPropertiesFileFor(DiagnosticLog diagnosticLog, String file, Properties properties) {
-        diagnosticLog.add(file + ":\n");
-        TreeSet sortedKeys = new TreeSet(properties.keySet());
-        for (Object key : sortedKeys)
-            diagnosticLog.add(key + "=" + properties.get(key));
-        diagnosticLog.add("______________________________________________________________");
+    private List<DiagnosticsResult> propertiesInAllFiles() {
+        List<DiagnosticsResult> properties = new ArrayList<DiagnosticsResult>();
+        for (Map.Entry<String, Properties> entry : propertyFilesMap.entrySet()) {
+            properties.add(new DiagnosticsResult(entry.getKey(), propertiesInFile(entry.getValue())));
+        }
+        return properties;
+    }
+
+    private List<DiagnosticsResult<String>> propertiesInFile(Properties propertiesFile) {
+        List<DiagnosticsResult<String>> properties = new ArrayList<DiagnosticsResult<String>>();
+        for (Map.Entry<Object, Object> entry : propertiesFile.entrySet()) {
+            properties.add(new DiagnosticsResult<String>(entry.getKey().toString(), entry.getValue().toString()));
+        }
+        return properties;
+    }
+
+    @Override
+    public String name() {
+        return DiagnosticServiceName.CONFIGURATION;
+    }
+
+    @Override
+    public boolean canPerformDiagnostics() {
+        return propertyFilesMap != null;
     }
 }
