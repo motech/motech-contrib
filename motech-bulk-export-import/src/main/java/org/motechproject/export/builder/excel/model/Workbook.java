@@ -11,11 +11,14 @@ public class Workbook {
     private String title;
     private List<String> columnHeaders;
     private int worksheetNumber;
+    private List<String> customHeaders;
+    private List<String> customFooters;
 
-    public Workbook(String title, List<String> columnHeaders) {
+    public Workbook(String title, List<String> columnHeaders, List<String> customHeaders, List<String> customFooters) {
         this.title = title;
         this.columnHeaders = columnHeaders;
-
+        this.customHeaders = customHeaders;
+        this.customFooters = customFooters;
         workbook = new HSSFWorkbook();
 
         worksheetNumber = 0;
@@ -34,6 +37,10 @@ public class Workbook {
     }
 
     private Worksheet newWorksheet() {
-        return new Worksheet(workbook, "Worksheet" + (worksheetNumber++), title, columnHeaders);
+        return new Worksheet(workbook, "Worksheet" + (worksheetNumber++), title, columnHeaders, customHeaders, customFooters);
+    }
+
+    public void addCustomFooter() {
+        worksheet.addCustomFooter();
     }
 }

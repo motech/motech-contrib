@@ -21,9 +21,11 @@ public class PagedExcelBuilder {
 
     public HSSFWorkbook build() {
         ExportData pagedExport = excelExportProcessor.getPaginatedExcelData(reportName);
-        workbook = new Workbook(excelExportProcessor.title(), pagedExport.getColumnHeaders());
-        for (List<String> row : pagedExport.getAllRowData())
+        workbook = new Workbook(excelExportProcessor.title(), pagedExport.getColumnHeaders(), excelExportProcessor.customHeaders(reportName), excelExportProcessor.customFooters(reportName));
+        for (List<String> row : pagedExport.getAllRowData()) {
             workbook.addRow(row);
+        }
+        workbook.addCustomFooter();
         return workbook.book();
     }
 

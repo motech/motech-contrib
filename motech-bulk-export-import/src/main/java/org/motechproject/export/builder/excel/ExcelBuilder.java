@@ -9,8 +9,8 @@ public abstract class ExcelBuilder<T> {
 
     private Workbook workbook;
 
-    protected ExcelBuilder(String title, List<String> columnHeaders) {
-        workbook = new Workbook(title, columnHeaders);
+    protected ExcelBuilder(String title, List<String> columnHeaders,  List<String> customHeaders,  List<String> customFooters) {
+        workbook = new Workbook(title, columnHeaders, customHeaders, customFooters);
     }
 
     public HSSFWorkbook build() {

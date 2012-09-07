@@ -4,6 +4,7 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.junit.Test;
 import org.motechproject.export.model.ExcelExportProcessor;
 import org.motechproject.export.service.sample.SampleExcelDataSource;
+import org.motechproject.export.service.sample.SampleExcelDataSourceWithCustomHeaderFooter;
 
 import static org.junit.Assert.assertEquals;
 
@@ -26,6 +27,18 @@ public class PagedExcelBuilderTest {
         HSSFWorkbook workbook = new PagedExcelBuilder(new ExcelExportProcessor(new SampleExcelDataSource()), "sampleExcel").build();
         assertDataInFirstPageAdded(workbook);
         assertDataInSecondPageAdded(workbook);
+    }
+
+    @Test
+    public void shouldSetCustomHeaderBelowTheSheetTitle_afterOneBlankRow() {
+        HSSFWorkbook workbook = new PagedExcelBuilder(new ExcelExportProcessor(new SampleExcelDataSourceWithCustomHeaderFooter()), "sampleExcel").build();
+        assertEquals("customHeader", workbook.getSheetAt(0).getRow(2).getCell(0).getStringCellValue());
+    }
+
+    @Test
+    public void shouldSetCustomFooterAtTheSheetBottom() {
+        HSSFWorkbook workbook = new PagedExcelBuilder(new ExcelExportProcessor(new SampleExcelDataSourceWithCustomHeaderFooter()), "sampleExcel").build();
+        assertEquals("customFooter", workbook.getSheetAt(0).getRow(8).getCell(0).getStringCellValue());
     }
 
     private void assertDataInFirstPageAdded(HSSFWorkbook workbook) {

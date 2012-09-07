@@ -19,16 +19,24 @@ public class Worksheet {
 
     private int currentRowIndex = 0;
     private List<String> columnHeaders;
+    private List<String> customFooters;
     HSSFSheet sheet;
+    private String title;
+    private List<String> customHeaders;
 
-    public Worksheet(HSSFWorkbook workbook, String sheetName, String title, List<String> columnHeaders) {
+    public Worksheet(HSSFWorkbook workbook, String sheetName, String title, List<String> columnHeaders, List<String> customHeaders, List<String> customFooters) {
+        this.title = title;
+        this.customHeaders = customHeaders;
+        this.columnHeaders = columnHeaders;
+        this.customFooters = customFooters;
         sheet = workbook.createSheet(sheetName);
-        initializeLayout(title, columnHeaders);
+        initializeLayout();
         sheet.createFreezePane(0, currentRowIndex);
     }
 
     public boolean addRow(List<String> rowData) {
         if (dataRowIndex() > lastDataRowIndex()) {
+            addCustomFooter();
             return false;
         } else {
             HSSFRow row = sheet.createRow(currentRowIndex);
@@ -42,36 +50,36 @@ public class Worksheet {
     }
 
     private int dataRowIndex() {
-        return currentRowIndex - HEADER_ROW_COUNT;
+        return currentRowIndex - getHeaderCount();
+    }
+
+    private int getHeaderCount() {
+        return HEADER_ROW_COUNT + (customHeaders != null && !customHeaders.isEmpty() ? customHeaders.size() + 1 : 0);
     }
 
     private int lastDataRowIndex() {
-        return MAX_ROW_INDEX - HEADER_ROW_COUNT;
+        return MAX_ROW_INDEX - (getHeaderCount());
     }
 
-    protected void initializeLayout(String title, List<String> columnHeaders) {
-        buildTitle(title, columnHeaders.size());
-        buildHeader(columnHeaders);
+    protected void initializeLayout() {
+        buildTitle(title, columnHeaders.size(), CellStyle.ALIGN_CENTER);
+        buildCustomHeaders();
+        buildColumnNamesHeader();
     }
 
-    private void buildTitle(String title, int width) {
+    private void buildTitle(String title, int width, short alignment) {
         HSSFRow rowTitle = sheet.createRow((short) currentRowIndex);
         rowTitle.setHeight((short) TITLE_ROW_HEIGHT);
 
         HSSFCell cellTitle = rowTitle.createCell(0);
         cellTitle.setCellValue(title);
-        cellTitle.setCellStyle(new MotechCellStyle(sheet, CellStyle.ALIGN_CENTER).style());
+        cellTitle.setCellStyle(new MotechCellStyle(sheet, alignment).style());
 
         sheet.addMergedRegion(new CellRangeAddress(currentRowIndex, currentRowIndex, FIRST_COLUMN, width));
         currentRowIndex++;
     }
 
-    private void buildHeader(List<String> columnHeaders) {
-        this.columnHeaders = columnHeaders;
-        createHeaderRow();
-    }
-
-    private void createHeaderRow() {
+    private void buildColumnNamesHeader() {
         HSSFCellStyle headerCellStyle = new MotechCellStyle(sheet).style();
 
         HSSFRow headerRow = sheet.createRow((short) currentRowIndex);
@@ -87,6 +95,14 @@ public class Worksheet {
         currentRowIndex++;
     }
 
+    private void buildCustomHeaders() {
+        if (this.customHeaders != null && !this.customHeaders.isEmpty()) {
+            buildTitle("", columnHeaders.size(), CellStyle.ALIGN_LEFT);
+            for (String headerValue : this.customHeaders) {
+                buildTitle(headerValue, columnHeaders.size(), CellStyle.ALIGN_LEFT);
+            }
+        }
+    }
 
     private List<ExcelColumn> columnHeaders() {
         List<ExcelColumn> columns = new ArrayList<ExcelColumn>();
@@ -102,6 +118,15 @@ public class Worksheet {
         for (ExcelColumn column : columns) {
             sheet.setColumnWidth(columnIndex, column.getWidth());
             columnIndex++;
+        }
+    }
+
+    public void addCustomFooter() {
+        if (this.customFooters != null && !this.customFooters.isEmpty()) {
+            buildTitle("", columnHeaders.size(), CellStyle.ALIGN_LEFT);
+            for (String headerValue : this.customFooters) {
+                buildTitle(headerValue, columnHeaders.size(), CellStyle.ALIGN_LEFT);
+            }
         }
     }
 }
