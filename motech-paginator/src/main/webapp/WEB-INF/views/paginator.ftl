@@ -1,8 +1,8 @@
-<#macro paginate id entity contextRoot  rowsPerPage="10" stylePath="">
+<#macro paginate id entity contextRoot filterSectionId rowsPerPage="10" stylePath="" >
 
     <link rel="stylesheet" type="text/css" href="<@spring.url '${stylePath}/motech-paginator-pagination.css'/>"/>
 
-    <div id="${id}" ng-init="entity='${entity}';contextRoot='${contextRoot}';rowsPerPage='${rowsPerPage}'">
+    <div id="${id}" ng-init="entity='${entity}';contextRoot='${contextRoot}';rowsPerPage='${rowsPerPage}';id='${id}';filterSectionId='${filterSectionId}';">
         <div class="paginator" ng-controller="PaginationCtrl">
             <div class="paginator-content">
                 <#nested>
@@ -15,11 +15,10 @@
 
 </#macro>
 
-<#macro filter paginationControl >
+<#macro filter id >
 
-    <form id="${paginationControl}-search" ng-controller="FilterCtrl" ng-init="paginationControl='${paginationControl}';">
+    <form id="${id}" ng-submit="applyFilter()" ng-controller="FilterCtrl">
         <#nested>
-        <input type="button" ng-click="applyFilter()" value="Search"/>
     </form>
 
 </#macro>
