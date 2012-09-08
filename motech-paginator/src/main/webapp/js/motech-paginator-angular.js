@@ -8843,7 +8843,8 @@ function $HttpProvider() {
 
         resolvePromise(response, status, headersString);
         $rootScope.$apply();
-      }
+        $('#'+$rootScope.id).trigger('pageLoadSuccess');
+       }
 
 
       /**
