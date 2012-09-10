@@ -52,7 +52,8 @@ public class LoadRunner extends BlockJUnit4ClassRunner {
         if(beforeMethods==null)return;
         sortBeforeMethodsBasedOnPriority(beforeMethods);
         for(FrameworkMethod method : beforeMethods){
-            TestSuite testSuite = TestSuiteUtils.createTestSuite(1, method);
+            LoadPerfBefore loadPerfBefore = method.getAnnotation(LoadPerfBefore.class);
+            TestSuite testSuite = TestSuiteUtils.createTestSuite(loadPerfBefore.concurrentUsers(), method);
             TestResult testResult = TestRunner.run(testSuite);
             assertTrue(testResult.wasSuccessful());
         }

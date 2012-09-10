@@ -10,4 +10,5 @@ import java.lang.annotation.Target;
 public @interface LoadPerfBefore {
     /*Higher the value, lower the priority*/
     int priority();
+    int concurrentUsers();
 }
