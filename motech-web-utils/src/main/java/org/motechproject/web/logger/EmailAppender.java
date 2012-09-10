@@ -14,8 +14,6 @@ import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMultipart;
 import javax.mail.internet.MimeUtility;
 import java.io.UnsupportedEncodingException;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.util.Date;
 
 public class EmailAppender extends SMTPAppender {
@@ -41,7 +39,7 @@ public class EmailAppender extends SMTPAppender {
             if (i == 0) {
                 Layout subjectLayout = new PatternLayout(getSubject());
                 String subject = subjectLayout.format(logEvent);
-                subject = subject + getHostDetails() + getSubjectHash(logEvent);
+                subject = subject + getHostName() + getSubjectHash(logEvent);
                 msg.setSubject(MimeUtility.encodeText(subject, "UTF-8", null));
             }
             buffer.append(layout.format(logEvent));
@@ -54,13 +52,10 @@ public class EmailAppender extends SMTPAppender {
         }
     }
 
-    private String getHostDetails() {
-        try {
-            InetAddress localHost = InetAddress.getLocalHost();
-            return " | " + localHost.getHostAddress() + " | " + localHost.getHostName() + " | ";
-        } catch (UnknownHostException e) {
-            return " | " + "UnknownHost" + " | ";
-        }
+    private String getHostName() {
+        String hostname = System.getenv("HOSTNAME");
+        hostname = hostname == null ? "Unknown Host" : hostname;
+        return " | " + hostname + " | ";
     }
 
     private String getSubjectHash(LoggingEvent loggingEvent) {
