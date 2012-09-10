@@ -5,12 +5,7 @@ function PaginationCtrl($scope, $http, $rootScope) {
     $scope.currentPage = 1;
 
     $scope.loadPage = function () {
-        var searchCriteria = null;
-        if ($scope.filterSectionId) {
-            searchCriteria = $scope.getCriteria();
-        }
-
-        $http.get($scope.buildURL(searchCriteria)).success(function (data) {
+        $http.get($scope.buildURL($scope.searchCriteria)).success(function (data) {
             $scope.data = data;
             $scope.numberOfPages = function () {
                 return Math.ceil($scope.data.totalRows / $scope.rowsPerPage);
@@ -38,9 +33,6 @@ function PaginationCtrl($scope, $http, $rootScope) {
         $scope.loadPage();
     }
 
-    $scope.getCriteria = function () {
-        return $("#" + $scope.filterSectionId).serializeObject();
-    }
 
     $.fn.serializeObject = function () {
         var o = {};
@@ -57,10 +49,21 @@ function PaginationCtrl($scope, $http, $rootScope) {
         });
         return o;
     };
+    function setSearchCriteria() {
+        if ($scope.filterSectionId) {
+            $scope.searchCriteria = $("#" + $scope.filterSectionId).serializeObject();
+        }
+        else
+            $scope.searchCriteria = null;
+
+    }
+
+    setSearchCriteria();
 
     $rootScope.$on('filterUpdated', function (evt, searchCriteria) {
+        setSearchCriteria();
         $scope.currentPage = 1;
-        $scope.loadPage(searchCriteria);
+        $scope.loadPage();
     });
 
     $scope.loadPage();
