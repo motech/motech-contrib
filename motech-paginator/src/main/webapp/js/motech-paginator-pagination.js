@@ -33,6 +33,15 @@ function PaginationCtrl($scope, $http, $rootScope) {
         $scope.loadPage();
     }
 
+    $scope.firstPage = function () {
+        $scope.currentPage = 1;
+        $scope.loadPage();
+    }
+
+    $scope.lastPage = function () {
+        $scope.currentPage = $scope.numberOfPages();
+        $scope.loadPage();
+    }
 
     $.fn.serializeObject = function () {
         var o = {};
@@ -55,8 +64,31 @@ function PaginationCtrl($scope, $http, $rootScope) {
         }
         else
             $scope.searchCriteria = null;
-
     }
+
+    $("#" + $scope.id + ' .current-page').keypress(function (e) {
+        var keyCode = e.which;
+
+        //is entered key a number or not printable character
+        var isSpecialCharcterPressed = keyCode == 8 || e.ctrlKey || e.metaKey || e.altKey;
+        if (keyCode > 47 && keyCode < 58 || isSpecialCharcterPressed || keyCode == 0) {
+            return true;
+        }
+
+        if (keyCode == 13) {
+            if ($(this).val() > 0 && $scope.numberOfPages() >= $(this).val()) {
+                $scope.currentPage = $(this).val();
+                $scope.loadPage();
+            }
+            else {
+                $("#" + $scope.id + ' .current-page').val('1');
+                $scope.currentPage = 1;
+                $scope.loadPage();
+            }
+            return true;
+        }
+        return false;
+    });
 
     setSearchCriteria();
 
