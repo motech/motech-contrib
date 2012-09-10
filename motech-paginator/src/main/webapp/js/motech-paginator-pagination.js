@@ -71,7 +71,7 @@ function PaginationCtrl($scope, $http, $rootScope) {
 
         //is entered key a number or not printable character
         var isSpecialCharcterPressed = keyCode == 8 || e.ctrlKey || e.metaKey || e.altKey;
-        if (keyCode > 47 && keyCode < 58 || isSpecialCharcterPressed || keyCode == 0) {
+        if (keyCode < 127 && (keyCode > 47 && keyCode < 58 || isSpecialCharcterPressed || keyCode == 0)) {
             return true;
         }
 
