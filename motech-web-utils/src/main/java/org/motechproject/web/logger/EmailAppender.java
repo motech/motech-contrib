@@ -55,7 +55,7 @@ public class EmailAppender extends SMTPAppender {
     private String getHostName() {
         String hostname = System.getenv("HOSTNAME");
         hostname = hostname == null ? "Unknown Host" : hostname;
-        return " | " + hostname + " | ";
+        return  hostname + " | ";
     }
 
     private String getSubjectHash(LoggingEvent loggingEvent) {
