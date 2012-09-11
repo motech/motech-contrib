@@ -43,4 +43,8 @@ public class Workbook {
     public void addCustomFooter() {
         worksheet.addCustomFooter();
     }
+
+    public void autoResizeAllColumns() {
+        worksheet.autoResizeAllColumns();
+    }
 }

@@ -91,7 +91,7 @@ public class ExcelExportProcessor {
         return null;
     }
 
-    private Method getHeaderMethod(String reportName) {
+    private Method getHeaderMethod() {
         for (Method method : excelDataSource.getClass().getDeclaredMethods()) {
             if (method.isAnnotationPresent(Header.class)) {
                 return method;
@@ -100,7 +100,7 @@ public class ExcelExportProcessor {
         return null;
     }
 
-    private Method getFooterMethod(String reportName) {
+    private Method getFooterMethod() {
         for (Method method : excelDataSource.getClass().getDeclaredMethods()) {
             if (method.isAnnotationPresent(Footer.class)) {
                 return method;
@@ -117,12 +117,12 @@ public class ExcelExportProcessor {
         return new MethodInvocationBroker().invokeSafely(getDataMethod(reportName), criteria);
     }
 
-    public List<String> customHeaders(String reportName) {
-        return new MethodInvocationBroker().invokeSafely(getHeaderMethod(reportName), null);
+    public List<String> customHeaders() {
+        return new MethodInvocationBroker().invokeSafely(getHeaderMethod(), null);
     }
 
-    public List<String> customFooters(String reportName) {
-        return new MethodInvocationBroker().invokeSafely(getFooterMethod(reportName), null);
+    public List<String> customFooters() {
+        return new MethodInvocationBroker().invokeSafely(getFooterMethod(), null);
     }
 
     private class MethodInvocationBroker {

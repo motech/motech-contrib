@@ -37,6 +37,7 @@ public class Worksheet {
     public boolean addRow(List<String> rowData) {
         if (dataRowIndex() > lastDataRowIndex()) {
             addCustomFooter();
+            autoResizeAllColumns();
             return false;
         } else {
             HSSFRow row = sheet.createRow(currentRowIndex);
@@ -62,18 +63,20 @@ public class Worksheet {
     }
 
     protected void initializeLayout() {
-        buildTitle(title, columnHeaders.size(), CellStyle.ALIGN_CENTER);
+        buildTitle(title, columnHeaders.size(), CellStyle.ALIGN_CENTER, true);
         buildCustomHeaders();
         buildColumnNamesHeader();
     }
 
-    private void buildTitle(String title, int width, short alignment) {
+    private void buildTitle(String title, int width, short alignment, boolean emphasize) {
         HSSFRow rowTitle = sheet.createRow((short) currentRowIndex);
-        rowTitle.setHeight((short) TITLE_ROW_HEIGHT);
 
         HSSFCell cellTitle = rowTitle.createCell(0);
         cellTitle.setCellValue(title);
-        cellTitle.setCellStyle(new MotechCellStyle(sheet, alignment).style());
+        if (emphasize) {
+            cellTitle.setCellStyle(new MotechCellStyle(sheet, alignment).style());
+            rowTitle.setHeight((short) TITLE_ROW_HEIGHT);
+        }
 
         sheet.addMergedRegion(new CellRangeAddress(currentRowIndex, currentRowIndex, FIRST_COLUMN, width));
         currentRowIndex++;
@@ -97,9 +100,9 @@ public class Worksheet {
 
     private void buildCustomHeaders() {
         if (this.customHeaders != null && !this.customHeaders.isEmpty()) {
-            buildTitle("", columnHeaders.size(), CellStyle.ALIGN_LEFT);
+            buildTitle("", columnHeaders.size(), CellStyle.ALIGN_LEFT, false);
             for (String headerValue : this.customHeaders) {
-                buildTitle(headerValue, columnHeaders.size(), CellStyle.ALIGN_LEFT);
+                buildTitle(headerValue, columnHeaders.size(), CellStyle.ALIGN_LEFT, false);
             }
         }
     }
@@ -107,7 +110,7 @@ public class Worksheet {
     private List<ExcelColumn> columnHeaders() {
         List<ExcelColumn> columns = new ArrayList<ExcelColumn>();
         for (String header : columnHeaders) {
-            columns.add(new ExcelColumn(header, Cell.CELL_TYPE_STRING, 8000));
+            columns.add(new ExcelColumn(header, Cell.CELL_TYPE_STRING));
         }
         setColumnWidths(columns);
         return columns;
@@ -123,10 +126,16 @@ public class Worksheet {
 
     public void addCustomFooter() {
         if (this.customFooters != null && !this.customFooters.isEmpty()) {
-            buildTitle("", columnHeaders.size(), CellStyle.ALIGN_LEFT);
+            buildTitle("", columnHeaders.size(), CellStyle.ALIGN_LEFT, false);
             for (String headerValue : this.customFooters) {
-                buildTitle(headerValue, columnHeaders.size(), CellStyle.ALIGN_LEFT);
+                buildTitle(headerValue, columnHeaders.size(), CellStyle.ALIGN_LEFT, false);
             }
+        }
+    }
+
+    public void autoResizeAllColumns() {
+        for (int i = 0; i < columnHeaders.size(); i++) {
+            sheet.autoSizeColumn(i);
         }
     }
 }
