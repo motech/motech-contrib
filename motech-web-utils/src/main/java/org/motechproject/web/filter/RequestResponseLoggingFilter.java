@@ -14,7 +14,7 @@ import java.util.List;
 
 public class RequestResponseLoggingFilter extends OncePerRequestFilter {
 
-    private final static Logger LOGGER = LoggerFactory.getLogger(RequestResponseLoggingFilter.class);
+    private final static Logger LOGGER = LoggerFactory.getLogger("RequestResponseLogger");
 
     private List<String> textBasedContentTypes = Arrays.asList("application/json", "text/plain", "application/xml", "application/javascript", "application/x-www-form-urlencoded");
 
