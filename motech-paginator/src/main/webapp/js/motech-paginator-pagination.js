@@ -2,7 +2,6 @@ var app = angular.module('paginator', []);
 
 function PaginationCtrl($scope, $http, $rootScope) {
 
-    $scope.currentPage = 1;
 
     $scope.loadPage = function () {
         $http.get($scope.buildURL($scope.searchCriteria)).success(function (data) {
@@ -10,8 +9,31 @@ function PaginationCtrl($scope, $http, $rootScope) {
             $scope.numberOfPages = function () {
                 return Math.ceil($scope.data.totalRows / $scope.rowsPerPage);
             }
+
+            $scope.firstRowCount = ($scope.currentPage - 1) * ($scope.rowsPerPage) + 1;
+
+            $scope.lastRowCount = $scope.currentPage * ($scope.rowsPerPage);
+            if ($scope.lastRowCount > $scope.data.totalRows) {
+                $scope.lastRowCount = $scope.data.totalRows;
+            }
+
+            setPaginationLinkUrls();
         });
     }
+    function setPaginationLinkUrls() {
+        var urlPart = window.location.pathname + "?";
+        if ($scope.searchCriteria)
+            urlPart += $scope.id + "-searchCriteria=" + JSON.stringify($scope.searchCriteria);
+
+        urlPart += "&" + $scope.id + "-rowsPerPage=" + $scope.rowsPerPage + "&" + $scope.id + "-pageNo=";
+        var currentPage = Number($scope.currentPage);
+
+        $('#' + $scope.id + " [link-type=firstPage]").attr('href', urlPart + "1");
+        $('#' + $scope.id + " [link-type=prevPage]").attr('href', urlPart + (currentPage - 1));
+        $('#' + $scope.id + " [link-type=nextPage]").attr('href', urlPart + (1 + currentPage));
+        $('#' + $scope.id + " [link-type=lastPage]").attr('href', urlPart + $scope.numberOfPages());
+    }
+
 
     $scope.prevPage = function () {
         $scope.currentPage--;
@@ -70,8 +92,8 @@ function PaginationCtrl($scope, $http, $rootScope) {
         var keyCode = e.which;
 
         //is entered key a number or not printable character
-        var isSpecialCharcterPressed = keyCode == 8 || e.ctrlKey || e.metaKey || e.altKey;
-        if (keyCode < 127 && (keyCode > 47 && keyCode < 58 || isSpecialCharcterPressed || keyCode == 0)) {
+        var isSpecialCharacterPressed = keyCode == 8 || e.ctrlKey || e.metaKey || e.altKey;
+        if (keyCode < 127 && (keyCode > 47 && keyCode < 58 || isSpecialCharacterPressed || keyCode == 0)) {
             return true;
         }
 
