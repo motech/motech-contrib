@@ -25,14 +25,19 @@
 
 </#macro>
 <#macro filterButtons >
-<a link-type="firstPage" ng-show="currentPage > 1" class="page-link" ng-click="firstPage()"
-   onclick="return false">First</a>
+<a link-type="firstPage" ng-show="currentPage > 1" class="page-link" ng-click="firstPage()" onclick="return false">First</a>
+<p link-type="firstPage-disabled" ng-hide="currentPage > 1" class="page-link-disabled">First</p>
+
 <a link-type="prevPage" ng-show="currentPage > 1" class="page-link" ng-click="prevPage()" onclick="return false">Previous</a>
-<div class="current-page-info">{{currentPage}} out of {{numberOfPages()}} pages</div>
-<a link-type="nextPage" ng-show="currentPage <  numberOfPages()" class="page-link"
-   ng-click="nextPage()" onclick="return false">Next</a>
-<a link-type="lastPage" ng-show="currentPage <  numberOfPages()" class="page-link"
-   ng-click="lastPage()" onclick="return false">Last</a>
+<p link-type="prevPage-disabled" ng-hide="currentPage > 1" class="page-link-disabled" >Previous</p>
+
+<div class="current-page-info">{{currentPage}} out of {{numberOfPages()}} page(s)</div>
+
+<a link-type="nextPage" ng-show="currentPage <  numberOfPages()" class="page-link" ng-click="nextPage()" onclick="return false">Next</a>
+<p link-type="nextPage-disabled" ng-hide="currentPage <  numberOfPages()" class="page-link-disabled">Next</p>
+
+<a link-type="lastPage" ng-show="currentPage <  numberOfPages()" class="page-link" ng-click="lastPage()" onclick="return false">Last</a>
+<p link-type="lastPage-disabled" ng-hide="currentPage <  numberOfPages()" class="page-link-disabled">Last</p>
 
 <div class="goto-page">
     Go to
