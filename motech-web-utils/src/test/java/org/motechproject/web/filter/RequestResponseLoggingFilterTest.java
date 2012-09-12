@@ -40,7 +40,7 @@ public class RequestResponseLoggingFilterTest {
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
 
-        logger = Logger.getLogger(RequestResponseLoggingFilter.class);
+        logger = Logger.getLogger("RequestResponseLogger");
         logStream = new ByteArrayOutputStream();
         appender = new WriterAppender(new SimpleLayout(), logStream);
         logger.addAppender(appender);
