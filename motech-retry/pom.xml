@@ -5,7 +5,7 @@
     <name>motech-retry</name>
     <groupId>org.motechproject.contrib-ghana-national</groupId>
     <artifactId>motech-retry</artifactId>
-    <version>0.12-SNAPSHOT</version>
+    <version>0.13-SNAPSHOT</version>
 
     <properties>
         <spring.version>3.1.0.RELEASE</spring.version>
@@ -42,17 +42,17 @@
         <dependency>
             <groupId>org.motechproject</groupId>
             <artifactId>motech-platform-common-api</artifactId>
-            <version>${motech.version}</version>
+            <version>0.13-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.motechproject</groupId>
             <artifactId>motech-platform-server-api</artifactId>
-            <version>${motech.version}</version>
+            <version>0.13-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.motechproject</groupId>
             <artifactId>motech-scheduler</artifactId>
-            <version>${motech.version}</version>
+            <version>0.13-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
