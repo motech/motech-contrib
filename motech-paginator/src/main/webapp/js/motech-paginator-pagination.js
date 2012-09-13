@@ -1,10 +1,9 @@
 var app = angular.module('paginator', []);
 
-function PaginationCtrl($scope, $http, $rootScope) {
-
+function PaginationCtrl($scope, $http, $rootScope, $location) {
 
     $scope.loadPage = function () {
-        $http.get($scope.buildURL($scope.searchCriteria)).success(function (data) {
+        $http.get($scope.buildURL($rootScope.searchCriteria)).success(function (data) {
             $scope.data = data;
             $scope.numberOfPages = function () {
                 return Math.ceil($scope.data.totalRows / $scope.rowsPerPage);
@@ -21,9 +20,9 @@ function PaginationCtrl($scope, $http, $rootScope) {
         });
     }
     function setPaginationLinkUrls() {
-        var urlPart = window.location.pathname + "?";
-        if ($scope.searchCriteria)
-            urlPart += $scope.id + "-searchCriteria=" + JSON.stringify($scope.searchCriteria);
+        var urlPart = $location.path() + "#?";
+        if ($rootScope.searchCriteria)
+            urlPart += $scope.id + "-searchCriteria=" + JSON.stringify($rootScope.searchCriteria);
 
         urlPart += "&" + $scope.id + "-rowsPerPage=" + $scope.rowsPerPage + "&" + $scope.id + "-pageNo=";
         var currentPage = Number($scope.currentPage);
@@ -80,13 +79,6 @@ function PaginationCtrl($scope, $http, $rootScope) {
         });
         return o;
     };
-    function setSearchCriteria() {
-        if ($scope.filterSectionId) {
-            $scope.searchCriteria = $("#" + $scope.filterSectionId).serializeObject();
-        }
-        else
-            $scope.searchCriteria = null;
-    }
 
     $("#" + $scope.id + ' .current-page').keypress(function (e) {
         var keyCode = e.which;
@@ -112,13 +104,35 @@ function PaginationCtrl($scope, $http, $rootScope) {
         return false;
     });
 
-    setSearchCriteria();
+
+    function setSearchCriteria() {
+        if ($scope.filterSectionId) {
+            $rootScope.searchCriteria = $("#" + $scope.filterSectionId).serializeObject();
+        }
+        else
+            $rootScope.searchCriteria = null;
+    }
 
     $rootScope.$on('filterUpdated', function (evt, searchCriteria) {
         setSearchCriteria();
+        var searchString = JSON.stringify($rootScope.searchCriteria);
+        var searchParams = {}
+        searchParams[$scope.id + "-searchCriteria"] = searchString;
+        $location.search(searchParams);
         $scope.currentPage = 1;
         $scope.loadPage();
     });
 
+    function setInitParams() {
+        $scope.currentPage = 1;
+
+        var paramMap = $location.search();
+        if(paramMap[$scope.id + "-pageNo"])
+            $scope.currentPage = paramMap[$scope.id + "-pageNo"]
+
+    }
+
+    setInitParams();
+    //setSearchCriteria();
     $scope.loadPage();
 }
