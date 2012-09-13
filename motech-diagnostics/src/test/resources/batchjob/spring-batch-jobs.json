@@ -1,0 +1,22 @@
+{"jobs" : {
+    "resource" : "http://localhost:8080/tama-batch/jobs.json",
+    "registrations" : {
+        "viewIndexerJob" : {
+            "name" : "viewIndexerJob",
+            "resource" : "http://localhost:8080/spring-batch/jobs/viewIndexerJob.json",
+            "description" : "No description",
+            "executionCount" : 10,
+            "launchable" : true,
+            "incrementable" : false
+        },
+        "dbCompactorJob" : {
+            "name" : "dbCompactorJob",
+            "resource" : "http://localhost:8080/spring-batch/jobs/dbCompactorJob.json",
+            "description" : "No description",
+            "executionCount" : 5,
+            "launchable" : true,
+            "incrementable" : false
+        }
+     }
+  }
+}

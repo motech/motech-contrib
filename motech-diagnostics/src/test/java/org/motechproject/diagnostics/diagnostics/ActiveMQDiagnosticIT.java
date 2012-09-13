@@ -9,11 +9,10 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.jms.JMSException;
 
-import static junit.framework.Assert.assertNotNull;
-import static junit.framework.Assert.assertTrue;
+import static junit.framework.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration("classpath:applicationContext-Diagnostics.xml")
+@ContextConfiguration("classpath:applicationContext-DiagnosticsTest.xml")
 public class ActiveMQDiagnosticIT {
 
     @Autowired
@@ -21,8 +20,9 @@ public class ActiveMQDiagnosticIT {
 
     @Test
     public void shouldCheckActiveMQConnection() throws JMSException {
-        DiagnosticsResult diagnosticsResult = activeMQDiagnostic.performDiagnosis();
+        DiagnosticsResult<String> diagnosticsResult = activeMQDiagnostic.performDiagnosis();
         assertNotNull(diagnosticsResult);
-        assertTrue("Connection check should return true.", diagnosticsResult.getStatus());
+        assertEquals("Is Active", diagnosticsResult.getName());
+        assertEquals("true", diagnosticsResult.getValue());
     }
 }
