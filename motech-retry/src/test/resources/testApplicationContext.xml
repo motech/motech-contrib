@@ -3,7 +3,8 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 
-    <import resource="classpath:/META-INF/motech/applicationScheduler.xml"/>
-    <import resource="classpath:/META-INF/motech/applicationPlatformServerAPI.xml"/>
     <import resource="classpath:applicationContext-retry.xml"/>
+    <import resource="classpath:/META-INF/motech/applicationScheduler.xml"/>
+    <import resource="classpath:/META-INF/motech/eventQueueConsumer.xml"/>
+    <import resource="classpath:/META-INF/motech/eventQueuePublisher.xml"/>
 </beans>

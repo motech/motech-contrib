@@ -37,7 +37,6 @@ public class AllRetriesDefinitionTest {
         assertThat(retryRecord.retryInterval(), is(Period.minutes(30)));
     }
 
-
     @Test
     public void shouldLoadJsonWithMultiplePeriods() {
         String retryScheduleName = "retry-every-2hrs-and-30mins";
