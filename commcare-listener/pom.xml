@@ -9,6 +9,9 @@
   </parent>
 
   <artifactId>commcare-listener</artifactId>
+  <groupId>org.motechproject</groupId>
+  <version>0.12-SNAPSHOT</version>
+
   <name>commcare-listener</name>
 
   <url>http://github.com/modilabs/dristhi</url>

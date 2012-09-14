@@ -3,6 +3,7 @@ package org.motechproject.export.builder.excel;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.junit.Test;
 
+import java.util.Collections;
 import java.util.List;
 
 import static java.util.Arrays.asList;
@@ -13,7 +14,7 @@ public class ExcelBuilderTest {
     public static class TestExcelBuilder extends ExcelBuilder<String> {
 
         protected TestExcelBuilder() {
-            super("Test", asList("Column 1", "Column 2"));
+            super("Test", asList("Column 1", "Column 2"), Collections.<String>emptyList(), Collections.<String>emptyList());
         }
 
         @Override

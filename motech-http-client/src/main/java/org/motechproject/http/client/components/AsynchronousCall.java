@@ -2,7 +2,6 @@ package org.motechproject.http.client.components;
 
 import org.motechproject.event.EventRelay;
 import org.motechproject.event.MotechEvent;
-import org.motechproject.http.client.listener.HttpClientEventListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

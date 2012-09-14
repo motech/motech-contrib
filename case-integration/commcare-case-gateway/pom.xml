@@ -9,6 +9,8 @@
     </parent>
 
     <artifactId>commcare-case-gateway</artifactId>
+    <groupId>org.motechproject</groupId>
+    <version>0.12-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>commcare-case-gateway</name>
 

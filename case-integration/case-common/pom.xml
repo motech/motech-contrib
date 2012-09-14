@@ -8,7 +8,9 @@
 
     <modelVersion>4.0.0</modelVersion>
 
+    <groupId>org.motechproject</groupId>
     <artifactId>case-common</artifactId>
+    <version>0.12-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>case-common</name>
 
@@ -17,6 +19,11 @@
             <groupId>org.apache.velocity</groupId>
             <artifactId>velocity</artifactId>
             <version>1.7</version>
+        </dependency>
+        <dependency>
+            <groupId>org.motechproject</groupId>
+            <artifactId>motech-common</artifactId>
+            <version>0.12-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>

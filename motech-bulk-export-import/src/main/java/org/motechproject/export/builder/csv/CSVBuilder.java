@@ -42,7 +42,7 @@ public class CSVBuilder {
 
     private void writeCsvReportToFile() throws IOException {
         BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file));
-        ExportData export = excelExportProcessor.getEntirExcelData(reportName, criteria);
+        ExportData export = excelExportProcessor.getEntireExcelData(reportName, criteria);
         bufferedWriter.write(getCsvRow(export.getColumnHeaders()));
 
         for (List<String> row : export.getAllRowData())

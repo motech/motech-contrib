@@ -1,6 +1,7 @@
 package org.motechproject.diagnostics.response;
 
 public class ExceptionResponse {
+
     private String message;
     private String trace;
 

@@ -1,19 +1,20 @@
 package org.motechproject.diagnostics.response;
 
-public class DiagnosticsResult {
-    private boolean status;
-    private String message;
+public class DiagnosticsResult<T> {
 
-    public DiagnosticsResult(boolean status, String message) {
-        this.status = status;
-        this.message = message;
+    private String name;
+    private T value;
+
+    public DiagnosticsResult(String name, T value) {
+        this.value = value;
+        this.name = name;
     }
 
-    public boolean getStatus() {
-        return status;
+    public String getName() {
+        return name;
     }
 
-    public String getMessage() {
-        return message;
+    public T getValue() {
+        return value;
     }
 }

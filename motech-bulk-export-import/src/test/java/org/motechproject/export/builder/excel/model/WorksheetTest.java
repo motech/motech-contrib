@@ -4,6 +4,8 @@ package org.motechproject.export.builder.excel.model;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.junit.Test;
 
+import java.util.Collections;
+
 import static java.util.Arrays.asList;
 import static org.junit.Assert.*;
 
@@ -11,7 +13,7 @@ public class WorksheetTest {
 
     @Test
     public void shouldAddRowWhenNumberOfRowsDoesNotExceedLimit() {
-        Worksheet worksheet = new Worksheet(new HSSFWorkbook(), "sheet", "Test", asList("Column"));
+        Worksheet worksheet = new Worksheet(new HSSFWorkbook(), "sheet", "Test", asList("Column"), Collections.<String>emptyList(), Collections.<String>emptyList());
         boolean addedSheet = true;
         for (int i = 0; i <= maxDataRowIndex(); i++) {
             addedSheet &= worksheet.addRow(asList("test"));
@@ -21,7 +23,7 @@ public class WorksheetTest {
 
     @Test
     public void shouldNotAddRowWhenNumberOfRowsDoesNotExceedLimit() {
-        Worksheet worksheet = new Worksheet(new HSSFWorkbook(), "sheet", "Test", asList("Column"));
+        Worksheet worksheet = new Worksheet(new HSSFWorkbook(), "sheet", "Test", asList("Column"), Collections.<String>emptyList(), Collections.<String>emptyList());
         for (int i = 0; i <= maxDataRowIndex(); i++) {
             worksheet.addRow(asList("test"));
         }

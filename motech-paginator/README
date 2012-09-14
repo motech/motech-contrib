@@ -1,0 +1,10 @@
+expects style classes :
+1.) page-link(next, previous links)
+2.) page-link-disabled(next, previous links in disabled state)
+3.) current-page-info('1 out of n pages' message)
+4.) goto-page ('Go to [textbox] page')
+5.) current-page (text box to enter desired page)
+6.) pull-right (bootstrap style to pull pagination links to right side of the page)
+
+Events triggered:
+pageLoadSuccess (triggered on tag with the paginate id after the page is loaded by angular js)

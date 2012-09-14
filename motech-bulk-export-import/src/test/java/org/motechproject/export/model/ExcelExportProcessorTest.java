@@ -75,7 +75,7 @@ public class ExcelExportProcessorTest {
     public void shouldCreateAnEntireReportWithHeadersAndRows() {
         ExcelExportProcessor excelExportProcessor = new ExcelExportProcessor(new ValidReportDataSource());
         Map<String, String> criteria = new HashMap<String, String>();
-        ExportData export = excelExportProcessor.getEntirExcelData("sampleExcel", criteria);
+        ExportData export = excelExportProcessor.getEntireExcelData("sampleExcel", criteria);
 
         List<String> columnHeaders = export.getColumnHeaders();
         List<List<String>> allRowData = export.getAllRowData();

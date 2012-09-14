@@ -5,18 +5,15 @@ import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.motechproject.diagnostics.DiagnosticResponseBuilder;
-import org.motechproject.diagnostics.repository.AllDiagnosticMethods;
-import org.motechproject.diagnostics.response.DiagnosticsResponse;
-import org.motechproject.diagnostics.response.DiagnosticsResult;
+import org.motechproject.diagnostics.service.DiagnosticsService;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
 import java.util.List;
 
 import static junit.framework.Assert.assertEquals;
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
@@ -24,7 +21,7 @@ import static org.mockito.MockitoAnnotations.initMocks;
 public class DiagnosticsControllerTest {
 
     @Mock
-    private AllDiagnosticMethods allDiagnosticMethods;
+    private DiagnosticsService diagnosticsService;
     @Mock
     private HttpServletResponse httpResponse;
     @Mock
@@ -35,26 +32,25 @@ public class DiagnosticsControllerTest {
     private DiagnosticsController diagnosticsController;
 
     @Before
-    public void setUp() {
+    public void setUp() throws IOException {
         initMocks(this);
-        diagnosticsController = new DiagnosticsController(allDiagnosticMethods,allDiagnosticMessageBuilder);
+        when(httpResponse.getOutputStream()).thenReturn(servletOutputStream);
+        diagnosticsController = new DiagnosticsController(diagnosticsService, allDiagnosticMessageBuilder);
     }
 
     @Test
-    public void shouldInvokeAllTheDiagnosticMethods() throws InvocationTargetException, IllegalAccessException, IOException {
-        List<DiagnosticsResponse> expectedDiagnosticsResponses = new ArrayList<DiagnosticsResponse>();
-        expectedDiagnosticsResponses.add(new DiagnosticsResponse("Test diagnostic", new DiagnosticsResult(true, "Test diagnostic run")));
+    public void shouldInvokeDiagnosticsByName() throws IOException {
+        diagnosticsController.runDiagnostics("name", httpResponse);
+        verify(diagnosticsService).run("name");
+    }
 
-        when(allDiagnosticMethods.runAllDiagnosticMethods()).thenReturn(expectedDiagnosticsResponses);
-        when(httpResponse.getOutputStream()).thenReturn(servletOutputStream);
-        when(allDiagnosticMessageBuilder.createResponseMessage(expectedDiagnosticsResponses)).thenReturn("Diagnostic Response");
+    @Test
+    public void shouldPrintDiagnosticMessageResponse() throws IOException {
+        when(allDiagnosticMessageBuilder.createResponseMessage(any(List.class))).thenReturn("Diagnostic Response");
+
+        diagnosticsController.runDiagnostics("name", httpResponse);
         ArgumentCaptor<String> captor = ArgumentCaptor.forClass(String.class);
-
-        diagnosticsController.getDiagnostics(httpResponse);
-
         verify(servletOutputStream).print(captor.capture());
-        String responseValue = captor.getValue();
-
-        assertEquals("Diagnostic Response", responseValue.trim());
+        assertEquals("Diagnostic Response", captor.getValue().trim());
     }
 }
