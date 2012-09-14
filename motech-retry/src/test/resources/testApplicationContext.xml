@@ -5,5 +5,5 @@
 
     <import resource="classpath:/META-INF/motech/applicationScheduler.xml"/>
     <import resource="classpath:/META-INF/motech/applicationPlatformServerAPI.xml"/>
-    <import resource="classpath:/META-INF/motech/applicationContext-retry.xml"/>
+    <import resource="classpath:applicationContext-retry.xml"/>
 </beans>
