@@ -22,8 +22,8 @@
         </dependency>
         <dependency>
             <groupId>org.motechproject</groupId>
-            <artifactId>motech-common</artifactId>
-            <version>0.12-SNAPSHOT</version>
+            <artifactId>motech-platform-common-api</artifactId>
+            <version>${motech.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
