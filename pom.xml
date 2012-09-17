@@ -5,15 +5,15 @@
 
     <name>motech-contrib</name>
     <artifactId>motech-contrib</artifactId>
-    <groupId>org.motechproject</groupId>
-    <version>0.12-SNAPSHOT</version>
+    <groupId>org.motechproject.whp-contrib</groupId>
+    <version>0.13-SNAPSHOT</version>
 
     <packaging>pom</packaging>
 
     <properties>
-        <motech.version>0.12-SNAPSHOT</motech.version>
-        <motech.contrib.version>0.12-SNAPSHOT</motech.contrib.version>
-        <motech.contrib.group>org.motechproject</motech.contrib.group>
+        <motech.version>0.12.3</motech.version>
+        <motech.contrib.version>0.13-SNAPSHOT</motech.contrib.version>
+        <motech.contrib.group>org.motechproject.whp-contrib</motech.contrib.group>
         <spring-security.version>3.1.0.RELEASE</spring-security.version>
         <spring.version>3.1.0.RELEASE</spring.version>
         <spring.integration.version>2.1.1.RELEASE</spring.integration.version>
