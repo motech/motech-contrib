@@ -114,6 +114,7 @@
                 <configuration>
                     <failOnMissingWebXml>false</failOnMissingWebXml>
                     <archiveClasses>true</archiveClasses>
+                    <attachClasses>true</attachClasses>
                 </configuration>
             </plugin>
             <plugin>
@@ -133,27 +134,6 @@
                             <file>
                                 ${project.build.directory}/${project.artifactId}-${project.version}.jar
                             </file>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-deploy-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <phase>deploy</phase>
-                        <goals>
-                            <goal>deploy-file</goal>
-                        </goals>
-                        <configuration>
-                            <packaging>jar</packaging>
-                            <generatePom>true</generatePom>
-                            <url>${project.distributionManagement.snapshotRepository.url}</url>
-                            <artifactId>${project.artifactId}</artifactId>
-                            <groupId>${project.groupId}</groupId>
-                            <version>${project.version}</version>
-                            <file>${project.build.directory}/${project.artifactId}-${project.version}.jar</file>
                         </configuration>
                     </execution>
                 </executions>
