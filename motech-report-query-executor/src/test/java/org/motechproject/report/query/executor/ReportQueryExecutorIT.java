@@ -13,7 +13,7 @@ import java.util.HashMap;
 import static org.junit.Assert.assertEquals;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration("classpath:testapplicationContext.xml")
+@ContextConfiguration("classpath:testApplicationContext.xml")
 public class ReportQueryExecutorIT {
 
     @Autowired
