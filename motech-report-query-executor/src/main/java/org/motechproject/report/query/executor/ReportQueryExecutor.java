@@ -33,8 +33,6 @@ public class ReportQueryExecutor {
 
         setQueryParameters(selectQuery, parameters);
 
-        System.out.println(selectQuery.getQueryString());
-
         BigInteger allRecordsCount = pageRequest.fetchAllRecordsCount() ? getAllRecordsCount(sql, parameters, currentSession) : BigInteger.valueOf(-1);
 
         return pageRequest.paginateResultSet(selectQuery.list(), allRecordsCount);
