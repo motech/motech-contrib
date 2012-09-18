@@ -8,13 +8,17 @@ public class DataPoint {
     @JsonProperty
     private DateRange range;
 
-    private Double value;
+    private Double value = 0d;
 
     public DataPoint() {
     }
 
     public DataPoint(DateTime from, DateTime to) {
         range = new DateRange(from, to);
+    }
+
+    public DataPoint(Double value) {
+        this.value = value;
     }
 
     public boolean matches(DateRange range) {

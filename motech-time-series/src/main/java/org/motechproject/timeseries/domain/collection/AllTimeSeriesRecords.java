@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 public class AllTimeSeriesRecords extends MotechBaseRepository<TimeSeriesRecord> {
 
     @Autowired
-    public AllTimeSeriesRecords(@Qualifier("dbConnector") CouchDbConnector db) {
+    public AllTimeSeriesRecords(@Qualifier("timeSeriesDBConnector") CouchDbConnector db) {
         super(TimeSeriesRecord.class, db);
     }
 

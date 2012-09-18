@@ -10,15 +10,16 @@
 		     http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.1.xsd">
 
     <context:annotation-config/>
-    <context:component-scan base-package="org.motechproject.paginator"/>
+    <context:component-scan base-package="org.motechproject.timeseries"/>
+
     <util:properties id="couchdbProperties" location="classpath:/couchdb.properties"/>
 
-    <bean id="dbConnector" class="org.ektorp.impl.StdCouchDbConnector">
+    <bean id="timeSeriesDBConnector" class="org.ektorp.impl.StdCouchDbConnector">
         <constructor-arg value="motech-time-series"/>
-        <constructor-arg ref="dbInstance"/>
+        <constructor-arg ref="timeSeriesDBInstance"/>
     </bean>
 
-    <bean id="dbInstance" class="org.ektorp.impl.StdCouchDbInstance">
+    <bean id="timeSeriesDBInstance" class="org.ektorp.impl.StdCouchDbInstance">
         <constructor-arg>
             <bean id="httpClient" class="org.ektorp.spring.HttpClientFactoryBean">
                 <property name="properties" ref="couchdbProperties"/>

@@ -7,7 +7,7 @@
         <groupId>org.motechproject.contrib-whp</groupId>
         <version>0.13-SNAPSHOT</version>
     </parent>
-    <packaging>war</packaging>
+    <packaging>jar</packaging>
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>motech-time-series</artifactId>

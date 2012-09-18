@@ -42,4 +42,8 @@ public class TimeSeriesRecord extends MotechBaseDataObject {
         }
         return matchedPoints;
     }
+
+    public List<DataPoint> allDataPoints() {
+        return new ArrayList<>(dataPoints);
+    }
 }
