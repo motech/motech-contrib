@@ -7,6 +7,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Arrays;
 import java.util.HashMap;
 
 import static org.junit.Assert.assertEquals;
@@ -45,13 +46,13 @@ public class ReportQueryExecutorIT {
         String sql = "select * from pg_tables where schemaname=:schemaname and tablename=:tablename";
 
         String expected = "[]";
-        String expectedPaginatedResult = String.format("{pagenumber:%s, pagesize:%s, lastpage:true, firstpage:true, totalrows:%s, rows:%s}", pageNumber,  pageSize,  -1, expected);
+        String expectedPaginatedResult = String.format("{pagenumber:%s, pagesize:%s, lastpage:true, firstpage:true, totalrows:%s, rows:%s}", pageNumber,  pageSize,  0, expected);
 
         HashMap<String, Object> parameters = new HashMap<>();
         parameters.put("schemaname", "pg_catalog");
         parameters.put("tablename", "does_not_exist");
 
-        String resultSet = executorReport.fetchJSONResultset(sql, parameters, new PageRequest(pageSize, pageNumber, false));
+        String resultSet = executorReport.fetchJSONResultset(sql, parameters, new PageRequest(pageSize, pageNumber, true));
 
         assertEquals(expectedPaginatedResult, resultSet);
     }
@@ -72,6 +73,23 @@ public class ReportQueryExecutorIT {
         String resultSet = executorReport.fetchJSONResultset(sql, parameters, new PageRequest(pageSize, pageNumber, true));
 
         assertEquals(expectedPaginatedResult, resultSet);
+    }
 
+    @Test
+    @Transactional
+    public void shouldResultNestedJSON() {
+        int pageSize = 1;
+        int pageNumber = 1;
+        String sql = "select t.schemaname, array_to_json(array_agg(row_to_json(stat))) as children from pg_tables t join (select relid, relname from pg_stat_all_tables) stat on stat.relname = t.tablename where stat.relid in (:relids) group by t.schemaname order by t.schemaname";
+
+        String expected = "[{\"schemaname\":\"information_schema\",\"children\":[{\"relid\":11860,\"relname\":\"sql_languages\"},{\"relid\":11855,\"relname\":\"sql_implementation_info\"}]}]";
+        String expectedPaginatedResult = String.format("{pagenumber:%s, pagesize:%s, lastpage:true, firstpage:true, totalrows:%s, rows:%s}", pageNumber,  pageSize,  1, expected);
+
+        HashMap<String, Object> parameters = new HashMap<>();
+        parameters.put("relids", Arrays.asList(11855, 11860));
+
+        String resultSet = executorReport.fetchJSONResultset(sql, parameters, new PageRequest(pageSize, pageNumber, true));
+
+        assertEquals(expectedPaginatedResult, resultSet);
     }
 }

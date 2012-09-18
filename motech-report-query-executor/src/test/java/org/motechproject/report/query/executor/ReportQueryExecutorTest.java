@@ -7,14 +7,14 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 public class ReportQueryExecutorTest {
@@ -29,13 +29,17 @@ public class ReportQueryExecutorTest {
     }
 
     @Test
-    public void shouldFetchJsonResultSet() {
+    public void shouldSetParametersAndFetchJsonResultSet() {
         String sql = "somesql";
         int pageSize = 21;
         int pageNumber = 10;
+
+        List<String> collectionParameter = new ArrayList();
+        String[] arrayParameter = new String[] {};
         HashMap<String, Object> parameters = new HashMap<>();
         parameters.put("parameter1", "value1");
-        parameters.put("parameter2", "value2");
+        parameters.put("parameter2", collectionParameter);
+        parameters.put("parameter3", arrayParameter);
 
         Session session = mock(Session.class);
         when(sessionFactory.getCurrentSession()).thenReturn(session);
@@ -46,13 +50,15 @@ public class ReportQueryExecutorTest {
 
         SQLQuery countQuery = mock(SQLQuery.class);
         when(session.createSQLQuery(wrapToCountQuery(sql))).thenReturn(countQuery);
-        when(countQuery.list()).thenReturn(Arrays.asList("42"));
+        when(countQuery.list()).thenReturn(Arrays.asList(new BigInteger("42")));
 
 
         String resultSet = executorReport.fetchJSONResultset(sql, parameters, new PageRequest(pageSize, pageNumber, true));
 
         verify(selectQuery).setParameter("parameter1", "value1");
-        verify(selectQuery).setParameter("parameter2", "value2");
+        verify(selectQuery).setParameterList("parameter2", collectionParameter);
+        verify(selectQuery).setParameterList("parameter3", arrayParameter);
+
         assertEquals("{pagenumber:10, pagesize:21, lastpage:true, firstpage:false, totalrows:42, rows:[result1, result2]}", resultSet);
     }
 
@@ -64,15 +70,15 @@ public class ReportQueryExecutorTest {
         parameters.put("parameter2", "value2");
 
         Session session = mock(Session.class);
-        SQLQuery sqlQuery = mock(SQLQuery.class);
+        SQLQuery selectQuery = mock(SQLQuery.class);
         when(sessionFactory.getCurrentSession()).thenReturn(session);
-        when(session.createSQLQuery(wrapToSelectQuery(sql, 20, 1))).thenReturn(sqlQuery);
-        when(sqlQuery.list()).thenReturn(Arrays.asList("result1", "result2"));
+        when(session.createSQLQuery(wrapToSelectQuery(sql, 20, 1))).thenReturn(selectQuery);
+        when(selectQuery.list()).thenReturn(Arrays.asList("result1", "result2"));
 
         String resultSet = executorReport.fetchJSONResultset(sql, parameters);
 
-        verify(sqlQuery).setParameter("parameter1", "value1");
-        verify(sqlQuery).setParameter("parameter2", "value2");
+        verify(selectQuery).setParameter("parameter1", "value1");
+        verify(selectQuery).setParameter("parameter2", "value2");
         assertEquals("{pagenumber:1, pagesize:20, lastpage:true, firstpage:true, totalrows:-1, rows:[result1, result2]}", resultSet);
     }
 
@@ -82,20 +88,21 @@ public class ReportQueryExecutorTest {
         String sql = "somesql";
         int pageSize = 21;
         int pageNumber = 1;
+
         HashMap<String, Object> parameters = new HashMap<>();
         parameters.put("parameter1", "value1");
         parameters.put("parameter2", "value2");
 
         Session session = mock(Session.class);
-        SQLQuery sqlQuery = mock(SQLQuery.class);
+        SQLQuery selectQuery = mock(SQLQuery.class);
         when(sessionFactory.getCurrentSession()).thenReturn(session);
-        when(session.createSQLQuery(wrapToSelectQuery(sql, pageSize, pageNumber))).thenReturn(sqlQuery);
-        when(sqlQuery.list()).thenReturn(new ArrayList());
+        when(session.createSQLQuery(wrapToSelectQuery(sql, pageSize, pageNumber))).thenReturn(selectQuery);
+        when(selectQuery.list()).thenReturn(new ArrayList());
 
         String resultSet = executorReport.fetchJSONResultset(sql, parameters, new PageRequest(pageSize, pageNumber, false));
 
-        verify(sqlQuery).setParameter("parameter1", "value1");
-        verify(sqlQuery).setParameter("parameter2", "value2");
+        verify(selectQuery).setParameter("parameter1", "value1");
+        verify(selectQuery).setParameter("parameter2", "value2");
         assertEquals("{pagenumber:1, pagesize:21, lastpage:true, firstpage:true, totalrows:-1, rows:[]}", resultSet);
     }
 

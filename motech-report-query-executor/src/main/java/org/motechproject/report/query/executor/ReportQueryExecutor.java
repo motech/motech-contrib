@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.math.BigInteger;
+import java.util.Collection;
 import java.util.HashMap;
 
 @Component
@@ -30,21 +31,34 @@ public class ReportQueryExecutor {
 
         SQLQuery selectQuery = currentSession.createSQLQuery(formattedSql);
 
-        for (String parameter : parameters.keySet()) {
-            selectQuery.setParameter(parameter, parameters.get(parameter));
-        }
+        setQueryParameters(selectQuery, parameters);
+
+        System.out.println(selectQuery.getQueryString());
 
         BigInteger allRecordsCount = pageRequest.fetchAllRecordsCount() ? getAllRecordsCount(sql, parameters, currentSession) : BigInteger.valueOf(-1);
 
         return pageRequest.paginateResultSet(selectQuery.list(), allRecordsCount);
     }
 
-    public BigInteger getAllRecordsCount(String sql, HashMap<String, Object> parameters, Session currentSession) {
-        SQLQuery countQuery = currentSession.createSQLQuery(wrapSqlQueryForCount(sql));
-        for (String parameter : parameters.keySet()) {
-            countQuery.setParameter(parameter, parameters.get(parameter));
+    private void setQueryParameters(SQLQuery selectQuery, HashMap<String, Object> parameters) {
+        for (String parameterName : parameters.keySet()) {
+            Object parameterValue = parameters.get(parameterName);
+            if(parameterValue instanceof Collection) {
+                selectQuery.setParameterList(parameterName, (Collection) parameterValue);
+                continue;
+            }
+            if(parameterValue instanceof Object[]) {
+                selectQuery.setParameterList(parameterName, (Object[]) parameterValue);
+                continue;
+            }
+            selectQuery.setParameter(parameterName, parameterValue);
         }
-        return (BigInteger)countQuery.list().get(0);
+    }
+
+    private BigInteger getAllRecordsCount(String sql, HashMap<String, Object> parameters, Session currentSession) {
+        SQLQuery countQuery = currentSession.createSQLQuery(wrapSqlQueryForCount(sql));
+        setQueryParameters(countQuery, parameters);
+        return (BigInteger) countQuery.list().get(0);
     }
 
     private String wrapSqlQueryWithJsonFunction(String sql) {
