@@ -3,3 +3,34 @@
 3. Thresholder - splits the time series into monotonically increasing decreasing or constant values
 4. Trender splits a given list into a set of lists where every subsquent value if greater than or less than the previous val
 5. Timer - finds the difference between the current point and the pervious point in days
+
+
+Fundamentals
+------------
+
+1. Time series data is stored as a document. One document per entity in a data store (-)
+2. A data store is named and can be accessed by name (.)
+3. The core mechanism in the module is a pipeline (-)
+4. Pipe line can be written in JSON (.)
+5. Every pipe has a trigger upon which it is invoked. The trigger can be cron or it can be adherence recording event (.)
+6. Every pipe has transformations along the line (-)
+7. The transformations are of two kinds. 1) value based 2) data point based (?)
+8. An entity can subscribe to any number of pipelines (.)
+9. Certain parts of the pipe can be parameterized. But all parameters of the pipe has to be supplied when registering an entity (.)
+10. Except the first element of the pipeline, all other elements can consume only the data that is the result of the previous transformation
+
+Value added
+-----------
+
+1. Provides a clear language for expressing down the stream computations after capturing time based information
+2. No need to perform the loop of fetch data, compute value and raise event. now the implementer just needs to provide computations
+3. Generic functions that can be combined to form complex transformations on the time series related information
+4. Since how the data is stored and accessed is hidden from the implementer, this gives the potential to change the data model if it is non performant.
+5. Potential value when moving towards a rest based system, as the module provides a declarative language
+   and each component of the module (pipeline, datastore,transformations) etc are named, and have the potential to be
+   accessed by name
+
+
+Risks
+-----
+1. Do not know how the testing is going to look like

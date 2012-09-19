@@ -31,20 +31,19 @@ public class TimeSeriesSetTest {
     private static class Transformation implements PipeTransformation {
 
         @Override
-        public Object process(List<Double> data) {
+        public List<List<DataPoint>> process(List<List<DataPoint>> data) {
             System.out.println("called");
-            return data.get(0);
+            return data;
         }
     }
 
     private static class TransformationWhichReturnsMultipleElements implements PipeTransformation {
 
 
-        /*TODO: This contract should be replaced by a type safe contract*/
         @Override
-        public Object process(List<Double> data) {
+        public List<List<DataPoint>> process(List<List<DataPoint>> data) {
             System.out.println("called multiple element return transformation");
-            return asList(asList(data.get(0)), asList(data.get(0)));
+            return asList(data.get(0), data.get(0));
         }
     }
 }

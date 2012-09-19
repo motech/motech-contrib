@@ -1,5 +1,6 @@
 package org.motechproject.timeseries.domain.valueobject;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.joda.time.DateTime;
 
@@ -11,14 +12,23 @@ public class DataPoint {
     private Double value = 0d;
 
     public DataPoint() {
+        range = new DateRange();
     }
 
     public DataPoint(DateTime from, DateTime to) {
+        this();
         range = new DateRange(from, to);
     }
 
     public DataPoint(Double value) {
+        this();
         this.value = value;
+    }
+
+    public DataPoint(DataPoint point) {
+        this();
+        range = point.range;
+        value = point.getValue();
     }
 
     public boolean matches(DateRange range) {
@@ -31,6 +41,26 @@ public class DataPoint {
 
     public void setValue(Double value) {
         this.value = value;
+    }
+
+    public void startFrom(DateTime time) {
+        if (range.hasNotStarted()) {
+            range.setStartDate(time);
+        }
+    }
+
+    public void extendTill(DateTime time){
+        range.setEndDate(time);
+    }
+
+    @JsonIgnore
+    public DateTime getStartTime() {
+        return range.getStartTime();
+    }
+
+    @JsonIgnore
+    public DateTime getEndTime() {
+        return range.getEndTime();
     }
 
     @Override

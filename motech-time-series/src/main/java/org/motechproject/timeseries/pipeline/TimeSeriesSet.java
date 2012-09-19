@@ -7,55 +7,41 @@ import org.motechproject.timeseries.domain.valueobject.DataPoint;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.util.Arrays.asList;
+
 public class TimeSeriesSet {
 
     private TimeSeriesRecord record;
-    private List data;
+    private List<List<DataPoint>> data;
 
     public TimeSeriesSet(TimeSeriesRecord record) {
         this.record = record;
-        this.data = allValues(record.allDataPoints());
+        this.data = asList(record.allDataPoints());
     }
 
     public TimeSeriesSet apply(PipeTransformation reader) {
         if (!data.isEmpty()) {
-            if (data.get(0) instanceof List) {
-                return applyTransformationOnEveryElement(reader);
-            } else {
-                return applyTransformation(reader);
+            this.data = tansform(reader.process(data));
+        }
+        return this;
+    }
+
+    private List<List<DataPoint>> tansform(List<List<DataPoint>> data) {
+        boolean allListsHaveSingleElement = true;
+        for (List<DataPoint> row : data) {
+            allListsHaveSingleElement &= row.size() == 1;
+            if (!allListsHaveSingleElement)
+                break;
+        }
+        if (allListsHaveSingleElement) {
+            List<DataPoint> result = new ArrayList<>();
+            for (List<DataPoint> row : data) {
+                result.add(row.get(0));
             }
+            return asList(result);
         } else {
-            return this;
+            return data;
         }
-    }
-
-    private TimeSeriesSet applyTransformation(PipeTransformation reader) {
-        Object result = reader.process(data);
-        if (result instanceof List) {
-            this.data = (List) result;
-        } else {
-            this.data = new ArrayList();
-            this.data.add(result);
-        }
-        return this;
-    }
-
-    private TimeSeriesSet applyTransformationOnEveryElement(PipeTransformation reader) {
-        List result = new ArrayList();
-        for (int i = 0; i < data.size(); i++) {
-            List<Double> element = (List<Double>) data.get(i);
-            result.add(reader.process(element));
-        }
-        this.data = result;
-        return this;
-    }
-
-    private List allValues(List<DataPoint> points) {
-        List values = new ArrayList();
-        for (DataPoint point : points) {
-            values.add(point.getValue());
-        }
-        return values;
     }
 }
 

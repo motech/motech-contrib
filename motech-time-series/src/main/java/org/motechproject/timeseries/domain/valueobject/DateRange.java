@@ -1,5 +1,6 @@
 package org.motechproject.timeseries.domain.valueobject;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.joda.time.DateTime;
 
@@ -22,18 +23,46 @@ public class DateRange {
         return isWithin(range.from) || isWithin(range.to) || encloses(range);
     }
 
+    @JsonIgnore
     private boolean isWithin(DateTime time) {
         return isOnOrAfter(from, time) && isOnOrBefore(to, time);
+    }
+
+    @JsonIgnore
+    public boolean hasNotStarted() {
+        return from == null;
+    }
+
+    @JsonIgnore
+    public void setStartDate(DateTime time) {
+        this.from = time;
+    }
+
+    @JsonIgnore
+    public void setEndDate(DateTime time) {
+        this.to = time;
+    }
+
+    @JsonIgnore
+    public DateTime getStartTime() {
+        return this.from;
+    }
+
+    @JsonIgnore
+    public DateTime getEndTime() {
+        return this.to;
     }
 
     private boolean encloses(DateRange reference) {
         return isOnOrBefore(from, reference.from) && isOnOrAfter(to, reference.to);
     }
 
+    @JsonIgnore
     private boolean isOnOrBefore(DateTime reference, DateTime compared) {
         return compared.isEqual(reference) || compared.isBefore(reference);
     }
 
+    @JsonIgnore
     private boolean isOnOrAfter(DateTime reference, DateTime compared) {
         return compared.isEqual(reference) || compared.isAfter(reference);
     }

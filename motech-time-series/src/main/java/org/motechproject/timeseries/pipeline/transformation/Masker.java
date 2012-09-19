@@ -6,19 +6,12 @@ import org.motechproject.timeseries.pipeline.PipeTransformation;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Thresholder implements PipeTransformation {
+public class Masker implements PipeTransformation {
 
-    private Double threshold;
-    private boolean lessThan;
+    private Double value;
 
-    public Thresholder(Double threshold) {
-        this.threshold = threshold;
-        this.lessThan = true;
-    }
-
-    public Thresholder(Double threshold, boolean lessThan) {
-        this.threshold = threshold;
-        this.lessThan = lessThan;
+    public Masker(Double value) {
+        this.value = value;
     }
 
     @Override
@@ -28,8 +21,7 @@ public class Thresholder implements PipeTransformation {
             List<DataPoint> resultRow = new ArrayList<>();
             for (DataPoint point : row) {
                 DataPoint dataPoint = new DataPoint(point);
-                if (conditionTriggered(point)) {
-                    System.out.println("Value " + point.getValue() + " has triggered the threshold " + threshold);
+                if (point.getValue().equals(value)) {
                     dataPoint.setValue(1d);
                 } else {
                     dataPoint.setValue(0d);
@@ -41,7 +33,4 @@ public class Thresholder implements PipeTransformation {
         return result;
     }
 
-    private boolean conditionTriggered(DataPoint point) {
-        return (lessThan) ? point.getValue() < threshold : point.getValue() > threshold;
-    }
 }

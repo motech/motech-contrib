@@ -6,15 +6,22 @@ import org.motechproject.timeseries.pipeline.PipeTransformation;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Grouper implements PipeTransformation {
+import static java.util.Arrays.asList;
 
+public class Clusterer implements PipeTransformation {
+
+    private Double valueToCluster;
+
+    public Clusterer(Double valueToCluster) {
+        this.valueToCluster = valueToCluster;
+    }
 
     @Override
     public List<List<DataPoint>> process(List<List<DataPoint>> data) {
         List<List<DataPoint>> result = new ArrayList<>();
 
         for (List<DataPoint> row : data) {
-            for (List<DataPoint> resultRow : group(row)) {
+            for (List<DataPoint> resultRow : cluster(row)) {
                 result.add(resultRow);
             }
         }
@@ -22,21 +29,19 @@ public class Grouper implements PipeTransformation {
         return result;
     }
 
-    private List<List<DataPoint>> group(List<DataPoint> row) {
+    private List<List<DataPoint>> cluster(List<DataPoint> row) {
         List<List<DataPoint>> result = new ArrayList<>();
-        DataPoint prevPoint = null;
         List<DataPoint> currentSet = new ArrayList<>();
 
         for (DataPoint point : row) {
-            if (point.equals(prevPoint)) {
+            if (point.getValue().equals(valueToCluster)) {
                 currentSet.add(point);
             } else {
-                prevPoint = point;
                 if (!currentSet.isEmpty()) {
                     result.add(new ArrayList<>(currentSet));
                     currentSet.removeAll(currentSet);
                 }
-                currentSet.add(point);
+                result.add(asList(point));
             }
         }
 
