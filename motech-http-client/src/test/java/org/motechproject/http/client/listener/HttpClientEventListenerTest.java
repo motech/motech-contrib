@@ -49,4 +49,19 @@ public class HttpClientEventListenerTest {
 
         verify(restTempate).put(putUrl, postData);
     }
+
+    @Test
+    public void shouldReadFromQueueAndMakeAHttpDeleteCall() throws IOException {
+        final String deleteUrl = "http://commcare";
+        final String deleteRequest = "aragorn";
+        MotechEvent motechEvent = new MotechEvent(EventSubjects.HTTP_REQUEST, new HashMap<String, Object>() {{
+            put(EventDataKeys.URL, deleteUrl);
+            put(EventDataKeys.DATA, deleteRequest);
+            put(EventDataKeys.METHOD, Method.DELETE);
+        }});
+
+        new HttpClientEventListener(restTempate).handle(motechEvent);
+
+        verify(restTempate).delete(deleteUrl, deleteRequest);
+    }
 }

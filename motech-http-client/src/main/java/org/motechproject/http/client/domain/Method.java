@@ -15,6 +15,13 @@ public enum Method {
         public void execute(RestTemplate restTemplate, String url, Object request) {
             restTemplate.put(url, request);
         }
+    },
+
+    DELETE {
+        @Override
+        public void execute(RestTemplate restTemplate, String url, Object request) {
+            restTemplate.delete(url, request);
+        }
     };
 
     public abstract void execute(RestTemplate restTemplate, String url, Object request);
