@@ -80,13 +80,13 @@ public class ReportQueryExecutorIT {
     public void shouldResultNestedJSON() {
         int pageSize = 1;
         int pageNumber = 1;
-        String sql = "select t.schemaname, array_to_json(array_agg(row_to_json(stat))) as children from pg_tables t join (select relid, relname from pg_stat_all_tables) stat on stat.relname = t.tablename where stat.relid in (:relids) group by t.schemaname order by t.schemaname";
+        String sql = "select t.schemaname, array_to_json(array_agg(row_to_json(stat))) as children from pg_tables t join (select schemaname, relname from pg_stat_all_tables) stat on stat.relname = t.tablename where stat.relname in (:relnames) group by t.schemaname order by t.schemaname";
 
-        String expected = "[{\"schemaname\":\"information_schema\",\"children\":[{\"relid\":11860,\"relname\":\"sql_languages\"},{\"relid\":11855,\"relname\":\"sql_implementation_info\"}]}]";
+        String expected = "[{\"schemaname\":\"information_schema\",\"children\":[{\"schemaname\":\"information_schema\",\"relname\":\"sql_languages\"},{\"schemaname\":\"information_schema\",\"relname\":\"sql_implementation_info\"}]}]";
         String expectedPaginatedResult = String.format("{pagenumber:%s, pagesize:%s, lastpage:true, firstpage:true, totalrows:%s, rows:%s}", pageNumber,  pageSize,  1, expected);
 
         HashMap<String, Object> parameters = new HashMap<>();
-        parameters.put("relids", Arrays.asList(11855, 11860));
+        parameters.put("relnames", Arrays.asList("sql_languages", "sql_implementation_info"));
 
         String resultSet = executorReport.fetchJSONResultset(sql, parameters, new PageRequest(pageSize, pageNumber, true));
 
