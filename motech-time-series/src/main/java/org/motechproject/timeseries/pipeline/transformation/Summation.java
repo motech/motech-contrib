@@ -8,7 +8,7 @@ import java.util.List;
 
 import static java.util.Arrays.asList;
 
-public class Summarizer implements PipeTransformation {
+public class Summation implements PipeTransformation {
 
     @Override
     public List<List<DataPoint>> process(List<List<DataPoint>> data) {

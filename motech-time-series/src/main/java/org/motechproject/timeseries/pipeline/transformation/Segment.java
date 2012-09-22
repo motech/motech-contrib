@@ -6,8 +6,11 @@ import org.motechproject.timeseries.pipeline.PipeTransformation;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Grouper implements PipeTransformation {
+import static java.util.Arrays.asList;
 
+public class Segment implements PipeTransformation {
+
+    private int slotSize;
 
     @Override
     public List<List<DataPoint>> process(List<List<DataPoint>> data) {
@@ -24,25 +27,22 @@ public class Grouper implements PipeTransformation {
 
     private List<List<DataPoint>> group(List<DataPoint> row) {
         List<List<DataPoint>> result = new ArrayList<>();
-        DataPoint prevPoint = null;
         List<DataPoint> currentSet = new ArrayList<>();
+        int i = 0;
 
         for (DataPoint point : row) {
-            if (point.equals(prevPoint)) {
+            if (i < slotSize) {
                 currentSet.add(point);
+                i++;
             } else {
-                prevPoint = point;
-                if (!currentSet.isEmpty()) {
-                    result.add(new ArrayList<>(currentSet));
-                    currentSet.removeAll(currentSet);
-                }
-                currentSet.add(point);
+                result.addAll(asList(currentSet));
+                currentSet.removeAll(currentSet);
+                i = 0;
             }
         }
-
-        if (!currentSet.isEmpty())
-            result.add(new ArrayList<>(currentSet));
-
+        if (!currentSet.isEmpty()) {
+            result.addAll(asList(currentSet));
+        }
         return result;
     }
 }

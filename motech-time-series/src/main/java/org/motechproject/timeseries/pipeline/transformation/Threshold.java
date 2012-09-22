@@ -6,17 +6,17 @@ import org.motechproject.timeseries.pipeline.PipeTransformation;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Thresholder implements PipeTransformation {
+public class Threshold implements PipeTransformation {
 
     private Double threshold;
     private boolean lessThan;
 
-    public Thresholder(Double threshold) {
+    public Threshold(Double threshold) {
         this.threshold = threshold;
         this.lessThan = true;
     }
 
-    public Thresholder(Double threshold, boolean lessThan) {
+    public Threshold(Double threshold, boolean lessThan) {
         this.threshold = threshold;
         this.lessThan = lessThan;
     }

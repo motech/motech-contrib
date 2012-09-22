@@ -6,11 +6,11 @@ import org.motechproject.timeseries.pipeline.PipeTransformation;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Masker implements PipeTransformation {
+public class Select implements PipeTransformation {
 
     private Double value;
 
-    public Masker(Double value) {
+    public Select(Double value) {
         this.value = value;
     }
 

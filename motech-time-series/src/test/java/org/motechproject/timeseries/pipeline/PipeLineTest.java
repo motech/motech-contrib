@@ -15,7 +15,7 @@ public class PipeLineTest {
         TimeSeriesRecord record = new TimeSeriesRecord();
         record.addDataPoints(asList(new DataPoint(1d), new DataPoint(1d), new DataPoint(0d), new DataPoint(1d)));
 
-        new PipeLine(asList(new Summarizer(), new Thresholder(5d))).process(new TimeSeriesSet(record));
+        new PipeLine(asList(new Summation(), new Threshold(5d))).process(new TimeSeriesSet(record));
     }
 
     @Test
@@ -23,7 +23,7 @@ public class PipeLineTest {
         TimeSeriesRecord record = new TimeSeriesRecord();
         record.addDataPoints(asList(new DataPoint(0d), new DataPoint(0d), new DataPoint(0d), new DataPoint(1d), new DataPoint(0d)));
 
-        new PipeLine(asList(new Grouper(), new Masker(0d), new Summarizer(), new Thresholder(2d, false))).process(new TimeSeriesSet(record));
+        new PipeLine(asList(new Group(), new Select(0d), new Summation(), new Threshold(2d, false))).process(new TimeSeriesSet(record));
     }
 
     @Test
@@ -31,7 +31,7 @@ public class PipeLineTest {
         TimeSeriesRecord record = new TimeSeriesRecord();
         record.addDataPoints(asList(new DataPoint(0d), new DataPoint(1d), new DataPoint(0d), new DataPoint(1d), new DataPoint(0d)));
 
-        new PipeLine(asList(new PatternMatcher("(0.01.0).+"), new Thresholder(0d, false))).process(new TimeSeriesSet(record));
+        new PipeLine(asList(new Regex("(0.01.0).+"), new Threshold(0d, false))).process(new TimeSeriesSet(record));
     }
 
     /*Shows the 2d to 1d transform*/
@@ -40,7 +40,7 @@ public class PipeLineTest {
         TimeSeriesRecord record = new TimeSeriesRecord();
         record.addDataPoints(asList(new DataPoint(0d), new DataPoint(0d), new DataPoint(1d), new DataPoint(1d), new DataPoint(0d), new DataPoint(0d), new DataPoint(1d)));
 
-        new PipeLine(asList(new Clusterer(0d), new PatternMatcher("0.00.0"), new PatternMatcher(".*1.00.00.01.0.*"), new Thresholder(0d, false))).process(new TimeSeriesSet(record));
+        new PipeLine(asList(new Cluster(0d), new Regex("0.00.0"), new Regex(".*1.00.00.01.0.*"), new Threshold(0d, false))).process(new TimeSeriesSet(record));
     }
 
     @Test
@@ -48,7 +48,7 @@ public class PipeLineTest {
         TimeSeriesRecord record = new TimeSeriesRecord();
         record.addDataPoints(asList(new DataPoint(0d), new DataPoint(0d), new DataPoint(1d), new DataPoint(1d), new DataPoint(0d), new DataPoint(0d), new DataPoint(1d)));
 
-        new PipeLine(asList(new Clusterer(0d), new Masker(0d), new Summarizer(), new Thresholder(1.0, false), new PatternMatcher(".*1.00.00.01.0.*"), new Thresholder(0d, false))).process(new TimeSeriesSet(record));
+        new PipeLine(asList(new Cluster(0d), new Select(0d), new Summation(), new Threshold(1.0, false), new Regex(".*1.00.00.01.0.*"), new Threshold(0d, false))).process(new TimeSeriesSet(record));
     }
 
     @Test
@@ -56,6 +56,6 @@ public class PipeLineTest {
         TimeSeriesRecord record = new TimeSeriesRecord();
         record.addDataPoints(asList(new DataPoint(0d), new DataPoint(0d), new DataPoint(1d), new DataPoint(1d), new DataPoint(1d), new DataPoint(0d), new DataPoint(0d), new DataPoint(1d)));
 
-        new PipeLine(asList(new Clusterer(0d), new Masker(0d), new Summarizer(), new Thresholder(1.0, false), new PatternMatcher(".*1.00.00.0(0.0).*1.0.*"), new Thresholder(0d, false))).process(new TimeSeriesSet(record));
+        new PipeLine(asList(new Cluster(0d), new Select(0d), new Summation(), new Threshold(1.0, false), new Regex(".*1.00.00.0(0.0).*1.0.*"), new Threshold(0d, false))).process(new TimeSeriesSet(record));
     }
 }

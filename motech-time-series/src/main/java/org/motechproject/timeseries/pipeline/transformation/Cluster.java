@@ -8,16 +8,20 @@ import java.util.List;
 
 import static java.util.Arrays.asList;
 
-public class Segmenter implements PipeTransformation {
+public class Cluster implements PipeTransformation {
 
-    private int slotSize;
+    private Double valueToCluster;
+
+    public Cluster(Double valueToCluster) {
+        this.valueToCluster = valueToCluster;
+    }
 
     @Override
     public List<List<DataPoint>> process(List<List<DataPoint>> data) {
         List<List<DataPoint>> result = new ArrayList<>();
 
         for (List<DataPoint> row : data) {
-            for (List<DataPoint> resultRow : group(row)) {
+            for (List<DataPoint> resultRow : cluster(row)) {
                 result.add(resultRow);
             }
         }
@@ -25,24 +29,25 @@ public class Segmenter implements PipeTransformation {
         return result;
     }
 
-    private List<List<DataPoint>> group(List<DataPoint> row) {
+    private List<List<DataPoint>> cluster(List<DataPoint> row) {
         List<List<DataPoint>> result = new ArrayList<>();
         List<DataPoint> currentSet = new ArrayList<>();
-        int i = 0;
 
         for (DataPoint point : row) {
-            if (i < slotSize) {
+            if (point.getValue().equals(valueToCluster)) {
                 currentSet.add(point);
-                i++;
             } else {
-                result.addAll(asList(currentSet));
-                currentSet.removeAll(currentSet);
-                i = 0;
+                if (!currentSet.isEmpty()) {
+                    result.add(new ArrayList<>(currentSet));
+                    currentSet.removeAll(currentSet);
+                }
+                result.add(asList(point));
             }
         }
-        if (!currentSet.isEmpty()) {
-            result.addAll(asList(currentSet));
-        }
+
+        if (!currentSet.isEmpty())
+            result.add(new ArrayList<>(currentSet));
+
         return result;
     }
 }

@@ -9,11 +9,11 @@ import java.util.List;
 import static java.util.Arrays.asList;
 import static java.util.regex.Pattern.matches;
 
-public class PatternMatcher implements PipeTransformation {
+public class Regex implements PipeTransformation {
 
     private String regexp;
 
-    public PatternMatcher(String regexp) {
+    public Regex(String regexp) {
         this.regexp = regexp;
     }
 
