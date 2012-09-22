@@ -6,8 +6,10 @@
     "validFrom":"2012-10-4",
     "transformations":{
         "head":{
-            "name":"summation",
-            "datasource":{
+            "function":{
+                "name":"summation"
+            },
+            "dataSource":{
                 "type":"range",
                 "query":{
                     "from":"2012-10-2",
@@ -17,10 +19,12 @@
         },
         "line":[
             {
-                "name":"threshold",
-                "configuration":{
-                    "value":"10",
-                    "opertaion":"GreaterThan"
+                "function":{
+                    "name":"threshold",
+                    "configuration":{
+                        "value":"10",
+                        "opertaion":"GreaterThan"
+                    }
                 }
             }
         ]

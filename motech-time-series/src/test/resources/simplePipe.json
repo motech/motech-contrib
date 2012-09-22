@@ -5,8 +5,10 @@
     },
     "transformations":{
         "head":{
-            "name":"summation",
-            "datasource":{
+            "function":{
+                "name":"summation"
+            },
+            "dataSource":{
                 "type":"points",
                 "query":{
                     "number":"10"
@@ -15,10 +17,12 @@
         },
         "line":[
             {
-                "name":"threshold",
-                "configuration":{
-                    "value":"10",
-                    "opertaion":"GreaterThan"
+                "function":{
+                    "name":"threshold",
+                    "configuration":{
+                        "value":"10",
+                        "opertaion":"GreaterThan"
+                    }
                 }
             }
         ]

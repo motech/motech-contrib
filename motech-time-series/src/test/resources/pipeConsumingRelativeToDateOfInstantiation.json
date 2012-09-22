@@ -6,8 +6,10 @@
     },
     "transformations":{
         "head":{
-            "name":"summation",
-            "datasource":{
+            "function":{
+                "name":"summation"
+            },
+            "dataSource":{
                 "type":"range",
                 "query":{
                     "from":"2y1m1d3h4t",
@@ -17,10 +19,12 @@
         },
         "line":[
             {
-                "name":"threshold",
-                "configuration":{
-                    "value":"10",
-                    "opertaion":"GreaterThan"
+                "function":{
+                    "name":"threshold",
+                    "configuration":{
+                        "value":"10",
+                        "opertaion":"GreaterThan"
+                    }
                 }
             }
         ]

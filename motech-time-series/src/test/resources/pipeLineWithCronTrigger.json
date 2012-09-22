@@ -2,12 +2,16 @@
     "name":"pipeWithCronTrigger",
     "type":{
         "name":"cron",
-        "expression":"cronTrigger"
+        "configuration":{
+            "expression":"cronTrigger"
+        }
     },
     "transformations":{
         "head":{
-            "name":"summation",
-            "datasource":{
+            "function":{
+                "name":"summation"
+            },
+            "dataSource":{
                 "type":"range",
                 "query":{
                     "from":"2012-10-2",
