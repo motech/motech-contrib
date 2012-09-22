@@ -1,12 +1,13 @@
 package org.motechproject.timeseries.pipeline.contract;
 
+import java.util.HashMap;
 import java.util.Map;
 
-public abstract class DataSource implements PipeComponent {
+public class DataSource implements PipeComponent {
 
     private String type;
 
-    private Map<String, String> query;
+    private Map<String, String> query = new HashMap<>();
 
     @Override
     public boolean hasParameter(String parameterName) {
@@ -27,5 +28,11 @@ public abstract class DataSource implements PipeComponent {
 
     public void setQuery(Map<String, String> query) {
         this.query = query;
+    }
+
+    public void queryWith(String[][] params) {
+        for (int i = 0; i < params.length; i++) {
+            query.put(params[i][0], params[i][1]);
+        }
     }
 }
