@@ -1,23 +1,27 @@
 {
-
-    "name":"simplePipeLine",
-    "cron":{
-        "expression":"cron",
+    "name":"pipeWithCronTrigger",
+    "type":{
+        "name":"cron",
+        "expression":"cronTrigger"
+    },
+    "transformations":{
         "head":{
-            "name":"summarization",
-            "dataSourceName":{
-                "dateRange":{
-                    "relativeFrom":"{date}",
-                    "from":"2y1m1d1h1n1s",
-                    "to":"1y1m1d1h1n1s"
+            "name":"summation",
+            "datasource":{
+                "type":"range",
+                "query":{
+                    "from":"2012-10-2",
+                    "to":"2012-10-3"
                 }
             }
         },
         "line":[
             {
                 "name":"threshold",
-                "value":"70",
-                "operation":"GREATER-THAN"
+                "configuration":{
+                    "value":"10",
+                    "opertaion":"GreaterThan"
+                }
             }
         ]
     }

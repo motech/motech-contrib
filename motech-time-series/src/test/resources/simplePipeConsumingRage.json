@@ -1,21 +1,26 @@
 {
-
-    "name":"simplePipeLine",
-    "onRecordEvent":{
+    "name":"pipeConsumingRange",
+    "type":{
+        "name":"onRecord"
+    },
+    "transformations":{
         "head":{
-            "name":"summarization",
-            "dataSourceName":{
-                "dateRange":{
-                    "from":"25-01-1989",
-                    "to":"31-01-1989"
+            "name":"summation",
+            "datasource":{
+                "type":"range",
+                "query":{
+                    "from":"2012-10-2",
+                    "to":"2012-10-3"
                 }
             }
         },
         "line":[
             {
                 "name":"threshold",
-                "value":"70",
-                "operation":"GREATER-THAN"
+                "configuration":{
+                    "value":"10",
+                    "opertaion":"GreaterThan"
+                }
             }
         ]
     }

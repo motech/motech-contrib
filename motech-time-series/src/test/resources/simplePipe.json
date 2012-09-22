@@ -1,16 +1,25 @@
 {
-
     "name":"simplePipeLine",
-    "onRecordEvent":{
+    "type":{
+        "name":"onRecord"
+    },
+    "transformations":{
         "head":{
-            "name":"summarization",
-            "points":"1"
+            "name":"summation",
+            "datasource":{
+                "type":"points",
+                "query":{
+                    "number":"10"
+                }
+            }
         },
         "line":[
             {
                 "name":"threshold",
-                "value":"70",
-                "operation":"GREATER-THAN"
+                "configuration":{
+                    "value":"10",
+                    "opertaion":"GreaterThan"
+                }
             }
         ]
     }
