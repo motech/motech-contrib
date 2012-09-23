@@ -11,6 +11,9 @@ public class DataPoint {
 
     private Double value = 0d;
 
+    @JsonProperty
+    private Double ideal = 1d;
+
     public DataPoint() {
         range = new DateRange();
     }
@@ -29,6 +32,7 @@ public class DataPoint {
         this();
         range = point.range;
         value = point.getValue();
+        ideal = point.getIdeal();
     }
 
     public boolean matches(DateRange range) {
@@ -43,13 +47,25 @@ public class DataPoint {
         this.value = value;
     }
 
+    public void setRange(DateRange range) {
+        this.range = range;
+    }
+
+    public Double getIdeal() {
+        return ideal;
+    }
+
+    public void setIdeal(Double ideal) {
+        this.ideal = ideal;
+    }
+
     public void startFrom(DateTime time) {
         if (range.hasNotStarted()) {
             range.setStartDate(time);
         }
     }
 
-    public void extendTill(DateTime time){
+    public void extendTill(DateTime time) {
         range.setEndDate(time);
     }
 
