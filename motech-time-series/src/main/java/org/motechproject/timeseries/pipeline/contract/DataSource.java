@@ -2,6 +2,8 @@ package org.motechproject.timeseries.pipeline.contract;
 
 import org.motechproject.timeseries.domain.entity.TimeSeriesRecord;
 import org.motechproject.timeseries.domain.valueobject.DataPoint;
+import org.motechproject.timeseries.domain.valueobject.DateRange;
+import org.motechproject.timeseries.pipeline.TimeSeriesDate;
 
 import java.util.HashMap;
 import java.util.List;
@@ -48,6 +50,12 @@ public class DataSource implements PipeComponent {
     }
 
     public List<DataPoint> queryOn(TimeSeriesRecord record) {
-        return record.allDataPoints(Integer.parseInt(query.get("number")));
+        if ("points".equalsIgnoreCase(type)) {
+            return record.allDataPoints(Integer.parseInt(query.get("number")));
+        } else {
+            TimeSeriesDate fromDate = new TimeSeriesDate(query.get("from"));
+            TimeSeriesDate toDate = new TimeSeriesDate(query.get("to"));
+            return record.allDataPointsMatching(asList(new DateRange(fromDate.getValue(), toDate.getValue())));
+        }
     }
 }

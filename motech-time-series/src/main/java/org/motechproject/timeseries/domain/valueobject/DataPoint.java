@@ -35,6 +35,11 @@ public class DataPoint {
         ideal = point.getIdeal();
     }
 
+    public DataPoint(double value, DateTime dateTime) {
+        this.value = value;
+        this.range = new DateRange(dateTime, dateTime);
+    }
+
     public boolean matches(DateRange range) {
         return this.range.matches(range);
     }

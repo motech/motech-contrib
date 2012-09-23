@@ -27,7 +27,7 @@ public class TimeSeriesSetTest {
         record.addDataPoints(asList(new DataPoint(), new DataPoint()));
 
         TimeSeriesSet seriesSet = new TimeSeriesSet(record);
-        seriesSet.apply(new TransformationWhichReturnsMultipleElements(),  Collections.<String, String>emptyMap()).apply(new Transformation(),  Collections.<String, String>emptyMap());
+        seriesSet.apply(new TransformationWhichReturnsMultipleElements(), Collections.<String, String>emptyMap()).apply(new Transformation(), Collections.<String, String>emptyMap());
     }
 
     private static class Transformation implements PipeTransformation {
