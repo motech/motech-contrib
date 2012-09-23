@@ -19,7 +19,7 @@ public class CronPipeRegistrar implements PipeRegistrar {
     /*TODO: schedule pipe*/
     @Override
     public RegistrationResult register(String externalId, PipeLine pipeLine) {
-        if (pipeLine.getName().equalsIgnoreCase("cron")) {
+        if (pipeLine.getType().getName().equalsIgnoreCase("cron")) {
             if (pipeLine.hasParameter("type.expression")) {
                 allPipeLines.add(new PipeLineRegistration(externalId, pipeLine));
                 return RegistrationResult.success;

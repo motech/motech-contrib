@@ -5,7 +5,7 @@ import org.ektorp.support.TypeDiscriminator;
 import org.motechproject.model.MotechBaseDataObject;
 import org.motechproject.timeseries.pipeline.contract.PipeLine;
 
-@TypeDiscriminator("document.type == 'PipeLineRegistration'")
+@TypeDiscriminator("doc.type == 'PipeLineRegistration'")
 public class PipeLineRegistration extends MotechBaseDataObject {
 
     @JsonProperty
@@ -13,6 +13,10 @@ public class PipeLineRegistration extends MotechBaseDataObject {
 
     @JsonProperty
     private PipeLine pipeLine;
+
+    public PipeLineRegistration(){
+
+    }
 
     public PipeLineRegistration(String externalId, PipeLine pipeLine) {
         this.externalId = externalId;

@@ -1,7 +1,14 @@
 package org.motechproject.timeseries.pipeline.contract;
 
+import org.motechproject.timeseries.domain.entity.TimeSeriesRecord;
+import org.motechproject.timeseries.domain.valueobject.DataPoint;
+
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+
+import static java.lang.Integer.parseInt;
+import static java.util.Arrays.asList;
 
 public class DataSource implements PipeComponent {
 
@@ -34,5 +41,9 @@ public class DataSource implements PipeComponent {
         for (int i = 0; i < params.length; i++) {
             query.put(params[i][0], params[i][1]);
         }
+    }
+
+    public List<List<DataPoint>> extractData(TimeSeriesRecord record) {
+        return asList(record.allDataPoints(parseInt(query.get("points"))));
     }
 }

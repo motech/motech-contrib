@@ -6,6 +6,7 @@ import org.motechproject.timeseries.domain.valueobject.DataPoint;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import static java.util.Arrays.asList;
 
@@ -19,9 +20,9 @@ public class TimeSeriesSet {
         this.data = asList(record.allDataPoints());
     }
 
-    public TimeSeriesSet apply(PipeTransformation reader) {
+    public TimeSeriesSet apply(PipeTransformation reader, Map<String, String> configuration) {
         if (!data.isEmpty()) {
-            this.data = tansform(reader.process(data));
+            this.data = tansform(reader.process(data, configuration));
         }
         return this;
     }

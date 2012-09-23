@@ -1,5 +1,6 @@
 package org.motechproject.timeseries.domain.entity;
 
+import org.codehaus.jackson.annotate.JsonProperty;
 import org.ektorp.support.TypeDiscriminator;
 import org.motechproject.model.MotechBaseDataObject;
 import org.motechproject.timeseries.domain.valueobject.DataPoint;
@@ -13,6 +14,7 @@ public class TimeSeriesRecord extends MotechBaseDataObject {
 
     private String externalId;
 
+    @JsonProperty
     private List<DataPoint> dataPoints;
 
     public TimeSeriesRecord() {
@@ -41,6 +43,14 @@ public class TimeSeriesRecord extends MotechBaseDataObject {
             }
         }
         return matchedPoints;
+    }
+
+    public List<DataPoint> allDataPoints(int nos) {
+        List<DataPoint> result = new ArrayList<>();
+        for (int i = (dataPoints.size() - nos) - 1; i < dataPoints.size() - 1; i++) {
+            result.add(dataPoints.get(i));
+        }
+        return result;
     }
 
     public List<DataPoint> allDataPoints() {

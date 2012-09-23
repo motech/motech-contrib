@@ -53,7 +53,7 @@ public class PipeLine implements PipeComponent {
         return false;
     }
 
-    public boolean baselineValidity(LocalDate date) {
+    public boolean defineBaseLineValidity(LocalDate date) {
         if (null == validFrom) {
             validFrom = date;
             return true;
@@ -63,7 +63,7 @@ public class PipeLine implements PipeComponent {
     }
 
     @JsonIgnore
-    public boolean isValid() {
+    public boolean isValidityDefined() {
         return null != validFrom;
     }
 }

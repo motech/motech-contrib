@@ -30,7 +30,7 @@ public class AllPipeLinesTest {
 
     private PipeLine createPipe() {
         PipeLine pipeLine = new PipeLine();
-        pipeLine.baselineValidity(DateUtil.today());
+        pipeLine.defineBaseLineValidity(DateUtil.today());
         pipeLine.setName("name");
         pipeLine.setType(createPipeType());
         pipeLine.setTransformations(createTransformations());

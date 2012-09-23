@@ -18,7 +18,7 @@ public class RecordEventPipeRegistrar implements PipeRegistrar {
 
     @Override
     public RegistrationResult register(String externalId, PipeLine pipeLine) {
-        if (pipeLine.getName().equalsIgnoreCase("onRecordEvent")) {
+        if (pipeLine.getType().getName().equalsIgnoreCase("onRecordEvent")) {
             allPipeLines.add(new PipeLineRegistration(externalId, pipeLine));
             return RegistrationResult.success;
         }
