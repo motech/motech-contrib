@@ -12,12 +12,19 @@ import static java.util.Arrays.asList;
 
 public class TimeSeriesSet {
 
-    private TimeSeriesRecord record;
     private List<List<DataPoint>> data;
 
+    public TimeSeriesSet() {
+        data = new ArrayList<>();
+    }
+
     public TimeSeriesSet(TimeSeriesRecord record) {
-        this.record = record;
         this.data = asList(record.allDataPoints());
+    }
+
+    public TimeSeriesSet addRow(List<DataPoint> row) {
+        data.add(row);
+        return this;
     }
 
     public TimeSeriesSet apply(PipeTransformation reader, Map<String, String> configuration) {

@@ -46,4 +46,8 @@ public class DataSource implements PipeComponent {
     public List<List<DataPoint>> extractData(TimeSeriesRecord record) {
         return asList(record.allDataPoints(parseInt(query.get("points"))));
     }
+
+    public List<DataPoint> queryOn(TimeSeriesRecord record) {
+        return record.allDataPoints(Integer.parseInt(query.get("number")));
+    }
 }

@@ -8,6 +8,7 @@ import org.motechproject.timeseries.domain.valueobject.DateRange;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Vector;
 
 @TypeDiscriminator("doc.type == 'TimeSeriesRecord'")
 public class TimeSeriesRecord extends MotechBaseDataObject {
@@ -46,9 +47,11 @@ public class TimeSeriesRecord extends MotechBaseDataObject {
     }
 
     public List<DataPoint> allDataPoints(int nos) {
-        List<DataPoint> result = new ArrayList<>();
-        for (int i = (dataPoints.size() - nos) - 1; i < dataPoints.size() - 1; i++) {
-            result.add(dataPoints.get(i));
+        Vector<DataPoint> result = new Vector<>();
+        for (int i = nos; i >= 0; i--) {
+            if (i < dataPoints.size()) {
+                result.insertElementAt(dataPoints.get(i), 0);
+            }
         }
         return result;
     }

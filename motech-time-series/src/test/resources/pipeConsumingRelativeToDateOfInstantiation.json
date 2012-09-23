@@ -9,13 +9,15 @@
             "function":{
                 "name":"summation"
             },
-            "dataSource":{
-                "type":"range",
-                "query":{
-                    "from":"2y1m1d3h4t",
-                    "to":"2y1m1d3h1t"
+            "dataSources":[
+                {
+                    "type":"range",
+                    "query":{
+                        "from":"2y1m1d3h4t",
+                        "to":"2y1m1d3h1t"
+                    }
                 }
-            }
+            ]
         },
         "line":[
             {

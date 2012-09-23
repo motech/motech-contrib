@@ -9,13 +9,15 @@
             "function":{
                 "name":"summation"
             },
-            "dataSource":{
-                "type":"range",
-                "query":{
-                    "from":"2012-10-2",
-                    "to":"2012-10-3"
+            "dataSources":[
+                {
+                    "type":"range",
+                    "query":{
+                        "from":"2012-10-2",
+                        "to":"2012-10-3"
+                    }
                 }
-            }
+            ]
         },
         "line":[
             {

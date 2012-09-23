@@ -31,7 +31,7 @@ public class ConsecutiveMissedDoses {
 
     private PipeHeadDefinition createHeadDefinition() {
         PipeHeadDefinition headDefinition = new PipeHeadDefinition();
-        headDefinition.setDataSource(createDataSource());
+        headDefinition.setDataSources(asList(createDataSource()));
         headDefinition.setFunction(new FunctionDefinition().setName("group"));
         return headDefinition;
     }

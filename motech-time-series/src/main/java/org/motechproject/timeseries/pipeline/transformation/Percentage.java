@@ -26,7 +26,6 @@ public class Percentage implements PipeTransformation {
                 numerator += point.getValue();
                 denominator += point.getIdeal();
                 result.setValue((numerator / denominator) * 100);
-
             }
             results.add(asList(result));
         }

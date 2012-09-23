@@ -8,12 +8,14 @@
             "function":{
                 "name":"summation"
             },
-            "dataSource":{
-                "type":"points",
-                "query":{
-                    "number":"10"
+            "dataSources":[
+                {
+                    "type":"points",
+                    "query":{
+                        "number":"10"
+                    }
                 }
-            }
+            ]
         },
         "line":[
             {

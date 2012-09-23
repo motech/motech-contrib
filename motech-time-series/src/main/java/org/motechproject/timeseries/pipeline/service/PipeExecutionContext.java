@@ -2,9 +2,9 @@ package org.motechproject.timeseries.pipeline.service;
 
 import org.motechproject.timeseries.domain.collection.AllTimeSeriesRecords;
 import org.motechproject.timeseries.domain.entity.TimeSeriesRecord;
-import org.motechproject.timeseries.domain.valueobject.DataPoint;
 import org.motechproject.timeseries.pipeline.PipeTransformation;
 import org.motechproject.timeseries.pipeline.TimeSeriesSet;
+import org.motechproject.timeseries.pipeline.contract.DataSource;
 import org.motechproject.timeseries.pipeline.contract.FunctionDefinition;
 import org.motechproject.timeseries.pipeline.contract.PipeHeadDefinition;
 import org.motechproject.timeseries.pipeline.contract.PipeLine;
@@ -50,7 +50,7 @@ public class PipeExecutionContext implements BeanPostProcessor {
     }
 
     private TimeSeriesSet executeHead(TimeSeriesRecord record, PipeHeadDefinition head) {
-        return executeFunction(head.getFunction(), new TimeSeriesSet(record));
+        return executeFunction(head.getFunction(), constructTimeSeriesSet(record, head));
     }
 
     private TimeSeriesSet executeLine(List<FunctionDefinition> line, TimeSeriesSet set) {
@@ -64,5 +64,14 @@ public class PipeExecutionContext implements BeanPostProcessor {
     private TimeSeriesSet executeFunction(FunctionDefinition function, TimeSeriesSet data) {
         PipeTransformation transformation = nameToBeanMapping.get(function.getName());
         return data.apply(transformation, function.getConfiguration());
+    }
+
+    private TimeSeriesSet constructTimeSeriesSet(TimeSeriesRecord record, PipeHeadDefinition head) {
+        TimeSeriesSet timeSeriesSet = new TimeSeriesSet();
+        List<DataSource> dataSources = head.getDataSources();
+        for (DataSource dataSource : dataSources) {
+            timeSeriesSet.addRow(dataSource.queryOn(record));
+        }
+        return timeSeriesSet;
     }
 }

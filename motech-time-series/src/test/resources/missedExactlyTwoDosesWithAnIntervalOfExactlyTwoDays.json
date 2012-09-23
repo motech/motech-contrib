@@ -11,12 +11,14 @@
                     "valueToCluster":"0"
                 }
             },
-            "dataSource":{
-                "type":"points",
-                "query":{
-                    "number":"5"
+            "dataSources":[
+                {
+                    "type":"points",
+                    "query":{
+                        "number":"5"
+                    }
                 }
-            }
+            ]
         },
         "line":[
             {

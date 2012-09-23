@@ -53,7 +53,7 @@ public class AllPipeLinesTest {
     private PipeHeadDefinition createHeadDefinition() {
         PipeHeadDefinition pipeHeadDefinition = new PipeHeadDefinition();
         pipeHeadDefinition.setFunction(createFunctionDefinition());
-        pipeHeadDefinition.setDataSource(createDataSource());
+        pipeHeadDefinition.setDataSources(asList(createDataSource()));
         return pipeHeadDefinition;
     }
 

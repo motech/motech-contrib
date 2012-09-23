@@ -1,18 +1,19 @@
 package org.motechproject.timeseries.pipeline.contract;
 
+import java.util.List;
+
 public class PipeHeadDefinition implements PipeComponent {
 
     private FunctionDefinition function;
 
-    private DataSource dataSource;
+    private List<DataSource> dataSources;
 
     @Override
     public boolean hasParameter(String parameterName) {
         if (parameterName.replace('.', ':').split(":")[0].equalsIgnoreCase("function")) {
             return function.hasParameter(parameterName.replace('.', ':').split(":")[1]);
-        } else {
-            return dataSource.hasParameter(parameterName.replace('.', ':').split(":")[1]);
         }
+        return false;
     }
 
     public FunctionDefinition getFunction() {
@@ -23,11 +24,11 @@ public class PipeHeadDefinition implements PipeComponent {
         this.function = function;
     }
 
-    public DataSource getDataSource() {
-        return dataSource;
+    public List<DataSource> getDataSources() {
+        return dataSources;
     }
 
-    public void setDataSource(DataSource dataSource) {
-        this.dataSource = dataSource;
+    public void setDataSources(List<DataSource> dataSources) {
+        this.dataSources = dataSources;
     }
 }
