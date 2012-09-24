@@ -19,7 +19,7 @@ public class AllNamedConstraintValidators extends PropertyValidator {
 
     protected Map<String, NamedConstraintValidator> constraintValidators;
 
-    @Autowired
+    @Autowired(required = false)
     public AllNamedConstraintValidators(Set<NamedConstraintValidator> constraintValidators) {
         this.constraintValidators = new HashMap<String, NamedConstraintValidator>();
         for (NamedConstraintValidator constraintValidator : constraintValidators) {
