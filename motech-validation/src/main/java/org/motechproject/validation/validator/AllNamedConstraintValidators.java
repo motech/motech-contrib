@@ -19,11 +19,17 @@ public class AllNamedConstraintValidators extends PropertyValidator {
 
     protected Map<String, NamedConstraintValidator> constraintValidators;
 
+    public AllNamedConstraintValidators() {
+        this.constraintValidators = new HashMap<String, NamedConstraintValidator>();
+    }
+
     @Autowired(required = false)
     public AllNamedConstraintValidators(Set<NamedConstraintValidator> constraintValidators) {
         this.constraintValidators = new HashMap<String, NamedConstraintValidator>();
-        for (NamedConstraintValidator constraintValidator : constraintValidators) {
-            this.constraintValidators.put(constraintValidator.getConstraintName(), constraintValidator);
+        if (constraintValidators != null) {
+            for (NamedConstraintValidator constraintValidator : constraintValidators) {
+                this.constraintValidators.put(constraintValidator.getConstraintName(), constraintValidator);
+            }
         }
     }
 
