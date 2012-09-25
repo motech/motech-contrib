@@ -8,7 +8,6 @@
 
     <import resource="classpath*:applicationPlatformCommonAPI.xml"/>
 
-    <context:property-placeholder location="classpath*:*.properties"/>
     <context:annotation-config/>
     <context:spring-configured/>
     <context:component-scan base-package="org.motechproject.validation"/>
