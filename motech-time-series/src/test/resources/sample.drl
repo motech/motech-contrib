@@ -1,0 +1,8 @@
+import org.motechproject.timeseries.*;
+
+rule "Hello World"
+    when
+
+    then
+        System.out.println("Hello world");
+end

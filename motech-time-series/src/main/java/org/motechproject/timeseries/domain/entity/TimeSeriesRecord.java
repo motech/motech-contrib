@@ -5,6 +5,7 @@ import org.ektorp.support.TypeDiscriminator;
 import org.motechproject.model.MotechBaseDataObject;
 import org.motechproject.timeseries.domain.valueobject.DataPoint;
 import org.motechproject.timeseries.domain.valueobject.DateRange;
+import org.motechproject.timeseries.domain.valueobject.TimeSeriesSet;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,25 +36,44 @@ public class TimeSeriesRecord extends MotechBaseDataObject {
             this.dataPoints.add(point);
     }
 
-    public List<DataPoint> allDataPointsMatching(List<DateRange> ranges) {
-        List<DataPoint> matchedPoints = new ArrayList<>();
+    public TimeSeriesSet allDataPointsMatching(List<DateRange> ranges) {
+        TimeSeriesSet set = new TimeSeriesSet();
         for (DateRange range : ranges) {
+            List<DataPoint> matchedPoints = new ArrayList<>();
             for (DataPoint point : dataPoints) {
                 if (point.matches(range))
                     matchedPoints.add(point);
             }
+            set.addRow(matchedPoints);
         }
-        return matchedPoints;
+        return set;
     }
 
-    public List<DataPoint> allDataPoints(int nos) {
+    public TimeSeriesSet allDataPoints(int nos) {
+        TimeSeriesSet set = new TimeSeriesSet();
         Vector<DataPoint> result = new Vector<>();
+
         for (int i = nos; i >= 0; i--) {
             if (i < dataPoints.size()) {
                 result.insertElementAt(dataPoints.get(i), 0);
             }
         }
-        return result;
+        set.addRow(result);
+        return set;
+    }
+
+    public TimeSeriesSet allDataPoints(List<Integer> nos) {
+        TimeSeriesSet set = new TimeSeriesSet();
+        for (Integer no : nos) {
+            Vector<DataPoint> result = new Vector<>();
+            for (int i = no; i >= 0; i--) {
+                if (i < dataPoints.size()) {
+                    result.insertElementAt(dataPoints.get(i), 0);
+                }
+            }
+            set.addRow(result);
+        }
+        return set;
     }
 
     public List<DataPoint> allDataPoints() {

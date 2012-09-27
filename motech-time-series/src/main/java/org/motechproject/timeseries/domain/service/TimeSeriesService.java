@@ -2,7 +2,7 @@ package org.motechproject.timeseries.domain.service;
 
 import org.motechproject.timeseries.domain.collection.AllTimeSeriesRecords;
 import org.motechproject.timeseries.domain.entity.TimeSeriesRecord;
-import org.motechproject.timeseries.pipeline.service.TimeSeriesOperationService;
+import org.motechproject.timeseries.rules.service.TimeSeriesRulesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -10,17 +10,17 @@ import org.springframework.stereotype.Service;
 public class TimeSeriesService {
 
     private AllTimeSeriesRecords allTimeSeriesRecords;
-    private TimeSeriesOperationService operationService;
+    private TimeSeriesRulesService rulesService;
 
     @Autowired
-    public TimeSeriesService(AllTimeSeriesRecords allTimeSeriesRecords, TimeSeriesOperationService operationService) {
+    public TimeSeriesService(AllTimeSeriesRecords allTimeSeriesRecords, TimeSeriesRulesService rulesService) {
         this.allTimeSeriesRecords = allTimeSeriesRecords;
-        this.operationService = operationService;
+        this.rulesService = rulesService;
     }
 
     public void capture(TimeSeriesRecord record) {
         allTimeSeriesRecords.add(record);
-        operationService.triggerPipes(record.getExternalId(), "onRecordEvent");
+        rulesService.executeRules(record, "onRecordEvent");
     }
 
     public TimeSeriesRecord recordForEntity(String externalId) {
