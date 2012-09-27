@@ -30,7 +30,7 @@ public class TimeSeriesSubscription extends MotechBaseDataObject {
         return ruleName;
     }
 
-    public void setRuleName(String pipeName) {
-        this.ruleName = pipeName;
+    public void setRuleName(String ruleName) {
+        this.ruleName = ruleName;
     }
 }
