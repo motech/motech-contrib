@@ -11,10 +11,6 @@ public class TimeSeriesRule extends MotechBaseDataObject {
 
     private String name;
 
-    private String externalId;
-
-    private String trigger;
-
     private InputStream inputStream;
 
     @JsonIgnore
@@ -37,21 +33,5 @@ public class TimeSeriesRule extends MotechBaseDataObject {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getExternalId() {
-        return externalId;
-    }
-
-    public void setExternalId(String externalId) {
-        this.externalId = externalId;
-    }
-
-    public String getTrigger() {
-        return trigger;
-    }
-
-    public void setTrigger(String trigger) {
-        this.trigger = trigger;
     }
 }

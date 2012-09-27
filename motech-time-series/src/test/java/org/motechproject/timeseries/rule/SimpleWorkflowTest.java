@@ -1,11 +1,15 @@
 package org.motechproject.timeseries.rule;
 
 import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.motechproject.timeseries.domain.entity.TimeSeriesRecord;
+import org.motechproject.timeseries.domain.service.TimeSeriesService;
 import org.motechproject.timeseries.rules.entity.TimeSeriesRule;
+import org.motechproject.timeseries.rules.entity.TimeSeriesSubscription;
 import org.motechproject.timeseries.rules.repository.AllTimeSeriesRules;
+import org.motechproject.timeseries.rules.repository.AllTimeSeriesSubscriptions;
 import org.motechproject.timeseries.rules.service.TimeSeriesRulesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -19,14 +23,34 @@ public class SimpleWorkflowTest {
     AllTimeSeriesRules rules;
 
     @Autowired
+    AllTimeSeriesSubscriptions subscriptions;
+
+    @Autowired
     TimeSeriesRulesService service;
+
+    @Autowired
+    TimeSeriesService timeSeriesService;
+
+    @Before
+    public void setup() {
+        persistRule();
+    }
 
     @Test
     public void shouldExecuteRulesForEntity() {
-        TimeSeriesRule timeSeriesRule = persistRule();
-        TimeSeriesRecord record = buildRecord(timeSeriesRule);
+        TimeSeriesSubscription subscription = subscription();
+        service.registerSubscription(subscription);
 
-        service.executeRules(record, timeSeriesRule.getTrigger());
+        TimeSeriesRecord record = buildRecord(subscription);
+        timeSeriesService.capture(record);
+    }
+
+    private TimeSeriesSubscription subscription() {
+        TimeSeriesSubscription subscription = new TimeSeriesSubscription();
+        subscription.setExternalId("externalId");
+        subscription.setEvent("onRecordEvent");
+        subscription.setRuleName("cumulativeMissedDoses");
+        return subscription;
     }
 
     private TimeSeriesRule persistRule() {
@@ -37,20 +61,20 @@ public class SimpleWorkflowTest {
 
     private TimeSeriesRule buildRule() {
         TimeSeriesRule rule = new TimeSeriesRule();
-        rule.setExternalId("externalId");
+        rule.setName("cumulativeMissedDoses");
         rule.setInputStream(this.getClass().getClassLoader().getResourceAsStream("cumulativeMissedDoses.drl"));
-        rule.setTrigger("onRecordEvent");
         return rule;
     }
 
-    private TimeSeriesRecord buildRecord(TimeSeriesRule timeSeriesRule) {
+    private TimeSeriesRecord buildRecord(TimeSeriesSubscription subscription) {
         TimeSeriesRecord record = new TimeSeriesRecord();
-        record.setExternalId(timeSeriesRule.getExternalId());
+        record.setExternalId(subscription.getExternalId());
         return record;
     }
 
     @After
     public void tearDown() {
         rules.removeAll();
+        subscriptions.removeAll();
     }
 }

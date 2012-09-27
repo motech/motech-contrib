@@ -1,7 +1,6 @@
 package org.motechproject.timeseries.rules.repository;
 
 import org.ektorp.AttachmentInputStream;
-import org.ektorp.ComplexKey;
 import org.ektorp.CouchDbConnector;
 import org.ektorp.ViewQuery;
 import org.ektorp.support.View;
@@ -33,9 +32,9 @@ public class AllTimeSeriesRules extends MotechBaseRepository<TimeSeriesRule> {
         }
     }
 
-    @View(name = "by_externalId_and_trigger", map = "function (doc) { if(doc.type === 'TimeSeriesRule') { emit([doc.externalId, doc.trigger], doc._id); }}")
-    public List<TimeSeriesRule> withTrigger(String externalId, String trigger) {
-        ViewQuery query = createQuery("by_externalId_and_trigger").key(ComplexKey.of(externalId, trigger)).includeDocs(true);
+    @View(name = "with_names", map = "function (doc) { if(doc.type === 'TimeSeriesRule') { emit(doc.name, doc._id); }}")
+    public List<TimeSeriesRule> withNames(List<String> names) {
+        ViewQuery query = createQuery("with_names").keys(names).includeDocs(true);
         List<TimeSeriesRule> result = db.queryView(query, TimeSeriesRule.class);
 
         if (result == null || result.isEmpty()) return Collections.emptyList();
