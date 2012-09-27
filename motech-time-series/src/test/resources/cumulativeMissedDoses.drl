@@ -1,0 +1,17 @@
+import org.motechproject.timeseries.domain.entity.*;
+import org.motechproject.timeseries.rules.function.*;
+import org.motechproject.timeseries.domain.valueobject.*;
+
+rule "Hello World"
+    when
+        $record : TimeSeriesRecord()
+    then
+        insert(new Threshold(1.0, true).process(new Summation().process($record.allDataPoints(0))));
+end
+
+rule "Summation"
+   when
+        TimeSeriesSet(isTrue() == true)
+   then
+        System.out.println("Hello world");
+end

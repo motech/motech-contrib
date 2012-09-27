@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static java.util.Arrays.asList;
+import static java.util.Arrays.deepEquals;
 
 public class TimeSeriesSet {
 
@@ -28,10 +29,16 @@ public class TimeSeriesSet {
     public List<List<DataPoint>> getData() {
         SingularResult singularData = singularData();
         if (singularData.isValid()) {
-            return asList(singularData.getResult());
+            List<List<DataPoint>> lists = new ArrayList<>();
+            lists.add(singularData.getResult());
+            return lists;
         } else {
             return data;
         }
+    }
+
+    public boolean isTrue(){
+        return data.size() > 0 && data.get(0).size() > 0 && data.get(0).get(0).getValue() > 0.0;
     }
 
     private SingularResult singularData() {

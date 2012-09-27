@@ -38,7 +38,7 @@ public class SimpleWorkflowTest {
     private TimeSeriesRule buildRule() {
         TimeSeriesRule rule = new TimeSeriesRule();
         rule.setExternalId("externalId");
-        rule.setInputStream(this.getClass().getClassLoader().getResourceAsStream("sample.drl"));
+        rule.setInputStream(this.getClass().getClassLoader().getResourceAsStream("cumulativeMissedDoses.drl"));
         rule.setTrigger("onRecordEvent");
         return rule;
     }

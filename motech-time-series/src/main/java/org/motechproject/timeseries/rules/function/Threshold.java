@@ -24,7 +24,6 @@ public class Threshold {
             for (DataPoint point : row) {
                 DataPoint dataPoint = new DataPoint(point);
                 if (conditionTriggered(point)) {
-                    System.out.println("Value " + point.getValue() + " has triggered the threshold " + value);
                     dataPoint.setValue(1d);
                 } else {
                     dataPoint.setValue(0d);

@@ -3,6 +3,7 @@ package org.motechproject.timeseries.rules.service;
 import org.drools.KnowledgeBase;
 import org.drools.KnowledgeBaseFactory;
 import org.drools.builder.KnowledgeBuilder;
+import org.drools.builder.KnowledgeBuilderError;
 import org.drools.builder.KnowledgeBuilderFactory;
 import org.drools.builder.ResourceType;
 import org.drools.io.ResourceFactory;
@@ -47,6 +48,11 @@ public class TimeSeriesRulesService {
         KnowledgeBuilder kBuilder = KnowledgeBuilderFactory.newKnowledgeBuilder();
         for (TimeSeriesRule timeSeriesRule : timeSeriesRules) {
             kBuilder.add(ResourceFactory.newInputStreamResource(timeSeriesRule.getInputStream()), ResourceType.DRL);
+        }
+        if(kBuilder.hasErrors()){
+            for( KnowledgeBuilderError err: kBuilder.getErrors() ){
+                System.out.println( err.toString() );
+            }
         }
         return kBuilder;
     }
