@@ -14,6 +14,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.List;
 
 public abstract class DataImportProcessor {
@@ -34,14 +35,21 @@ public abstract class DataImportProcessor {
         }
     }
 
-    public void process(String filePath) {
+    public void process(String... filePaths) {
         try {
-            List<Object> valuesFromFile = parse(filePath);
-            ValidationResponse validationResponse = validate(valuesFromFile);
-            if (validationResponse.isValid()) {
-                invokePostMethod(valuesFromFile);
-            } else {
-                processErrors(validationResponse.getErrors(), filePath);
+            List<Object> allValuesFromFile = new ArrayList<>();
+            for (String filePath : filePaths) {
+                List<Object> valuesFromFile = parse(filePath);
+                ValidationResponse validationResponse = validate(valuesFromFile);
+                if (validationResponse.isValid()) {
+                    allValuesFromFile.addAll(valuesFromFile);
+                } else {
+                    processErrors(validationResponse.getErrors(), filePath);
+                }
+            }
+
+            if (!allValuesFromFile.isEmpty()) {
+                invokePostMethod(allValuesFromFile);
             }
         } catch (Exception e) {
             System.err.println("Error while importing csv : " + ExceptionUtils.getFullStackTrace(e));
