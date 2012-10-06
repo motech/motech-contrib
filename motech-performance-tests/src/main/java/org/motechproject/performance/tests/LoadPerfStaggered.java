@@ -11,5 +11,5 @@ public @interface LoadPerfStaggered {
     int totalNumberOfUsers();
     String[] minMaxRandomBatchSizes();
     int minDelayInMillis();
-    int maxDelayInMillis();
+    int delayVariation();
 }
