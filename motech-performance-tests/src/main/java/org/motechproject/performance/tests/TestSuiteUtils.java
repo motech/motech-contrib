@@ -20,7 +20,7 @@ public class TestSuiteUtils {
     public static TestSuite createStaggeredLoadTestSuite(LoadPerfStaggered loadPerfStaggered, FrameworkMethod method) {
         TestSuite testSuite = new TestSuite();
         CustomTest customTest = getCustomTest(method.getMethod().getDeclaringClass(), method.getMethod().getName());
-        int variation = loadPerfStaggered.maxDelayInMillis();
+        int variation = loadPerfStaggered.delayVariation();
         RandomTimer randomTimer = new RandomTimer(loadPerfStaggered.minDelayInMillis(), variation);
 
         String[] batchSizes = loadPerfStaggered.minMaxRandomBatchSizes();
