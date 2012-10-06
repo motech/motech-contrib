@@ -9,6 +9,6 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface LoadPerfBefore {
     /*Higher the value, lower the priority*/
-    int priority();
-    int concurrentUsers();
+    int priority() default 1;
+    int concurrentUsers() default 1;
 }

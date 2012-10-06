@@ -2,7 +2,6 @@ package org.motechproject.performance.tests;
 
 import com.clarkware.junitperf.LoadTest;
 import com.clarkware.junitperf.RandomTimer;
-import com.clarkware.junitperf.TestMethodFactory;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 import org.joda.time.DateTime;
@@ -21,7 +20,7 @@ public class TestSuiteUtils {
     public static TestSuite createStaggeredLoadTestSuite(LoadPerfStaggered loadPerfStaggered, FrameworkMethod method) {
         TestSuite testSuite = new TestSuite();
         CustomTest customTest = getCustomTest(method.getMethod().getDeclaringClass(), method.getMethod().getName());
-        int variation = loadPerfStaggered.delayVariation();
+        int variation = loadPerfStaggered.maxDelayInMillis();
         RandomTimer randomTimer = new RandomTimer(loadPerfStaggered.minDelayInMillis(), variation);
 
         String[] batchSizes = loadPerfStaggered.minMaxRandomBatchSizes();
@@ -33,9 +32,10 @@ public class TestSuiteUtils {
     }
 
     private static CustomTest getCustomTest(Class testClass, String methodName) {
-        Test testCase = new TestMethodFactory(testClass, methodName);
+        Test testCase = new SpringTestMethodFactory(testClass, methodName);
         IndividualTestTimeResultWriter resultWriter = new IndividualTestTimeResultWriter(methodName+"-PerformanceTestLog" + DateTime.now() + ".csv");
-        return new CustomTest(testCase, resultWriter);
+        CustomTest customTest = new CustomTest(testCase, resultWriter);
+        return customTest;
     }
 
 
