@@ -3,7 +3,7 @@
     <parent>
         <artifactId>case-integration</artifactId>
         <groupId>org.motechproject.contrib-whp</groupId>
-        <version>0.3-SNAPSHOT</version>
+        <version>0.3</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -77,12 +77,12 @@
         <dependency>
             <groupId>org.motechproject.contrib-whp</groupId>
             <artifactId>case-parser</artifactId>
-            <version>0.3-SNAPSHOT</version>
+            <version>0.3</version>
         </dependency>
         <dependency>
             <groupId>org.motechproject.contrib-whp</groupId>
             <artifactId>case-common</artifactId>
-            <version>0.3-SNAPSHOT</version>
+            <version>0.3</version>
         </dependency>
     </dependencies>
 

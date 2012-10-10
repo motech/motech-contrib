@@ -6,7 +6,7 @@
     <artifactId>motech-diagnostics</artifactId>
     <groupId>org.motechproject.contrib-whp</groupId>
     <packaging>jar</packaging>
-    <version>0.3-SNAPSHOT</version>
+    <version>0.3</version>
 
     <properties>
         <spring-security.version>3.1.0.RELEASE</spring-security.version>
@@ -16,7 +16,7 @@
     <parent>
         <artifactId>motech-contrib</artifactId>
         <groupId>org.motechproject.contrib-whp</groupId>
-        <version>0.3-SNAPSHOT</version>
+        <version>0.3</version>
     </parent>
 
     <dependencies>
