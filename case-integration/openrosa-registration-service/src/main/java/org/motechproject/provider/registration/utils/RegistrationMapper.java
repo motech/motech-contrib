@@ -3,6 +3,7 @@ package org.motechproject.provider.registration.utils;
 import org.apache.commons.beanutils.BeanMap;
 import org.apache.commons.beanutils.BeanUtils;
 import org.motechproject.casexml.domain.Case;
+import org.motechproject.provider.registration.contract.OpenRosaXmlRequest;
 import org.motechproject.provider.registration.domain.Provider;
 
 import java.util.HashMap;
@@ -16,7 +17,7 @@ import java.util.Map;
  * Time: 10:48 PM
  * To change this template use File | Settings | File Templates.
  */
-public class RegistrationMapper<T> {
+public class RegistrationMapper<T extends OpenRosaXmlRequest> {
 
     private Class<T> clazz;
 

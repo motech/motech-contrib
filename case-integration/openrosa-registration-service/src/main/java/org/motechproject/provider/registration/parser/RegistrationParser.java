@@ -1,6 +1,7 @@
 package org.motechproject.provider.registration.parser;
 
 import com.sun.org.apache.xerces.internal.parsers.DOMParser;
+import org.motechproject.provider.registration.contract.OpenRosaXmlRequest;
 import org.motechproject.provider.registration.domain.Provider;
 import org.motechproject.provider.registration.exception.OpenRosaRegistrationParserException;
 import org.motechproject.provider.registration.utils.RegistrationMapper;
@@ -15,7 +16,7 @@ import java.io.StringReader;
 
 import static org.apache.commons.lang.StringUtils.trimToEmpty;
 
-public class RegistrationParser<T> {
+public class RegistrationParser<T extends OpenRosaXmlRequest> {
     RegistrationMapper<T> domainMapper;
     private String xmlDocument;
 

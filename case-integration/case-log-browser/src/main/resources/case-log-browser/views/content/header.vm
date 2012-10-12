@@ -1,0 +1,54 @@
+<head>
+    <title>CaseLogs</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="$label.home.page.title">
+    <meta name="author" content="$label.home.author">
+    <base href="/$endpoint/">
+
+    <link rel="shortcut icon" href="assets/ico/favicon.ico">
+    <link href="case-log-browser/css/bootstrap.css" rel="stylesheet">
+    <link href="case-log-browser/css/bootstrap-responsive.css" rel="stylesheet">
+
+    <script src="case-log-browser/js/jquery-min.js"></script>
+    <script src="case-log-browser/js/bootstrap.js"></script>
+    <script src="case-log-browser/js/caseLogs.js"></script>
+</head>
+
+<body>
+<div class="navbar navbar-fixed-top">
+    <div class="navbar-inner">
+        <div class="container-fluid">
+            <a class="brand" href="">Home</a>
+            <a class="brand" href="caselogs/all">Case Logs</a>
+        </div>
+    </div>
+</div>
+<br>
+<br>
+
+<div id="search-section" class="well">
+    <form id="filter-case-logs-form" autocomplete="off" input class="form-horizontal">
+        <div id="search-pane" class="row-fluid">
+            <div class="control-group span3">
+                <label class="control-label">Entity ID</label>
+
+                <div class="controls">
+                    <input id="entityId" name="entityId" type="text"/>
+                </div>
+            </div>
+
+            <div class="control-group span5">
+                <label class="control-label">Request Type</label>
+
+                <div class="controls">
+                    <input class="input-large" type="text" name='requestType' id="requestType"/>
+
+                    <button type="button" id="filter" class="btn btn-primary">Filter <i
+                            class="icon-filter icon-white"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

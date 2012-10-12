@@ -1,0 +1,7 @@
+#parse( "case-log-browser/views/content/header.vm" )
+
+<div id="logs-content">
+    #parse( "case-log-browser/views/content/body.vm" )
+</div>
+
+#parse( "case-log-browser/views/content/footer.vm" )

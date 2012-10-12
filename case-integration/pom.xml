@@ -19,6 +19,8 @@
         <module>case-parser</module>
         <module>case-common</module>
         <module>case-service</module>
+        <module>case-logger</module>
+        <module>case-log-browser</module>
         <module>commcare-case-gateway</module>
         <module>openrosa-registration-service</module>
     </modules>
@@ -85,6 +87,18 @@
 
     <dependencies>
         <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>servlet-api</artifactId>
+            <version>2.5</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test-mvc</artifactId>
+            <version>1.0.0.M1</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
             <groupId>joda-time</groupId>
             <artifactId>joda-time</artifactId>
             <version>2.0</version>
@@ -95,9 +109,20 @@
             <version>2.5</version>
         </dependency>
         <dependency>
+            <groupId>org.codehaus.jackson</groupId>
+            <artifactId>jackson-mapper-asl</artifactId>
+            <version>1.9.7</version>
+        </dependency>
+        <dependency>
+            <groupId>org.codehaus.jackson</groupId>
+            <artifactId>jackson-core-asl</artifactId>
+            <version>1.9.7</version>
+        </dependency>
+        <dependency>
             <groupId>org.motechproject</groupId>
-            <artifactId>motech-platform-common-api</artifactId>
+            <artifactId>motech-testing-utils</artifactId>
             <version>${motech.version}</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 </project>
