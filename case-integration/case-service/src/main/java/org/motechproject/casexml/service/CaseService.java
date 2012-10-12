@@ -1,16 +1,18 @@
 package org.motechproject.casexml.service;
 
 import org.apache.log4j.Logger;
-import org.apache.velocity.app.VelocityEngine;
+import org.motechproject.casexml.CaseLog;
 import org.motechproject.casexml.builder.ResponseMessageBuilder;
 import org.motechproject.casexml.exception.CaseParserException;
 import org.motechproject.casexml.parser.CommcareCaseParser;
+import org.motechproject.casexml.repository.AllCaseLogs;
 import org.motechproject.casexml.service.exception.CaseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
 public abstract class CaseService<T> {
@@ -20,9 +22,15 @@ public abstract class CaseService<T> {
     private static Logger logger = Logger.getLogger(CaseService.class);
 
     private Class<T> clazz;
+    private AllCaseLogs allCaseLogs;
 
     public CaseService(Class<T> clazz) {
         this.clazz = clazz;
+    }
+
+    @Autowired
+    public void setAllCaseLogs(AllCaseLogs allCaseLogs) {
+        this.allCaseLogs = allCaseLogs;
     }
 
     @Autowired
@@ -31,30 +39,39 @@ public abstract class CaseService<T> {
     }
 
     @RequestMapping(value = "/process", method = RequestMethod.POST)
-    public ResponseEntity<String> processCase(HttpEntity<String> requestEntity) throws IOException {
+    public ResponseEntity<String> processCase(HttpServletRequest request, HttpEntity<String> requestEntity) throws IOException {
         logger.info(requestEntity.getBody());
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.setContentType(MediaType.TEXT_XML);
+
 
         try {
             CommcareCaseParser<T> caseParser = new CommcareCaseParser<T>(clazz, requestEntity.getBody());
             T object = caseParser.parseCase();
 
             processCaseAction(caseParser, object);
+            logCase(request.getPathInfo(), requestEntity.getBody(), false);
 
         } catch (CaseParserException exception) {
             logError(exception);
+            logCase(request.getPathInfo(), requestEntity.getBody(), true);
             return loggedResponse(new ResponseEntity<String>(responseMessageBuilder.createResponseMessage(exception), responseHeaders, HttpStatus.BAD_REQUEST));
 
         } catch (CaseException exception) {
             logError(exception);
+            logCase(request.getPathInfo(), requestEntity.getBody(), true);
             return loggedResponse(new ResponseEntity<String>(responseMessageBuilder.createResponseMessage(exception), responseHeaders, exception.getHttpStatusCode()));
 
         } catch (RuntimeException exception) {
             logError(exception);
+            logCase(request.getPathInfo(), requestEntity.getBody(), true);
             return loggedResponse(new ResponseEntity<String>(responseMessageBuilder.messageForRuntimeException(), responseHeaders, HttpStatus.INTERNAL_SERVER_ERROR));
         }
         return loggedResponse(new ResponseEntity<String>(responseMessageBuilder.messageForSuccess(), responseHeaders, HttpStatus.OK));
+    }
+
+    private void logCase(String requestURI, String requestBody, boolean hasException) {
+        allCaseLogs.add(new CaseLog(requestBody, requestURI, hasException));
     }
 
     private void logError(Throwable exception) {
