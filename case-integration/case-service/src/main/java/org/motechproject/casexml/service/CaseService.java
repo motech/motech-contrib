@@ -44,42 +44,47 @@ public abstract class CaseService<T> {
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.setContentType(MediaType.TEXT_XML);
 
-
+        CaseLog persistedLog = null;
         try {
             CommcareCaseParser<T> caseParser = new CommcareCaseParser<T>(clazz, requestEntity.getBody());
             T object = caseParser.parseCase();
 
             processCaseAction(caseParser, object);
-            logCase(request.getPathInfo(), requestEntity.getBody(), false);
-
+            persistedLog = createNewLog(request.getPathInfo(), requestEntity.getBody(), false);
         } catch (CaseParserException exception) {
             logError(exception);
-            logCase(request.getPathInfo(), requestEntity.getBody(), true);
-            return loggedResponse(new ResponseEntity<String>(responseMessageBuilder.createResponseMessage(exception), responseHeaders, HttpStatus.BAD_REQUEST));
+            persistedLog = createNewLog(request.getPathInfo(), requestEntity.getBody(), true);
+            return loggedResponse(new ResponseEntity<String>(responseMessageBuilder.createResponseMessage(exception), responseHeaders, HttpStatus.BAD_REQUEST), persistedLog);
 
         } catch (CaseException exception) {
             logError(exception);
-            logCase(request.getPathInfo(), requestEntity.getBody(), true);
-            return loggedResponse(new ResponseEntity<String>(responseMessageBuilder.createResponseMessage(exception), responseHeaders, exception.getHttpStatusCode()));
+            persistedLog = createNewLog(request.getPathInfo(), requestEntity.getBody(), true);
+            return loggedResponse(new ResponseEntity<String>(responseMessageBuilder.createResponseMessage(exception), responseHeaders, exception.getHttpStatusCode()), persistedLog);
 
         } catch (RuntimeException exception) {
             logError(exception);
-            logCase(request.getPathInfo(), requestEntity.getBody(), true);
-            return loggedResponse(new ResponseEntity<String>(responseMessageBuilder.messageForRuntimeException(), responseHeaders, HttpStatus.INTERNAL_SERVER_ERROR));
+            persistedLog = createNewLog(request.getPathInfo(), requestEntity.getBody(), true);
+            return loggedResponse(new ResponseEntity<String>(responseMessageBuilder.messageForRuntimeException(), responseHeaders, HttpStatus.INTERNAL_SERVER_ERROR), persistedLog);
         }
-        return loggedResponse(new ResponseEntity<String>(responseMessageBuilder.messageForSuccess(), responseHeaders, HttpStatus.OK));
+        return loggedResponse(new ResponseEntity<String>(responseMessageBuilder.messageForSuccess(), responseHeaders, HttpStatus.OK), persistedLog);
     }
 
-    private void logCase(String requestURI, String requestBody, boolean hasException) {
-        allCaseLogs.add(new CaseLog(requestBody, requestURI, hasException));
+    private CaseLog createNewLog(String requestURI, String requestBody, boolean hasException) {
+        return new CaseLog(requestBody, requestURI, hasException);
+    }
+
+    private void log(CaseLog log) {
+        allCaseLogs.add(log);
     }
 
     private void logError(Throwable exception) {
         logger.error("Exception encountered while processing case xml" + exception.getMessage() + exception.getStackTrace(), exception);
     }
 
-    private ResponseEntity<String> loggedResponse(ResponseEntity<String> responseEntity) {
+    private ResponseEntity<String> loggedResponse(ResponseEntity<String> responseEntity, CaseLog caseLog) {
         logger.info("Sending case xml Response: Status Code: " + responseEntity.getStatusCode() + "; Body: " + responseEntity.getBody());
+        caseLog.setResponse(responseEntity.getBody());
+        log(caseLog);
         return responseEntity;
     }
 

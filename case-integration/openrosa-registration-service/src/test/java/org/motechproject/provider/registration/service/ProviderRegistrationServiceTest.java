@@ -1,4 +1,4 @@
-package org.motechproject.casexml.service;
+package org.motechproject.provider.registration.service;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
@@ -6,8 +6,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.motechproject.casexml.CaseLog;
-import org.motechproject.casexml.impl.CaseServiceImpl;
 import org.motechproject.casexml.repository.AllCaseLogs;
+import org.motechproject.provider.registration.impl.SampleProviderRegistrationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -20,11 +20,12 @@ import static org.springframework.test.web.server.request.MockMvcRequestBuilders
 import static org.springframework.test.web.server.setup.MockMvcBuilders.standaloneSetup;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = "classpath:testApplicationContext-case.xml")
-public class CaseServiceTest {
+@ContextConfiguration(locations = "classpath:testApplicationContext-openrosa.xml")
+public class ProviderRegistrationServiceTest {
 
     @Autowired
-    CaseServiceImpl caseService;
+    SampleProviderRegistrationService providerRegistrationService;
+
     @Autowired
     AllCaseLogs caseLogs;
 
@@ -45,33 +46,9 @@ public class CaseServiceTest {
         testLogCreated(bytes, true);
     }
 
-    @Test
-    public void shouldLogUpdateCaseResponses() throws Exception {
-        byte[] bytes = readSampleXML("/testUpdateXML");
-        testLogCreated(bytes, false);
-    }
-
-    @Test
-    public void shouldLogUpdateCaseResponseInCaseOfException() throws Exception {
-        byte[] bytes = readSampleXML("/invalidUpdateXML");
-        testLogCreated(bytes, false);
-    }
-
-    @Test
-    public void shouldLogCloseCaseResponses() throws Exception {
-        byte[] bytes = readSampleXML("/testCloseXML");
-        testLogCreated(bytes, false);
-    }
-
-    @Test
-    public void shouldLogCloseCaseResponseInCaseOfException() throws Exception {
-        byte[] bytes = readSampleXML("/testCloseXML");
-        testLogCreated(bytes, false);
-    }
-
     private void testLogCreated(byte[] bytes, boolean hasException) throws Exception {
         String contextPath = "/case/process";
-        standaloneSetup(caseService)
+        standaloneSetup(providerRegistrationService)
                 .build()
                 .perform(
                         post(contextPath)
@@ -91,4 +68,5 @@ public class CaseServiceTest {
         assertEquals(hasContent, StringUtils.isNotBlank(caseLog.getRequest()));
         assertTrue(StringUtils.isNotBlank(caseLog.getResponse()));
     }
+
 }

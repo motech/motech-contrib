@@ -1,5 +1,6 @@
 package org.motechproject.casexml.impl;
 
+import org.motechproject.casexml.SampleCaseRequest;
 import org.motechproject.casexml.service.CaseService;
 import org.motechproject.casexml.service.exception.CaseException;
 import org.springframework.stereotype.Controller;

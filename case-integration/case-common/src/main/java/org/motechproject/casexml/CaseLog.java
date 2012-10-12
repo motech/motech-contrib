@@ -9,6 +9,7 @@ public class CaseLog extends MotechBaseDataObject {
     private String contextPath;
     private String request;
     private boolean hasException;
+    private String response;
 
     public CaseLog() {
     }
@@ -41,5 +42,13 @@ public class CaseLog extends MotechBaseDataObject {
 
     public void setHasException(boolean hasException) {
         this.hasException = hasException;
+    }
+
+    public String getResponse() {
+        return response;
+    }
+
+    public void setResponse(String response) {
+        this.response = response;
     }
 }
