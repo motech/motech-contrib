@@ -71,7 +71,7 @@ public abstract class CaseService<T> {
     }
 
     private CaseLog createNewLog(String requestURI, String requestBody, boolean hasException) {
-        return new CaseLog(requestBody, requestURI, hasException, DateUtil.now());
+        return new CaseLog(requestBody, requestURI, hasException, DateUtil.now().withMillisOfSecond(0));
     }
 
     private void log(CaseLog log) {

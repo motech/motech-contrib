@@ -32,7 +32,7 @@ public class ProviderRegistrationServiceTest extends BaseUnitTest {
     @Autowired
     AllCaseLogs caseLogs;
 
-    DateTime now = DateUtil.now();
+    DateTime now = DateUtil.now().withMillisOfSecond(0);
 
     @Before
     public void setup() {

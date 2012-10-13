@@ -31,7 +31,7 @@ public class CaseServiceTest extends BaseUnitTest {
     @Autowired
     AllCaseLogs caseLogs;
 
-    DateTime now = DateUtil.now();
+    DateTime now = DateUtil.now().withMillisOfSecond(0);
 
     @Before
     public void setup() {
