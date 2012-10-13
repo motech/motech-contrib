@@ -29,16 +29,24 @@ public abstract class LuceneAwareMotechBaseRepository<T extends MotechBaseDataOb
     }
 
     private CustomLuceneResult getLuceneResult(QueryDefinition queryDefinition, Properties queryParams, String viewName, String searchFunctionName, Integer limit, Integer skip) {
+        LuceneQuery query = getLuceneQuery(queryDefinition, queryParams, viewName, searchFunctionName, limit, skip);
+        TypeReference resultDocType = getTypeReference();
+        return ((LuceneAwareCouchDbConnector) db).queryLucene(query, resultDocType);
+    }
+
+    private LuceneQuery getLuceneQuery(QueryDefinition queryDefinition, Properties queryParams, String viewName, String searchFunctionName, Integer limit, Integer skip) {
         LuceneQuery query = new LuceneQuery(viewName, searchFunctionName);
         String queryString = new QueryBuilder(queryParams, queryDefinition).build();
         query.setQuery(queryString.toString());
         query.setIncludeDocs(true);
         query.setLimit(limit);
         query.setSkip(skip);
-
-        TypeReference resultDocType = getTypeReference();
-        return ((LuceneAwareCouchDbConnector) db).queryLucene(query, resultDocType);
+        return query;
     }
 
     protected abstract TypeReference getTypeReference();
+
+    public int count(QueryDefinition queryDefinition, String viewName, String searchName, Properties filterParams) {
+        return getLuceneResult(queryDefinition, filterParams, viewName, searchName, 1, 0).getTotalRows();
+    }
 }

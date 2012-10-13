@@ -53,6 +53,25 @@ public class LuceneAwareMotechBaseRepositoryTest {
         verify(connector).queryLucene(expectedQuery, repository.getTypeReference());
     }
 
+    @Test
+    public void shouldGetTotalRecordsForGivenFilter(){
+        Properties filterParams = buildFilterParameters();
+
+        LuceneAwareMotechBaseRepositoryImpl repository = new LuceneAwareMotechBaseRepositoryImpl(connector);
+        LuceneQuery expectedQuery = expectedLuceneQuery();
+        expectedQuery.setLimit(1);
+
+        Entity entity = new Entity("value1", "value2");
+        CustomLuceneResult<Entity> luceneResult = createLuceneResult(entity);
+        luceneResult.setTotalRows(1);
+
+        when(connector.queryLucene(expectedQuery, repository.getTypeReference())).thenReturn(luceneResult);
+
+        assertEquals(1, repository.count(new QueryDefinitionImpl(), VIEW_NAME, SEARCH_NAME, filterParams));
+        verify(connector).queryLucene(expectedQuery, repository.getTypeReference());
+
+    }
+
     private Properties buildFilterParameters() {
         Properties filterParams = new Properties();
         filterParams.put("field1", "value1");
