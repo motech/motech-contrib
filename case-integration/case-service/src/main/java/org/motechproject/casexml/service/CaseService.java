@@ -7,6 +7,7 @@ import org.motechproject.casexml.exception.CaseParserException;
 import org.motechproject.casexml.parser.CommcareCaseParser;
 import org.motechproject.casexml.repository.AllCaseLogs;
 import org.motechproject.casexml.service.exception.CaseException;
+import org.motechproject.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -70,7 +71,7 @@ public abstract class CaseService<T> {
     }
 
     private CaseLog createNewLog(String requestURI, String requestBody, boolean hasException) {
-        return new CaseLog(requestBody, requestURI, hasException);
+        return new CaseLog(requestBody, requestURI, hasException, DateUtil.now());
     }
 
     private void log(CaseLog log) {

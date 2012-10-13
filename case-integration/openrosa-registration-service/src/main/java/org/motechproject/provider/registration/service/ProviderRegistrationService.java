@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
+import static org.motechproject.util.DateUtil.now;
+
 public abstract class ProviderRegistrationService<T> {
 
     private static Logger logger = Logger.getLogger(ProviderRegistrationService.class);
@@ -62,7 +64,7 @@ public abstract class ProviderRegistrationService<T> {
     }
 
     private CaseLog createNewLog(String requestURI, String requestBody, boolean hasException) {
-        return new CaseLog(requestBody, requestURI, hasException);
+        return new CaseLog(requestBody, requestURI, hasException, now());
     }
 
     private void log(CaseLog log) {

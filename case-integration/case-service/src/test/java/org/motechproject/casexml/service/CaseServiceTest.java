@@ -2,12 +2,15 @@ package org.motechproject.casexml.service;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
+import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.motechproject.casexml.CaseLog;
 import org.motechproject.casexml.impl.CaseServiceImpl;
 import org.motechproject.casexml.repository.AllCaseLogs;
+import org.motechproject.testing.utils.BaseUnitTest;
+import org.motechproject.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -21,16 +24,19 @@ import static org.springframework.test.web.server.setup.MockMvcBuilders.standalo
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = "classpath:testApplicationContext-case.xml")
-public class CaseServiceTest {
+public class CaseServiceTest extends BaseUnitTest {
 
     @Autowired
     CaseServiceImpl caseService;
     @Autowired
     AllCaseLogs caseLogs;
 
+    DateTime now = DateUtil.now();
+
     @Before
     public void setup() {
         caseLogs.removeAll();
+        mockCurrentDate(now);
     }
 
     @Test
@@ -90,5 +96,6 @@ public class CaseServiceTest {
         assertEquals(hasException, caseLog.getHasException());
         assertEquals(hasContent, StringUtils.isNotBlank(caseLog.getRequest()));
         assertTrue(StringUtils.isNotBlank(caseLog.getResponse()));
+        assertEquals(now, caseLog.getLogDate());
     }
 }

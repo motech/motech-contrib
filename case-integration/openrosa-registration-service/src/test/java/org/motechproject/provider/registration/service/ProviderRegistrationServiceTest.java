@@ -2,12 +2,15 @@ package org.motechproject.provider.registration.service;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
+import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.motechproject.casexml.CaseLog;
 import org.motechproject.casexml.repository.AllCaseLogs;
 import org.motechproject.provider.registration.impl.SampleProviderRegistrationService;
+import org.motechproject.testing.utils.BaseUnitTest;
+import org.motechproject.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -21,7 +24,7 @@ import static org.springframework.test.web.server.setup.MockMvcBuilders.standalo
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = "classpath:testApplicationContext-openrosa.xml")
-public class ProviderRegistrationServiceTest {
+public class ProviderRegistrationServiceTest extends BaseUnitTest {
 
     @Autowired
     SampleProviderRegistrationService providerRegistrationService;
@@ -29,8 +32,11 @@ public class ProviderRegistrationServiceTest {
     @Autowired
     AllCaseLogs caseLogs;
 
+    DateTime now = DateUtil.now();
+
     @Before
     public void setup() {
+        mockCurrentDate(now);
         caseLogs.removeAll();
     }
 
@@ -67,6 +73,7 @@ public class ProviderRegistrationServiceTest {
         assertEquals(hasException, caseLog.getHasException());
         assertEquals(hasContent, StringUtils.isNotBlank(caseLog.getRequest()));
         assertTrue(StringUtils.isNotBlank(caseLog.getResponse()));
+        assertEquals(now, caseLog.getLogDate());
     }
 
 }
