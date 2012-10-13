@@ -153,4 +153,14 @@ class QueryDefinitionImpl implements QueryDefinition {
     public String searchFunctionName() {
         return "SEARCH_NAME";
     }
+
+    @Override
+    public String indexFunction() {
+        return "function(doc) { " +
+                    "var index=new Document(); " +
+                    "index.add(doc.field1, {field: 'field1'}); " +
+                    "index.add(doc.field2, {field: 'field2'}); " +
+                    "return index;" +
+                "}";
+    }
 }

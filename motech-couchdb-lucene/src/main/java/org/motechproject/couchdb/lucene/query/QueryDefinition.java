@@ -8,4 +8,5 @@ public interface QueryDefinition {
     List<Field> fields();
     String viewName();
     String searchFunctionName();
+    String indexFunction();
 }
