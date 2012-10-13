@@ -38,7 +38,7 @@ public class QueryBuilder {
 
     private List<Criteria> getQueryCriteria() {
         List<Criteria> criteria = new ArrayList<>();
-        for (Field field : queryDefinition.getFields()) {
+        for (Field field : queryDefinition.fields()) {
             if(field.presentIn(filterParams)) {
                 criteria.add(field.createCriteria(filterParams));
             }

@@ -24,11 +24,21 @@ public class QueryBuilderTest {
 
         AtomicReference<QueryDefinition> queryDefinition = new AtomicReference<QueryDefinition>(new QueryDefinition() {
             @Override
-            public List<Field> getFields() {
+            public List<Field> fields() {
                 List<Field> fields = new ArrayList<>();
                 fields.add(new QueryField("field1", STRING));
                 fields.add(new QueryField("field2", STRING));
                 return fields;
+            }
+
+            @Override
+            public String viewName() {
+                return "view_name";
+            }
+
+            @Override
+            public String searchFunctionName() {
+                return "search_name";
             }
         });
 
@@ -46,11 +56,21 @@ public class QueryBuilderTest {
 
         QueryDefinition queryDefinition = new QueryDefinition() {
             @Override
-            public List<Field> getFields() {
+            public List<Field> fields() {
                 List<Field> fields = new ArrayList<>();
                 fields.add(new RangeField("field", STRING, "fieldFrom", "fieldTo"));
                 fields.add(new QueryField("anotherField", STRING));
                 return fields;
+            }
+
+            @Override
+            public String viewName() {
+                return "view_name";
+            }
+
+            @Override
+            public String searchFunctionName() {
+                return "search_name";
             }
         };
         QueryBuilder queryBuilder = new QueryBuilder(filterParam, queryDefinition);

@@ -25,8 +25,6 @@ import static org.mockito.MockitoAnnotations.initMocks;
 import static org.motechproject.couchdb.lucene.query.field.FieldType.STRING;
 
 public class LuceneAwareMotechBaseRepositoryTest {
-    String SEARCH_NAME = "SEARCH_NAME";
-    String VIEW_NAME = "VIEW_NAME";
 
     @Mock
     LuceneAwareCouchDbConnector connector;
@@ -42,14 +40,15 @@ public class LuceneAwareMotechBaseRepositoryTest {
 
         LuceneAwareMotechBaseRepositoryImpl repository = new LuceneAwareMotechBaseRepositoryImpl(connector);
 
-        LuceneQuery expectedQuery = expectedLuceneQuery();
+        QueryDefinitionImpl queryDefinition = new QueryDefinitionImpl();
+        LuceneQuery expectedQuery = expectedLuceneQuery(queryDefinition.viewName(), queryDefinition.searchFunctionName());
         Entity entity = new Entity("value1", "value2");
         List<Entity> expectedResult = createExpectedResult(entity);
         CustomLuceneResult<Entity> luceneResult = createLuceneResult(entity);
 
         when(connector.queryLucene(expectedQuery, repository.getTypeReference())).thenReturn(luceneResult);
 
-        assertEquals(expectedResult, repository.filter(new QueryDefinitionImpl(), VIEW_NAME, SEARCH_NAME, filterParams, 0, 10));
+        assertEquals(expectedResult, repository.filter(queryDefinition, filterParams, 0, 10));
         verify(connector).queryLucene(expectedQuery, repository.getTypeReference());
     }
 
@@ -58,7 +57,8 @@ public class LuceneAwareMotechBaseRepositoryTest {
         Properties filterParams = buildFilterParameters();
 
         LuceneAwareMotechBaseRepositoryImpl repository = new LuceneAwareMotechBaseRepositoryImpl(connector);
-        LuceneQuery expectedQuery = expectedLuceneQuery();
+        QueryDefinitionImpl queryDefinition = new QueryDefinitionImpl();
+        LuceneQuery expectedQuery = expectedLuceneQuery(queryDefinition.viewName(), queryDefinition.searchFunctionName());
         expectedQuery.setLimit(1);
 
         Entity entity = new Entity("value1", "value2");
@@ -67,7 +67,7 @@ public class LuceneAwareMotechBaseRepositoryTest {
 
         when(connector.queryLucene(expectedQuery, repository.getTypeReference())).thenReturn(luceneResult);
 
-        assertEquals(1, repository.count(new QueryDefinitionImpl(), VIEW_NAME, SEARCH_NAME, filterParams));
+        assertEquals(1, repository.count(queryDefinition, filterParams));
         verify(connector).queryLucene(expectedQuery, repository.getTypeReference());
 
     }
@@ -86,8 +86,8 @@ public class LuceneAwareMotechBaseRepositoryTest {
         return expectedResult;
     }
 
-    private LuceneQuery expectedLuceneQuery() {
-        LuceneQuery expectedQuery = new LuceneQuery(VIEW_NAME, SEARCH_NAME);
+    private LuceneQuery expectedLuceneQuery(String viewName, String searchFunctionName) {
+        LuceneQuery expectedQuery = new LuceneQuery(viewName, searchFunctionName);
         String queryString = "field1:value1 AND field2<string>:[value2 TO value3]";
         expectedQuery.setQuery(queryString.toString());
         expectedQuery.setIncludeDocs(true);
@@ -137,10 +137,20 @@ class LuceneAwareMotechBaseRepositoryImpl extends LuceneAwareMotechBaseRepositor
 class QueryDefinitionImpl implements QueryDefinition {
 
     @Override
-    public List<Field> getFields() {
+    public List<Field> fields() {
         List<Field> queryFields = new ArrayList<>();
         queryFields.add(new QueryField("field1", STRING));
         queryFields.add(new RangeField("field2", STRING, "field2From", "field2To"));
         return queryFields;
+    }
+
+    @Override
+    public String viewName() {
+        return "VIEW_NAME";
+    }
+
+    @Override
+    public String searchFunctionName() {
+        return "SEARCH_NAME";
     }
 }

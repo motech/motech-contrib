@@ -5,5 +5,7 @@ import org.motechproject.couchdb.lucene.query.field.Field;
 import java.util.List;
 
 public interface QueryDefinition {
-    List<Field> getFields();
+    List<Field> fields();
+    String viewName();
+    String searchFunctionName();
 }

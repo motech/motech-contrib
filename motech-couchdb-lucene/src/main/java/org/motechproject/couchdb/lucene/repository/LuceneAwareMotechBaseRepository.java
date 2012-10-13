@@ -19,8 +19,8 @@ public abstract class LuceneAwareMotechBaseRepository<T extends MotechBaseDataOb
         super(type, db);
     }
 
-    public List<T> filter(QueryDefinition queryDefinition, String viewName, String searchFunctionName, Properties filterParams, Integer skip, Integer limit) {
-        CustomLuceneResult luceneResult = getLuceneResult(queryDefinition, filterParams, viewName, searchFunctionName, limit, skip);
+    public List<T> filter(QueryDefinition queryDefinition, Properties filterParams, Integer skip, Integer limit) {
+        CustomLuceneResult luceneResult = getLuceneResult(queryDefinition, filterParams, limit, skip);
         List<CustomLuceneResult.Row<T>> resultRows = luceneResult.getRows();
         List<T> results = new ArrayList();
         for (CustomLuceneResult.Row<T> row : resultRows)
@@ -28,14 +28,14 @@ public abstract class LuceneAwareMotechBaseRepository<T extends MotechBaseDataOb
         return results;
     }
 
-    private CustomLuceneResult getLuceneResult(QueryDefinition queryDefinition, Properties queryParams, String viewName, String searchFunctionName, Integer limit, Integer skip) {
-        LuceneQuery query = getLuceneQuery(queryDefinition, queryParams, viewName, searchFunctionName, limit, skip);
+    private CustomLuceneResult getLuceneResult(QueryDefinition queryDefinition, Properties queryParams, Integer limit, Integer skip) {
+        LuceneQuery query = getLuceneQuery(queryDefinition, queryParams, limit, skip);
         TypeReference resultDocType = getTypeReference();
         return ((LuceneAwareCouchDbConnector) db).queryLucene(query, resultDocType);
     }
 
-    private LuceneQuery getLuceneQuery(QueryDefinition queryDefinition, Properties queryParams, String viewName, String searchFunctionName, Integer limit, Integer skip) {
-        LuceneQuery query = new LuceneQuery(viewName, searchFunctionName);
+    private LuceneQuery getLuceneQuery(QueryDefinition queryDefinition, Properties queryParams, Integer limit, Integer skip) {
+        LuceneQuery query = new LuceneQuery(queryDefinition.viewName(), queryDefinition.searchFunctionName());
         String queryString = new QueryBuilder(queryParams, queryDefinition).build();
         query.setQuery(queryString.toString());
         query.setIncludeDocs(true);
@@ -46,7 +46,7 @@ public abstract class LuceneAwareMotechBaseRepository<T extends MotechBaseDataOb
 
     protected abstract TypeReference getTypeReference();
 
-    public int count(QueryDefinition queryDefinition, String viewName, String searchName, Properties filterParams) {
-        return getLuceneResult(queryDefinition, filterParams, viewName, searchName, 1, 0).getTotalRows();
+    public int count(QueryDefinition queryDefinition, Properties filterParams) {
+        return getLuceneResult(queryDefinition, filterParams, 1, 0).getTotalRows();
     }
 }
