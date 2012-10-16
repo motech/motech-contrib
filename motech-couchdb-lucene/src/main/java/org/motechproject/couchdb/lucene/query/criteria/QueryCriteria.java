@@ -18,6 +18,6 @@ public class QueryCriteria implements Criteria {
 
     @Override
     public String buildCriteriaString() {
-        return field.getName() + QUERY_SEPARATOR + value;
+        return field.getName() + QUERY_SEPARATOR + field.transform(value);
     }
 }

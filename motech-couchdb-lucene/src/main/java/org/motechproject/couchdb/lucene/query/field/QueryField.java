@@ -25,4 +25,9 @@ public class QueryField implements Field {
     public Criteria createCriteria(Properties filterParams) {
         return new QueryCriteria(this, filterParams.get(getName()).toString());
     }
+
+    @Override
+    public String transform(String fieldValue) {
+        return type.transform(fieldValue);
+    }
 }

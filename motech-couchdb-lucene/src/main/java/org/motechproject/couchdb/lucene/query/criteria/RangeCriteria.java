@@ -18,6 +18,10 @@ public class RangeCriteria implements Criteria {
 
     @Override
     public String buildCriteriaString() {
-        return String.format("%s<%s>:[%s TO %s]", field.getName(), field.getType().getValue(), from, to);
+        return String.format("%s<%s>:[%s TO %s]",
+                field.getName(),
+                field.getType().getValue(),
+                field.transform(from),
+                field.transform(to));
     }
 }

@@ -31,4 +31,9 @@ public class RangeField implements Field {
         String to = filterParams.get(getToName()).toString();
         return new RangeCriteria(this, from, to);
     }
+
+    @Override
+    public String transform(String fieldValue) {
+        return type.transform(fieldValue);
+    }
 }
