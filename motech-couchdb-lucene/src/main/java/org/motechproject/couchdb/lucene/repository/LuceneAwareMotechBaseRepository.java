@@ -19,13 +19,17 @@ public abstract class LuceneAwareMotechBaseRepository<T extends MotechBaseDataOb
         super(type, db);
     }
 
-    public List<T> filter(QueryDefinition queryDefinition, Properties filterParams, Integer skip, Integer limit) {
+    protected List<T> filter(QueryDefinition queryDefinition, Properties filterParams, Integer skip, Integer limit) {
         CustomLuceneResult luceneResult = getLuceneResult(queryDefinition, filterParams, limit, skip);
         List<CustomLuceneResult.Row<T>> resultRows = luceneResult.getRows();
         List<T> results = new ArrayList();
         for (CustomLuceneResult.Row<T> row : resultRows)
             results.add(row.getDoc());
         return results;
+    }
+
+    protected int count(QueryDefinition queryDefinition, Properties filterParams) {
+        return getLuceneResult(queryDefinition, filterParams, 1, 0).getTotalRows();
     }
 
     private CustomLuceneResult getLuceneResult(QueryDefinition queryDefinition, Properties queryParams, Integer limit, Integer skip) {
@@ -45,8 +49,4 @@ public abstract class LuceneAwareMotechBaseRepository<T extends MotechBaseDataOb
     }
 
     protected abstract TypeReference getTypeReference();
-
-    public int count(QueryDefinition queryDefinition, Properties filterParams) {
-        return getLuceneResult(queryDefinition, filterParams, 1, 0).getTotalRows();
-    }
 }
