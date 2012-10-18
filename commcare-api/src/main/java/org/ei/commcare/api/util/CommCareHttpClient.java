@@ -31,7 +31,7 @@ public class CommCareHttpClient {
         lock.lock();
         try {
             httpClient.getCredentialsProvider().setCredentials(
-                    new AuthScope("www.commcarehq.org", 443, "DJANGO", "digest"),
+                    new AuthScope("india.commcarehq.org", 443, "DJANGO", "digest"),
                     new UsernamePasswordCredentials(userName, password));
 
             HttpResponse response = httpClient.execute(new HttpGet(url));
