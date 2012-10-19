@@ -16,7 +16,7 @@ public class DiagnosticsServiceTest {
     @Test
     public void givenADiagnosticRunsItByName() {
         TestDiagnostic diagnostic = new TestDiagnostic();
-        diagnosticsService = new DiagnosticsService(asList((Diagnostics) diagnostic));
+        diagnosticsService = new DiagnosticsService(asList((Diagnostics) diagnostic), "testDiagnostic");
 
         diagnosticsService.run("testDiagnostic");
         assertTrue(diagnostic.isCalled());
@@ -26,7 +26,7 @@ public class DiagnosticsServiceTest {
     public void givenASetOfDiagnosticsRunsADiagnosticByName() {
         TestDiagnostic diagnostic = new TestDiagnostic();
         AnotherTestDiagnostic anotherDiagnostic = new AnotherTestDiagnostic();
-        diagnosticsService = new DiagnosticsService(asList(diagnostic, anotherDiagnostic));
+        diagnosticsService = new DiagnosticsService(asList(diagnostic, anotherDiagnostic), "anotherTestDiagnostic,testDiagnostic");
 
         diagnosticsService.run("anotherTestDiagnostic");
         assertFalse(diagnostic.isCalled());
@@ -37,7 +37,7 @@ public class DiagnosticsServiceTest {
     public void givenADiagnosticThrowsAnExceptionWhenNameDoesNotMatchDiagnosticName() {
         TestDiagnostic diagnostic = new TestDiagnostic();
         AnotherTestDiagnostic anotherDiagnostic = new AnotherTestDiagnostic();
-        diagnosticsService = new DiagnosticsService(asList(diagnostic, anotherDiagnostic));
+        diagnosticsService = new DiagnosticsService(asList(diagnostic, anotherDiagnostic), "anotherTestDiagnostic,testDiagnostic");
 
         diagnosticsService.run("randomName");
     }

@@ -1,15 +1,14 @@
 package org.motechproject.diagnostics.service;
 
 import org.motechproject.diagnostics.Diagnostics;
+import org.motechproject.diagnostics.repository.AllDiagnosticMethods;
 import org.motechproject.diagnostics.response.DiagnosticsResult;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class DiagnosticsService {
@@ -17,10 +16,11 @@ public class DiagnosticsService {
     private Map<String, Diagnostics> diagnostics;
 
     @Autowired
-    public DiagnosticsService(List<Diagnostics> diagnostics) {
-        this.diagnostics = new HashMap<String, Diagnostics>();
+    public DiagnosticsService(List<Diagnostics> diagnostics, @Value("${diagnosticServices}") String diagnosticServiceNames) {
+        List<String> configuredDiagnosticServices = Arrays.asList(diagnosticServiceNames.split(","));
+        this.diagnostics = new HashMap<>();
         for (Diagnostics diagnostic : diagnostics) {
-            if (diagnostic.canPerformDiagnostics()) {
+            if (configuredDiagnosticServices.contains(diagnostic.name()) && diagnostic.canPerformDiagnostics()) {
                 this.diagnostics.put(diagnostic.name(), diagnostic);
             }
         }

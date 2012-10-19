@@ -22,7 +22,7 @@ public class ActiveMQDiagnosticIT {
     public void shouldCheckActiveMQConnection() throws JMSException {
         DiagnosticsResult<String> diagnosticsResult = activeMQDiagnostic.performDiagnosis();
         assertNotNull(diagnosticsResult);
-        assertEquals("Is Active", diagnosticsResult.getName());
+        assertEquals("Active MQ Port Is Active", diagnosticsResult.getName());
         assertEquals("true", diagnosticsResult.getValue());
     }
 }

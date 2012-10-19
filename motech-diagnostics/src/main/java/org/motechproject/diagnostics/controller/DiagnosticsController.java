@@ -3,6 +3,7 @@ package org.motechproject.diagnostics.controller;
 import org.motechproject.diagnostics.DiagnosticResponseBuilder;
 import org.motechproject.diagnostics.response.DiagnosticsResult;
 import org.motechproject.diagnostics.response.ExceptionResponse;
+import org.motechproject.diagnostics.repository.AllDiagnosticMethods;
 import org.motechproject.diagnostics.service.DiagnosticsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -12,10 +13,11 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 @Controller
-@RequestMapping(value = "/diagnostics")
+@RequestMapping(value = "/diagnostics/")
 public class DiagnosticsController {
 
     DiagnosticsService diagnosticsService;
@@ -27,17 +29,24 @@ public class DiagnosticsController {
         this.diagnosticResponseBuilder = diagnosticResponseBuilder;
     }
 
-    @RequestMapping(value = "{serviceName}", method = RequestMethod.GET)
-    public void runDiagnostics(@PathVariable("serviceName") String name, HttpServletResponse response) throws IOException {
+    @RequestMapping(value = "service/{serviceName}", method = RequestMethod.GET)
+    @ResponseBody
+    public List<DiagnosticsResult> runDiagnostics(@PathVariable("serviceName") String name, HttpServletResponse response) throws IOException {
         List<DiagnosticsResult> diagnosticsResponses = diagnosticsService.run(name);
-        String diagnosticsResponse = diagnosticResponseBuilder.createResponseMessage(diagnosticsResponses);
-        response.getOutputStream().print(diagnosticsResponse);
+        return diagnosticsResponses;
     }
 
-    @ExceptionHandler(Exception.class)
-    public
+    @RequestMapping(value = "allServices", method = RequestMethod.GET)
     @ResponseBody
-    String handleException(final Exception exception, HttpServletResponse response) {
+    public List<DiagnosticsResult> getDiagnostics(HttpServletResponse response) throws InvocationTargetException, IllegalAccessException, IOException {
+        List<DiagnosticsResult> diagnosticsResponses = diagnosticsService.runAll();
+        return diagnosticsResponses;
+    }
+
+
+    @ExceptionHandler(Exception.class)
+    @ResponseBody
+    public String handleException(final Exception exception, HttpServletResponse response) {
         response.setHeader("Content-Type", "application/json");
         response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 

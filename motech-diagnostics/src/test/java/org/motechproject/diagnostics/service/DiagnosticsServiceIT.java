@@ -18,7 +18,7 @@ import java.util.List;
 import static ch.lambdaj.Lambda.*;
 import static junit.framework.Assert.*;
 
-@ContextConfiguration(locations = "classpath*:/applicationContext-Diagnostics.xml")
+@ContextConfiguration(locations = "classpath*:/applicationContext-DiagnosticsTest.xml")
 public class DiagnosticsServiceIT extends SpringIntegrationTest {
 
     @Before

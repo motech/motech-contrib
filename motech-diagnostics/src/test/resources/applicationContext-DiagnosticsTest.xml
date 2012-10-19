@@ -7,6 +7,9 @@
        http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.0.xsd
        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd">
 
+
+    <context:property-placeholder location="classpath:diagnostics.properties" ignore-unresolvable="true"/>
+
     <util:properties id="postgresProperties" location="classpath:postgres.properties"/>
 
     <import resource="classpath:applicationContext-Diagnostics.xml"/>
@@ -52,5 +55,7 @@
         <constructor-arg value="invalidDb"/>
         <constructor-arg ref="invalidDbInstance"/>
     </bean>
+
+
 
 </beans>

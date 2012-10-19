@@ -20,7 +20,7 @@ public class ActiveMQDiagnostic implements Diagnostics {
     public DiagnosticsResult<String> performDiagnosis() throws JMSException {
 
         Boolean isSuccess = checkActiveMQConnection();
-        return new DiagnosticsResult<String>("Is Active", isSuccess.toString());
+        return new DiagnosticsResult<String>("Active MQ Port Is Active", isSuccess.toString());
     }
 
     private boolean checkActiveMQConnection() {
