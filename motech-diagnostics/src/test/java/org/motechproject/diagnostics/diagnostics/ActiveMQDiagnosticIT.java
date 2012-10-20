@@ -25,4 +25,11 @@ public class ActiveMQDiagnosticIT {
         assertEquals("Active MQ Port Is Active", diagnosticsResult.getName());
         assertEquals("true", diagnosticsResult.getValue());
     }
+
+
+    @Test
+    public void shouldCheckActiveMQQueueSizes() throws JMSException {
+        DiagnosticsResult<String> diagnosticsResult = activeMQDiagnostic.queueSizes();
+        assertNotNull(diagnosticsResult);
+    }
 }
