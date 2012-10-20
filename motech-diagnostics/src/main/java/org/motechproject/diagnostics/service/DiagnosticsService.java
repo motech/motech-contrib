@@ -1,10 +1,10 @@
 package org.motechproject.diagnostics.service;
 
 import org.motechproject.diagnostics.Diagnostics;
+import org.motechproject.diagnostics.configuration.DiagnosticConfiguration;
 import org.motechproject.diagnostics.repository.AllDiagnosticMethods;
 import org.motechproject.diagnostics.response.DiagnosticsResult;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.lang.reflect.InvocationTargetException;
@@ -16,8 +16,8 @@ public class DiagnosticsService {
     private Map<String, Diagnostics> diagnostics;
 
     @Autowired
-    public DiagnosticsService(List<Diagnostics> diagnostics, @Value("${diagnosticServices}") String diagnosticServiceNames) {
-        List<String> configuredDiagnosticServices = Arrays.asList(diagnosticServiceNames.split(","));
+    public DiagnosticsService(List<Diagnostics> diagnostics, DiagnosticConfiguration diagnosticProperties) {
+        List<String> configuredDiagnosticServices = Arrays.asList(diagnosticProperties.diagnosticServices().split(","));
         this.diagnostics = new HashMap<>();
         for (Diagnostics diagnostic : diagnostics) {
             if (configuredDiagnosticServices.contains(diagnostic.name()) && diagnostic.canPerformDiagnostics()) {

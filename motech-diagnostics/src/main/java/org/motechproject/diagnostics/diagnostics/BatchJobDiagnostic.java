@@ -27,13 +27,13 @@ public class BatchJobDiagnostic implements Diagnostics {
         try {
             for (BatchJob batchJob : allBatchJobs.fetchAll()) {
                 String value = batchJob.lastExecutionFailed() ? "false" : "true";
-                results.add(new DiagnosticsResult<String>(batchJob.getName(), value));
+                results.add(new DiagnosticsResult<>(batchJob.getName(), value));
             }
         } catch (Exception e) {
-            results.add(new DiagnosticsResult<String>("Connecting to batch", "false"));
+            results.add(new DiagnosticsResult<>("Connecting to batch", "false"));
         }
 
-        return new DiagnosticsResult<List<DiagnosticsResult<String>>>("Batch Job", results);
+        return new DiagnosticsResult<>("Batch Job", results);
     }
 
     @Override

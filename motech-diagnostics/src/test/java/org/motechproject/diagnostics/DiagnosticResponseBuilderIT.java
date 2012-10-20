@@ -12,7 +12,7 @@ import java.util.Arrays;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration("classpath:applicationContext-Diagnostics.xml")
+@ContextConfiguration("classpath:applicationContext-DiagnosticsTest.xml")
 public class DiagnosticResponseBuilderIT {
 
     @Autowired

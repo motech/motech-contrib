@@ -9,6 +9,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.jms.JMSException;
 
+import java.net.MalformedURLException;
+
 import static junit.framework.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -28,7 +30,7 @@ public class ActiveMQDiagnosticIT {
 
 
     @Test
-    public void shouldCheckActiveMQQueueSizes() throws JMSException {
+    public void shouldCheckActiveMQQueueSizes() throws JMSException, MalformedURLException {
         DiagnosticsResult<String> diagnosticsResult = activeMQDiagnostic.queueSizes();
         assertNotNull(diagnosticsResult);
     }

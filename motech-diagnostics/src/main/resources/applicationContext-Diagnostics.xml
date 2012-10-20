@@ -42,7 +42,4 @@
         <constructor-arg ref="springBatchDiagnosticsHttpClient"/>
     </bean>
 
-    <bean id="activeMQClientConnector" class="org.springframework.jmx.support.MBeanServerConnectionFactoryBean">
-        <property name="serviceUrl" value="service:jmx:rmi:///jndi/rmi://localhost:1099/jmxrmi"/>
-    </bean>
 </beans>

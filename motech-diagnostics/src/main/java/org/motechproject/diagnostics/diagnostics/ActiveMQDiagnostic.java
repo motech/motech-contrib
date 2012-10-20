@@ -1,18 +1,19 @@
 package org.motechproject.diagnostics.diagnostics;
 
+import org.apache.commons.lang.StringUtils;
 import org.motechproject.diagnostics.Diagnostics;
 import org.motechproject.diagnostics.annotation.Diagnostic;
+import org.motechproject.diagnostics.configuration.DiagnosticConfiguration;
 import org.motechproject.diagnostics.controller.DiagnosticServiceName;
 import org.motechproject.diagnostics.response.DiagnosticsResult;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jms.connection.CachingConnectionFactory;
 import org.springframework.jmx.support.MBeanServerConnectionFactoryBean;
 import org.springframework.stereotype.Component;
 
 import javax.jms.JMSException;
 import javax.management.*;
-import java.io.IOException;
+import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -24,28 +25,39 @@ public class ActiveMQDiagnostic implements Diagnostics {
     private CachingConnectionFactory connectionFactory;
 
     @Autowired(required = false)
-    private MBeanServerConnectionFactoryBean activeMQClientConnector;
+    private MBeanServerConnectionFactoryBean activeMQDiagnosticsClientConnector;
 
-    private List<String> queueNameList;
+    @Autowired
+    private DiagnosticConfiguration diagnosticConfiguration;
 
     @Diagnostic(name = "Port active")
     public DiagnosticsResult<String> performDiagnosis() throws JMSException {
 
         Boolean isSuccess = checkActiveMQConnection();
-        return new DiagnosticsResult<String>("Active MQ Port Is Active", isSuccess.toString());
+        return new DiagnosticsResult<>("Active MQ Port Is Active", isSuccess.toString());
     }
 
     @Diagnostic(name = "Queue Size")
-    public DiagnosticsResult<String> queueSizes() throws JMSException {
+    public DiagnosticsResult<String> queueSizes() throws JMSException, MalformedURLException {
+        List<String> queueNameList = queueNamesList(diagnosticConfiguration.activeMqQueueNames());
+
+        if (!queueNameList.isEmpty() && activeMQDiagnosticsClientConnector == null) {
+            return new DiagnosticsResult("ActiveMQ Queue Sizes", "activeMQDiagnosticsClientConnector bean not defined");
+        }
+
+        if (queueNameList.isEmpty()) {
+            return new DiagnosticsResult("ActiveMQ Queue Sizes", "No activeMQ.queueNames specified.");
+        }
+
         List<DiagnosticsResult> results = new ArrayList<>();
-        for(String queueName : queueNameList) {
+        for (String queueName : queueNameList) {
             try {
                 ObjectName objectNameRequest = new ObjectName(
                         "org.apache.activemq:BrokerName=localhost,Type=Queue,Destination=" + queueName);
-                Long queueSize = (Long) activeMQClientConnector.getObject().getAttribute(objectNameRequest, "QueueSize");
-                results.add(new DiagnosticsResult<String>("Queue Size for " + queueName, queueSize.toString()));
+                Long queueSize = (Long) activeMQDiagnosticsClientConnector.getObject().getAttribute(objectNameRequest, "QueueSize");
+                results.add(new DiagnosticsResult<>("Queue Size for " + queueName, queueSize != null ? queueSize.toString() : "Not Found!"));
             } catch (Exception e) {
-                return new DiagnosticsResult("Connecting to queue: " + queueName , "Error");
+                return new DiagnosticsResult(queueName, "Error occurred while connecting");
             }
         }
         return new DiagnosticsResult("ActiveMQ Queue Sizes", results);
@@ -70,9 +82,11 @@ public class ActiveMQDiagnostic implements Diagnostics {
         return connectionFactory != null;
     }
 
-    @Value("${activeMQ.queueNames}")
-    public void queueNames(String queueNames){
-        queueNameList = Arrays.asList(queueNames.split(","));
 
+    public List<String> queueNamesList(String queueNames) {
+        if (StringUtils.isNotEmpty(queueNames))
+            return Arrays.asList(queueNames.split(","));
+        else
+            return new ArrayList<>();
     }
 }
