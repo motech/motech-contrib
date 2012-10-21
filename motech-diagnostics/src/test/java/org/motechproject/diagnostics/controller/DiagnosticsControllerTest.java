@@ -2,19 +2,16 @@ package org.motechproject.diagnostics.controller;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.motechproject.diagnostics.DiagnosticResponseBuilder;
 import org.motechproject.diagnostics.response.DiagnosticsResult;
 import org.motechproject.diagnostics.response.DiagnosticsStatus;
-import org.motechproject.diagnostics.repository.AllDiagnosticMethods;
 import org.motechproject.diagnostics.service.DiagnosticsService;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -46,7 +43,7 @@ public class DiagnosticsControllerTest {
 
     @Test
     public void shouldInvokeDiagnosticsByName() throws IOException {
-        diagnosticsController.runDiagnostics("name", httpResponse);
+        diagnosticsController.runDiagnostics("name");
         verify(diagnosticsService).run("name");
     }
 
@@ -55,7 +52,7 @@ public class DiagnosticsControllerTest {
         List<DiagnosticsResult> expectedDiagnosticsResponses = Arrays.asList(new DiagnosticsResult("Test diagnostic", new DiagnosticsResult(DiagnosticsStatus.PASS.name(), "Test diagnostic run")));
         when(diagnosticsService.run("name")).thenReturn(expectedDiagnosticsResponses);
 
-        List<DiagnosticsResult> diagnosticsResults = diagnosticsController.runDiagnostics("name", httpResponse);
+        List<DiagnosticsResult> diagnosticsResults = diagnosticsController.runDiagnostics("name");
 
         assertEquals(expectedDiagnosticsResponses, diagnosticsResults);
     }
@@ -66,7 +63,7 @@ public class DiagnosticsControllerTest {
         when(diagnosticsService.runAll()).thenReturn(expectedDiagnosticsResponses);
         when(httpResponse.getOutputStream()).thenReturn(servletOutputStream);
         when(allDiagnosticMessageBuilder.createResponseMessage(expectedDiagnosticsResponses)).thenReturn("Diagnostic Response");
-        List<DiagnosticsResult> diagnostics = diagnosticsController.getDiagnostics(httpResponse);
+        List<DiagnosticsResult> diagnostics = diagnosticsController.getDiagnostics();
         assertEquals(expectedDiagnosticsResponses, diagnostics);
     }
 }

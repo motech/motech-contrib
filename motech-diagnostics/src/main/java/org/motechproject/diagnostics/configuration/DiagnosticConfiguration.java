@@ -26,6 +26,10 @@ public class DiagnosticConfiguration {
         return properties.getProperty("diagnosticServices");
     }
 
+    public String contextPath(){
+        return properties.getProperty("application.context.path");
+    }
+
 }
 
 

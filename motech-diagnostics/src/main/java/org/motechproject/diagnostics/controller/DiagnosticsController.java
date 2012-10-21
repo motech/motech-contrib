@@ -16,6 +16,8 @@ import java.io.StringWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
+import static org.springframework.web.bind.annotation.RequestMethod.GET;
+
 @Controller
 @RequestMapping(value = "/diagnostics/")
 public class DiagnosticsController {
@@ -29,20 +31,25 @@ public class DiagnosticsController {
         this.diagnosticResponseBuilder = diagnosticResponseBuilder;
     }
 
-    @RequestMapping(value = "service/{serviceName}", method = RequestMethod.GET)
+    @RequestMapping(value = "service/{serviceName}", method = GET)
     @ResponseBody
-    public List<DiagnosticsResult> runDiagnostics(@PathVariable("serviceName") String name, HttpServletResponse response) throws IOException {
+    public List<DiagnosticsResult> runDiagnostics(@PathVariable("serviceName") String name) throws IOException {
         List<DiagnosticsResult> diagnosticsResponses = diagnosticsService.run(name);
         return diagnosticsResponses;
     }
 
-    @RequestMapping(value = "allServices", method = RequestMethod.GET)
+    @RequestMapping(value = "all", method = GET)
     @ResponseBody
-    public List<DiagnosticsResult> getDiagnostics(HttpServletResponse response) throws InvocationTargetException, IllegalAccessException, IOException {
+    public List<DiagnosticsResult> getDiagnostics() throws InvocationTargetException, IllegalAccessException, IOException {
         List<DiagnosticsResult> diagnosticsResponses = diagnosticsService.runAll();
         return diagnosticsResponses;
     }
 
+    @RequestMapping(value = "all/view", method = GET)
+    public void viewDiagnostics(HttpServletResponse response) throws IOException, InvocationTargetException, IllegalAccessException {
+        String diagnosticsResponse = diagnosticResponseBuilder.createResponseMessage(getDiagnostics());
+        response.getOutputStream().print(diagnosticsResponse);
+    }
 
     @ExceptionHandler(Exception.class)
     @ResponseBody

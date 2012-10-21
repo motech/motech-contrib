@@ -42,4 +42,17 @@
         <constructor-arg ref="springBatchDiagnosticsHttpClient"/>
     </bean>
 
+    <!--<bean class="org.motechproject.diagnostics.velocity.DiagnosticViewResolver">-->
+        <!--<property name="prefix" value="/"/>-->
+        <!--<property name="suffix" value=".vm"/>-->
+        <!--<property name="exposeSpringMacroHelpers" value="true"/>-->
+        <!--<property name="toolboxConfigLocation" value="/diagnostics-web/velocity/toolbox.xml"/>-->
+        <!--<property name="contentType" value="text/html; charset=utf-8"/>-->
+        <!--<property name="layoutUrl" value="layout/empty.vm"/>-->
+    <!--</bean>-->
+
+    <!--<bean id="velocityConfig" class="org.springframework.web.servlet.view.velocity.VelocityConfigurer">-->
+        <!--<property name="resourceLoaderPath" value="/diagnostics-web/views"/>-->
+        <!--<property name="configLocation" value="velocity.properties"/>-->
+    <!--</bean>-->
 </beans>
