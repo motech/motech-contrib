@@ -30,6 +30,10 @@ public class DiagnosticConfiguration {
         return properties.getProperty("application.context.path");
     }
 
+    public String logFileLocation(){
+        return properties.getProperty("log.location");
+    }
+
 }
 
 

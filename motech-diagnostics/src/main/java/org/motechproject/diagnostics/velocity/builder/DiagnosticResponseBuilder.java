@@ -1,4 +1,4 @@
-package org.motechproject.diagnostics;
+package org.motechproject.diagnostics.velocity.builder;
 
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;

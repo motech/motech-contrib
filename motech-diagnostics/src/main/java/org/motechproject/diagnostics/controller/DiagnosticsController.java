@@ -1,14 +1,15 @@
 package org.motechproject.diagnostics.controller;
 
-import org.motechproject.diagnostics.DiagnosticResponseBuilder;
-import org.motechproject.diagnostics.response.DiagnosticsResult;
+import org.apache.commons.io.IOUtils;
+import org.motechproject.diagnostics.velocity.builder.DiagnosticResponseBuilder;
 import org.motechproject.diagnostics.response.ExceptionResponse;
-import org.motechproject.diagnostics.repository.AllDiagnosticMethods;
 import org.motechproject.diagnostics.response.ServiceResult;
 import org.motechproject.diagnostics.service.DiagnosticsService;
+import org.motechproject.diagnostics.velocity.builder.LogFilesResponseBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -25,11 +26,13 @@ public class DiagnosticsController {
 
     DiagnosticsService diagnosticsService;
     private DiagnosticResponseBuilder diagnosticResponseBuilder;
+    private LogFilesResponseBuilder logFilesResponseBuilder;
 
     @Autowired
-    public DiagnosticsController(DiagnosticsService diagnosticsService, DiagnosticResponseBuilder diagnosticResponseBuilder) {
+    public DiagnosticsController(DiagnosticsService diagnosticsService, DiagnosticResponseBuilder diagnosticResponseBuilder, LogFilesResponseBuilder logFilesResponseBuilder) {
         this.diagnosticsService = diagnosticsService;
         this.diagnosticResponseBuilder = diagnosticResponseBuilder;
+        this.logFilesResponseBuilder = logFilesResponseBuilder;
     }
 
     @RequestMapping(value = "service/{serviceName}", method = GET)
@@ -50,6 +53,20 @@ public class DiagnosticsController {
     public void viewDiagnostics(HttpServletResponse response) throws IOException, InvocationTargetException, IllegalAccessException {
         String diagnosticsResponse = diagnosticResponseBuilder.createResponseMessage(getDiagnostics());
         response.getOutputStream().print(diagnosticsResponse);
+    }
+
+
+    @RequestMapping(method = RequestMethod.GET, value = "logs")
+    public void showLogs(HttpServletResponse response) throws Exception {
+        String logFilesResponse = logFilesResponseBuilder.createResponse();
+        response.getOutputStream().print(logFilesResponse);
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "logs/{file_name:.*}")
+    public void getLog(@PathVariable("file_name") String logFilename, HttpServletResponse response) throws Exception {
+        IOUtils.copy(logFilesResponseBuilder.getLogFile(logFilename), response.getOutputStream());
+        response.setContentType("text/plain");
+        response.flushBuffer();
     }
 
     @ExceptionHandler(Exception.class)

@@ -1,33 +1,6 @@
-<head>
-    <title>$label.home.page.title</title>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="$label.home.page.title">
-    <meta name="author" content="$label.home.author">
-    <base href="/$contextPath/">
+#parse( "diagnostics-web/views/content/header.vm" )
 
-    <link rel="shortcut icon" href="assets/ico/favicon.ico">
-    <link href="diagnostics-web/css/bootstrap.css" rel="stylesheet">
-    <link href="diagnostics-web/css/tablesorter.css" rel="stylesheet">
-    <link href="diagnostics-web/css/bootstrap-responsive.css" rel="stylesheet">
-    <link href="diagnostics-web/css/ananya.css" rel="stylesheet">
-
-    <script src="diagnostics-web/js/html5.js"></script>
-    <script src="diagnostics-web/js/jquery-min.js"></script>
-    <script src="diagnostics-web/js/bootstrap.js"></script>
-    <script src="diagnostics-web/js/validation.js"></script>
-</head>
-
-<body>
-
-<div class="navbar navbar-fixed-top">
-    <div class="navbar-inner">
-        <div class="container-fluid">
-            <a class="brand" href="#">Diagnostics</a>
-        </div>
-    </div>
-</div>
-
+<br/><br/>
 <div class=container-fluid>
     <div class="row-fluid mainbox">
 
@@ -54,4 +27,4 @@
     </div>
 </div>
 
-</body>
+#parse( "diagnostics-web/views/content/footer.vm" )

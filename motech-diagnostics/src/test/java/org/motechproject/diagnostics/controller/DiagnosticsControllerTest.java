@@ -3,17 +3,17 @@ package org.motechproject.diagnostics.controller;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
-import org.motechproject.diagnostics.DiagnosticResponseBuilder;
+import org.motechproject.diagnostics.velocity.builder.DiagnosticResponseBuilder;
 import org.motechproject.diagnostics.response.DiagnosticsResult;
 import org.motechproject.diagnostics.response.DiagnosticsStatus;
 import org.motechproject.diagnostics.response.ServiceResult;
 import org.motechproject.diagnostics.service.DiagnosticsService;
+import org.motechproject.diagnostics.velocity.builder.LogFilesResponseBuilder;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-import java.util.Arrays;
 import java.util.List;
 
 import static java.util.Arrays.asList;
@@ -28,6 +28,8 @@ public class DiagnosticsControllerTest {
     @Mock
     private DiagnosticsService diagnosticsService;
     @Mock
+    private LogFilesResponseBuilder logFilesResponseBuilder;
+    @Mock
     private HttpServletResponse httpResponse;
     @Mock
     ServletOutputStream servletOutputStream;
@@ -40,7 +42,7 @@ public class DiagnosticsControllerTest {
     public void setUp() throws IOException {
         initMocks(this);
         when(httpResponse.getOutputStream()).thenReturn(servletOutputStream);
-        diagnosticsController = new DiagnosticsController(diagnosticsService, allDiagnosticMessageBuilder);
+        diagnosticsController = new DiagnosticsController(diagnosticsService, allDiagnosticMessageBuilder,logFilesResponseBuilder);
     }
 
     @Test

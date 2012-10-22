@@ -1,0 +1,30 @@
+<head>
+    <title>$label.home.page.title</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="$label.home.page.title">
+    <meta name="author" content="$label.home.author">
+    <base href="/$contextPath/">
+
+    <link rel="shortcut icon" href="assets/ico/favicon.ico">
+    <link href="diagnostics-web/css/bootstrap.css" rel="stylesheet">
+    <link href="diagnostics-web/css/tablesorter.css" rel="stylesheet">
+    <link href="diagnostics-web/css/bootstrap-responsive.css" rel="stylesheet">
+
+    <script src="diagnostics-web/js/html5.js"></script>
+    <script src="diagnostics-web/js/jquery-min.js"></script>
+    <script src="diagnostics-web/js/bootstrap.js"></script>
+    <script src="diagnostics-web/js/validation.js"></script>
+</head>
+
+<body>
+<div class="navbar navbar-fixed-top">
+    <div class="navbar-inner">
+        <div class="container-fluid">
+            <a class="brand" href="diagnostics/all/view">Diagnostics</a>
+            <ul class="nav">
+                <li class="active"><a href="diagnostics/logs">Logs</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
