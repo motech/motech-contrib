@@ -3,10 +3,10 @@
 
     <modelVersion>4.0.0</modelVersion>
     <packaging>jar</packaging>
-    <groupId>org.motechproject</groupId>
+    <groupId>org.motechproject.contrib-ananya-care</groupId>
     <artifactId>motech-flash-scope</artifactId>
     <name>motech-flash-scope</name>
-    <version>0.12-SNAPSHOT</version>
+    <version>0.9-SNAPSHOT</version>
 
     <properties>
         <spring-security.version>3.1.0.RELEASE</spring-security.version>
@@ -15,8 +15,8 @@
 
     <parent>
         <artifactId>motech-contrib</artifactId>
-        <groupId>org.motechproject</groupId>
-        <version>0.12-SNAPSHOT</version>
+        <groupId>org.motechproject.contrib-ananya-care</groupId>
+        <version>0.9-SNAPSHOT</version>
     </parent>
 
     <repositories>

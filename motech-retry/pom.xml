@@ -3,9 +3,9 @@
     <modelVersion>4.0.0</modelVersion>
 
     <name>motech-retry</name>
-    <groupId>org.motechproject</groupId>
+    <groupId>org.motechproject.contrib-ananya-care</groupId>
     <artifactId>motech-retry</artifactId>
-    <version>0.12-SNAPSHOT</version>
+    <version>0.9-SNAPSHOT</version>
 
     <properties>
         <spring.version>3.1.0.RELEASE</spring.version>
@@ -13,8 +13,8 @@
 
     <parent>
         <artifactId>motech-contrib</artifactId>
-        <groupId>org.motechproject</groupId>
-        <version>0.12-SNAPSHOT</version>
+        <groupId>org.motechproject.contrib-ananya-care</groupId>
+        <version>0.9-SNAPSHOT</version>
     </parent>
 
 

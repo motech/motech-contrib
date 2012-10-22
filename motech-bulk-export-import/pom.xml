@@ -4,12 +4,12 @@
 
     <name>motech-bulk-export-import</name>
     <artifactId>motech-bulk-export-import</artifactId>
-    <groupId>org.motechproject</groupId>
+    <groupId>org.motechproject.contrib-ananya-care</groupId>
 
     <parent>
         <artifactId>motech-contrib</artifactId>
-        <groupId>org.motechproject</groupId>
-        <version>0.12-SNAPSHOT</version>
+        <groupId>org.motechproject.contrib-ananya-care</groupId>
+        <version>0.9-SNAPSHOT</version>
     </parent>
 
     <dependencies>

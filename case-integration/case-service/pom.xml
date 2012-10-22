@@ -4,13 +4,13 @@
 
     <parent>
         <artifactId>case-integration</artifactId>
-        <groupId>org.motechproject</groupId>
-        <version>0.12-SNAPSHOT</version>
+        <groupId>org.motechproject.contrib-ananya-care</groupId>
+        <version>0.9-SNAPSHOT</version>
     </parent>
 
     <artifactId>case-service</artifactId>
-    <groupId>org.motechproject</groupId>
-    <version>0.12-SNAPSHOT</version>
+    <groupId>org.motechproject.contrib-ananya-care</groupId>
+    <version>0.9-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>case-service</name>
 
