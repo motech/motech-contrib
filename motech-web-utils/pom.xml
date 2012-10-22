@@ -60,6 +60,11 @@
             <artifactId>spring-test</artifactId>
             <version>3.0.5.RELEASE</version>
         </dependency>
+        <dependency>
+            <groupId>org.motechproject</groupId>
+            <artifactId>motech-platform-common-api</artifactId>
+            <version>${motech.version}</version>
+        </dependency>
     </dependencies>
 
 </project>
