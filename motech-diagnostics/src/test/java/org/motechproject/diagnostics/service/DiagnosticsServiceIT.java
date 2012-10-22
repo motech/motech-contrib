@@ -51,7 +51,7 @@ public class DiagnosticsServiceIT extends SpringIntegrationTest {
         List<DiagnosticsResult> testDiagnostics2Response = filter(having(on(DiagnosticsResult.class).getName(), Matchers.equalTo("test message 2")), diagnosticsResponses);
 
         assertEquals(3, TestClass.methodExecutionCount);
-        assertTrue((Boolean) testDiagnostics1Response.get(0).getValue());
-        assertFalse((Boolean) testDiagnostics2Response.get(0).getValue());
+        assertEquals("true", testDiagnostics1Response.get(0).getValue());
+        assertEquals("false", testDiagnostics2Response.get(0).getValue());
     }
 }

@@ -17,6 +17,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static org.motechproject.diagnostics.response.Status.Fail;
+import static org.motechproject.diagnostics.response.Status.Success;
+import static org.motechproject.diagnostics.response.Status.Warn;
+
 @Component
 public class ActiveMQDiagnostic implements Diagnostics {
 
@@ -30,33 +34,36 @@ public class ActiveMQDiagnostic implements Diagnostics {
     private DiagnosticConfiguration diagnosticConfiguration;
 
     @Diagnostic(name = "Port active")
-    public DiagnosticsResult<String> performDiagnosis() throws JMSException {
+    public DiagnosticsResult performDiagnosis() throws JMSException {
 
         Boolean isSuccess = checkActiveMQConnection();
-        return new DiagnosticsResult<>("Active MQ Port Is Active", isSuccess.toString());
+        return new DiagnosticsResult("Active MQ Port Is Active", isSuccess.toString(), Success);
     }
 
     @Diagnostic(name = "Queue Size")
-    public DiagnosticsResult<String> queueSizes() throws JMSException, MalformedURLException {
+    public DiagnosticsResult queueSizes() throws JMSException, MalformedURLException {
         List<String> queueNameList = queueNamesList(diagnosticConfiguration.activeMqQueueNames());
 
         if (!queueNameList.isEmpty() && activeMQDiagnosticsClientConnector == null) {
-            return new DiagnosticsResult("ActiveMQ Queue Sizes", "activeMQDiagnosticsClientConnector bean not defined");
+            return new DiagnosticsResult("ActiveMQ Queue Sizes", "activeMQDiagnosticsClientConnector bean not defined", Warn);
         }
 
         if (queueNameList.isEmpty()) {
-            return new DiagnosticsResult("ActiveMQ Queue Sizes", "No activeMQ.queueNames specified.");
+            return new DiagnosticsResult("ActiveMQ Queue Sizes", "No activeMQ.queueNames specified.", Warn);
         }
 
         List<DiagnosticsResult> results = new ArrayList<>();
         for (String queueName : queueNameList) {
             try {
-                ObjectName objectNameRequest = new ObjectName(
-                        "org.apache.activemq:BrokerName=localhost,Type=Queue,Destination=" + queueName);
+                ObjectName objectNameRequest = new ObjectName("org.apache.activemq:BrokerName=localhost,Type=Queue,Destination=" + queueName);
                 Long queueSize = (Long) activeMQDiagnosticsClientConnector.getObject().getAttribute(objectNameRequest, "QueueSize");
-                results.add(new DiagnosticsResult<>("Queue Size for " + queueName, queueSize != null ? queueSize.toString() : "Not Found!"));
+                if (queueSize == null) {
+                    results.add(new DiagnosticsResult("Queue Size for " + queueName, "Not Found!", Fail));
+                } else {
+                    results.add(new DiagnosticsResult("Queue Size for " + queueName, queueSize.toString(), Success));
+                }
             } catch (Exception e) {
-                return new DiagnosticsResult(queueName, "Error occurred while connecting");
+                return new DiagnosticsResult(queueName, "Error occurred while connecting", Fail);
             }
         }
         return new DiagnosticsResult("ActiveMQ Queue Sizes", results);

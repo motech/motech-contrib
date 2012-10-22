@@ -21,13 +21,13 @@ public class ConfigurationDiagnosticIT {
 
     @Test
     public void shouldPrintAllProperties() throws JMSException {
-        DiagnosticsResult<List<DiagnosticsResult>> diagnosticsResults = configurationDiagnostic.performDiagnosis();
+        DiagnosticsResult diagnosticsResults = configurationDiagnostic.performDiagnosis();
 
-        assertEquals("true", diagnosticsResults.getValue().get(0).getValue());
-        assertTrue(containsResultWithName("activemq", diagnosticsResults.getValue()));
-        assertTrue(containsNestedResultWithName("queue.for.events", "QueueForEvents", diagnosticsResults.getValue()));
-        assertTrue(containsResultWithName("postgres", diagnosticsResults.getValue()));
-        assertTrue(containsNestedResultWithName("jdbc.username", "postgres", diagnosticsResults.getValue()));
+        assertEquals("true", diagnosticsResults.getResults().get(0).getValue());
+        assertTrue(containsResultWithName("activemq", diagnosticsResults.getResults()));
+        assertTrue(containsNestedResultWithName("queue.for.events", "QueueForEvents", diagnosticsResults.getResults()));
+        assertTrue(containsResultWithName("postgres", diagnosticsResults.getResults()));
+        assertTrue(containsNestedResultWithName("jdbc.username", "postgres", diagnosticsResults.getResults()));
     }
 
     private boolean containsResultWithName(String name, List<DiagnosticsResult> results) {
@@ -43,8 +43,8 @@ public class ConfigurationDiagnosticIT {
                                                  String nestedElementValue,
                                                  List<DiagnosticsResult> results) {
         for (DiagnosticsResult result : results) {
-            if (result.getValue() instanceof List) {
-                List<DiagnosticsResult> nestedResults = (List<DiagnosticsResult>) result.getValue();
+            if (!result.getResults().isEmpty()) {
+                List<DiagnosticsResult> nestedResults = result.getResults();
                 for (DiagnosticsResult nestedResult : nestedResults) {
                     if (nestedResult.getName().equalsIgnoreCase(nestedElementName)) {
                         return nestedResult.getValue().equals(nestedElementValue);

@@ -22,7 +22,7 @@ public class ActiveMQDiagnosticIT {
 
     @Test
     public void shouldCheckActiveMQConnection() throws JMSException {
-        DiagnosticsResult<String> diagnosticsResult = activeMQDiagnostic.performDiagnosis();
+        DiagnosticsResult diagnosticsResult = activeMQDiagnostic.performDiagnosis();
         assertNotNull(diagnosticsResult);
         assertEquals("Active MQ Port Is Active", diagnosticsResult.getName());
         assertEquals("true", diagnosticsResult.getValue());
@@ -31,7 +31,7 @@ public class ActiveMQDiagnosticIT {
 
     @Test
     public void shouldCheckActiveMQQueueSizes() throws JMSException, MalformedURLException {
-        DiagnosticsResult<String> diagnosticsResult = activeMQDiagnostic.queueSizes();
+        DiagnosticsResult diagnosticsResult = activeMQDiagnostic.queueSizes();
         assertNotNull(diagnosticsResult);
     }
 }

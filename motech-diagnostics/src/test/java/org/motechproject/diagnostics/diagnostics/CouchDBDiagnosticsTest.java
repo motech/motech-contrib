@@ -25,19 +25,19 @@ public class CouchDBDiagnosticsTest extends SpringIntegrationTest {
 
     @Test
     public void eachInstanceHasResult() {
-        List<DiagnosticsResult> results = diagnostics.isActive().getValue();
+        List<DiagnosticsResult> results = diagnostics.isActive().getResults();
         assertEquals(allConnectors.size(), results.size());
     }
 
     @Test
     public void shouldReturnPositiveResultWhenAbleToConnectToInstance() {
-        List<DiagnosticsResult> results = diagnostics.isActive().getValue();
+        List<DiagnosticsResult> results = diagnostics.isActive().getResults();
         assertEquals("true", results.get(0).getValue().toString());
     }
 
     @Test
     public void shouldReturnNegativeReturnWhenNotAbleToConnectToInstance() {
-        List<DiagnosticsResult> results = diagnostics.isActive().getValue();
+        List<DiagnosticsResult> results = diagnostics.isActive().getResults();
         assertResultsContainError(results);
     }
 

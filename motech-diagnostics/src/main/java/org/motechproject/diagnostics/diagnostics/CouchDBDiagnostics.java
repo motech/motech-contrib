@@ -12,6 +12,8 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.motechproject.diagnostics.response.Status.*;
+
 @Component
 public class CouchDBDiagnostics implements Diagnostics {
 
@@ -26,12 +28,12 @@ public class CouchDBDiagnostics implements Diagnostics {
     }
 
     @Diagnostic(name = "IS_ACTIVE")
-    public DiagnosticsResult<List<DiagnosticsResult>> isActive() {
-        List<DiagnosticsResult> results = new ArrayList<DiagnosticsResult>();
+    public DiagnosticsResult isActive() {
+        List<DiagnosticsResult> results = new ArrayList<>();
         for (StdCouchDbConnector connector : allConnectors) {
             results.add(isInstanceActive(connector));
         }
-        return new DiagnosticsResult<>("couchdb is active", results);
+        return new DiagnosticsResult("couchdb is active", results);
     }
 
     private DiagnosticsResult isInstanceActive(StdCouchDbConnector connector) {
@@ -39,12 +41,12 @@ public class CouchDBDiagnostics implements Diagnostics {
             HttpClient connection = connector.getConnection();
             HttpResponse httpResponse = connection.get("/");
             if (400 > httpResponse.getCode()) {
-                return new DiagnosticsResult("Able to connect to " + connector.getDatabaseName(), "true");
+                return new DiagnosticsResult("Able to connect to " + connector.getDatabaseName(), "true", Success);
             } else {
-                return new DiagnosticsResult("Able to connect to " + connector.getDatabaseName(), "false");
+                return new DiagnosticsResult("Able to connect to " + connector.getDatabaseName(), "false", Success);
             }
         } catch (Exception e) {
-            return new DiagnosticsResult("Connecting to " + connector.getDatabaseName() + "resulted in", "error");
+            return new DiagnosticsResult("Connecting to " + connector.getDatabaseName() + "resulted in", "error", Fail);
         }
     }
 

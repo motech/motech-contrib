@@ -3,6 +3,7 @@ package org.motechproject.diagnostics.response;
 import java.util.List;
 
 public class ServiceResult {
+
     private String serviceName;
     private List<DiagnosticsResult> results;
 

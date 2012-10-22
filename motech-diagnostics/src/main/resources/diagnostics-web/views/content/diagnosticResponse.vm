@@ -6,12 +6,23 @@
 
         <div class="span10">
             #macro( print, $result , $namePrefix )
-                #if( $result.value.class.simpleName.contains("List") )
-                    #foreach( $subResult in $result.value )
-                        <ul> #print($subResult , $namePrefix $result.name) </ul>
-                    #end
+                #if(! $result.results.isEmpty() )
+                <li>$result.name -  $result.status</li>
+                        #foreach( $subResult in $result.results )
+                          <ul> #print($subResult , $namePrefix $result.name) </ul>
+                        #end
                 #else
-                    <li>$namePrefix $result.name $result.value</li>
+                    <li>
+                        #if($result.status != "Success")
+                            <span class="label
+                            #if($result.status == "Warn")
+                                label-warning
+                            #else
+                                label-important
+                            #end
+                             ">&nbsp;$result.status</span>
+                        #end
+                            $namePrefix $result.name $result.value </li>
                 #end
 
             #end

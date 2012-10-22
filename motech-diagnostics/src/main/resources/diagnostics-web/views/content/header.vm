@@ -1,5 +1,5 @@
 <head>
-    <title>$label.home.page.title</title>
+    <title>Diagnostics - $contextPath</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="$label.home.page.title">
