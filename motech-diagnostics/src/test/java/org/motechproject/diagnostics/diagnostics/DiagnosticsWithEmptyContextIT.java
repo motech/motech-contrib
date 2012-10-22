@@ -3,6 +3,7 @@ package org.motechproject.diagnostics.diagnostics;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.motechproject.diagnostics.response.DiagnosticsResult;
+import org.motechproject.diagnostics.response.ServiceResult;
 import org.motechproject.diagnostics.service.DiagnosticsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -21,7 +22,7 @@ public class DiagnosticsWithEmptyContextIT {
 
     @Test
     public void shouldNotPerformAnyDiagnostics() {
-        List<DiagnosticsResult> results = service.runAll();
+        List<ServiceResult> results = service.runAll();
         assertTrue(results.isEmpty());
     }
 }

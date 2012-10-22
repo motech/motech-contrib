@@ -3,12 +3,14 @@ package org.motechproject.diagnostics;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.motechproject.diagnostics.response.DiagnosticsResult;
+import org.motechproject.diagnostics.response.ServiceResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.util.Arrays;
 
+import static java.util.Arrays.asList;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -21,7 +23,8 @@ public class DiagnosticResponseBuilderIT {
     @Test
     public void shouldVerifyTheMessageBuilt() {
         DiagnosticsResult diagnosticsResponse = new DiagnosticsResult("Aragorn", true);
-        String responseMessage = diagnosticResponseBuilder.createResponseMessage(Arrays.asList(diagnosticsResponse));
+        ServiceResult serviceResult = new ServiceResult("serviceName", asList(diagnosticsResponse));
+        String responseMessage = diagnosticResponseBuilder.createResponseMessage(asList(serviceResult));
 
         assertTrue(responseMessage.contains("Aragorn true"));
     }

@@ -1,4 +1,4 @@
-package org.motechproject.diagnostics.controller;
+package org.motechproject.diagnostics.diagnostics;
 
 public class DiagnosticServiceName {
 

@@ -4,11 +4,14 @@ import org.motechproject.diagnostics.Diagnostics;
 import org.motechproject.diagnostics.configuration.DiagnosticConfiguration;
 import org.motechproject.diagnostics.repository.AllDiagnosticMethods;
 import org.motechproject.diagnostics.response.DiagnosticsResult;
+import org.motechproject.diagnostics.response.ServiceResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
+
+import static java.util.Arrays.asList;
 
 @Service
 public class DiagnosticsService {
@@ -17,7 +20,7 @@ public class DiagnosticsService {
 
     @Autowired
     public DiagnosticsService(List<Diagnostics> diagnostics, DiagnosticConfiguration diagnosticProperties) {
-        List<String> configuredDiagnosticServices = Arrays.asList(diagnosticProperties.diagnosticServices().split(","));
+        List<String> configuredDiagnosticServices = asList(diagnosticProperties.diagnosticServices().split(","));
         this.diagnostics = new HashMap<>();
         for (Diagnostics diagnostic : diagnostics) {
             if (configuredDiagnosticServices.contains(diagnostic.name()) && diagnostic.canPerformDiagnostics()) {
@@ -26,11 +29,11 @@ public class DiagnosticsService {
         }
     }
 
-    public List<DiagnosticsResult> run(String name) {
+    public ServiceResult run(String name) {
         Diagnostics diagnostic = diagnostics.get(name);
         AllDiagnosticMethods allDiagnosticMethods = new AllDiagnosticMethods(diagnostic);
         try {
-            return allDiagnosticMethods.runAllDiagnosticMethods();
+            return new ServiceResult(name, allDiagnosticMethods.runAllDiagnosticMethods());
         } catch (InvocationTargetException e) {
             throw new RuntimeException(e);
         } catch (IllegalAccessException e) {
@@ -38,10 +41,10 @@ public class DiagnosticsService {
         }
     }
 
-    public List<DiagnosticsResult> runAll() {
-        List<DiagnosticsResult> results = new ArrayList<DiagnosticsResult>();
+    public List<ServiceResult> runAll() {
+        List<ServiceResult> results = new ArrayList<>();
         for (String key : diagnostics.keySet()) {
-            results.addAll(run(key));
+            results.add(run(key));
         }
         return results;
     }

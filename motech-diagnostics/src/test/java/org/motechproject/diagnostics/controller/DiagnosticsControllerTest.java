@@ -6,6 +6,7 @@ import org.mockito.Mock;
 import org.motechproject.diagnostics.DiagnosticResponseBuilder;
 import org.motechproject.diagnostics.response.DiagnosticsResult;
 import org.motechproject.diagnostics.response.DiagnosticsStatus;
+import org.motechproject.diagnostics.response.ServiceResult;
 import org.motechproject.diagnostics.service.DiagnosticsService;
 
 import javax.servlet.ServletOutputStream;
@@ -15,6 +16,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.List;
 
+import static java.util.Arrays.asList;
 import static junit.framework.Assert.assertEquals;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.verify;
@@ -49,21 +51,25 @@ public class DiagnosticsControllerTest {
 
     @Test
     public void shouldPrintDiagnosticMessageResponse() throws IOException {
-        List<DiagnosticsResult> expectedDiagnosticsResponses = Arrays.asList(new DiagnosticsResult("Test diagnostic", new DiagnosticsResult(DiagnosticsStatus.PASS.name(), "Test diagnostic run")));
-        when(diagnosticsService.run("name")).thenReturn(expectedDiagnosticsResponses);
+        String serviceName = "name";
+        List<DiagnosticsResult> expectedDiagnosticsResponses = asList(new DiagnosticsResult("Test diagnostic", new DiagnosticsResult(DiagnosticsStatus.PASS.name(), "Test diagnostic run")));
+        ServiceResult expectedServiceResult = new ServiceResult(serviceName, expectedDiagnosticsResponses);
+        when(diagnosticsService.run(serviceName)).thenReturn(expectedServiceResult);
 
-        List<DiagnosticsResult> diagnosticsResults = diagnosticsController.runDiagnostics("name");
+        ServiceResult serviceResult = diagnosticsController.runDiagnostics(serviceName);
 
-        assertEquals(expectedDiagnosticsResponses, diagnosticsResults);
+        assertEquals(expectedServiceResult, serviceResult);
     }
 
     @Test
     public void shouldInvokeAllTheDiagnosticMethods() throws InvocationTargetException, IllegalAccessException, IOException {
-        List<DiagnosticsResult> expectedDiagnosticsResponses = Arrays.asList(new DiagnosticsResult("Test diagnostic", new DiagnosticsResult(DiagnosticsStatus.PASS.name(), "Test diagnostic run")));
-        when(diagnosticsService.runAll()).thenReturn(expectedDiagnosticsResponses);
+        List<DiagnosticsResult> expectedDiagnosticsResponses = asList(new DiagnosticsResult("Test diagnostic", new DiagnosticsResult(DiagnosticsStatus.PASS.name(), "Test diagnostic run")));
+        List<ServiceResult> expectedServiceResults = asList(new ServiceResult("serviceName", expectedDiagnosticsResponses));
+        when(diagnosticsService.runAll()).thenReturn(expectedServiceResults);
         when(httpResponse.getOutputStream()).thenReturn(servletOutputStream);
-        when(allDiagnosticMessageBuilder.createResponseMessage(expectedDiagnosticsResponses)).thenReturn("Diagnostic Response");
-        List<DiagnosticsResult> diagnostics = diagnosticsController.getDiagnostics();
-        assertEquals(expectedDiagnosticsResponses, diagnostics);
+        when(allDiagnosticMessageBuilder.createResponseMessage(expectedServiceResults)).thenReturn("Diagnostic Response");
+
+        List<ServiceResult> actualServiceResults = diagnosticsController.getDiagnostics();
+        assertEquals(expectedServiceResults, actualServiceResults);
     }
 }

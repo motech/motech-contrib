@@ -4,7 +4,7 @@ import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
 import org.motechproject.diagnostics.configuration.DiagnosticConfiguration;
-import org.motechproject.diagnostics.response.DiagnosticsResult;
+import org.motechproject.diagnostics.response.ServiceResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -23,11 +23,11 @@ public class DiagnosticResponseBuilder {
         this.diagnosticConfiguration = diagnosticConfiguration;
     }
 
-    public String createResponseMessage(List<DiagnosticsResult> diagnosticsResponses) {
+    public String createResponseMessage(List<ServiceResult> serviceResults) {
         Template template = velocityEngine.getTemplate("diagnostics-web/views/content/diagnosticResponse.vm");
         VelocityContext context = new VelocityContext();
         context.put("contextPath", diagnosticConfiguration.contextPath());
-        context.put("diagnosticsResponses", diagnosticsResponses);
+        context.put("serviceResults", serviceResults);
         StringWriter writer = new StringWriter();
         template.merge(context, writer);
         return writer.toString();

@@ -42,8 +42,13 @@
                 #end
 
             #end
-            #foreach( $diagnosticResponse in $diagnosticsResponses )
-                <ul> #print( $diagnosticResponse , "" ) #if ( $foreach.hasNext ) #end </ul>
+            #foreach( $serviceResult in $serviceResults )
+                <h3>$serviceResult.serviceName</h3>
+                <div class="well">
+                    #foreach( $diagnosticResult in $serviceResult.results )
+                        <ul> #print( $diagnosticResult , "" ) #if ( $foreach.hasNext ) #end </ul>
+                    #end
+                </div>
             #end
         </div>
     </div>

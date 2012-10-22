@@ -4,6 +4,7 @@ import org.motechproject.diagnostics.DiagnosticResponseBuilder;
 import org.motechproject.diagnostics.response.DiagnosticsResult;
 import org.motechproject.diagnostics.response.ExceptionResponse;
 import org.motechproject.diagnostics.repository.AllDiagnosticMethods;
+import org.motechproject.diagnostics.response.ServiceResult;
 import org.motechproject.diagnostics.service.DiagnosticsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -33,16 +34,16 @@ public class DiagnosticsController {
 
     @RequestMapping(value = "service/{serviceName}", method = GET)
     @ResponseBody
-    public List<DiagnosticsResult> runDiagnostics(@PathVariable("serviceName") String name) throws IOException {
-        List<DiagnosticsResult> diagnosticsResponses = diagnosticsService.run(name);
-        return diagnosticsResponses;
+    public ServiceResult runDiagnostics(@PathVariable("serviceName") String name) throws IOException {
+        ServiceResult serviceResult = diagnosticsService.run(name);
+        return serviceResult;
     }
 
     @RequestMapping(value = "all", method = GET)
     @ResponseBody
-    public List<DiagnosticsResult> getDiagnostics() throws InvocationTargetException, IllegalAccessException, IOException {
-        List<DiagnosticsResult> diagnosticsResponses = diagnosticsService.runAll();
-        return diagnosticsResponses;
+    public List<ServiceResult> getDiagnostics() throws InvocationTargetException, IllegalAccessException, IOException {
+        List<ServiceResult> serviceResults = diagnosticsService.runAll();
+        return serviceResults;
     }
 
     @RequestMapping(value = "all/view", method = GET)

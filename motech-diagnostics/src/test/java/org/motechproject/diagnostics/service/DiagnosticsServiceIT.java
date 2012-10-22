@@ -7,6 +7,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.motechproject.diagnostics.response.DiagnosticsResult;
+import org.motechproject.diagnostics.response.ServiceResult;
 import org.motechproject.diagnostics.util.TestClass;
 import org.motechproject.testing.utils.SpringIntegrationTest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,8 @@ import java.util.List;
 
 import static ch.lambdaj.Lambda.*;
 import static junit.framework.Assert.*;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.core.Is.is;
 
 @ContextConfiguration(locations = "classpath*:/applicationContext-DiagnosticsTest.xml")
 public class DiagnosticsServiceIT extends SpringIntegrationTest {
@@ -37,7 +40,12 @@ public class DiagnosticsServiceIT extends SpringIntegrationTest {
 
     @Test
     public void shouldInvokeAllDiagnosticMethods() throws InvocationTargetException, IllegalAccessException {
-        List<DiagnosticsResult> diagnosticsResponses = diagnosticService.runAll();
+        List<ServiceResult> serviceResults = diagnosticService.runAll();
+
+        assertThat(serviceResults.size(), is(1));
+        assertThat(serviceResults.get(0).getServiceName(), is("testDiagnostics"));
+
+        List<DiagnosticsResult> diagnosticsResponses = serviceResults.get(0).getResults();
 
         List<DiagnosticsResult> testDiagnostics1Response = filter(having(on(DiagnosticsResult.class).getName(), Matchers.equalTo("test message 1")), diagnosticsResponses);
         List<DiagnosticsResult> testDiagnostics2Response = filter(having(on(DiagnosticsResult.class).getName(), Matchers.equalTo("test message 2")), diagnosticsResponses);
