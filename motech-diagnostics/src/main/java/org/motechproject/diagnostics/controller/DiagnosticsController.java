@@ -42,27 +42,27 @@ public class DiagnosticsController {
         return serviceResult;
     }
 
-    @RequestMapping(value = "all", method = GET)
+    @RequestMapping(value = "show/all/json", method = GET)
     @ResponseBody
     public List<ServiceResult> getDiagnostics() throws InvocationTargetException, IllegalAccessException, IOException {
         List<ServiceResult> serviceResults = diagnosticsService.runAll();
         return serviceResults;
     }
 
-    @RequestMapping(value = "all/view", method = GET)
+    @RequestMapping(value = "show/all", method = GET)
     public void viewDiagnostics(HttpServletResponse response) throws IOException, InvocationTargetException, IllegalAccessException {
         String diagnosticsResponse = diagnosticResponseBuilder.createResponseMessage(getDiagnostics());
         response.getOutputStream().print(diagnosticsResponse);
     }
 
 
-    @RequestMapping(method = RequestMethod.GET, value = "logs")
+    @RequestMapping(method = RequestMethod.GET, value = "show/logs")
     public void showLogs(HttpServletResponse response) throws Exception {
         String logFilesResponse = logFilesResponseBuilder.createResponse();
         response.getOutputStream().print(logFilesResponse);
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "logs/{file_name:.*}")
+    @RequestMapping(method = RequestMethod.GET, value = "show/logs/{file_name:.*}")
     public void getLog(@PathVariable("file_name") String logFilename, HttpServletResponse response) throws Exception {
         IOUtils.copy(logFilesResponseBuilder.getLogFile(logFilename), response.getOutputStream());
         response.setContentType("text/plain");

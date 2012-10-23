@@ -14,7 +14,7 @@
             </thead><tbody>
                 #foreach($entry in $logFilesInfo)
                 <tr>
-                    <td><a href="diagnostics/logs/$entry.getName()" target="_new">$entry.getName()</a></td>
+                    <td><a href="diagnostics/show/logs/$entry.getName()" target="_new">$entry.getName()</a></td>
                     <td>$entry.getSize()</td>
                     <td>$entry.getLastUpdated()</td>
                 </tr>

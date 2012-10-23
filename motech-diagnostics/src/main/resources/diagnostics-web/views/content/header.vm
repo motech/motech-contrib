@@ -21,9 +21,9 @@
 <div class="navbar navbar-fixed-top">
     <div class="navbar-inner">
         <div class="container-fluid">
-            <a class="brand" href="diagnostics/all/view">Diagnostics</a>
+            <a class="brand" href="diagnostics/show/all">Diagnostics</a>
             <ul class="nav">
-                <li class="active"><a href="diagnostics/logs">Logs</a></li>
+                <li class="active"><a href="diagnostics/show/logs">Logs</a></li>
             </ul>
         </div>
     </div>
