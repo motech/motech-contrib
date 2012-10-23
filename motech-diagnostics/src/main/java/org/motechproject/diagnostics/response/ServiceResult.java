@@ -19,4 +19,9 @@ public class ServiceResult {
     public List<DiagnosticsResult> getResults() {
         return results;
     }
+
+    public Status status(){
+        return new DiagnosticResults(results).status();
+    }
+
 }

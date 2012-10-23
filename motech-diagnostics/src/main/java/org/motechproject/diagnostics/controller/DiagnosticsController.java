@@ -1,6 +1,7 @@
 package org.motechproject.diagnostics.controller;
 
 import org.apache.commons.io.IOUtils;
+import org.motechproject.diagnostics.response.Status;
 import org.motechproject.diagnostics.velocity.builder.DiagnosticResponseBuilder;
 import org.motechproject.diagnostics.response.ExceptionResponse;
 import org.motechproject.diagnostics.response.ServiceResult;
@@ -18,6 +19,8 @@ import java.io.StringWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
+import static javax.servlet.http.HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
+import static org.motechproject.diagnostics.response.Status.Success;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
 @Controller
@@ -37,8 +40,11 @@ public class DiagnosticsController {
 
     @RequestMapping(value = "service/{serviceName}", method = GET)
     @ResponseBody
-    public ServiceResult runDiagnostics(@PathVariable("serviceName") String name) throws IOException {
+    public ServiceResult runDiagnostics(@PathVariable("serviceName") String name, HttpServletResponse response) throws IOException {
         ServiceResult serviceResult = diagnosticsService.run(name);
+        if(serviceResult.status() != Success){
+            response.setStatus(SC_INTERNAL_SERVER_ERROR);
+        }
         return serviceResult;
     }
 
@@ -73,7 +79,7 @@ public class DiagnosticsController {
     @ResponseBody
     public String handleException(final Exception exception, HttpServletResponse response) {
         response.setHeader("Content-Type", "application/json");
-        response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+        response.setStatus(SC_INTERNAL_SERVER_ERROR);
 
         StringWriter stringWriter = new StringWriter();
         exception.printStackTrace(new PrintWriter(stringWriter));

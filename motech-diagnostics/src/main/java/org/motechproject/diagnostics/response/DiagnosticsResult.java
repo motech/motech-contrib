@@ -10,8 +10,8 @@ public class DiagnosticsResult {
 
     private String name;
     private String value;
-    private List<DiagnosticsResult> results = new ArrayList<>();
     private Status status;
+    private List<DiagnosticsResult> results = new ArrayList<>();
 
     public DiagnosticsResult(String name, String value, Status status) {
         this.value = value;
@@ -25,16 +25,11 @@ public class DiagnosticsResult {
         this.status = getStatus();
     }
 
-    private int statusLevel(){
-        return status.level();
-    }
-
     public Status getStatus() {
-        int statusLevel = 0;
-        for(DiagnosticsResult result : results){
-            statusLevel = status(statusLevel, result.getStatus().level());
-        }
-        return Status.status(statusLevel);
+        if(results.isEmpty())
+            return status;
+
+        return new DiagnosticResults(results).status();
     }
 
     public String getName() {
@@ -52,13 +47,6 @@ public class DiagnosticsResult {
     public DiagnosticsResult add(DiagnosticsResult diagnosticsResult){
         results.add(diagnosticsResult);
         return this;
-    }
-
-    private int status(int oldStatus, int newStatus){
-        if(oldStatus > newStatus)
-            return oldStatus;
-        else
-            return newStatus;
     }
 
 }

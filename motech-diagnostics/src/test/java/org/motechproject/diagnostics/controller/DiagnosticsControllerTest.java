@@ -10,6 +10,7 @@ import org.motechproject.diagnostics.response.Status;
 import org.motechproject.diagnostics.service.DiagnosticsService;
 import org.motechproject.diagnostics.velocity.builder.DiagnosticResponseBuilder;
 import org.motechproject.diagnostics.velocity.builder.LogFilesResponseBuilder;
+import org.springframework.mock.web.MockHttpServletResponse;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
@@ -48,8 +49,13 @@ public class DiagnosticsControllerTest {
 
     @Test
     public void shouldInvokeDiagnosticsByName() throws IOException {
-        diagnosticsController.runDiagnostics("name");
-        verify(diagnosticsService).run("name");
+        HttpServletResponse response = new MockHttpServletResponse();
+        String serviceName = "serviceName";
+        ServiceResult expectedServiceResult = new ServiceResult(serviceName, Arrays.asList(new DiagnosticsResult("apache", "running", Status.Fail)));
+        when(diagnosticsService.run(serviceName)).thenReturn(expectedServiceResult);
+
+        diagnosticsController.runDiagnostics(serviceName, response);
+        verify(diagnosticsService).run(serviceName);
     }
 
     @Test
@@ -59,7 +65,8 @@ public class DiagnosticsControllerTest {
         ServiceResult expectedServiceResult = new ServiceResult(serviceName, expectedDiagnosticsResponses);
         when(diagnosticsService.run(serviceName)).thenReturn(expectedServiceResult);
 
-        ServiceResult serviceResult = diagnosticsController.runDiagnostics(serviceName);
+        HttpServletResponse response = new MockHttpServletResponse();
+        ServiceResult serviceResult = diagnosticsController.runDiagnostics(serviceName, response);
 
         assertEquals(expectedServiceResult, serviceResult);
     }
@@ -74,5 +81,18 @@ public class DiagnosticsControllerTest {
 
         List<ServiceResult> actualServiceResults = diagnosticsController.getDiagnostics();
         assertEquals(expectedServiceResults, actualServiceResults);
+    }
+
+    @Test
+    public void shouldSetErrorStatusCodeWhenAtLeastOneDiagnosticResultHasFailed() throws IOException {
+        MockHttpServletResponse response = new MockHttpServletResponse();
+        String serviceName = "serviceName";
+        ServiceResult expectedServiceResult = new ServiceResult(serviceName, Arrays.asList(new DiagnosticsResult("apache", "running", Status.Fail)));
+        when(diagnosticsService.run(serviceName)).thenReturn(expectedServiceResult);
+
+        ServiceResult serviceResult = diagnosticsController.runDiagnostics(serviceName, response);
+
+        assertEquals(expectedServiceResult, serviceResult);
+        assertEquals(500, response.getStatus());
     }
 }
