@@ -5,7 +5,7 @@ import au.com.bytecode.opencsv.bean.HeaderColumnNameTranslateMappingStrategy;
 import org.motechproject.importer.annotation.CSVImporter;
 import org.motechproject.importer.annotation.ColumnName;
 
-import java.io.FileReader;
+import java.io.Reader;
 import java.lang.reflect.Field;
 import java.lang.reflect.Member;
 import java.lang.reflect.Method;
@@ -22,8 +22,13 @@ public class CSVDataImportProcessor extends DataImportProcessor {
     private Object importer;
 
     public CSVDataImportProcessor(Object importer) {
-        super(importer);
+        super(importer, importer.getClass().getAnnotation(CSVImporter.class).bean());
         this.importer = importer;
+        this.csvToBean = new MyCsvToBean();
+    }
+
+    public CSVDataImportProcessor(Class bean) {
+        super(bean);
         this.csvToBean = new MyCsvToBean();
     }
 
@@ -31,16 +36,12 @@ public class CSVDataImportProcessor extends DataImportProcessor {
         return importer.getClass().getAnnotation(CSVImporter.class).entity();
     }
 
-    public Class bean() {
-        return importer.getClass().getAnnotation(CSVImporter.class).bean();
-    }
-
-    public List<Object> parse(String filePath) throws Exception {
-        CSVReader reader = new CSVReader(new FileReader(filePath), ',');
+    public List<Object> parse(Reader reader) {
+        CSVReader csvReader = new CSVReader(reader, ',');
         HeaderColumnNameTranslateMappingStrategy columnNameMappingStrategy = new HeaderColumnNameTranslateMappingStrategy();
-        columnNameMappingStrategy.setType(bean());
+        columnNameMappingStrategy.setType(bean);
         columnNameMappingStrategy.setColumnMapping(getColumnMapping());
-        return csvToBean.parse(columnNameMappingStrategy, reader);
+        return csvToBean.parse(columnNameMappingStrategy, csvReader);
     }
 
     public static boolean isValid(Class beanClass) {
@@ -65,7 +66,7 @@ public class CSVDataImportProcessor extends DataImportProcessor {
         if (method.isAnnotationPresent(ColumnName.class)) {
             mapping.put(method.getAnnotation(ColumnName.class).name(), method.getName().replace("set", ""));
         } else {
-            mapping.put(method.getName(), method.getName().replace("set",""));
+            mapping.put(method.getName(), method.getName().replace("set", ""));
         }
     }
 
@@ -80,8 +81,8 @@ public class CSVDataImportProcessor extends DataImportProcessor {
 
     private List<Member> getAllMembers() {
         List<Member> members = new ArrayList<Member>();
-        members.addAll(asList(bean().getDeclaredFields()));
-        members.addAll(asList(bean().getDeclaredMethods()));
+        members.addAll(asList(bean.getDeclaredFields()));
+        members.addAll(asList(bean.getDeclaredMethods()));
         return members;
     }
 }

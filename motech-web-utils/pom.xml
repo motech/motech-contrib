@@ -60,6 +60,11 @@
             <artifactId>spring-test</artifactId>
             <version>3.1.0.RELEASE</version>
         </dependency>
+        <dependency>
+            <groupId>org.motechproject.contrib-ananya</groupId>
+            <artifactId>motech-bulk-export-import</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
 
 </project>
