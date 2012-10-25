@@ -15,9 +15,13 @@ import static au.com.bytecode.opencsv.CSVWriter.NO_QUOTE_CHARACTER;
 @Component
 public class CSVWriter {
 
-    public void writeCSVData(Writer writer, CSVExportProcessor csvExportProcessor, Object parameters) throws IOException {
-        ExportData exportData = csvExportProcessor.getCSVData(parameters);
-        writeDataToCSV(writer, exportData);
+    public void writeCSVData(Writer writer, CSVExportProcessor csvExportProcessor, Object parameters) {
+        try {
+            ExportData exportData = csvExportProcessor.getCSVData(parameters);
+            writeDataToCSV(writer, exportData);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public void writeCSVFromData(Writer writer, List data) throws IOException {

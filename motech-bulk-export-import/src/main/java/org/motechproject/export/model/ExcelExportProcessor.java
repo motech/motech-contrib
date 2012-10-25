@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -79,21 +80,23 @@ public class ExcelExportProcessor {
         return new ArrayList<Object>();
     }
 
-    public List<String> columnHeaders(String reportName) {
-        return new ExportDataModel(getDataMethod(reportName).getGenericReturnType()).columnHeaders();
+    public List<String> columnHeaders(Type returnType) {
+        return new ExportDataModel(returnType).columnHeaders();
     }
 
-    public List<String> rowData(String reportName, Object model) {
-        return new ExportDataModel(getDataMethod(reportName).getGenericReturnType()).rowData(model);
+    public List<String> rowData(Object model, Type returnType) {
+        return new ExportDataModel(returnType).rowData(model);
     }
 
     public ExportData getEntirExcelData(String reportName, Map<String, String> criteria) {
-        List<String> headers = columnHeaders(reportName);
-        List<List<String>> allRowData = new ArrayList<List<String>>();
+        List<String> headers = new ArrayList<>();
+        List<List<String>> allRowData = new ArrayList<>();
         List<Object> data = data(reportName, criteria);
         if (data != null && !data.isEmpty()) {
+            Class<? extends Object> clazz = data.get(0).getClass();
+            headers = columnHeaders(clazz);
             for (Object datum : data) {
-                allRowData.add(rowData(reportName, datum));
+                allRowData.add(rowData(datum, clazz ));
             }
         }
 
@@ -103,15 +106,17 @@ public class ExcelExportProcessor {
     public ExportData getPaginatedExcelData(String reportName) {
         boolean doneBuilding = false;
         int pageNumber = 1;
-        List<String> headers = columnHeaders(reportName);
-        List<List<String>> allRowData = new ArrayList<List<String>>();
+        List<String> headers = new ArrayList<>();
+        List<List<String>> allRowData = new ArrayList<>();
 
         while (!doneBuilding) {
             List<Object> data = dataForPage(reportName, pageNumber);
             if (data != null && !data.isEmpty()) {
-                List<List<String>> rowsOfAPage = new ArrayList<List<String>>();
+                Class<? extends Object> clazz = data.get(0).getClass();
+                headers = columnHeaders(clazz);
+                List<List<String>> rowsOfAPage = new ArrayList<>();
                 for (Object datum : data) {
-                    rowsOfAPage.add(rowData(reportName, datum));
+                    rowsOfAPage.add(rowData(datum, clazz));
                 }
                 allRowData.addAll(rowsOfAPage);
                 pageNumber++;
