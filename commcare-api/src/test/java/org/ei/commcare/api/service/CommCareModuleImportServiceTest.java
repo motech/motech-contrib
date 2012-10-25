@@ -37,12 +37,12 @@ public class CommCareModuleImportServiceTest {
         CommCareImportProperties commCareImportProperties = properties("/test-data/commcare-export-with-one-url.json");
         List<CommCareFormDefinition> formDefinitions = commCareImportProperties.moduleDefinitions().modules().get(0).definitions();
         CommCareFormInstance formInstance = new CommCareFormInstance(formDefinitions.get(0), new CommCareFormContent(asList("key"), asList("value")));
-        when(commcareFormImportService.fetchForms(formDefinitions, "someUser@gmail.com", "somePassword")).thenReturn(Arrays.asList(formInstance));
+        when(commcareFormImportService.fetchForms(formDefinitions, "www.server.org", "someUser@gmail.com", "somePassword")).thenReturn(Arrays.asList(formInstance));
 
         CommCareModuleImportService moduleImportService = new CommCareModuleImportService(commcareFormImportService, commCareImportProperties);
         List<List<CommCareFormInstance>> formsForEachModule = moduleImportService.fetchFormsForAllModules();
 
-        verify(commcareFormImportService).fetchForms(formDefinitions, "someUser@gmail.com", "somePassword");
+        verify(commcareFormImportService).fetchForms(formDefinitions, "www.server.org", "someUser@gmail.com", "somePassword");
         assertEquals(1, formsForEachModule.size());
         assertEquals(asList(formInstance), formsForEachModule.get(0));
     }
@@ -55,14 +55,14 @@ public class CommCareModuleImportServiceTest {
 
         CommCareFormInstance firstModuleFormInstance = new CommCareFormInstance(firstModuleFormDefinitions.get(0), new CommCareFormContent(asList("key"), asList("value")));
         CommCareFormInstance secondModuleFormInstance = new CommCareFormInstance(secondModuleFormDefinitions.get(0), new CommCareFormContent(asList("key"), asList("value")));
-        when(commcareFormImportService.fetchForms(firstModuleFormDefinitions, "someUser@gmail.com", "somePassword")).thenReturn(Arrays.asList(firstModuleFormInstance));
-        when(commcareFormImportService.fetchForms(secondModuleFormDefinitions, "someUser@gmail.com", "somePassword")).thenReturn(Arrays.asList(secondModuleFormInstance));
+        when(commcareFormImportService.fetchForms(firstModuleFormDefinitions, "www.server.org", "someUser@gmail.com", "somePassword")).thenReturn(Arrays.asList(firstModuleFormInstance));
+        when(commcareFormImportService.fetchForms(secondModuleFormDefinitions, "www.server.org", "someUser@gmail.com", "somePassword")).thenReturn(Arrays.asList(secondModuleFormInstance));
 
         CommCareModuleImportService moduleImportService = new CommCareModuleImportService(commcareFormImportService, commCareImportProperties);
         List<List<CommCareFormInstance>> allForms = moduleImportService.fetchFormsForAllModules();
 
-        verify(commcareFormImportService).fetchForms(firstModuleFormDefinitions, "someUser@gmail.com", "somePassword");
-        verify(commcareFormImportService).fetchForms(secondModuleFormDefinitions, "someUser@gmail.com", "somePassword");
+        verify(commcareFormImportService).fetchForms(firstModuleFormDefinitions, "www.server.org", "someUser@gmail.com", "somePassword");
+        verify(commcareFormImportService).fetchForms(secondModuleFormDefinitions, "www.server.org", "someUser@gmail.com", "somePassword");
         assertEquals(2, allForms.size());
         assertEquals(asList(firstModuleFormInstance), allForms.get(0));
         assertEquals(asList(secondModuleFormInstance), allForms.get(1));
@@ -75,14 +75,14 @@ public class CommCareModuleImportServiceTest {
         List<CommCareFormDefinition> secondModuleFormDefinitions = commCareImportProperties.moduleDefinitions().modules().get(1).definitions();
 
         CommCareFormInstance firstModuleFormInstance = new CommCareFormInstance(firstModuleFormDefinitions.get(0), new CommCareFormContent(asList("key"), asList("value")));
-        when(commcareFormImportService.fetchForms(firstModuleFormDefinitions, "someUser@gmail.com", "somePassword")).thenReturn(Arrays.asList(firstModuleFormInstance));
-        when(commcareFormImportService.fetchForms(secondModuleFormDefinitions, "someUser@gmail.com", "somePassword")).thenReturn(new ArrayList<CommCareFormInstance>());
+        when(commcareFormImportService.fetchForms(firstModuleFormDefinitions, "www.server.org", "someUser@gmail.com", "somePassword")).thenReturn(Arrays.asList(firstModuleFormInstance));
+        when(commcareFormImportService.fetchForms(secondModuleFormDefinitions, "www.server.org", "someUser@gmail.com", "somePassword")).thenReturn(new ArrayList<CommCareFormInstance>());
 
         CommCareModuleImportService moduleImportService = new CommCareModuleImportService(commcareFormImportService, commCareImportProperties);
         List<List<CommCareFormInstance>> allForms = moduleImportService.fetchFormsForAllModules();
 
-        verify(commcareFormImportService).fetchForms(firstModuleFormDefinitions, "someUser@gmail.com", "somePassword");
-        verify(commcareFormImportService).fetchForms(secondModuleFormDefinitions, "someUser@gmail.com", "somePassword");
+        verify(commcareFormImportService).fetchForms(firstModuleFormDefinitions, "www.server.org", "someUser@gmail.com", "somePassword");
+        verify(commcareFormImportService).fetchForms(secondModuleFormDefinitions, "www.server.org", "someUser@gmail.com", "somePassword");
         assertEquals(1, allForms.size());
         assertEquals(asList(firstModuleFormInstance), allForms.get(0));
     }

@@ -54,9 +54,9 @@ public class CommCareFormImportServiceTest {
         String urlOfExport = "http://baseURL__FORM__?export_tag=%22" + NAMESPACE2 + "%22&format=json&previous_export=";
         CommCareFormDefinition formDefinition = setupForm("__FORM__", "", formResponse(200, "/test-data/form.1.dump.json", "NEW-TOKEN"));
 
-        List<CommCareFormInstance> formInstances = formImportService.fetchForms(asList(formDefinition), "user", "password");
+        List<CommCareFormInstance> formInstances = formImportService.fetchForms(asList(formDefinition), "www.server.org", "user", "password");
 
-        verify(httpClient).get(urlOfExport, "user", "password");
+        verify(httpClient).get(urlOfExport, "www.server.org", "user", "password");
         assertEquals(2, formInstances.size());
         assertForm(formInstances.get(0), new String[]{"form-1-instance-1-value-1", "form-1-instance-1-value-2"}, "__FORM__", "extraFieldValue-1-1");
         assertForm(formInstances.get(1), new String[]{"form-1-instance-2-value-1", "form-1-instance-2-value-2"}, "__FORM__", "extraFieldValue-1-2");
@@ -67,9 +67,9 @@ public class CommCareFormImportServiceTest {
         String urlOfExport = "http://baseURL__FORM__?export_tag=%22" + NAMESPACE2 + "%22&format=json&previous_export=";
         CommCareFormDefinition formDefinition = setupForm("__FORM__", "", formResponse(200, "/test-data/form.3.dump.json", "NEW-TOKEN"));
 
-        List<CommCareFormInstance> formInstances = formImportService.fetchForms(asList(formDefinition), "user", "password");
+        List<CommCareFormInstance> formInstances = formImportService.fetchForms(asList(formDefinition), "www.server.org", "user", "password");
 
-        verify(httpClient).get(urlOfExport, "user", "password");
+        verify(httpClient).get(urlOfExport, "www.server.org", "user", "password");
         assertEquals(2, formInstances.size());
         assertForm(formInstances.get(0), new String[]{"form-1-instance-1-value-1", ""}, "__FORM__", "extraFieldValue-1-1");
         assertForm(formInstances.get(1), new String[]{"form-1-instance-2-value-1", "form-1-instance-2-value-2"}, "__FORM__", "");
@@ -83,10 +83,10 @@ public class CommCareFormImportServiceTest {
         CommCareFormDefinition firstFormDefinition = setupForm("__FORM1__", NAMESPACE, "OLD-TOKEN", formResponse(200, "/test-data/form.1.dump.json", "NEW-TOKEN"));
         CommCareFormDefinition secondFormDefinition = setupForm("__FORM2__", NAMESPACE2, "OLD-TOKEN", formResponse(200, "/test-data/form.2.dump.json", "NEW-TOKEN"));
 
-        List<CommCareFormInstance> formInstances = formImportService.fetchForms(asList(firstFormDefinition, secondFormDefinition), "user", "password");
+        List<CommCareFormInstance> formInstances = formImportService.fetchForms(asList(firstFormDefinition, secondFormDefinition), "www.server.org", "user", "password");
 
-        verify(httpClient).get(urlOfFirstExport, "user", "password");
-        verify(httpClient).get(urlOfSecondExport, "user", "password");
+        verify(httpClient).get(urlOfFirstExport, "www.server.org", "user", "password");
+        verify(httpClient).get(urlOfSecondExport, "www.server.org", "user", "password");
         verify(allExportTokens).updateToken(NAMESPACE, "NEW-TOKEN");
         verify(allExportTokens).updateToken(NAMESPACE2, "NEW-TOKEN");
 
@@ -102,9 +102,9 @@ public class CommCareFormImportServiceTest {
         String urlOfExport = "http://baseURL?export_tag=%22" + NAMESPACE2 + "%22&format=json&previous_export=";
         CommCareFormDefinition form = setupForm("", "", formResponse(200, "/test-data/form.1.dump.json", "NEW-TOKEN"));
 
-        formImportService.fetchForms(asList(form), "user", "password");
+        formImportService.fetchForms(asList(form), "www.server.org", "user", "password");
 
-        verify(httpClient).get(urlOfExport, "user", "password");
+        verify(httpClient).get(urlOfExport, "www.server.org", "user", "password");
     }
 
     @Test
@@ -112,16 +112,16 @@ public class CommCareFormImportServiceTest {
         String urlOfExport = "http://baseURL?export_tag=%22" + NAMESPACE2 + "%22&format=json&previous_export=OLD-TOKEN";
         CommCareFormDefinition form = setupForm("", "OLD-TOKEN", formResponse(200, "/test-data/form.1.dump.json", "NEW-TOKEN"));
 
-        formImportService.fetchForms(asList(form), "user", "password");
+        formImportService.fetchForms(asList(form), "www.server.org", "user", "password");
 
-        verify(httpClient).get(urlOfExport, "user", "password");
+        verify(httpClient).get(urlOfExport, "www.server.org", "user", "password");
     }
 
     @Test
     public void shouldSaveTheExportTokenAfterFetchingData() throws Exception {
         CommCareFormDefinition form = setupForm("", "OLD-TOKEN", formResponse(200, "/test-data/form.1.dump.json", "NEW-TOKEN"));
 
-        formImportService.fetchForms(asList(form), "user", "password");
+        formImportService.fetchForms(asList(form), "www.server.org", "user", "password");
 
         verify(allExportTokens).updateToken(NAMESPACE2, "NEW-TOKEN");
     }
@@ -130,7 +130,7 @@ public class CommCareFormImportServiceTest {
     public void shouldNotProcessFormOrUpdateTokenWhenResponseSaysThatThereIsNoNewData() throws Exception {
         CommCareFormDefinition formWithEmptyData = setupForm("", "OLD-TOKEN", formResponse(302, "/test-data/form.1.dump.json", null));
 
-        List<CommCareFormInstance> formInstances = formImportService.fetchForms(asList(formWithEmptyData), "user", "password");
+        List<CommCareFormInstance> formInstances = formImportService.fetchForms(asList(formWithEmptyData), "www.server.org", "user", "password");
 
         assertThat(formInstances.size(), is(0));
         verify(allExportTokens).findByNameSpace(NAMESPACE2);
@@ -142,7 +142,7 @@ public class CommCareFormImportServiceTest {
         CommCareFormDefinition form1 = setupForm("__FORM1__", "OLD-TOKEN", formResponse(200, "/test-data/form.1.dump.json", "NEW-TOKEN"));
         CommCareFormDefinition form2 = setupForm("__FORM2__", "OLD-TOKEN", formResponse(302, "/test-data/form.with.empty.data.json", null));
 
-        List<CommCareFormInstance> instances = formImportService.fetchForms(asList(form1, form2), "user", "password");
+        List<CommCareFormInstance> instances = formImportService.fetchForms(asList(form1, form2), "www.server.org", "user", "password");
 
         assertThat(instances.size(), is(2));
         verify(allExportTokens).updateToken(NAMESPACE2, "NEW-TOKEN");
@@ -154,7 +154,7 @@ public class CommCareFormImportServiceTest {
         CommCareFormDefinition form2 = setupForm("FORM2", "OLD-TOKEN", formResponse(302, "/test-data/form.with.empty.data.json", null));
         CommCareFormDefinition form3 = setupForm("FORM3", "OLD-TOKEN", formResponse(302, "/test-data/form.with.empty.data.json", null));
 
-        formImportService.fetchForms(asList(form1, form2, form3), "user", "password");
+        formImportService.fetchForms(asList(form1, form2, form3), "www.server.org", "user", "password");
 
         verify(allExportTokens, times(1)).updateToken(NAMESPACE2, "NEW-TOKEN");
     }
@@ -165,7 +165,7 @@ public class CommCareFormImportServiceTest {
         CommCareFormDefinition form2 = setupForm("FORM2", "OLD-TOKEN", formResponse(404, "/test-data/form.1.dump.json", null));
         CommCareFormDefinition form3 = setupForm("FORM3", "OLD-TOKEN", formResponse(200, "/test-data/form.1.dump.json", "NEW-TOKEN"));
 
-        formImportService.fetchForms(asList(form1, form2, form3), "user", "password");
+        formImportService.fetchForms(asList(form1, form2, form3), "www.server.org", "user", "password");
 
         verify(allExportTokens, times(0)).updateToken(Matchers.<String>any(), Matchers.<String>any());
     }
@@ -178,7 +178,7 @@ public class CommCareFormImportServiceTest {
         CommCareFormDefinition formDefinition = createForm(formPrefix, nameSpace);
 
         when(allExportTokens.findByNameSpace(nameSpace)).thenReturn(new ExportToken(nameSpace, oldToken));
-        when(httpClient.get(formDefinition.url(oldToken), "user", "password")).thenReturn(httpResponse);
+        when(httpClient.get(formDefinition.url(oldToken), "www.server.org", "user", "password")).thenReturn(httpResponse);
         return formDefinition;
     }
 

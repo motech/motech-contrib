@@ -25,7 +25,7 @@ public class CommCareModuleImportService {
         List<List<CommCareFormInstance>> instancesForModules = new ArrayList<List<CommCareFormInstance>>();
 
         for (CommCareModuleDefinition module : moduleDefinitions.modules()) {
-            List<CommCareFormInstance> formInstances = formImportService.fetchForms(module.definitions(), moduleDefinitions.userName(), moduleDefinitions.password());
+            List<CommCareFormInstance> formInstances = formImportService.fetchForms(module.definitions(), moduleDefinitions.commcareBaseUrl(), moduleDefinitions.userName(), moduleDefinitions.password());
             if (!formInstances.isEmpty()) {
                 instancesForModules.add(formInstances);
             }

@@ -30,19 +30,19 @@ public class CommCareFormImportService {
         this.allExportTokens = allExportTokens;
     }
 
-    public List<CommCareFormInstance> fetchForms(List<CommCareFormDefinition> definitions, String userName, String password) {
-        List<CommCareFormInstance> formInstances = processAllForms(fetchAllForms(definitions, userName, password));
+    public List<CommCareFormInstance> fetchForms(List<CommCareFormDefinition> definitions, String commcareBaseUrl, String userName, String password) {
+        List<CommCareFormInstance> formInstances = processAllForms(fetchAllForms(definitions, commcareBaseUrl, userName, password));
         logger.info("Fetched " + formInstances.size() + " formInstances.");
         return formInstances;
     }
 
-    private List<CommCareFormWithResponse> fetchAllForms(List<CommCareFormDefinition> definitions, String userName, String password) {
+    private List<CommCareFormWithResponse> fetchAllForms(List<CommCareFormDefinition> definitions, String commcareBaseUrl, String userName, String password) {
         List<CommCareFormWithResponse> formWithResponses = new ArrayList<CommCareFormWithResponse>();
         ArrayList<ExportToken> exportTokens = new ArrayList<ExportToken>();
 
         for (CommCareFormDefinition formDefinition : definitions) {
             String previousToken = allExportTokens.findByNameSpace(formDefinition.nameSpace()).value();
-            CommCareHttpResponse responseFromCommCareHQ = httpClient.get(formDefinition.url(previousToken), userName, password);
+            CommCareHttpResponse responseFromCommCareHQ = httpClient.get(formDefinition.url(previousToken), commcareBaseUrl, userName, password);
 
             if (responseFromCommCareHQ.isFailure()) {
                 logger.warn("Fetching forms for module failed. Form which failed: " + formDefinition + ". Description: " + responseFromCommCareHQ);

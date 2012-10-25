@@ -23,15 +23,15 @@ public class CommCareHttpClient {
         this.httpClient = new DefaultHttpClient();
     }
 
-    public CommCareHttpResponse get(String url, String userName, String password) {
-        logger.debug("Fetching URL: " + url + " with username: " + userName);
+    public CommCareHttpResponse get(String url, String commcareBaseUrl, String userName, String password) {
+        logger.debug("Fetching URL: " + url + " with username: " + userName + " with commcareBaseUrl: " + commcareBaseUrl);
 
         CommCareHttpResponse commCareHttpResponse = null;
 
         lock.lock();
         try {
             httpClient.getCredentialsProvider().setCredentials(
-                    new AuthScope("india.commcarehq.org", 443, "DJANGO", "digest"),
+                    new AuthScope(commcareBaseUrl, 443, "DJANGO", "digest"),
                     new UsernamePasswordCredentials(userName, password));
 
             HttpResponse response = httpClient.execute(new HttpGet(url));

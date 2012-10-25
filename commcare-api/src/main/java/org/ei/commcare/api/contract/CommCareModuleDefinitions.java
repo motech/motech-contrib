@@ -10,6 +10,7 @@ public class CommCareModuleDefinitions {
     private String userName;
     private String password;
     private String caseFetchURLBase;
+    private String commcareBaseUrl;
     private List<CommCareModuleDefinition> modules;
 
     public String userName() {
@@ -18,6 +19,10 @@ public class CommCareModuleDefinitions {
 
     public String password() {
         return password;
+    }
+
+    public String commcareBaseUrl() {
+        return commcareBaseUrl;
     }
 
     public List<CommCareModuleDefinition> modules() {

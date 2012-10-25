@@ -34,8 +34,8 @@ public class CommCareCaseImportServiceTest {
 
     @Test
     public void shouldFetchDependentsCaseWhenParentCaseIdIsProvided() throws Exception {
-        when(commCareHttpClient.get("http://commcare.org/cloudcare/?case_id=MOTHER-CASE-X", "username", "password")).thenReturn(new CommCareHttpResponse(200, new Header[0], jsonFor("mother-cloud-care.json")));
-        when(commCareHttpClient.get("http://commcare.org/cloudcare/?case_id=CHILD-CASE-X", "username", "password")).thenReturn(new CommCareHttpResponse(200, new Header[0], jsonFor("child-cloud-care.json")));
+        when(commCareHttpClient.get("http://commcare.org/cloudcare/?case_id=MOTHER-CASE-X", "www.server.org", "username", "password")).thenReturn(new CommCareHttpResponse(200, new Header[0], jsonFor("mother-cloud-care.json")));
+        when(commCareHttpClient.get("http://commcare.org/cloudcare/?case_id=CHILD-CASE-X", "www.server.org", "username", "password")).thenReturn(new CommCareHttpResponse(200, new Header[0], jsonFor("child-cloud-care.json")));
 
         CommCareCaseImportService service = new CommCareCaseImportService(commCareHttpClient, commCareImportProperties);
         CaseInformation childCaseInformation = service.fetchDependentCase("MOTHER-CASE-X");
@@ -50,7 +50,7 @@ public class CommCareCaseImportServiceTest {
 
     @Test
     public void shouldReturnCaseInformationWithFailedStatusWhenMotherCaseInformationCannotBeFetched() throws Exception {
-        when(commCareHttpClient.get("http://commcare.org/cloudcare/?case_id=MOTHER-CASE-X", "username", "password")).thenReturn(new CommCareHttpResponse(404, new Header[0], new byte[0]));
+        when(commCareHttpClient.get("http://commcare.org/cloudcare/?case_id=MOTHER-CASE-X", "www.server.org", "username", "password")).thenReturn(new CommCareHttpResponse(404, new Header[0], new byte[0]));
 
         CommCareCaseImportService service = new CommCareCaseImportService(commCareHttpClient, commCareImportProperties);
         CaseInformation childCaseInformation = service.fetchDependentCase("MOTHER-CASE-X");
@@ -60,8 +60,8 @@ public class CommCareCaseImportServiceTest {
 
     @Test
     public void shouldReturnCaseInformationWithFailedStatusWhenChildCaseInformationCannotBeFetched() throws Exception {
-        when(commCareHttpClient.get("http://commcare.org/cloudcare/?case_id=MOTHER-CASE-X", "username", "password")).thenReturn(new CommCareHttpResponse(200, new Header[0], jsonFor("mother-cloud-care.json")));
-        when(commCareHttpClient.get("http://commcare.org/cloudcare/?case_id=CHILD-CASE-X", "username", "password")).thenReturn(new CommCareHttpResponse(404, new Header[0], new byte[0]));
+        when(commCareHttpClient.get("http://commcare.org/cloudcare/?case_id=MOTHER-CASE-X", "www.server.org", "username", "password")).thenReturn(new CommCareHttpResponse(200, new Header[0], jsonFor("mother-cloud-care.json")));
+        when(commCareHttpClient.get("http://commcare.org/cloudcare/?case_id=CHILD-CASE-X", "www.server.org", "username", "password")).thenReturn(new CommCareHttpResponse(404, new Header[0], new byte[0]));
 
         CommCareCaseImportService service = new CommCareCaseImportService(commCareHttpClient, commCareImportProperties);
         CaseInformation childCaseInformation = service.fetchDependentCase("MOTHER-CASE-X");
@@ -71,7 +71,7 @@ public class CommCareCaseImportServiceTest {
 
     @Test
     public void shouldReturnCaseInformationWithFailedStatusWhenMotherCaseInformationIsEmptyOrNotFound() throws Exception {
-        when(commCareHttpClient.get("http://commcare.org/cloudcare/?case_id=MOTHER-CASE-X", "username", "password")).thenReturn(new CommCareHttpResponse(200, new Header[0], toByteArray(new StringReader("[]"))));
+        when(commCareHttpClient.get("http://commcare.org/cloudcare/?case_id=MOTHER-CASE-X", "www.server.org", "username", "password")).thenReturn(new CommCareHttpResponse(200, new Header[0], toByteArray(new StringReader("[]"))));
 
         CommCareCaseImportService service = new CommCareCaseImportService(commCareHttpClient, commCareImportProperties);
         CaseInformation childCaseInformation = service.fetchDependentCase("MOTHER-CASE-X");
@@ -81,8 +81,8 @@ public class CommCareCaseImportServiceTest {
 
     @Test
     public void shouldReturnCaseInformationWithFailedStatusWhenChildCaseInformationIsEmptyOrNotFound() throws Exception {
-        when(commCareHttpClient.get("http://commcare.org/cloudcare/?case_id=MOTHER-CASE-X", "username", "password")).thenReturn(new CommCareHttpResponse(200, new Header[0], jsonFor("mother-cloud-care.json")));
-        when(commCareHttpClient.get("http://commcare.org/cloudcare/?case_id=CHILD-CASE-X", "username", "password")).thenReturn(new CommCareHttpResponse(200, new Header[0], toByteArray(new StringReader("[]"))));
+        when(commCareHttpClient.get("http://commcare.org/cloudcare/?case_id=MOTHER-CASE-X", "www.server.org", "username", "password")).thenReturn(new CommCareHttpResponse(200, new Header[0], jsonFor("mother-cloud-care.json")));
+        when(commCareHttpClient.get("http://commcare.org/cloudcare/?case_id=CHILD-CASE-X", "www.server.org", "username", "password")).thenReturn(new CommCareHttpResponse(200, new Header[0], toByteArray(new StringReader("[]"))));
 
         CommCareCaseImportService service = new CommCareCaseImportService(commCareHttpClient, commCareImportProperties);
         CaseInformation childCaseInformation = service.fetchDependentCase("MOTHER-CASE-X");
@@ -94,6 +94,7 @@ public class CommCareCaseImportServiceTest {
         when(commCareImportProperties.moduleDefinitions()).thenReturn(commCareModuleDefinitions);
         when(commCareModuleDefinitions.userName()).thenReturn("username");
         when(commCareModuleDefinitions.password()).thenReturn("password");
+        when(commCareModuleDefinitions.commcareBaseUrl()).thenReturn("www.server.org");
         when(commCareModuleDefinitions.caseFetchURLBase()).thenReturn("http://commcare.org/cloudcare/");
     }
 

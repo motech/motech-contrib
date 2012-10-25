@@ -38,7 +38,7 @@ public class CommCareCaseImportService {
     }
 
     private CloudCareCaseData fetchCaseData(String caseId) {
-        CommCareHttpResponse caseFetchResponse = commCareHttpClient.get(moduleDefinitions.caseFetchURLBase() + "?case_id=" + caseId, moduleDefinitions.userName(), moduleDefinitions.password());
+        CommCareHttpResponse caseFetchResponse = commCareHttpClient.get(moduleDefinitions.caseFetchURLBase() + "?case_id=" + caseId, moduleDefinitions.commcareBaseUrl(), moduleDefinitions.userName(), moduleDefinitions.password());
         if (caseFetchResponse.isFailure()) {
             return null;
         }

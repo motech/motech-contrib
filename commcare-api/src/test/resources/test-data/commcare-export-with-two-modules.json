@@ -1,6 +1,7 @@
 {
     "userName": "someUser@gmail.com",
     "password": "somePassword",
+    "commcareBaseUrl": "www.server.org",
     "modules": [
         {
             "forms": [
