@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,6 +16,9 @@ public class CSVExportProcessor {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     private Object csvDataSource;
+
+    public CSVExportProcessor() {
+    }
 
     public CSVExportProcessor(Object csvDataSource) {
         this.csvDataSource = csvDataSource;
@@ -47,24 +51,30 @@ public class CSVExportProcessor {
             logger.error("Format of data method is invalid." + e.getMessage());
             throw new RuntimeException("Format of data method is invalid." + e.getMessage());
         }
-        return new ArrayList<Object>();
+        return new ArrayList<>();
     }
 
-    public List<String> columnHeaders() {
-        return new ExportDataModel(getDataMethod().getGenericReturnType()).columnHeaders();
+    public List<String> columnHeaders(Type returnType) {
+        return new ExportDataModel(returnType).columnHeaders();
     }
 
-    public List<String> rowData(Object model) {
-        return new ExportDataModel(getDataMethod().getGenericReturnType()).rowData(model);
+    public List<String> rowData(Object model, Type returnType) {
+        return new ExportDataModel(returnType).rowData(model);
     }
 
     public ExportData getCSVData(Object parameters) {
-        List<String> headers = columnHeaders();
+        List data = data(parameters);
+        return formatCSVData(data);
+    }
+
+    public ExportData formatCSVData(List data) {
+        List<String> headers = new ArrayList<>();
         List<List<String>> allRowData = new ArrayList();
-        List<Object> data = data(parameters);
         if (data != null && !data.isEmpty()) {
+            Class<? extends Object> clazz = data.get(0).getClass();
+            headers = columnHeaders(clazz);
             for (Object datum : data) {
-                allRowData.add(rowData(datum));
+                allRowData.add(rowData(datum, clazz));
             }
         }
         return new ExportData(headers, allRowData);

@@ -1,6 +1,5 @@
 package org.motechproject.export.model;
 
-import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
@@ -10,20 +9,11 @@ public class ExportDataModel {
     private final Columns columns;
 
     public ExportDataModel(Type returnType) {
-        Type[] typeParameters = ((ParameterizedType) returnType).getActualTypeArguments();
-        assertHasSingleTypeParameter(typeParameters);
-
-        columns = new Columns((Class) typeParameters[0]);
-    }
-
-    private void assertHasSingleTypeParameter(Type[] typeParameters) {
-        if (typeParameters.length != 1) {
-            throw new RuntimeException("Return type should have only one generics type parameter");
-        }
+        columns = new Columns((Class) returnType);
     }
 
     public List<String> columnHeaders() {
-        List<String> columnHeaders = new ArrayList<String>();
+        List<String> columnHeaders = new ArrayList<>();
         for (Column column : columns) {
             columnHeaders.add(column.name());
         }
@@ -31,7 +21,7 @@ public class ExportDataModel {
     }
 
     public List<String> rowData(Object model) {
-        List<String> rowData = new ArrayList<String>();
+        List<String> rowData = new ArrayList<>();
         for (Column column : columns) {
             rowData.add(column.value(model));
         }

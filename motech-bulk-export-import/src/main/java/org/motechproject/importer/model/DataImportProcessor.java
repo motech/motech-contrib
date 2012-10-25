@@ -8,10 +8,7 @@ import org.motechproject.importer.domain.ValidationResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -22,9 +19,15 @@ public abstract class DataImportProcessor {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
     private Method postMethod;
     private Method validateMethod;
+    protected Class bean;
 
-    public DataImportProcessor(Object importer) {
+    protected DataImportProcessor(Class bean) {
+        this.bean = bean;
+    }
+
+    public DataImportProcessor(Object importer, Class bean) {
         this.importer = importer;
+        this.bean = bean;
         for (Method method : this.importer.getClass().getDeclaredMethods()) {
             if (method.isAnnotationPresent(Post.class)) {
                 postMethod = method;
@@ -39,7 +42,7 @@ public abstract class DataImportProcessor {
         try {
             List<Object> allValuesFromFile = new ArrayList<>();
             for (String filePath : filePaths) {
-                List<Object> valuesFromFile = parse(filePath);
+                List<Object> valuesFromFile = parse(new FileReader(filePath));
                 ValidationResponse validationResponse = validate(valuesFromFile);
                 if (validationResponse.isValid()) {
                     allValuesFromFile.addAll(valuesFromFile);
@@ -85,7 +88,5 @@ public abstract class DataImportProcessor {
 
     public abstract String entity();
 
-    public abstract Class bean();
-
-    public abstract List<Object> parse(String filePath) throws Exception;
+    public abstract List<Object> parse(Reader reader) throws Exception;
 }
