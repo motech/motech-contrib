@@ -29,14 +29,14 @@ public class PaginationController {
     public PageResults page(@PathVariable String entity,
                             @RequestParam(value = "pageNo", defaultValue = "1") String pageNo,
                             @RequestParam("rowsPerPage") String rowsPerPage,
-                            @RequestParam(value = "searchCriteria", required = false, defaultValue = "{}") String searchCriteria) throws IOException {
+                            @RequestParam(value = "searchCriteria", required = false, defaultValue = "{}") String searchCriteria,
+                            @RequestParam(value = "sortCriteria", required = false, defaultValue = "{}") String sortCriteria) throws IOException {
         Paging pagingService = getPagingService(entity);
-        Properties criteria = createCriteria(searchCriteria);
-        return fetchData(pageNo, rowsPerPage, criteria, pagingService);
+        return fetchData(pageNo, rowsPerPage, createCriteria(searchCriteria), createCriteria(sortCriteria), pagingService);
     }
 
-    private PageResults fetchData(String pageNo, String rowsPerPage, Properties criteria, Paging pagingService) {
-        return (pagingService != null) ? pagingService.page(parseInt(pageNo), parseInt(rowsPerPage), criteria) : null;
+    private PageResults fetchData(String pageNo, String rowsPerPage, Properties searchCriteria, Properties sortCriteria, Paging pagingService) {
+        return (pagingService != null) ? pagingService.page(parseInt(pageNo), parseInt(rowsPerPage), searchCriteria, sortCriteria) : null;
     }
 
     private Properties createCriteria(String searchCriteria) throws IOException {
