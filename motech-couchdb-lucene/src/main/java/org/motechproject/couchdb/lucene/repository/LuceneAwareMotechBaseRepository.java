@@ -19,8 +19,8 @@ public abstract class LuceneAwareMotechBaseRepository<T extends MotechBaseDataOb
         super(type, db);
     }
 
-    protected List<T> filter(QueryDefinition queryDefinition, Properties filterParams, Integer skip, Integer limit) {
-        CustomLuceneResult luceneResult = getLuceneResult(queryDefinition, filterParams, limit, skip);
+    protected List<T> filter(QueryDefinition queryDefinition, Properties filterParams, Properties sortParams, Integer skip, Integer limit) {
+        CustomLuceneResult luceneResult = getLuceneResult(queryDefinition, filterParams, sortParams, limit, skip);
         List<CustomLuceneResult.Row<T>> resultRows = luceneResult.getRows();
         List<T> results = new ArrayList();
         for (CustomLuceneResult.Row<T> row : resultRows)
@@ -29,19 +29,20 @@ public abstract class LuceneAwareMotechBaseRepository<T extends MotechBaseDataOb
     }
 
     protected int count(QueryDefinition queryDefinition, Properties filterParams) {
-        return getLuceneResult(queryDefinition, filterParams, 1, 0).getTotalRows();
+        return getLuceneResult(queryDefinition, filterParams, null, 1, 0).getTotalRows();
     }
 
-    private CustomLuceneResult getLuceneResult(QueryDefinition queryDefinition, Properties queryParams, Integer limit, Integer skip) {
-        LuceneQuery query = getLuceneQuery(queryDefinition, queryParams, limit, skip);
+    private CustomLuceneResult getLuceneResult(QueryDefinition queryDefinition, Properties queryParams, Properties sortParams, Integer limit, Integer skip) {
+        LuceneQuery query = getLuceneQuery(queryDefinition, queryParams, sortParams, limit, skip);
         TypeReference resultDocType = getTypeReference();
         return ((LuceneAwareCouchDbConnector) db).queryLucene(query, resultDocType);
     }
 
-    private LuceneQuery getLuceneQuery(QueryDefinition queryDefinition, Properties queryParams, Integer limit, Integer skip) {
+    private LuceneQuery getLuceneQuery(QueryDefinition queryDefinition, Properties queryParams, Properties sortParams, Integer limit, Integer skip) {
         LuceneQuery query = new LuceneQuery(queryDefinition.viewName(), queryDefinition.searchFunctionName());
-        String queryString = new QueryBuilder(queryParams, queryDefinition).build();
-        query.setQuery(queryString.toString());
+        QueryBuilder queryBuilder = new QueryBuilder(queryParams, sortParams, queryDefinition);
+        query.setQuery(queryBuilder.build());
+        query.setSort(queryBuilder.buildSortCriteria());
         query.setIncludeDocs(true);
         query.setLimit(limit);
         query.setSkip(skip);

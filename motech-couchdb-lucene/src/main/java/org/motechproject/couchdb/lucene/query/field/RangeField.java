@@ -1,15 +1,11 @@
 package org.motechproject.couchdb.lucene.query.field;
 
-import lombok.Getter;
 import org.motechproject.couchdb.lucene.query.criteria.Criteria;
 import org.motechproject.couchdb.lucene.query.criteria.RangeCriteria;
 
 import java.util.Properties;
 
-@Getter
-public class RangeField implements Field {
-    private final String name;
-    private final FieldType type;
+public class RangeField extends Field {
     private String fromName;
     private String toName;
 
@@ -22,13 +18,13 @@ public class RangeField implements Field {
 
     @Override
     public boolean presentIn(Properties filterParams) {
-        return filterParams.containsKey(getFromName()) && filterParams.containsKey(getToName());
+        return filterParams.containsKey(fromName) && filterParams.containsKey(toName);
     }
 
     @Override
     public Criteria createCriteria(Properties  filterParams) {
-        String from = filterParams.get(getFromName()).toString();
-        String to = filterParams.get(getToName()).toString();
+        String from = filterParams.get(fromName).toString();
+        String to = filterParams.get(toName).toString();
         return new RangeCriteria(this, from, to);
     }
 

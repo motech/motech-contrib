@@ -11,6 +11,7 @@ import java.util.Properties;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertNull;
 import static org.motechproject.couchdb.lucene.query.field.FieldType.DATE;
 import static org.motechproject.couchdb.lucene.query.field.FieldType.STRING;
 
@@ -26,12 +27,26 @@ public class QueryBuilderTest {
         filterParam.put("field3To", "18/12/2012");
         filterParam.put("field4", "17/10/2012");
 
-        QueryBuilder queryBuilder = new QueryBuilder(filterParam, new QueryDefinitionImpl());
+        QueryBuilder queryBuilder = new QueryBuilder(filterParam, null, new QueryDefinitionImpl());
         String expectedQuery = "field1:val1 AND field2<string>:[val2 TO val3] " +
                 "AND field3<date>:[2012-10-16 TO 2012-12-18] " +
                 "AND field4:2012-10-17";
 
         assertThat(queryBuilder.build(), is(expectedQuery));
+        assertNull(queryBuilder.buildSortCriteria());
+    }
+
+    @Test
+    public void shouldBuildSortParams() {
+        Properties sortParams = new Properties();
+        sortParams.put("field1", "asc");
+        sortParams.put("field2", "desc");
+        sortParams.put("field3", "asc");
+
+        QueryBuilder queryBuilder = new QueryBuilder(null, sortParams, new QueryDefinitionImpl());
+        String expectedCriteria = "/field1<string>,\\field2<string>,/field3<date>";
+
+        assertThat(queryBuilder.buildSortCriteria(), is(expectedCriteria));
     }
 }
 

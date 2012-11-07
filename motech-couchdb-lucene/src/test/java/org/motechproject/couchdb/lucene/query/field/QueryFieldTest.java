@@ -1,6 +1,7 @@
 package org.motechproject.couchdb.lucene.query.field;
 
 import org.junit.Test;
+import org.motechproject.couchdb.lucene.query.SortOrder;
 import org.motechproject.couchdb.lucene.query.criteria.QueryCriteria;
 
 import java.util.Properties;
@@ -36,5 +37,12 @@ public class QueryFieldTest {
 
         assertThat((QueryCriteria) field.createCriteria(filterParams), is(new QueryCriteria(field, "value1")));
 
+    }
+
+    @Test
+    public void shouldCreateSortCriteria(){
+        QueryField field = new QueryField("field1", FieldType.STRING);
+        assertThat(field.createSortCriteria(SortOrder.ASC), is("/field1<string>"));
+        assertThat(field.createSortCriteria(SortOrder.DESC), is("\\field1<string>"));
     }
 }

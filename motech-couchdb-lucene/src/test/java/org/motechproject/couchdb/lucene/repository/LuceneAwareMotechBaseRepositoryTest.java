@@ -48,7 +48,30 @@ public class LuceneAwareMotechBaseRepositoryTest {
 
         when(connector.queryLucene(expectedQuery, repository.getTypeReference())).thenReturn(luceneResult);
 
-        assertEquals(expectedResult, repository.filter(queryDefinition, filterParams, 0, 10));
+        assertEquals(expectedResult, repository.filter(queryDefinition, filterParams, null, 0, 10));
+        verify(connector).queryLucene(expectedQuery, repository.getTypeReference());
+    }
+
+    @Test
+    public void shouldFilterAndSortResultsBasedOnQueryDefinition() {
+        Properties filterParams = buildFilterParameters();
+
+        LuceneAwareMotechBaseRepositoryImpl repository = new LuceneAwareMotechBaseRepositoryImpl(connector);
+
+        Properties sortParams = new Properties();
+        sortParams.put("field1", "ASC");
+
+        QueryDefinitionImpl queryDefinition = new QueryDefinitionImpl();
+        LuceneQuery expectedQuery = expectedLuceneQuery(queryDefinition.viewName(), queryDefinition.searchFunctionName());
+        expectedQuery.setSort("/field1<string>");
+
+        Entity entity = new Entity("value1", "value2");
+        List<Entity> expectedResult = createExpectedResult(entity);
+        CustomLuceneResult<Entity> luceneResult = createLuceneResult(entity);
+
+        when(connector.queryLucene(expectedQuery, repository.getTypeReference())).thenReturn(luceneResult);
+
+        assertEquals(expectedResult, repository.filter(queryDefinition, filterParams, sortParams, 0, 10));
         verify(connector).queryLucene(expectedQuery, repository.getTypeReference());
     }
 
