@@ -3,14 +3,13 @@ package org.motechproject.paginator.repository;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.motechproject.paginator.contract.FilterParams;
 import org.motechproject.paginator.response.PageResults;
 import org.motechproject.paginator.service.Paging;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-
-import java.util.Properties;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
@@ -34,7 +33,7 @@ class PagingServiceStub implements Paging {
 
 
     @Override
-    public PageResults<Object> page(Integer pageNo, Integer rowsPerPage, Properties filterCriteria, Properties sortCriteria) {
+    public PageResults<Object> page(Integer pageNo, Integer rowsPerPage, FilterParams filterCriteria, FilterParams sortCriteria) {
         return null;
     }
 

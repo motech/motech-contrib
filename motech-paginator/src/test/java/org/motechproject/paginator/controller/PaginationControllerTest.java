@@ -4,11 +4,10 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
+import org.motechproject.paginator.contract.FilterParams;
 import org.motechproject.paginator.repository.AllPagingServices;
 import org.motechproject.paginator.response.PageResults;
 import org.motechproject.paginator.service.Paging;
-
-import java.util.Properties;
 
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
@@ -41,20 +40,20 @@ public class PaginationControllerTest {
 
         Paging pagingService = mock(Paging.class);
         when(allPagingServices.getPagingServiceFor("entity1")).thenReturn(pagingService);
-        when(pagingService.page(any(Integer.class), any(Integer.class), any(Properties.class), any(Properties.class))).thenReturn(results);
+        when(pagingService.page(any(Integer.class), any(Integer.class), any(FilterParams.class), any(FilterParams.class))).thenReturn(results);
 
         standaloneSetup(paginationController).build()
                 .perform(get("/page/entity1").param("pageNo", "1").param("rowsPerPage", "2").param("searchCriteria", "{\"name\":\"goodName\"}")
-                .param("sortCriteria", "{\"name\":\"asc\"}"))
+                        .param("sortCriteria", "{\"name\":\"asc\"}"))
                 .andExpect(status().isOk())
                 .andExpect(content().type("application/json;charset=UTF-8"))
                 .andExpect(content().string("{\"pageNo\":0,\"totalRows\":1,\"results\":[\"someString\"]}"));
 
-        ArgumentCaptor<Properties> searchCriteriaCaptor = ArgumentCaptor.forClass(Properties.class);
-        ArgumentCaptor<Properties> sortCriteriaCaptor = ArgumentCaptor.forClass(Properties.class);
+        ArgumentCaptor<FilterParams> searchCriteriaCaptor = ArgumentCaptor.forClass(FilterParams.class);
+        ArgumentCaptor<FilterParams> sortCriteriaCaptor = ArgumentCaptor.forClass(FilterParams.class);
         verify(pagingService).page(eq(1), eq(2), searchCriteriaCaptor.capture(), sortCriteriaCaptor.capture());
-        assertEquals("goodName", searchCriteriaCaptor.getValue().getProperty("name"));
-        assertEquals("asc", sortCriteriaCaptor.getValue().getProperty("name"));
+        assertEquals("goodName", searchCriteriaCaptor.getValue().get("name"));
+        assertEquals("asc", sortCriteriaCaptor.getValue().get("name"));
     }
 
 }

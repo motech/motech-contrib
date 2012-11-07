@@ -1,6 +1,7 @@
 package org.motechproject.paginator.controller;
 
 import org.codehaus.jackson.map.ObjectMapper;
+import org.motechproject.paginator.contract.FilterParams;
 import org.motechproject.paginator.repository.AllPagingServices;
 import org.motechproject.paginator.response.PageResults;
 import org.motechproject.paginator.service.Paging;
@@ -9,7 +10,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
-import java.util.Properties;
 
 import static java.lang.Integer.parseInt;
 
@@ -35,12 +35,12 @@ public class PaginationController {
         return fetchData(pageNo, rowsPerPage, createCriteria(searchCriteria), createCriteria(sortCriteria), pagingService);
     }
 
-    private PageResults fetchData(String pageNo, String rowsPerPage, Properties searchCriteria, Properties sortCriteria, Paging pagingService) {
+    private PageResults fetchData(String pageNo, String rowsPerPage, FilterParams searchCriteria, FilterParams sortCriteria, Paging pagingService) {
         return (pagingService != null) ? pagingService.page(parseInt(pageNo), parseInt(rowsPerPage), searchCriteria, sortCriteria) : null;
     }
 
-    private Properties createCriteria(String searchCriteria) throws IOException {
-        return new ObjectMapper().readValue(searchCriteria, Properties.class);
+    private FilterParams createCriteria(String searchCriteria) throws IOException {
+        return new ObjectMapper().readValue(searchCriteria, FilterParams.class);
     }
 
     private Paging getPagingService(String entity) {
