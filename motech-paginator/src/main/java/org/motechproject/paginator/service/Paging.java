@@ -7,7 +7,7 @@ import java.util.Properties;
 
 public interface Paging<E> {
 
-    PageResults<E> page(Integer pageNo, Integer rowsPerPage, Properties criteria);
+    PageResults<E> page(Integer pageNo, Integer rowsPerPage, Properties filterCriteria, Properties sortCriteria);
 
     String entityName();
 

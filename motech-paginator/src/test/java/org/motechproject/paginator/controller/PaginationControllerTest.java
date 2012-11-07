@@ -41,17 +41,20 @@ public class PaginationControllerTest {
 
         Paging pagingService = mock(Paging.class);
         when(allPagingServices.getPagingServiceFor("entity1")).thenReturn(pagingService);
-        when(pagingService.page(any(Integer.class), any(Integer.class), any(Properties.class))).thenReturn(results);
+        when(pagingService.page(any(Integer.class), any(Integer.class), any(Properties.class), any(Properties.class))).thenReturn(results);
 
         standaloneSetup(paginationController).build()
-                .perform(get("/page/entity1").param("pageNo", "1").param("rowsPerPage", "2").param("searchCriteria", "{\"name\":\"goodName\"}"))
+                .perform(get("/page/entity1").param("pageNo", "1").param("rowsPerPage", "2").param("searchCriteria", "{\"name\":\"goodName\"}")
+                .param("sortCriteria", "{\"name\":\"asc\"}"))
                 .andExpect(status().isOk())
                 .andExpect(content().type("application/json;charset=UTF-8"))
                 .andExpect(content().string("{\"pageNo\":0,\"totalRows\":1,\"results\":[\"someString\"]}"));
 
-        ArgumentCaptor<Properties> captor = ArgumentCaptor.forClass(Properties.class);
-        verify(pagingService).page(eq(1), eq(2), captor.capture());
-        assertEquals("goodName", captor.getValue().getProperty("name"));
+        ArgumentCaptor<Properties> searchCriteriaCaptor = ArgumentCaptor.forClass(Properties.class);
+        ArgumentCaptor<Properties> sortCriteriaCaptor = ArgumentCaptor.forClass(Properties.class);
+        verify(pagingService).page(eq(1), eq(2), searchCriteriaCaptor.capture(), sortCriteriaCaptor.capture());
+        assertEquals("goodName", searchCriteriaCaptor.getValue().getProperty("name"));
+        assertEquals("asc", sortCriteriaCaptor.getValue().getProperty("name"));
     }
 
 }

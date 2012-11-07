@@ -34,7 +34,7 @@ class PagingServiceStub implements Paging {
 
 
     @Override
-    public PageResults<Object> page(Integer pageNo, Integer rowsPerPage, Properties criteria) {
+    public PageResults<Object> page(Integer pageNo, Integer rowsPerPage, Properties filterCriteria, Properties sortCriteria) {
         return null;
     }
 
