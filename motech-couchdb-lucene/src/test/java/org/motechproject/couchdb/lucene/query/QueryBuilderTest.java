@@ -6,8 +6,9 @@ import org.motechproject.couchdb.lucene.query.field.QueryField;
 import org.motechproject.couchdb.lucene.query.field.RangeField;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Properties;
+import java.util.Map;
 
 import static java.util.Arrays.asList;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -20,7 +21,7 @@ public class QueryBuilderTest {
 
     @Test
     public void shouldBuildQuery() {
-        Properties filterParam = new Properties();
+        Map<String, Object> filterParam = new HashMap<>();
         filterParam.put("field1", "val1");
         filterParam.put("field2From", "val2");
         filterParam.put("field2To", "val3");
@@ -39,7 +40,7 @@ public class QueryBuilderTest {
 
     @Test
     public void shouldBuildSortParams() {
-        Properties sortParams = new Properties();
+        Map<String, Object> sortParams = new HashMap<>();
         sortParams.put("field1", "asc");
         sortParams.put("field2", "desc");
         sortParams.put("field3", "asc");
@@ -52,7 +53,7 @@ public class QueryBuilderTest {
 
     @Test
     public void shouldApplyOrOperationWhenParametersHaveMoreThanOneValue() {
-        Properties filterParam = new Properties();
+        Map<String, Object> filterParam = new HashMap<>();
         filterParam.put("field1", asList("val1", "val2"));
         filterParam.put("field2From", "val2");
         filterParam.put("field2To", "val3");
@@ -70,7 +71,7 @@ public class QueryBuilderTest {
 
     @Test(expected = RuntimeException.class)
     public void shouldThrowExceptionWhenRangeFieldsHaveMultipleValues() {
-        Properties filterParam = new Properties();
+        Map<String, Object> filterParam = new HashMap<>();
         filterParam.put("field2From", asList("val1", "val2"));
         filterParam.put("field2To", asList("val3", "val4"));
 

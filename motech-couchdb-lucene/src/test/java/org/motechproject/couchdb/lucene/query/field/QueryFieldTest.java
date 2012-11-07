@@ -4,6 +4,8 @@ import org.junit.Test;
 import org.motechproject.couchdb.lucene.query.SortOrder;
 import org.motechproject.couchdb.lucene.query.criteria.QueryCriteria;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -15,11 +17,11 @@ public class QueryFieldTest {
     public void shouldCheckIfFieldExistsInFilterParams(){
         QueryField field = new QueryField("field1", FieldType.STRING);
 
-        Properties filterParamsContainingField = new Properties();
+        Map<String, Object> filterParamsContainingField = new HashMap<>();
         filterParamsContainingField.put("field1", "value1");
         filterParamsContainingField.put("field2", "value2");
 
-        Properties filterParamsNotContainingField = new Properties();
+        Map<String, Object> filterParamsNotContainingField = new HashMap<>();
         filterParamsNotContainingField.put("field2", "value1");
         filterParamsNotContainingField.put("field3", "value2");
 
@@ -31,7 +33,7 @@ public class QueryFieldTest {
     public void shouldCreateQueryCriteria(){
         QueryField field = new QueryField("field1", FieldType.STRING);
 
-        Properties filterParams = new Properties();
+        Map<String, Object> filterParams = new HashMap<>();
         filterParams.put("field1", "value1");
         filterParams.put("field2", "value2");
 

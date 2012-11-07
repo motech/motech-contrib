@@ -4,6 +4,7 @@ import org.motechproject.couchdb.lucene.query.criteria.Criteria;
 import org.motechproject.couchdb.lucene.query.criteria.QueryCriteria;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 
@@ -15,12 +16,12 @@ public class QueryField extends Field {
     }
 
     @Override
-    public boolean presentIn(Properties filterParams) {
+    public boolean presentIn(Map<String, Object> filterParams) {
         return filterParams.containsKey(name);
     }
 
     @Override
-    public Criteria createCriteria(Properties filterParams) {
+    public Criteria createCriteria(Map<String, Object> filterParams) {
         return new QueryCriteria(this, filterParams.get(name));
     }
 

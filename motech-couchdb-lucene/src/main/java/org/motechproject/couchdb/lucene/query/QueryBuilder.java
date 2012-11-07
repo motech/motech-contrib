@@ -6,6 +6,7 @@ import org.motechproject.couchdb.lucene.query.field.Field;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 import static org.motechproject.couchdb.lucene.query.SortOrder.getSortOrder;
@@ -14,11 +15,11 @@ public class QueryBuilder {
     public static final String AND = " AND ";
     public static final String EMPTY_STRING = "";
     public static final String LUCENE_SORT_FIELD_SEPARATOR = ",";
-    private final Properties filterParams;
-    private Properties sortParams;
+    private final Map<String, Object> filterParams;
+    private Map<String, Object> sortParams;
     private final QueryDefinition queryDefinition;
 
-    public QueryBuilder(Properties filterParams, Properties sortParams, QueryDefinition queryDefinition) {
+    public QueryBuilder(Map<String, Object> filterParams, Map<String, Object> sortParams, QueryDefinition queryDefinition) {
         this.filterParams = filterParams;
         this.sortParams = sortParams;
         this.queryDefinition = queryDefinition;

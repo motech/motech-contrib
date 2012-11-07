@@ -14,9 +14,7 @@ import org.motechproject.couchdb.lucene.query.field.QueryField;
 import org.motechproject.couchdb.lucene.query.field.RangeField;
 import org.motechproject.model.MotechBaseDataObject;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Properties;
+import java.util.*;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.verify;
@@ -36,7 +34,7 @@ public class LuceneAwareMotechBaseRepositoryTest {
 
     @Test
     public void shouldFilterResultsBasedOnQueryDefinition() {
-        Properties filterParams = buildFilterParameters();
+        Map<String, Object> filterParams = buildFilterParameters();
 
         LuceneAwareMotechBaseRepositoryImpl repository = new LuceneAwareMotechBaseRepositoryImpl(connector);
 
@@ -54,11 +52,11 @@ public class LuceneAwareMotechBaseRepositoryTest {
 
     @Test
     public void shouldFilterAndSortResultsBasedOnQueryDefinition() {
-        Properties filterParams = buildFilterParameters();
+        Map<String, Object> filterParams = buildFilterParameters();
 
         LuceneAwareMotechBaseRepositoryImpl repository = new LuceneAwareMotechBaseRepositoryImpl(connector);
 
-        Properties sortParams = new Properties();
+        Map<String, Object> sortParams = new HashMap<>();
         sortParams.put("field1", "ASC");
 
         QueryDefinitionImpl queryDefinition = new QueryDefinitionImpl();
@@ -77,7 +75,7 @@ public class LuceneAwareMotechBaseRepositoryTest {
 
     @Test
     public void shouldGetTotalRecordsForGivenFilter(){
-        Properties filterParams = buildFilterParameters();
+        Map<String, Object> filterParams = buildFilterParameters();
 
         LuceneAwareMotechBaseRepositoryImpl repository = new LuceneAwareMotechBaseRepositoryImpl(connector);
         QueryDefinitionImpl queryDefinition = new QueryDefinitionImpl();
@@ -95,8 +93,8 @@ public class LuceneAwareMotechBaseRepositoryTest {
 
     }
 
-    private Properties buildFilterParameters() {
-        Properties filterParams = new Properties();
+    private Map<String, Object> buildFilterParameters() {
+        Map<String, Object> filterParams = new HashMap<>();
         filterParams.put("field1", "value1");
         filterParams.put("field2From", "value2");
         filterParams.put("field2To", "value3");
