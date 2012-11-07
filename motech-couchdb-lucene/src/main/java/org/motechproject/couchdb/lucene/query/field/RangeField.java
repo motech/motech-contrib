@@ -22,9 +22,9 @@ public class RangeField extends Field {
     }
 
     @Override
-    public Criteria createCriteria(Properties  filterParams) {
-        String from = filterParams.get(fromName).toString();
-        String to = filterParams.get(toName).toString();
+    public Criteria createCriteria(Properties filterParams) {
+        Object from = filterParams.get(fromName);
+        Object to = filterParams.get(toName);
         return new RangeCriteria(this, from, to);
     }
 

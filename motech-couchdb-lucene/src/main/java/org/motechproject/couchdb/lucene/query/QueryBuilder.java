@@ -36,7 +36,7 @@ public class QueryBuilder {
             builder.append(AND);
         }
 
-        if(builder.length() == 0)
+        if (builder.length() == 0)
             return EMPTY_STRING;
 
         return builder.substring(0, builder.lastIndexOf(AND));
@@ -45,7 +45,7 @@ public class QueryBuilder {
     private List<Criteria> getQueryCriteria() {
         List<Criteria> criteria = new ArrayList<>();
         for (Field field : queryDefinition.fields()) {
-            if(field.presentIn(filterParams)) {
+            if (field.presentIn(filterParams)) {
                 criteria.add(field.createCriteria(filterParams));
             }
         }
@@ -53,14 +53,14 @@ public class QueryBuilder {
     }
 
     public String buildSortCriteria() {
-        if(sortParams == null){
+        if (sortParams == null) {
             return null;
         }
 
         List<String> criteria = new ArrayList<>();
 
         for (Field field : queryDefinition.fields()) {
-            if(sortParams.containsKey(field.getName()))
+            if (sortParams.containsKey(field.getName()))
                 criteria.add(field.createSortCriteria(getSortOrder((String) sortParams.get(field.getName()))));
         }
         return StringUtils.join(criteria, LUCENE_SORT_FIELD_SEPARATOR);

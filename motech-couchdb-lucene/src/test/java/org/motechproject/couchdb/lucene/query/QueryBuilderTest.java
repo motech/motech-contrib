@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
+import static java.util.Arrays.asList;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertNull;
@@ -47,6 +48,34 @@ public class QueryBuilderTest {
         String expectedCriteria = "/field1<string>,\\field2<string>,/field3<date>";
 
         assertThat(queryBuilder.buildSortCriteria(), is(expectedCriteria));
+    }
+
+    @Test
+    public void shouldApplyOrOperationWhenParametersHaveMoreThanOneValue() {
+        Properties filterParam = new Properties();
+        filterParam.put("field1", asList("val1", "val2"));
+        filterParam.put("field2From", "val2");
+        filterParam.put("field2To", "val3");
+        filterParam.put("field3From", "16/10/2012");
+        filterParam.put("field3To", "18/12/2012");
+        filterParam.put("field4", "17/10/2012");
+
+        QueryBuilder queryBuilder = new QueryBuilder(filterParam, null, new QueryDefinitionImpl());
+        String expectedQuery = "(field1:val1 OR field1:val2) AND field2<string>:[val2 TO val3] " +
+                "AND field3<date>:[2012-10-16 TO 2012-12-18] " +
+                "AND field4:2012-10-17";
+
+        assertThat(queryBuilder.build(), is(expectedQuery));
+    }
+
+    @Test(expected = RuntimeException.class)
+    public void shouldThrowExceptionWhenRangeFieldsHaveMultipleValues() {
+        Properties filterParam = new Properties();
+        filterParam.put("field2From", asList("val1", "val2"));
+        filterParam.put("field2To", asList("val3", "val4"));
+
+        QueryBuilder queryBuilder = new QueryBuilder(filterParam, null, new QueryDefinitionImpl());
+        queryBuilder.build();
     }
 }
 
