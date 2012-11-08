@@ -27,5 +27,12 @@
             <artifactId>spring-test</artifactId>
             <version>${spring.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.motechproject.contrib-whp</groupId>
+            <artifactId>motech-diagnostics</artifactId>
+            <scope>test</scope>
+            <classifier>tests</classifier>
+            <type>jar</type>
+        </dependency>
     </dependencies>
 </project>

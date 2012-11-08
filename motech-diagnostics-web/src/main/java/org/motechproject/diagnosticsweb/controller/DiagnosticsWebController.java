@@ -40,7 +40,6 @@ public class DiagnosticsWebController {
         response.getOutputStream().print(diagnosticsResponse);
     }
 
-
     @RequestMapping(method = RequestMethod.GET, value = "show/logs")
     public void showLogs(HttpServletResponse response) throws Exception {
         String logFilesResponse = logFilesResponseBuilder.createResponse();
