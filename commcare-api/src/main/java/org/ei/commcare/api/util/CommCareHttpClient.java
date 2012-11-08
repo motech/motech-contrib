@@ -1,12 +1,16 @@
 package org.ei.commcare.api.util;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.http.*;
+import org.apache.http.Header;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicHeader;
+import org.apache.http.params.BasicHttpParams;
+import org.apache.http.params.HttpConnectionParams;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -21,6 +25,9 @@ public class CommCareHttpClient {
 
     public CommCareHttpClient() {
         this.httpClient = new DefaultHttpClient();
+        BasicHttpParams basicHttpParams = new BasicHttpParams();
+        HttpConnectionParams.setConnectionTimeout(basicHttpParams, 60000);
+        HttpConnectionParams.setSoTimeout(basicHttpParams, 60000);
     }
 
     public CommCareHttpResponse get(String url, String commcareBaseUrl, String userName, String password) {
