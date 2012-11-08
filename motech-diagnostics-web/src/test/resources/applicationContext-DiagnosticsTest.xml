@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+       http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.0.xsd">
+
+
+    <util:properties id="postgresProperties" location="classpath:postgres.properties"/>
+    <util:properties id="diagnosticProperties" location="classpath:diagnostics.properties"/>
+
+    <import resource="classpath:applicationContext-DiagnosticsWeb.xml"/>
+
+    <bean id="configurationDiagnostic" class="org.motechproject.diagnostics.diagnostics.ConfigurationDiagnostic">
+        <constructor-arg>
+            <map>
+                <entry key="activemq">
+                    <util:properties location="classpath:activemq.properties"/>
+                </entry>
+                <entry key="postgres">
+                    <util:properties location="classpath:postgres.properties"/>
+                </entry>
+            </map>
+        </constructor-arg>
+    </bean>
+
+    <bean id="couchDbInstance" class="org.ektorp.impl.StdCouchDbInstance">
+        <constructor-arg>
+            <bean id="httpClient1" class="org.ektorp.spring.HttpClientFactoryBean"/>
+        </constructor-arg>
+    </bean>
+
+    <bean id="couchDbConnector" class="org.ektorp.impl.StdCouchDbConnector">
+        <constructor-arg value="testDb"/>
+        <constructor-arg ref="couchDbInstance"/>
+    </bean>
+
+    <bean id="invalidParams" class="org.apache.http.params.BasicHttpParams"/>
+    <bean id="invalidHttpClient" class="org.apache.http.impl.client.DefaultHttpClient">
+        <constructor-arg ref="invalidParams"/>
+    </bean>
+
+    <bean id="invalidCouchDbClient" class="org.ektorp.http.StdHttpClient">
+        <constructor-arg ref="invalidHttpClient"/>
+    </bean>
+
+    <bean id="invalidDbInstance" class="org.ektorp.impl.StdCouchDbInstance">
+        <constructor-arg ref="invalidCouchDbClient"/>
+    </bean>
+
+    <bean id="invalidDbConnector" class="org.ektorp.impl.StdCouchDbConnector">
+        <constructor-arg value="invalidDb"/>
+        <constructor-arg ref="invalidDbInstance"/>
+    </bean>
+
+
+    <bean id="activeMQDiagnosticsClientConnector" class="org.springframework.jmx.support.MBeanServerConnectionFactoryBean">
+        <property name="serviceUrl" value="service:jmx:rmi:///jndi/rmi://localhost:1099/jmxrmi"/>
+    </bean>
+
+</beans>
