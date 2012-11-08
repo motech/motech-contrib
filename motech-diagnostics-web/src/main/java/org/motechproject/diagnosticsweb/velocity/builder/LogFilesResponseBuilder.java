@@ -1,10 +1,10 @@
-package org.motechproject.diagnostics.velocity.builder;
+package org.motechproject.diagnosticsweb.velocity.builder;
 
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
 import org.motechproject.diagnostics.configuration.DiagnosticConfiguration;
-import org.motechproject.diagnostics.model.FileInfo;
+import org.motechproject.diagnosticsweb.model.FileInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

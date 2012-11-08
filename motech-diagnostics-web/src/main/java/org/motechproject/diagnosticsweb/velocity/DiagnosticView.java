@@ -1,4 +1,4 @@
-package org.motechproject.diagnostics.velocity;
+package org.motechproject.diagnosticsweb.velocity;
 
 import org.apache.velocity.context.Context;
 import org.apache.velocity.tools.view.context.ChainedContext;

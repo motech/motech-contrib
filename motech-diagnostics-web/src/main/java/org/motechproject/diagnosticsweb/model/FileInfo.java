@@ -1,4 +1,4 @@
-package org.motechproject.diagnostics.model;
+package org.motechproject.diagnosticsweb.model;
 
 import java.util.Date;
 

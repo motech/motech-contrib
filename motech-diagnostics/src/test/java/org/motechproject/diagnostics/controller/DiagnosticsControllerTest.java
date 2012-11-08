@@ -8,8 +8,6 @@ import org.motechproject.diagnostics.response.DiagnosticsStatus;
 import org.motechproject.diagnostics.response.ServiceResult;
 import org.motechproject.diagnostics.response.Status;
 import org.motechproject.diagnostics.service.DiagnosticsService;
-import org.motechproject.diagnostics.velocity.builder.DiagnosticResponseBuilder;
-import org.motechproject.diagnostics.velocity.builder.LogFilesResponseBuilder;
 import org.springframework.mock.web.MockHttpServletResponse;
 
 import javax.servlet.ServletOutputStream;
@@ -30,21 +28,17 @@ public class DiagnosticsControllerTest {
     @Mock
     private DiagnosticsService diagnosticsService;
     @Mock
-    private LogFilesResponseBuilder logFilesResponseBuilder;
-    @Mock
     private HttpServletResponse httpResponse;
     @Mock
     ServletOutputStream servletOutputStream;
 
-    @Mock
-    private DiagnosticResponseBuilder allDiagnosticMessageBuilder;
     private DiagnosticsController diagnosticsController;
 
     @Before
     public void setUp() throws IOException {
         initMocks(this);
         when(httpResponse.getOutputStream()).thenReturn(servletOutputStream);
-        diagnosticsController = new DiagnosticsController(diagnosticsService, allDiagnosticMessageBuilder,logFilesResponseBuilder);
+        diagnosticsController = new DiagnosticsController(diagnosticsService);
     }
 
     @Test
@@ -77,7 +71,6 @@ public class DiagnosticsControllerTest {
         List<ServiceResult> expectedServiceResults = asList(new ServiceResult("serviceName", expectedDiagnosticsResponses));
         when(diagnosticsService.runAll()).thenReturn(expectedServiceResults);
         when(httpResponse.getOutputStream()).thenReturn(servletOutputStream);
-        when(allDiagnosticMessageBuilder.createResponseMessage(expectedServiceResults)).thenReturn("Diagnostic Response");
 
         List<ServiceResult> actualServiceResults = diagnosticsController.getDiagnostics();
         assertEquals(expectedServiceResults, actualServiceResults);

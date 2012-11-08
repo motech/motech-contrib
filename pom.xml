@@ -36,6 +36,7 @@
         <module>motech-web-utils</module>
         <module>motech-paginator</module>
         <module>motech-couchdb-lucene</module>
+        <module>motech-diagnostics-web</module>
     </modules>
 
     <distributionManagement>

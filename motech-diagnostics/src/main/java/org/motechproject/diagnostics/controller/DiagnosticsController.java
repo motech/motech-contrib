@@ -1,16 +1,14 @@
 package org.motechproject.diagnostics.controller;
 
-import org.apache.commons.io.IOUtils;
-import org.motechproject.diagnostics.response.Status;
-import org.motechproject.diagnostics.velocity.builder.DiagnosticResponseBuilder;
 import org.motechproject.diagnostics.response.ExceptionResponse;
 import org.motechproject.diagnostics.response.ServiceResult;
 import org.motechproject.diagnostics.service.DiagnosticsService;
-import org.motechproject.diagnostics.velocity.builder.LogFilesResponseBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -28,14 +26,10 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
 public class DiagnosticsController {
 
     DiagnosticsService diagnosticsService;
-    private DiagnosticResponseBuilder diagnosticResponseBuilder;
-    private LogFilesResponseBuilder logFilesResponseBuilder;
 
     @Autowired
-    public DiagnosticsController(DiagnosticsService diagnosticsService, DiagnosticResponseBuilder diagnosticResponseBuilder, LogFilesResponseBuilder logFilesResponseBuilder) {
+    public DiagnosticsController(DiagnosticsService diagnosticsService) {
         this.diagnosticsService = diagnosticsService;
-        this.diagnosticResponseBuilder = diagnosticResponseBuilder;
-        this.logFilesResponseBuilder = logFilesResponseBuilder;
     }
 
     @RequestMapping(value = "service/{serviceName}", method = GET)
@@ -48,32 +42,13 @@ public class DiagnosticsController {
         return serviceResult;
     }
 
-    @RequestMapping(value = "show/all/json", method = GET)
+    @RequestMapping(value = "service/_all", method = GET)
     @ResponseBody
     public List<ServiceResult> getDiagnostics() throws InvocationTargetException, IllegalAccessException, IOException {
         List<ServiceResult> serviceResults = diagnosticsService.runAll();
         return serviceResults;
     }
 
-    @RequestMapping(value = "show/all", method = GET)
-    public void viewDiagnostics(HttpServletResponse response) throws IOException, InvocationTargetException, IllegalAccessException {
-        String diagnosticsResponse = diagnosticResponseBuilder.createResponseMessage(getDiagnostics());
-        response.getOutputStream().print(diagnosticsResponse);
-    }
-
-
-    @RequestMapping(method = RequestMethod.GET, value = "show/logs")
-    public void showLogs(HttpServletResponse response) throws Exception {
-        String logFilesResponse = logFilesResponseBuilder.createResponse();
-        response.getOutputStream().print(logFilesResponse);
-    }
-
-    @RequestMapping(method = RequestMethod.GET, value = "show/logs/{file_name:.*}")
-    public void getLog(@PathVariable("file_name") String logFilename, HttpServletResponse response) throws Exception {
-        IOUtils.copy(logFilesResponseBuilder.getLogFile(logFilename), response.getOutputStream());
-        response.setContentType("text/plain");
-        response.flushBuffer();
-    }
 
     @ExceptionHandler(Exception.class)
     @ResponseBody

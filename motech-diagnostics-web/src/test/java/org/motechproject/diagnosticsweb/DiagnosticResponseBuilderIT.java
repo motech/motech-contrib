@@ -1,17 +1,16 @@
-package org.motechproject.diagnostics;
+package org.motechproject.diagnosticsweb;
 
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.motechproject.diagnostics.response.DiagnosticsResult;
 import org.motechproject.diagnostics.response.ServiceResult;
-import org.motechproject.diagnostics.response.Status;
-import org.motechproject.diagnostics.velocity.builder.DiagnosticResponseBuilder;
+import org.motechproject.diagnosticsweb.velocity.builder.DiagnosticResponseBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import static java.util.Arrays.asList;
-import static org.junit.Assert.assertTrue;
 import static org.motechproject.diagnostics.response.Status.Success;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -27,7 +26,7 @@ public class DiagnosticResponseBuilderIT {
         ServiceResult serviceResult = new ServiceResult("serviceName", asList(diagnosticsResponse));
         String responseMessage = diagnosticResponseBuilder.createResponseMessage(asList(serviceResult));
 
-        assertTrue(responseMessage.contains("Apache is running"));
+        Assert.assertTrue(responseMessage.contains("Apache is running"));
     }
 
     @Test
@@ -38,7 +37,7 @@ public class DiagnosticResponseBuilderIT {
         ServiceResult serviceResult = new ServiceResult("serviceName", asList(diagnosticsResponse));
         String responseMessage = diagnosticResponseBuilder.createResponseMessage(asList(serviceResult));
 
-        assertTrue(responseMessage.contains("Apache Port 80"));
+        Assert.assertTrue(responseMessage.contains("Apache Port 80"));
     }
 
 

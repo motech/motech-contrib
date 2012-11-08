@@ -1,4 +1,4 @@
-package org.motechproject.diagnostics.velocity;
+package org.motechproject.diagnosticsweb.velocity;
 
 import org.springframework.web.servlet.view.velocity.VelocityLayoutViewResolver;
 

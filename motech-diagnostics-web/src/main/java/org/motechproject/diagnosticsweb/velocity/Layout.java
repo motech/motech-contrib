@@ -1,4 +1,4 @@
-package org.motechproject.diagnostics.velocity;
+package org.motechproject.diagnosticsweb.velocity;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
