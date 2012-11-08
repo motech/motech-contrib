@@ -33,6 +33,7 @@
             <scope>test</scope>
             <classifier>tests</classifier>
             <type>jar</type>
+            <version>${motech.contrib.version}</version>
         </dependency>
     </dependencies>
 </project>
