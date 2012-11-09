@@ -15,6 +15,11 @@ public class ColumnsTest {
         assertEquals("parentField1",columns.get(1).name());
         assertEquals("parentField2",columns.get(2).name());
     }
+    @Test
+    public void shouldReturnEmptyIfThereAreNoAnnotatedMethods(){
+        Columns columns = new Columns(Object.class);
+        assertEquals(0,columns.size());
+    }
 }
 
 
