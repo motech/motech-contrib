@@ -9,7 +9,7 @@ import java.util.Collections;
 public class Columns extends ArrayList<Column> {
 
     public Columns(Class typeParameter) {
-        for (Method declaredMethod : typeParameter.getDeclaredMethods()) {
+        for (Method declaredMethod : typeParameter.getMethods()) {
             if (declaredMethod.isAnnotationPresent(ExportValue.class)) {
                 validateValueMethod(declaredMethod);
                 this.add(new Column(declaredMethod));
