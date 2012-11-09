@@ -1,6 +1,7 @@
 package org.motechproject.export.model;
 
 import org.motechproject.export.annotation.CSVDataSource;
+import org.motechproject.export.annotation.ComponentTypeProvider;
 import org.motechproject.export.annotation.DataProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -8,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
+import java.lang.reflect.TypeVariable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -68,7 +70,7 @@ public class CSVExportProcessor {
     }
 
     public ExportData formatCSVData(List data) {
-        List<String> headers = new ArrayList<>();
+        List<String> headers = getColumnHeaders(data);
         List<List<String>> allRowData = new ArrayList();
         if (data != null && !data.isEmpty()) {
             Class<? extends Object> clazz = data.get(0).getClass();
@@ -80,6 +82,11 @@ public class CSVExportProcessor {
         return new ExportData(headers, allRowData);
     }
 
+    private List<String> getColumnHeaders(List data) {
+        Class componentClassType = getComponentClassType(data);
+        return columnHeaders(componentClassType);
+    }
+
     private Method getDataMethod() {
         for (Method method : csvDataSource.getClass().getDeclaredMethods()) {
             if (method.isAnnotationPresent(DataProvider.class)) {
@@ -87,5 +94,20 @@ public class CSVExportProcessor {
             }
         }
         return null;
+    }
+
+    private Class getComponentClassType(List data) {
+        for (Method method : data.getClass().getDeclaredMethods()) {
+            if (method.isAnnotationPresent(ComponentTypeProvider.class)) {
+                try {
+                    return (Class)method.invoke(data);
+                }catch (IllegalAccessException e) {
+                    e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                }catch (InvocationTargetException e) {
+                    e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                }
+            }
+        }
+        return Object.class;
     }
 }
