@@ -1,4 +1,4 @@
-package org.motechproject.diagnostics.diagnostics;
+package org.motechproject.diagnostics;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

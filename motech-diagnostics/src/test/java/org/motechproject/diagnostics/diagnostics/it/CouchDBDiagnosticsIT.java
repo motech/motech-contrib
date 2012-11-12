@@ -1,8 +1,9 @@
-package org.motechproject.diagnostics.diagnostics;
+package org.motechproject.diagnostics.diagnostics.it;
 
 import org.ektorp.CouchDbConnector;
 import org.ektorp.impl.StdCouchDbConnector;
 import org.junit.Test;
+import org.motechproject.diagnostics.diagnostics.CouchDBDiagnostics;
 import org.motechproject.diagnostics.response.DiagnosticsResult;
 import org.motechproject.testing.utils.SpringIntegrationTest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,8 +14,8 @@ import java.util.List;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.fail;
 
-@ContextConfiguration(locations = "classpath*:/applicationContext-DiagnosticsTest.xml")
-public class CouchDBDiagnosticsTest extends SpringIntegrationTest {
+@ContextConfiguration(locations = "classpath:applicationContext-DiagnosticsTest.xml")
+public class CouchDBDiagnosticsIT extends SpringIntegrationTest {
 
 
     @Autowired

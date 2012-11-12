@@ -25,7 +25,6 @@
         </property>
     </bean>
 
-
     <bean id="springBatchDiagnosticsHttpClient" class="org.apache.commons.httpclient.HttpClient">
         <property name="state" ref="springBatchDiagnosticsHttpState"/>
     </bean>

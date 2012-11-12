@@ -1,7 +1,8 @@
-package org.motechproject.diagnostics.diagnostics;
+package org.motechproject.diagnostics.diagnostics.it;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.motechproject.diagnostics.diagnostics.ConfigurationDiagnostic;
 import org.motechproject.diagnostics.response.DiagnosticsResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
