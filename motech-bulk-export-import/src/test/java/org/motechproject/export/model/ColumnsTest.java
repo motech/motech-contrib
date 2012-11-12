@@ -12,8 +12,8 @@ public class ColumnsTest {
         Columns columns = new Columns(Dummy.class);
         assertEquals(3,columns.size());
         assertEquals("dummyField",columns.get(0).name());
-        assertEquals("parentField1",columns.get(1).name());
-        assertEquals("parentField2",columns.get(2).name());
+        assertEquals("district",columns.get(1).name());
+        assertEquals("panchy",columns.get(2).name());
     }
     @Test
     public void shouldReturnEmptyIfThereAreNoAnnotatedMethods(){
@@ -23,7 +23,7 @@ public class ColumnsTest {
 }
 
 
-class Dummy extends DummyParent{
+class Dummy extends DummyCsv{
     private String field;
 
     private String anotherField;
@@ -38,19 +38,3 @@ class Dummy extends DummyParent{
     }
 }
 
-class DummyParent{
-
-    private String parentField1;
-    private String parentField2;
-
-    public void methodFromParent(){}
-
-    @ExportValue(column="parentField1", index = 1)
-    public String getParentField1() {
-        return parentField1;
-    }
-    @ExportValue(column="parentField2", index = 2)
-    public String getParentField2() {
-        return parentField2;
-    }
-}

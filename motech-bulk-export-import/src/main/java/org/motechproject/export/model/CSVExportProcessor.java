@@ -9,7 +9,6 @@ import org.slf4j.LoggerFactory;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
-import java.lang.reflect.TypeVariable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -70,7 +69,7 @@ public class CSVExportProcessor {
     }
 
     public ExportData formatCSVData(List data) {
-        List<String> headers = getColumnHeaders(data);
+        List<String> headers;
         List<List<String>> allRowData = new ArrayList();
         if (data != null && !data.isEmpty()) {
             Class<? extends Object> clazz = data.get(0).getClass();
@@ -78,11 +77,12 @@ public class CSVExportProcessor {
             for (Object datum : data) {
                 allRowData.add(rowData(datum, clazz));
             }
-        }
+        } else
+            headers = getColumnHeadersEvenThoughDataIsNull(data);
         return new ExportData(headers, allRowData);
     }
 
-    private List<String> getColumnHeaders(List data) {
+    private List<String> getColumnHeadersEvenThoughDataIsNull(List data) {
         Class componentClassType = getComponentClassType(data);
         return columnHeaders(componentClassType);
     }
