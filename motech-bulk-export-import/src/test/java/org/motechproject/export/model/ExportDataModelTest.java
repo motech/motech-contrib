@@ -1,10 +1,7 @@
 package org.motechproject.export.model;
 
 import org.junit.Test;
-import org.motechproject.export.annotation.ComponentTypeProvider;
-import org.motechproject.export.annotation.ExportValue;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static junit.framework.Assert.assertEquals;
@@ -20,24 +17,8 @@ public class ExportDataModelTest {
 
     @Test
     public void shouldReturnColumnHeaders(){
-        List<String> columnHeaders = new ExportDataModel(dummy2.class).columnHeaders();
+        List<String> columnHeaders = new ExportDataModel(DummyCsv.class).columnHeaders();
         assertEquals(2,columnHeaders.size());
     }
 }
 
-class dummy2{
-
-    private String district;
-    private String panchy;
-
-    @ExportValue(column="district", index = 0)
-    public String getDistrict() {
-        return district;
-    }
-
-    @ExportValue(column="panchy", index = 1)
-    public String getPanchy() {
-        return panchy;
-    }
-
-}
