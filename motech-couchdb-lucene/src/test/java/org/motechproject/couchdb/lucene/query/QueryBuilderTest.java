@@ -31,7 +31,7 @@ public class QueryBuilderTest {
                 "AND field3<date>:[2012-10-16 TO 2012-12-18] " +
                 "AND field4:2012-10-17";
 
-        assertThat(queryBuilder.build(), is(expectedQuery));
+        assertThat(queryBuilder.buildQuery(), is(expectedQuery));
         assertNull(queryBuilder.buildSortCriteria());
     }
 
@@ -63,7 +63,7 @@ public class QueryBuilderTest {
                 "AND field3<date>:[2012-10-16 TO 2012-12-18] " +
                 "AND field4:2012-10-17";
 
-        assertThat(queryBuilder.build(), is(expectedQuery));
+        assertThat(queryBuilder.buildQuery(), is(expectedQuery));
     }
 
     @Test(expected = RuntimeException.class)
@@ -73,7 +73,7 @@ public class QueryBuilderTest {
         filterParam.put("field2To", asList("val3", "val4"));
 
         QueryBuilder queryBuilder = new QueryBuilder(filterParam, null, new QueryDefinitionImpl());
-        queryBuilder.build();
+        queryBuilder.buildQuery();
     }
 }
 

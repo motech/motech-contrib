@@ -9,7 +9,10 @@ import org.motechproject.couchdb.lucene.query.QueryDefinition;
 import org.motechproject.dao.MotechBaseRepository;
 import org.motechproject.model.MotechBaseDataObject;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 public abstract class LuceneAwareMotechBaseRepository<T extends MotechBaseDataObject> extends MotechBaseRepository<T> {
 
@@ -39,7 +42,7 @@ public abstract class LuceneAwareMotechBaseRepository<T extends MotechBaseDataOb
     private LuceneQuery getLuceneQuery(QueryDefinition queryDefinition, Map<String, Object> queryParams, LinkedHashMap<String, Object> sortParams, Integer limit, Integer skip) {
         LuceneQuery query = new LuceneQuery(queryDefinition.viewName(), queryDefinition.searchFunctionName());
         QueryBuilder queryBuilder = new QueryBuilder(queryParams, sortParams, queryDefinition);
-        query.setQuery(queryBuilder.build());
+        query.setQuery(queryBuilder.buildQuery());
         query.setSort(queryBuilder.buildSortCriteria());
         query.setIncludeDocs(true);
         query.setLimit(limit);

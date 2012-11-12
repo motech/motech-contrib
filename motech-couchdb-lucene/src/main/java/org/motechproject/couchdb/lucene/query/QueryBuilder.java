@@ -29,7 +29,7 @@ public class QueryBuilder {
         this.queryDefinition = queryDefinition;
     }
 
-    public String build() {
+    public String buildQuery() {
         List<Criteria> criteria = getQueryCriteria();
         return getQuery(criteria);
     }
