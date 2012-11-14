@@ -9,12 +9,10 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.motechproject.scheduler.gateway.OutboundEventGateway;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Properties;
+import java.util.*;
 
 import static java.util.Arrays.asList;
+import static junit.framework.Assert.assertTrue;
 import static org.ei.commcare.api.util.CommCareImportProperties.COMMCARE_IMPORT_DEFINITION_FILE;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.verify;
@@ -85,6 +83,33 @@ public class CommCareModuleImportServiceTest {
         verify(commcareFormImportService).fetchForms(secondModuleFormDefinitions, "www.server.org", "someUser@gmail.com", "somePassword");
         assertEquals(1, allForms.size());
         assertEquals(asList(firstModuleFormInstance), allForms.get(0));
+    }
+
+    @Test
+    public void shouldFetchFormsForOneModuleInSortedOrderBasedOnFormSubmitEndDate() throws Exception {
+        CommCareImportProperties commCareImportProperties = properties("/test-data/commcare-export-with-two-modules.json");
+        List<CommCareFormDefinition> formDefinitions = commCareImportProperties.moduleDefinitions().modules().get(0).definitions();
+
+        //2012-11-07T12:24:03Z CHANGE OCP
+        //2012-11-07T12:24:22Z RENEW IUD
+        //2012-11-07T12:25:41Z RENEW MALE_S
+        //2012-11-07T12:23:48Z RENEW OCP
+
+        CommCareFormInstance firstFormInstance = new CommCareFormInstance(formDefinitions.get(0), new CommCareFormContent(asList("key1", "form|meta|timeEnd"), asList("value1", "2012-11-07T12:24:03Z")));
+        CommCareFormInstance secondFormInstance = new CommCareFormInstance(formDefinitions.get(0), new CommCareFormContent(asList("key2", "form|meta|timeEnd"), asList("value2", "2012-11-07T12:24:22Z")));
+        CommCareFormInstance thirdFormInstance = new CommCareFormInstance(formDefinitions.get(0), new CommCareFormContent(asList("key3", "form|meta|timeEnd"), asList("value3", "2012-11-07T12:25:41Z")));
+        CommCareFormInstance fourthFormInstance = new CommCareFormInstance(formDefinitions.get(0), new CommCareFormContent(asList("key4", "form|meta|timeEnd"), asList("value4", "2012-11-07T12:23:48Z")));
+        when(commcareFormImportService.fetchForms(formDefinitions, "www.server.org", "someUser@gmail.com", "somePassword")).thenReturn(Arrays.asList(firstFormInstance,secondFormInstance,thirdFormInstance,fourthFormInstance));
+
+        CommCareModuleImportService moduleImportService = new CommCareModuleImportService(commcareFormImportService, commCareImportProperties);
+        List<List<CommCareFormInstance>> allForms = moduleImportService.fetchFormsForAllModules();
+
+        verify(commcareFormImportService).fetchForms(formDefinitions, "www.server.org", "someUser@gmail.com", "somePassword");
+        assertEquals(1, allForms.size());
+        assertEquals(fourthFormInstance, allForms.get(0).get(0));
+        assertEquals(firstFormInstance, allForms.get(0).get(1));
+        assertEquals(secondFormInstance, allForms.get(0).get(2));
+        assertEquals(thirdFormInstance, allForms.get(0).get(3));
     }
 
     private CommCareImportProperties properties(String fileName) {

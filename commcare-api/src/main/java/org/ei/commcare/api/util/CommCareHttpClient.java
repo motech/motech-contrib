@@ -30,7 +30,7 @@ public class CommCareHttpClient {
         HttpConnectionParams.setSoTimeout(basicHttpParams, 60000);
     }
 
-    public CommCareHttpResponse get(String url, String commcareBaseUrl, String userName, String password) {
+    public CommCareHttpResponse  get(String url, String commcareBaseUrl, String userName, String password) {
         logger.debug("Fetching URL: " + url + " with username: " + userName + " with commcareBaseUrl: " + commcareBaseUrl);
 
         CommCareHttpResponse commCareHttpResponse = null;

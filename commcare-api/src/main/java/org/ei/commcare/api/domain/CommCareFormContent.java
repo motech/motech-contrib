@@ -7,6 +7,7 @@ import java.util.Map;
 
 public class CommCareFormContent {
     public static final String FORM_ID_FIELD = "form|meta|instanceID";
+    public static final String FORM_SUBMIT_TIMESTAMP_FIELD = "form|meta|timeEnd";
     private List<String> headers;
     private List<String> values;
 
@@ -41,6 +42,16 @@ public class CommCareFormContent {
         for (int i = 0; i < headers().size(); i++) {
             String header = headers().get(i);
             if (header.equals(FORM_ID_FIELD)) {
+                return values().get(i);
+            }
+        }
+        return "";
+    }
+
+    public String formSubmitTimeStamp() {
+        for (int i = 0; i < headers().size(); i++) {
+            String header = headers().get(i);
+            if (header.equals(FORM_SUBMIT_TIMESTAMP_FIELD)) {
                 return values().get(i);
             }
         }
