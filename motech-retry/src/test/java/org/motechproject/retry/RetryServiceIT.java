@@ -6,7 +6,7 @@ import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.motechproject.event.MotechEvent;
-import org.motechproject.event.annotations.MotechListener;
+import org.motechproject.event.listener.annotations.MotechListener;
 import org.motechproject.retry.dao.AllRetries;
 import org.motechproject.retry.domain.Retry;
 import org.motechproject.retry.domain.RetryRequest;
@@ -24,9 +24,7 @@ import java.util.Set;
 import java.util.UUID;
 
 import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 import static org.quartz.impl.matchers.GroupMatcher.jobGroupEquals;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -51,17 +49,18 @@ public class RetryServiceIT {
     public void shouldInvokeRetrySubjectListener() throws InterruptedException {
         retryService.schedule(new RetryRequest("retry-every-second", UUID.randomUUID().toString(), DateTime.now()));
         int counter = 0;
-        while(true) {
-            if(eventFired) {
+        while (true) {
+            if (eventFired) {
                 return;
             }
-            if(counter >= 120) {
+            if (counter >= 120) {
                 fail("Retry listener should have been invoked");
             }
             counter++;
             Thread.sleep(1000);
         }
     }
+
     @Test
     public void shouldCreateRetryEvent() {
         String groupName = "campaign-retries";

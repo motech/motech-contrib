@@ -12,7 +12,8 @@
 
     <context:component-scan base-package="org.motechproject.diagnostics"/>
 
-    <import resource="classpath:applicationPlatformServerAPI.xml"/>
+    <import resource="classpath:/META-INF/motech/applicationPlatformServerAPI.xml"/>
+    <import resource="classpath:/META-INF/motech/activemqConnection.xml"/>
 
     <bean id="springBatchDiagnosticsHttpClient" class="org.apache.commons.httpclient.HttpClient">
         <property name="state" ref="springBatchDiagnosticsHttpState"/>
@@ -27,7 +28,8 @@
         <constructor-arg value="${spring.batch.password}"/>
     </bean>
 
-    <bean id="springBatchDiagnosticsHttpClientFactory" class="org.springframework.http.client.CommonsClientHttpRequestFactory">
+    <bean id="springBatchDiagnosticsHttpClientFactory"
+          class="org.springframework.http.client.CommonsClientHttpRequestFactory">
         <constructor-arg ref="springBatchDiagnosticsHttpClient"/>
     </bean>
 </beans>

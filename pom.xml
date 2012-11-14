@@ -11,7 +11,7 @@
     <packaging>pom</packaging>
 
     <properties>
-        <motech.version>0.12.3</motech.version>
+        <motech.version>0.14.1-SNAPSHOT</motech.version>
         <motech.contrib.version>0.13-SNAPSHOT</motech.contrib.version>
         <motech.contrib.group>org.motechproject.whp-contrib</motech.contrib.group>
         <spring-security.version>3.1.0.RELEASE</spring-security.version>

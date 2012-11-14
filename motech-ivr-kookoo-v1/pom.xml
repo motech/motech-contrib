@@ -142,12 +142,27 @@
         </dependency>
         <dependency>
             <groupId>org.motechproject</groupId>
-            <artifactId>motech-platform-ivr-api</artifactId>
+            <artifactId>motech-ivr-api</artifactId>
             <version>${motech.version}</version>
         </dependency>
         <dependency>
             <groupId>org.motechproject</groupId>
-            <artifactId>motech-platform-decisiontree</artifactId>
+            <artifactId>motech-platform-event</artifactId>
+            <version>${motech.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.osgi</groupId>
+            <artifactId>spring-osgi-core</artifactId>
+            <version>1.2.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.osgi</groupId>
+            <artifactId>spring-osgi-web</artifactId>
+            <version>1.2.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.motechproject</groupId>
+            <artifactId>motech-decisiontree-server</artifactId>
             <version>${motech.version}</version>
         </dependency>
         <dependency>
@@ -182,7 +197,7 @@
                         </Bundle-Activator>
                         <Import-Package>
                             *,
-                            org.motechproject.decisiontree.model,
+                            org.motechproject.decisiontree.core.model,
                             org.springframework.beans.factory.xml,
                             org.springframework.context.config,
                             org.springframework.context.support,

@@ -1,6 +1,6 @@
 package org.motechproject.ivr.kookoo.extensions;
 
-import org.motechproject.decisiontree.model.Tree;
+import org.motechproject.decisiontree.core.model.Tree;
 import org.motechproject.ivr.kookoo.KooKooIVRContext;
 
 public class CallFlowControllerImpl implements CallFlowController {

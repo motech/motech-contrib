@@ -1,8 +1,8 @@
 package org.motechproject.ivr.kookoo.service;
 
 import org.apache.commons.lang.StringUtils;
-import org.motechproject.event.EventRelay;
 import org.motechproject.event.MotechEvent;
+import org.motechproject.event.listener.EventRelay;
 import org.motechproject.ivr.event.CallEvent;
 import org.motechproject.ivr.event.IVREvent;
 import org.motechproject.ivr.kookoo.domain.KookooCallDetailRecord;
@@ -10,7 +10,6 @@ import org.motechproject.ivr.kookoo.eventlogging.CallEventConstants;
 import org.motechproject.ivr.kookoo.repository.AllKooKooCallDetailRecords;
 import org.motechproject.ivr.model.CallDetailRecord;
 import org.motechproject.ivr.model.CallDirection;
-import org.motechproject.scheduler.context.EventContext;
 import org.motechproject.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,16 +22,17 @@ public class KookooCallDetailRecordsServiceImpl implements KookooCallDetailRecor
 
     private AllKooKooCallDetailRecords allKooKooCallDetailRecords;
     private AllKooKooCallDetailRecords allCallDetailRecords;
-    private EventRelay eventRelay = EventContext.getInstance().getEventRelay();
+    private EventRelay eventRelay;
 
     public static final String CLOSE_CALL_SUBJECT = "close_call";
     public static final String CALL_ID = "call_id";
     public static final String EXTERNAL_ID = "external_id";
 
     @Autowired
-    public KookooCallDetailRecordsServiceImpl(AllKooKooCallDetailRecords allKooKooCallDetailRecords, AllKooKooCallDetailRecords allCallDetailRecords) {
+    public KookooCallDetailRecordsServiceImpl(AllKooKooCallDetailRecords allKooKooCallDetailRecords, AllKooKooCallDetailRecords allCallDetailRecords, EventRelay eventRelay) {
         this.allKooKooCallDetailRecords = allKooKooCallDetailRecords;
         this.allCallDetailRecords = allCallDetailRecords;
+        this.eventRelay = eventRelay;
     }
 
     public KookooCallDetailRecord get(String callDetailRecordId) {

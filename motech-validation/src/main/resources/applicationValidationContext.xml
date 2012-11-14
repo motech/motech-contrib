@@ -6,7 +6,7 @@
 
                            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd">
 
-    <import resource="classpath*:applicationPlatformCommonAPI.xml"/>
+    <import resource="classpath*:/META-INF/motech/applicationPlatformCommonAPI.xml"/>
 
     <context:annotation-config/>
     <context:spring-configured/>

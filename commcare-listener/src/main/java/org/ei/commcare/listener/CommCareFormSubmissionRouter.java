@@ -6,7 +6,7 @@ import org.ei.commcare.api.domain.CommCareFormInstance;
 import org.ei.commcare.listener.event.CommCareFormEvent;
 import org.motechproject.dao.MotechJsonReader;
 import org.motechproject.event.MotechEvent;
-import org.motechproject.event.annotations.MotechListener;
+import org.motechproject.event.listener.annotations.MotechListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

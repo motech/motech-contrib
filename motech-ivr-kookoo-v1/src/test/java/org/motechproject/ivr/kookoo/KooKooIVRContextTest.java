@@ -3,7 +3,7 @@ package org.motechproject.ivr.kookoo;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
-import org.motechproject.decisiontree.domain.FlowSessionRecord;
+import org.motechproject.decisiontree.server.domain.FlowSessionRecord;
 import org.motechproject.ivr.kookoo.eventlogging.CallEventConstants;
 
 import javax.servlet.http.HttpServletRequest;
@@ -35,7 +35,7 @@ public class KooKooIVRContextTest {
         ArrayList<String> completedTrees = new ArrayList<String>() {{
             this.add("tree1");
         }};
-        FlowSessionRecord flowSessionRecord = new FlowSessionRecord("sessionId");
+        FlowSessionRecord flowSessionRecord = new FlowSessionRecord("sessionId", "phoneNumber");
         flowSessionRecord.set(KooKooIVRContext.LIST_OF_COMPLETED_TREES, completedTrees);
         KooKooIVRContext kooKooIVRContext = new KooKooIVRContext(null, request, null, flowSessionRecord);
 
@@ -49,7 +49,7 @@ public class KooKooIVRContextTest {
 
     @Test
     public void shouldAddFirstTreeToListOfCompletedTrees(){
-        FlowSessionRecord flowSessionRecord = new FlowSessionRecord("sessionId");
+        FlowSessionRecord flowSessionRecord = new FlowSessionRecord("sessionId", "phoneNumber");
 
         KooKooIVRContext kooKooIVRContext = new KooKooIVRContext(null, request, null, flowSessionRecord);
         kooKooIVRContext.addToListOfCompletedTrees("lastTreeName");
@@ -62,7 +62,7 @@ public class KooKooIVRContextTest {
 
     @Test
     public void shouldStoreTreeName_InTheDataBucket(){
-        FlowSessionRecord flowSessionRecord = new FlowSessionRecord("sessionId");
+        FlowSessionRecord flowSessionRecord = new FlowSessionRecord("sessionId", "phoneNumber");
         KooKooIVRContext kooKooIVRContext = new KooKooIVRContext(null, request, null, flowSessionRecord);
 
         kooKooIVRContext.treeName("symptomTree");

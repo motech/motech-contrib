@@ -7,7 +7,9 @@
                http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd
                http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.0.xsd">
 
-    <import resource="classpath:applicationScheduler.xml"/>
-    <import resource="classpath:applicationPlatformServerAPI.xml"/>
+    <import resource="classpath:/META-INF/motech/applicationScheduler.xml"/>
+    <import resource="classpath:/META-INF/motech/applicationPlatformServerAPI.xml"/>
+    <import resource="classpath:/META-INF/motech/eventQueuePublisher.xml"/>
+    <import resource="classpath:/META-INF/motech/eventQueueConsumer.xml"/>
     <import resource="classpath:applicationContext-retry.xml"/>
 </beans>

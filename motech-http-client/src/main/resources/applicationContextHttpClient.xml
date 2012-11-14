@@ -12,7 +12,9 @@
         <prop key="communication.type">asynchronous</prop>
     </util:properties>
 
-    <import resource="classpath:applicationPlatformServerAPI.xml"/>
+    <import resource="classpath:/META-INF/motech/applicationPlatformServerAPI.xml"/>
+    <import resource="classpath:/META-INF/motech/eventQueuePublisher.xml"/>
+    <import resource="classpath:/META-INF/motech/eventQueueConsumer.xml"/>
 
     <context:annotation-config/>
     <context:component-scan base-package="org.motechproject.http.client"/>

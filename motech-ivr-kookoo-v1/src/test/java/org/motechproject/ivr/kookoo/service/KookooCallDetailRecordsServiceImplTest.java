@@ -8,8 +8,8 @@ import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.motechproject.event.EventRelay;
 import org.motechproject.event.MotechEvent;
+import org.motechproject.event.listener.EventRelay;
 import org.motechproject.ivr.event.CallEvent;
 import org.motechproject.ivr.event.IVREvent;
 import org.motechproject.ivr.kookoo.KookooIVRResponseBuilder;
@@ -18,11 +18,11 @@ import org.motechproject.ivr.kookoo.eventlogging.CallEventConstants;
 import org.motechproject.ivr.kookoo.repository.AllKooKooCallDetailRecords;
 import org.motechproject.ivr.model.CallDetailRecord;
 import org.motechproject.ivr.model.CallDirection;
-import org.motechproject.scheduler.context.EventContext;
 import org.motechproject.util.DateUtil;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
+import javax.naming.event.EventContext;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
@@ -40,8 +40,6 @@ public class KookooCallDetailRecordsServiceImplTest {
     @Mock
     private AllKooKooCallDetailRecords allKooKooCallDetailRecords;
     @Mock
-    private EventContext eventContext;
-    @Mock
     private EventRelay eventRelay;
 
     private KookooCallDetailRecordsServiceImpl kookooCallDetailRecordsService;
@@ -54,16 +52,13 @@ public class KookooCallDetailRecordsServiceImplTest {
     public void setUp() {
         initMocks(this);
 
-        mockStatic(EventContext.class);
         mockStatic(DateUtil.class);
-        when(EventContext.getInstance()).thenReturn(eventContext);
-        when(eventContext.getEventRelay()).thenReturn(eventRelay);
         now = new DateTime(2011, 1, 1, 10, 25, 30, 0);
         when(DateUtil.now()).thenReturn(now);
         when(DateUtil.newDateTime(now.toDate())).thenReturn(now);
         when(DateUtil.setTimeZone(now)).thenReturn(now.toDateTime(DateTimeZone.forTimeZone(Calendar.getInstance().getTimeZone())));
 
-        kookooCallDetailRecordsService = new KookooCallDetailRecordsServiceImpl(allKooKooCallDetailRecords, allKooKooCallDetailRecords);
+        kookooCallDetailRecordsService = new KookooCallDetailRecordsServiceImpl(allKooKooCallDetailRecords, allKooKooCallDetailRecords, eventRelay);
         CallDetailRecord callDetailRecord = CallDetailRecord.create("85437", CallDirection.Inbound, CallDetailRecord.Disposition.ANSWERED);
         kookooCallDetailRecord = new KookooCallDetailRecord(callDetailRecord, "fdsfdsf");
         Mockito.when(allKooKooCallDetailRecords.get(callDetailRecordId)).thenReturn(kookooCallDetailRecord);

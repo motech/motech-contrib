@@ -1,10 +1,10 @@
 package org.motechproject.ivr.kookoo.domain;
 
-import org.motechproject.decisiontree.model.AudioPrompt;
-import org.motechproject.decisiontree.model.ITreeCommand;
-import org.motechproject.decisiontree.model.Node;
-import org.motechproject.decisiontree.model.Prompt;
-import org.motechproject.decisiontree.model.TextToSpeechPrompt;
+import org.motechproject.decisiontree.core.model.AudioPrompt;
+import org.motechproject.decisiontree.core.model.ITreeCommand;
+import org.motechproject.decisiontree.core.model.Node;
+import org.motechproject.decisiontree.core.model.Prompt;
+import org.motechproject.decisiontree.core.model.TextToSpeechPrompt;
 
 import org.motechproject.ivr.kookoo.KookooIVRResponseBuilder;
 

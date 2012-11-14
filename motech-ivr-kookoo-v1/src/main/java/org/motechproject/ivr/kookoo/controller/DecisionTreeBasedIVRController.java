@@ -1,19 +1,19 @@
 package org.motechproject.ivr.kookoo.controller;
 
 import org.apache.commons.lang.StringUtils;
-import org.motechproject.decisiontree.model.ITreeCommand;
-import org.motechproject.decisiontree.model.Node;
-import org.motechproject.decisiontree.model.NodeInfo;
-import org.motechproject.decisiontree.model.Prompt;
-import org.motechproject.decisiontree.model.Tree;
-import org.motechproject.decisiontree.service.FlowSessionService;
+import org.motechproject.decisiontree.core.TreeNodeLocator;
+import org.motechproject.decisiontree.core.model.ITreeCommand;
+import org.motechproject.decisiontree.core.model.Node;
+import org.motechproject.decisiontree.core.model.NodeInfo;
+import org.motechproject.decisiontree.core.model.Prompt;
+import org.motechproject.decisiontree.core.model.Tree;
+import org.motechproject.decisiontree.server.service.FlowSessionService;
 import org.motechproject.ivr.domain.IVRMessage;
 import org.motechproject.ivr.kookoo.KooKooIVRContext;
 import org.motechproject.ivr.kookoo.KookooIVRResponseBuilder;
 import org.motechproject.ivr.kookoo.domain.DecisionTreeBasedResponseBuilder;
 import org.motechproject.ivr.kookoo.extensions.CallFlowController;
 import org.motechproject.ivr.kookoo.service.KookooCallDetailRecordsService;
-import org.motechproject.server.decisiontree.TreeNodeLocator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;

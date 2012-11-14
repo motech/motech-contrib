@@ -4,7 +4,9 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
-import org.motechproject.decisiontree.domain.FlowSessionRecord;
+import org.motechproject.decisiontree.core.FlowSession;
+import org.motechproject.decisiontree.server.domain.FlowSessionRecord;
+import org.motechproject.decisiontree.server.service.FlowSessionService;
 import org.motechproject.ivr.event.CallEvent;
 import org.motechproject.ivr.event.IVREvent;
 import org.motechproject.ivr.kookoo.KooKooIVRContextForTest;
@@ -14,9 +16,7 @@ import org.motechproject.ivr.kookoo.extensions.CallFlowController;
 import org.motechproject.ivr.kookoo.service.KookooCallDetailRecordsService;
 import org.motechproject.ivr.model.CallDetailRecord;
 import org.motechproject.ivr.model.CallDirection;
-import org.motechproject.decisiontree.FlowSession;
 import org.motechproject.ivr.service.IVRService;
-import org.motechproject.decisiontree.service.FlowSessionService;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -62,7 +62,7 @@ public class IVRControllerTest {
         assertEquals(kooKooCallDetailRecordId, ivrContextForTest.callDetailRecordId());
         assertEquals(treeName, ivrContextForTest.treeName());
     }
-    
+
     @Test
     public void shouldHandleCallSessionRecordForEveryRequest() {
         KookooRequest kookooRequest = mock(KookooRequest.class);
@@ -74,7 +74,7 @@ public class IVRControllerTest {
         when(request.getCookies()).thenReturn(new Cookie[]{});
         when(request.getSession()).thenReturn(session);
 
-        when(flowSessionService.getSession("sid")).thenReturn(new FlowSessionRecord("sid"));
+        when(flowSessionService.getSession("sid")).thenReturn(new FlowSessionRecord("sid", "phoneNumber"));
         doNothing().when(callDetailRecordsService).appendToLastCallEvent(anyString(), anyMap());
 
         ivrController.reply(kookooRequest, request, mock(HttpServletResponse.class));
