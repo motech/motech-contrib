@@ -11,12 +11,12 @@ public class DiagnosticMethod {
 
     private String name;
     private Method method;
-    private Object bean;
+    private Diagnostics bean;
 
-    public DiagnosticMethod(String name, Object bean, Method method) {
+    public DiagnosticMethod(String name, Diagnostics diagnostics, Method method) {
         this.name = name;
         this.method = method;
-        this.bean = bean;
+        this.bean = diagnostics;
     }
 
     public static boolean isValidDiagnosticMethod(Method method) {
@@ -26,5 +26,13 @@ public class DiagnosticMethod {
     public DiagnosticsResult run() throws InvocationTargetException, IllegalAccessException {
         DiagnosticsResult result = (DiagnosticsResult) method.invoke(bean, null);
         return result == null ? null : result;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getDiagnosticServiceName() {
+        return bean.name();
     }
 }

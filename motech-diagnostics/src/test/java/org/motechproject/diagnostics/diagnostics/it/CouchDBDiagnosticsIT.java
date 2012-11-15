@@ -1,8 +1,9 @@
-package org.motechproject.diagnostics.diagnostics;
+package org.motechproject.diagnostics.diagnostics.it;
 
 import org.ektorp.CouchDbConnector;
 import org.ektorp.impl.StdCouchDbConnector;
 import org.junit.Test;
+import org.motechproject.diagnostics.diagnostics.CouchDBDiagnostics;
 import org.motechproject.diagnostics.response.DiagnosticsResult;
 import org.motechproject.testing.utils.SpringIntegrationTest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,8 +14,8 @@ import java.util.List;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.fail;
 
-@ContextConfiguration(locations = "classpath*:/applicationContext-DiagnosticsTest.xml")
-public class CouchDBDiagnosticsTest extends SpringIntegrationTest {
+@ContextConfiguration(locations = "classpath:applicationContext-DiagnosticsTest.xml")
+public class CouchDBDiagnosticsIT extends SpringIntegrationTest {
 
 
     @Autowired
@@ -25,19 +26,19 @@ public class CouchDBDiagnosticsTest extends SpringIntegrationTest {
 
     @Test
     public void eachInstanceHasResult() {
-        List<DiagnosticsResult> results = diagnostics.isActive().getValue();
+        List<DiagnosticsResult> results = diagnostics.isActive().getResults();
         assertEquals(allConnectors.size(), results.size());
     }
 
     @Test
     public void shouldReturnPositiveResultWhenAbleToConnectToInstance() {
-        List<DiagnosticsResult> results = diagnostics.isActive().getValue();
+        List<DiagnosticsResult> results = diagnostics.isActive().getResults();
         assertEquals("true", results.get(0).getValue().toString());
     }
 
     @Test
     public void shouldReturnNegativeReturnWhenNotAbleToConnectToInstance() {
-        List<DiagnosticsResult> results = diagnostics.isActive().getValue();
+        List<DiagnosticsResult> results = diagnostics.isActive().getResults();
         assertResultsContainError(results);
     }
 

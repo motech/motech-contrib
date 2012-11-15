@@ -35,6 +35,7 @@
         <module>motech-ivr-kookoo-v1</module>
         <module>motech-web-utils</module>
         <module>motech-paginator</module>
+        <module>motech-diagnostics-web</module>
     </modules>
 
     <distributionManagement>

@@ -40,9 +40,9 @@ public class BatchJobDiagnosticTest {
 
         when(allBatchJobs.fetchAll()).thenReturn(asList(viewIndexerJob, dbCompactorJob));
 
-        DiagnosticsResult<List<DiagnosticsResult<String>>> results = batchJobDiagnostics.performDiagnosis();
-        assertEquals("false", results.getValue().get(0).getValue());
-        assertEquals("true", results.getValue().get(1).getValue());
+        DiagnosticsResult results = batchJobDiagnostics.performDiagnosis();
+        assertEquals("false", results.getResults().get(0).getValue());
+        assertEquals("true", results.getResults().get(1).getValue());
     }
 
     private BatchJob createSpringBatchJob(String jobName, String... jobStatuses) {

@@ -1,13 +1,16 @@
-package org.motechproject.diagnostics.diagnostics;
+package org.motechproject.diagnostics.diagnostics.it;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.motechproject.diagnostics.diagnostics.ActiveMQDiagnostic;
 import org.motechproject.diagnostics.response.DiagnosticsResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.jms.JMSException;
+
+import java.net.MalformedURLException;
 
 import static junit.framework.Assert.*;
 
@@ -20,9 +23,16 @@ public class ActiveMQDiagnosticIT {
 
     @Test
     public void shouldCheckActiveMQConnection() throws JMSException {
-        DiagnosticsResult<String> diagnosticsResult = activeMQDiagnostic.performDiagnosis();
+        DiagnosticsResult diagnosticsResult = activeMQDiagnostic.performDiagnosis();
         assertNotNull(diagnosticsResult);
-        assertEquals("Is Active", diagnosticsResult.getName());
+        assertEquals("Active MQ Port Is Active", diagnosticsResult.getName());
         assertEquals("true", diagnosticsResult.getValue());
+    }
+
+
+    @Test
+    public void shouldCheckActiveMQQueueSizes() throws JMSException, MalformedURLException {
+        DiagnosticsResult diagnosticsResult = activeMQDiagnostic.queueSizes();
+        assertNotNull(diagnosticsResult);
     }
 }

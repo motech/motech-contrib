@@ -2,12 +2,14 @@ package org.motechproject.diagnostics.diagnostics;
 
 import org.motechproject.diagnostics.Diagnostics;
 import org.motechproject.diagnostics.annotation.Diagnostic;
-import org.motechproject.diagnostics.controller.DiagnosticServiceName;
 import org.motechproject.diagnostics.response.DiagnosticsResult;
+import org.motechproject.diagnostics.response.Status;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
+
+import static org.motechproject.diagnostics.response.Status.Success;
 
 @Component
 public class ConfigurationDiagnostic implements Diagnostics {
@@ -23,25 +25,25 @@ public class ConfigurationDiagnostic implements Diagnostics {
     }
 
     @Diagnostic(name = "All properties")
-    public DiagnosticsResult<List<DiagnosticsResult>> performDiagnosis() {
-        List<DiagnosticsResult> results = new ArrayList<DiagnosticsResult>();
-        results.add(new DiagnosticsResult("Is Active", "true"));
+    public DiagnosticsResult performDiagnosis() {
+        List<DiagnosticsResult> results = new ArrayList<>();
+        results.add(new DiagnosticsResult("Is Active", "true", Success));
         results.addAll(propertiesInAllFiles());
-        return new DiagnosticsResult<List<DiagnosticsResult>>("CONFIGURATION PROPERTIES", results);
+        return new DiagnosticsResult("CONFIGURATION PROPERTIES", results);
     }
 
-    private List<DiagnosticsResult> propertiesInAllFiles() {
-        List<DiagnosticsResult> properties = new ArrayList<DiagnosticsResult>();
+    private List<DiagnosticsResult> propertiesInAllFiles()
+    {
+        List<DiagnosticsResult> properties = new ArrayList<>();
         for (Map.Entry<String, Properties> entry : propertyFilesMap.entrySet()) {
             properties.add(new DiagnosticsResult(entry.getKey(), propertiesInFile(entry.getValue())));
         }
         return properties;
     }
-
-    private List<DiagnosticsResult<String>> propertiesInFile(Properties propertiesFile) {
-        List<DiagnosticsResult<String>> properties = new ArrayList<DiagnosticsResult<String>>();
+    private List<DiagnosticsResult> propertiesInFile(Properties propertiesFile) {
+        List<DiagnosticsResult> properties = new ArrayList<>();
         for (Map.Entry<Object, Object> entry : propertiesFile.entrySet()) {
-            properties.add(new DiagnosticsResult<String>(entry.getKey().toString(), entry.getValue().toString()));
+            properties.add(new DiagnosticsResult(entry.getKey().toString(), entry.getValue().toString(), Success));
         }
         return properties;
     }

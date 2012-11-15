@@ -1,5 +1,6 @@
-package org.motechproject.diagnostics.service;
+package org.motechproject.diagnostics.repository;
 
+import org.motechproject.diagnostics.Diagnostics;
 import org.motechproject.diagnostics.annotation.Diagnostic;
 import org.motechproject.diagnostics.model.DiagnosticMethod;
 import org.motechproject.diagnostics.response.DiagnosticsResult;
@@ -15,10 +16,10 @@ public class AllDiagnosticMethods {
 
     List<DiagnosticMethod> diagnosticMethods = new ArrayList<DiagnosticMethod>();
 
-    public AllDiagnosticMethods(Object bean) {
-        for (Method method : bean.getClass().getDeclaredMethods())
+    public AllDiagnosticMethods(Diagnostics diagnostics) {
+        for (Method method : diagnostics.getClass().getDeclaredMethods())
             if (isValidDiagnosticMethod(method))
-                diagnosticMethods.add(new DiagnosticMethod(method.getAnnotation(Diagnostic.class).name(), bean, method));
+                diagnosticMethods.add(new DiagnosticMethod(method.getAnnotation(Diagnostic.class).name(), diagnostics, method));
     }
 
     public List<DiagnosticsResult> runAllDiagnosticMethods() throws InvocationTargetException, IllegalAccessException {

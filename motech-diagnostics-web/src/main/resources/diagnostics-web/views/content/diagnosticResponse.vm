@@ -1,0 +1,41 @@
+#parse( "diagnostics-web/views/content/header.vm" )
+
+<br/><br/><br/>
+<div class=container-fluid>
+    <div class="row-fluid mainbox">
+
+        <div class="span10">
+            #macro( print, $result , $namePrefix )
+                #if(! $result.results.isEmpty() )
+                <li>$result.name -  $result.status</li>
+                        #foreach( $subResult in $result.results )
+                          <ul> #print($subResult , $namePrefix $result.name) </ul>
+                        #end
+                #else
+                    <li>
+                        #if($result.status != "Success")
+                            <span class="label
+                            #if($result.status == "Warn")
+                                label-warning
+                            #else
+                                label-important
+                            #end
+                             ">&nbsp;$result.status</span>
+                        #end
+                            $namePrefix $result.name $result.value </li>
+                #end
+
+            #end
+            #foreach( $serviceResult in $serviceResults )
+                <h3>$serviceResult.serviceName</h3>
+                <div class="well">
+                    #foreach( $diagnosticResult in $serviceResult.results )
+                        <ul> #print( $diagnosticResult , "" ) #if ( $foreach.hasNext ) #end </ul>
+                    #end
+                </div>
+            #end
+        </div>
+    </div>
+</div>
+
+#parse( "diagnostics-web/views/content/footer.vm" )

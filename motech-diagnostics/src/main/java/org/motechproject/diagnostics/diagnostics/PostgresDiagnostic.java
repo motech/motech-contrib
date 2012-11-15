@@ -2,8 +2,8 @@ package org.motechproject.diagnostics.diagnostics;
 
 import org.motechproject.diagnostics.Diagnostics;
 import org.motechproject.diagnostics.annotation.Diagnostic;
-import org.motechproject.diagnostics.controller.DiagnosticServiceName;
 import org.motechproject.diagnostics.response.DiagnosticsResult;
+import org.motechproject.diagnostics.response.Status;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
@@ -14,6 +14,8 @@ import java.sql.SQLException;
 import java.util.Properties;
 
 import static org.hibernate.exception.ExceptionUtils.getFullStackTrace;
+import static org.motechproject.diagnostics.response.Status.Fail;
+import static org.motechproject.diagnostics.response.Status.Success;
 
 @Component
 public class PostgresDiagnostic implements Diagnostics {
@@ -26,16 +28,16 @@ public class PostgresDiagnostic implements Diagnostics {
     }
 
     @Diagnostic(name = "Can create connection")
-    public DiagnosticsResult<String> performDiagnosis() {
-        Connection connection = null;
+    public DiagnosticsResult performDiagnosis() {
+        Connection connection;
         try {
             connection = getConnection();
             if (connection != null)
                 connection.close();
         } catch (SQLException e) {
-            return new DiagnosticsResult<String>("POSTGRES DATABASE CONNECTION EXCEPTION", getFullStackTrace(e));
+            return new DiagnosticsResult("POSTGRES DATABASE CONNECTION EXCEPTION", getFullStackTrace(e), Fail);
         }
-        return new DiagnosticsResult<String>("POSTGRES DATABASE CONNECTION OPENED", "true");
+        return new DiagnosticsResult("POSTGRES DATABASE CONNECTION OPENED", "true", Success);
     }
 
     protected Connection getConnection() throws SQLException {

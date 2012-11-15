@@ -3,6 +3,7 @@ package org.motechproject.diagnostics.util;
 import org.motechproject.diagnostics.Diagnostics;
 import org.motechproject.diagnostics.annotation.Diagnostic;
 import org.motechproject.diagnostics.response.DiagnosticsResult;
+import org.motechproject.diagnostics.response.Status;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -12,16 +13,16 @@ public class TestClass implements Diagnostics {
     public static boolean methodWithAnnotationRun = false;
 
     @Diagnostic(name = "testDiagnostics1")
-    public DiagnosticsResult<Boolean> method1WithAnnotation() {
+    public DiagnosticsResult method1WithAnnotation() {
         methodExecutionCount++;
         methodWithAnnotationRun = true;
-        return new DiagnosticsResult<Boolean>("test message 1", true);
+        return new DiagnosticsResult("test message 1", "true", Status.Success);
     }
 
     @Diagnostic(name = "testDiagnostics2")
-    public DiagnosticsResult<Boolean> method2WithAnnotation() {
+    public DiagnosticsResult method2WithAnnotation() {
         methodExecutionCount++;
-        return new DiagnosticsResult<Boolean>("test message 2", false);
+        return new DiagnosticsResult("test message 2", "false", Status.Success);
     }
 
     @Diagnostic(name = "testDiagnosticsWithNullResult")

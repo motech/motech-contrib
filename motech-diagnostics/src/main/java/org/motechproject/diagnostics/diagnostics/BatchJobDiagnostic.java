@@ -5,6 +5,7 @@ import org.motechproject.diagnostics.annotation.Diagnostic;
 import org.motechproject.diagnostics.model.BatchJob;
 import org.motechproject.diagnostics.repository.AllBatchJobs;
 import org.motechproject.diagnostics.response.DiagnosticsResult;
+import org.motechproject.diagnostics.response.Status;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -22,18 +23,17 @@ public class BatchJobDiagnostic implements Diagnostics {
     }
 
     @Diagnostic(name = "Batch job diagnostics")
-    public DiagnosticsResult<List<DiagnosticsResult<String>>> performDiagnosis() {
-        List<DiagnosticsResult<String>> results = new ArrayList<DiagnosticsResult<String>>();
+    public DiagnosticsResult performDiagnosis() {
+        List<DiagnosticsResult> results = new ArrayList<>();
         try {
             for (BatchJob batchJob : allBatchJobs.fetchAll()) {
                 String value = batchJob.lastExecutionFailed() ? "false" : "true";
-                results.add(new DiagnosticsResult<String>(batchJob.getName(), value));
+                results.add(new DiagnosticsResult(batchJob.getName(), value, Status.Success));
             }
         } catch (Exception e) {
-            results.add(new DiagnosticsResult<String>("Connecting to batch", "false"));
+            results.add(new DiagnosticsResult("Connecting to batch", "false", Status.Fail));
         }
-
-        return new DiagnosticsResult<List<DiagnosticsResult<String>>>("Batch Job", results);
+        return new DiagnosticsResult("Batch Job", results);
     }
 
     @Override

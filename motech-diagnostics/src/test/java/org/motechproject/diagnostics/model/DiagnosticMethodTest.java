@@ -31,10 +31,10 @@ public class DiagnosticMethodTest {
         String methodName = "testMethod1";
 
         DiagnosticMethod diagnosticMethod = new DiagnosticMethod(methodName, testClass, testClass.getClass().getMethod("method1WithAnnotation"));
-        DiagnosticsResult<Boolean> diagnosticsResponse = diagnosticMethod.run();
+        DiagnosticsResult diagnosticsResponse = diagnosticMethod.run();
 
         assertTrue(testClass.methodWithAnnotationRun);
-        assertTrue(diagnosticsResponse.getValue());
+        assertEquals("true", diagnosticsResponse.getValue());
     }
 
     @Test
