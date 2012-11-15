@@ -5,10 +5,7 @@ import org.motechproject.couchdb.lucene.query.field.Field;
 import org.motechproject.couchdb.lucene.query.field.QueryField;
 import org.motechproject.couchdb.lucene.query.field.RangeField;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static java.util.Arrays.asList;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -40,13 +37,13 @@ public class QueryBuilderTest {
 
     @Test
     public void shouldBuildSortParams() {
-        Map<String, Object> sortParams = new HashMap<>();
+        LinkedHashMap<String, Object> sortParams = new LinkedHashMap<>();
+        sortParams.put("field3", "asc");
         sortParams.put("field1", "asc");
         sortParams.put("field2", "desc");
-        sortParams.put("field3", "asc");
 
         QueryBuilder queryBuilder = new QueryBuilder(null, sortParams, new QueryDefinitionImpl());
-        String expectedCriteria = "/field1<string>,\\field2<string>,/field3<date>";
+        String expectedCriteria = "/field3<date>,/field1<string>,\\field2<string>";
 
         assertThat(queryBuilder.buildSortCriteria(), is(expectedCriteria));
     }

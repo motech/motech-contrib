@@ -1,14 +1,18 @@
 package org.motechproject.couchdb.lucene.query;
 
+import ch.lambdaj.Lambda;
 import org.apache.commons.lang.StringUtils;
 import org.motechproject.couchdb.lucene.query.criteria.Criteria;
 import org.motechproject.couchdb.lucene.query.field.Field;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 
+import static ch.lambdaj.Lambda.having;
+import static ch.lambdaj.Lambda.on;
+import static org.hamcrest.core.Is.is;
 import static org.motechproject.couchdb.lucene.query.SortOrder.getSortOrder;
 
 public class QueryBuilder {
@@ -16,10 +20,10 @@ public class QueryBuilder {
     public static final String EMPTY_STRING = "";
     public static final String LUCENE_SORT_FIELD_SEPARATOR = ",";
     private final Map<String, Object> filterParams;
-    private Map<String, Object> sortParams;
+    private LinkedHashMap<String, Object> sortParams;
     private final QueryDefinition queryDefinition;
 
-    public QueryBuilder(Map<String, Object> filterParams, Map<String, Object> sortParams, QueryDefinition queryDefinition) {
+    public QueryBuilder(Map<String, Object> filterParams, LinkedHashMap<String, Object> sortParams, QueryDefinition queryDefinition) {
         this.filterParams = filterParams;
         this.sortParams = sortParams;
         this.queryDefinition = queryDefinition;
@@ -60,10 +64,12 @@ public class QueryBuilder {
 
         List<String> criteria = new ArrayList<>();
 
-        for (Field field : queryDefinition.fields()) {
-            if (sortParams.containsKey(field.getName()))
-                criteria.add(field.createSortCriteria(getSortOrder((String) sortParams.get(field.getName()))));
+        for(String key : sortParams.keySet()) {
+            Field selectedField = Lambda.selectFirst(queryDefinition.fields(), having(on(Field.class).getName(), is(key)));
+            if(selectedField != null)
+                criteria.add(selectedField.createSortCriteria(getSortOrder((String) sortParams.get(key))));
         }
+
         return StringUtils.join(criteria, LUCENE_SORT_FIELD_SEPARATOR);
     }
 }

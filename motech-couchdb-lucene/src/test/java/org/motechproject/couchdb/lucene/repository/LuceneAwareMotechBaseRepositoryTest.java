@@ -56,7 +56,7 @@ public class LuceneAwareMotechBaseRepositoryTest {
 
         LuceneAwareMotechBaseRepositoryImpl repository = new LuceneAwareMotechBaseRepositoryImpl(connector);
 
-        Map<String, Object> sortParams = new HashMap<>();
+        LinkedHashMap<String, Object> sortParams = new LinkedHashMap<>();
         sortParams.put("field1", "ASC");
 
         QueryDefinitionImpl queryDefinition = new QueryDefinitionImpl();
