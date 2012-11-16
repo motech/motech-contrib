@@ -1,12 +1,12 @@
 package org.motechproject.export.model;
 
+import org.motechproject.contrib.common.ReflectionUtil;
 import org.motechproject.export.annotation.CSVDataSource;
 import org.motechproject.export.annotation.ComponentTypeProvider;
 import org.motechproject.export.annotation.DataProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -34,23 +34,11 @@ public class CSVExportProcessor {
     }
 
     public List<Object> data(Object parameters) {
-        try {
-            Method method = getDataMethod();
-            if (method != null) {
-                return parameters != null ? (List<Object>) method.invoke(csvDataSource, parameters) : (List<Object>) method.invoke(csvDataSource);
-            }
-        } catch (IllegalAccessException e) {
-            logger.error("Data method should be public" + e.getMessage());
-            throw new RuntimeException("Data method should be public" + e.getMessage());
-        } catch (InvocationTargetException e) {
-            logger.error("Format of data method is invalid." + e.getMessage());
-            throw new RuntimeException("Format of data method is invalid." + e.getMessage());
-        } catch (IllegalArgumentException e) {
-            logger.error("Format of data method is invalid." + e.getMessage());
-            throw new RuntimeException("Format of data method is invalid." + e.getMessage());
-        } catch (ClassCastException e) {
-            logger.error("Format of data method is invalid." + e.getMessage());
-            throw new RuntimeException("Format of data method is invalid." + e.getMessage());
+        Method method = ReflectionUtil.getAnnotatedMethod(csvDataSource, DataProvider.class);
+        if (method != null) {
+            if (parameters != null)
+                return (List<Object>) ReflectionUtil.invokeMethod(method, csvDataSource, parameters);
+            return (List<Object>) ReflectionUtil.invokeMethod(method, csvDataSource);
         }
         return new ArrayList<>();
     }
@@ -87,27 +75,8 @@ public class CSVExportProcessor {
         return columnHeaders(componentClassType);
     }
 
-    private Method getDataMethod() {
-        for (Method method : csvDataSource.getClass().getDeclaredMethods()) {
-            if (method.isAnnotationPresent(DataProvider.class)) {
-                return method;
-            }
-        }
-        return null;
-    }
-
     private Class getComponentClassType(List data) {
-        for (Method method : data.getClass().getDeclaredMethods()) {
-            if (method.isAnnotationPresent(ComponentTypeProvider.class)) {
-                try {
-                    return (Class)method.invoke(data);
-                }catch (IllegalAccessException e) {
-                    e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-                }catch (InvocationTargetException e) {
-                    e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-                }
-            }
-        }
-        return Object.class;
+        Object componentClass = ReflectionUtil.invokeAnnotatedMethod(data, ComponentTypeProvider.class);
+        return componentClass != null ? (Class) componentClass : Object.class;
     }
 }

@@ -6,15 +6,15 @@ import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpInputMessage;
-import org.springframework.http.HttpOutputMessage;
 import org.springframework.http.MediaType;
+import org.springframework.http.server.ServletServerHttpResponse;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.ArrayList;
 import java.util.List;
 
 import static junit.framework.Assert.*;
@@ -27,7 +27,7 @@ public class CSVHttpMessageConverterTest {
     @Mock
     private HttpInputMessage httpInputMessage;
     @Mock
-    private HttpOutputMessage httpOutputMessage;
+    private ServletServerHttpResponse httpOutputMessage;
     @Mock
     private OutputStream mockedOutputStream;
     private CSVHttpMessageConverter csvHttpMessageConverter;
@@ -53,21 +53,25 @@ public class CSVHttpMessageConverterTest {
 
     @Test
     public void shouldWriteToCSVStream() throws IOException {
-        ArrayList<ValidCSVEntity> validCSVEntities = new ArrayList<>();
+        ValidCSVEntities validCSVEntities = new ValidCSVEntities();
         final ValidCSVEntity validCSVEntity = new ValidCSVEntity();
         validCSVEntity.setSome("a");
         validCSVEntity.setSomeOther("b");
         validCSVEntities.add(validCSVEntity);
         when(httpOutputMessage.getBody()).thenReturn(mockedOutputStream);
-
+        HttpHeaders httpHeaders = new HttpHeaders();
+        when(httpOutputMessage.getHeaders()).thenReturn(httpHeaders);
         csvHttpMessageConverter.writeInternal(validCSVEntities, httpOutputMessage);
 
         ArgumentCaptor<byte[]> argumentCaptor = ArgumentCaptor.forClass(byte[].class);
         verify(mockedOutputStream).write(argumentCaptor.capture(), anyInt(), anyInt());
+
         String actualStreamContent = new String(argumentCaptor.getValue());
         String[] actualStreamContents = actualStreamContent.split("\n");
         assertEquals("some,someOther", actualStreamContents[0]);
         assertEquals("a,b", actualStreamContents[1]);
+        assertTrue(httpHeaders.get("Content-Disposition").contains("attachment; filename=test.csv"));
+
     }
 
     @Test
