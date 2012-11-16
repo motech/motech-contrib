@@ -75,6 +75,11 @@
             <artifactId>motech-bulk-export-import</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.motechproject.contrib-ananya</groupId>
+            <artifactId>contrib-common</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
 
 </project>
