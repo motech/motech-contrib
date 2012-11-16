@@ -1,9 +1,9 @@
 package org.motechproject.export.model;
 
-import org.motechproject.contrib.common.ReflectionUtil;
 import org.motechproject.export.annotation.CSVDataSource;
 import org.motechproject.export.annotation.ComponentTypeProvider;
 import org.motechproject.export.annotation.DataProvider;
+import org.motechproject.export.util.ReflectionUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

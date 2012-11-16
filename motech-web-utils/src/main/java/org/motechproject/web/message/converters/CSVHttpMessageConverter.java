@@ -1,7 +1,7 @@
 package org.motechproject.web.message.converters;
 
 
-import org.motechproject.contrib.common.ReflectionUtil;
+import org.motechproject.export.util.ReflectionUtil;
 import org.motechproject.export.writer.CSVWriter;
 import org.motechproject.importer.model.CSVDataImportProcessor;
 import org.motechproject.web.message.converters.annotations.CSVEntity;
@@ -51,9 +51,8 @@ public class CSVHttpMessageConverter extends AbstractHttpMessageConverter<Object
     @Override
     public void writeInternal(Object o, HttpOutputMessage outputMessage) throws IOException, HttpMessageNotWritableException {
         String fileName = (String) ReflectionUtil.invokeAnnotatedMethod(o, CSVFileName.class);
-        if (fileName == null)
-            fileName = "file.csv";
-        outputMessage.getHeaders().add("Content-Disposition", "attachment; filename="+fileName);
+        if (fileName != null)
+            outputMessage.getHeaders().add("Content-Disposition", "attachment; filename=" + fileName);
 
         CSVWriter csvWriter = new CSVWriter();
         csvWriter.writeCSVFromData(new OutputStreamWriter(outputMessage.getBody()), (List) o);
