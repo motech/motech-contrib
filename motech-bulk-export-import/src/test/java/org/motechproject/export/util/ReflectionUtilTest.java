@@ -1,4 +1,4 @@
-package org.motechproject.contrib.common;
+package org.motechproject.export.util;
 
 import org.junit.Test;
 
@@ -15,7 +15,7 @@ public class ReflectionUtilTest {
     public void shouldInvokeAnnotatedMethod(){
         Dummy dummy = new Dummy();
         String expected = dummy.getFoo("arwen");
-        Object output = ReflectionUtil.invokeAnnotatedMethod(dummy, DummyEntity.class,"arwen");
+        Object output = ReflectionUtil.invokeAnnotatedMethod(dummy, DummyEntity.class, "arwen");
         assertEquals(expected,(String)output);
     }
 }
