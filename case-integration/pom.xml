@@ -19,6 +19,7 @@
         <module>case-parser</module>
         <module>case-common</module>
         <module>case-service</module>
+        <module>case-logger</module>
         <module>commcare-case-gateway</module>
         <module>openrosa-registration-service</module>
     </modules>
@@ -115,11 +116,6 @@
             <groupId>org.codehaus.jackson</groupId>
             <artifactId>jackson-core-asl</artifactId>
             <version>1.9.7</version>
-        </dependency>
-        <dependency>
-            <groupId>org.motechproject</groupId>
-            <artifactId>motech-platform-common-api</artifactId>
-            <version>${motech.version}</version>
         </dependency>
     </dependencies>
 </project>

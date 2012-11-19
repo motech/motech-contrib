@@ -1,9 +1,9 @@
 package org.motechproject.provider.registration.service;
 
 import org.apache.log4j.Logger;
-import org.motechproject.casexml.CaseLog;
 import org.motechproject.casexml.builder.ResponseMessageBuilder;
-import org.motechproject.casexml.repository.AllCaseLogs;
+import org.motechproject.casexml.domain.CaseLog;
+import org.motechproject.casexml.service.CaseLogService;
 import org.motechproject.provider.registration.exception.OpenRosaRegistrationParserException;
 import org.motechproject.provider.registration.exception.OpenRosaRegistrationValidationException;
 import org.motechproject.provider.registration.parser.RegistrationParser;
@@ -22,7 +22,7 @@ public abstract class ProviderRegistrationService<T> {
     private static Logger logger = Logger.getLogger(ProviderRegistrationService.class);
     private ResponseMessageBuilder responseMessageBuilder;
     private Class<T> clazz;
-    AllCaseLogs allCaseLogs;
+    CaseLogService caseLogService;
 
     @Autowired
     public void setResponseMessageBuilder(ResponseMessageBuilder responseMessageBuilder) {
@@ -68,12 +68,12 @@ public abstract class ProviderRegistrationService<T> {
     }
 
     private void log(CaseLog log) {
-        allCaseLogs.add(log);
+        caseLogService.add(log);
     }
 
     @Autowired
-    public void setAllCaseLogs(AllCaseLogs allCaseLogs) {
-        this.allCaseLogs = allCaseLogs;
+    public void setCaseLogService(CaseLogService caseLogService) {
+        this.caseLogService = caseLogService;
     }
 
     public abstract void createOrUpdate(T registration) throws OpenRosaRegistrationValidationException;

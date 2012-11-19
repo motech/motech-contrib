@@ -1,11 +1,10 @@
 package org.motechproject.casexml.service;
 
 import org.apache.log4j.Logger;
-import org.motechproject.casexml.CaseLog;
 import org.motechproject.casexml.builder.ResponseMessageBuilder;
+import org.motechproject.casexml.domain.CaseLog;
 import org.motechproject.casexml.exception.CaseParserException;
 import org.motechproject.casexml.parser.CommcareCaseParser;
-import org.motechproject.casexml.repository.AllCaseLogs;
 import org.motechproject.casexml.service.exception.CaseException;
 import org.motechproject.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,15 +22,15 @@ public abstract class CaseService<T> {
     private static Logger logger = Logger.getLogger(CaseService.class);
 
     private Class<T> clazz;
-    private AllCaseLogs allCaseLogs;
+    private CaseLogService caseLogService;
 
     public CaseService(Class<T> clazz) {
         this.clazz = clazz;
     }
 
     @Autowired
-    public void setAllCaseLogs(AllCaseLogs allCaseLogs) {
-        this.allCaseLogs = allCaseLogs;
+    public void setCaseLogService(CaseLogService caseLogService) {
+        this.caseLogService = caseLogService;
     }
 
     @Autowired
@@ -75,7 +74,7 @@ public abstract class CaseService<T> {
     }
 
     private void log(CaseLog log) {
-        allCaseLogs.add(log);
+        caseLogService.add(log);
     }
 
     private void logError(Throwable exception) {

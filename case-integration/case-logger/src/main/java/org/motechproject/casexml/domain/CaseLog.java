@@ -1,10 +1,9 @@
-package org.motechproject.casexml;
+package org.motechproject.casexml.domain;
 
 import org.ektorp.support.TypeDiscriminator;
 import org.joda.time.DateTime;
 import org.motechproject.model.MotechBaseDataObject;
-
-import static org.motechproject.util.DateUtil.setTimeZone;
+import org.motechproject.util.DateUtil;
 
 @TypeDiscriminator("doc.type === 'CaseLog'")
 public class CaseLog extends MotechBaseDataObject {
@@ -62,6 +61,6 @@ public class CaseLog extends MotechBaseDataObject {
     }
 
     public void setLogDate(DateTime logDate) {
-        this.logDate = setTimeZone(logDate);
+        this.logDate = DateUtil.setTimeZone(logDate);
     }
 }

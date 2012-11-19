@@ -2,17 +2,13 @@ package org.motechproject.casexml.service.builder;
 
 import com.sun.org.apache.xerces.internal.parsers.DOMParser;
 import junit.framework.Assert;
-import org.apache.velocity.Template;
+import org.apache.commons.lang.StringUtils;
 import org.apache.velocity.app.VelocityEngine;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
 import org.motechproject.casexml.builder.ResponseMessageBuilder;
 import org.motechproject.casexml.service.exception.CaseError;
 import org.motechproject.casexml.service.exception.CaseException;
-import org.motechproject.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.ContextConfiguration;
@@ -32,8 +28,6 @@ import java.io.StringWriter;
 import java.util.List;
 
 import static java.util.Arrays.asList;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.when;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("classpath:applicationContext-case.xml")
@@ -112,7 +106,7 @@ public class ResponseMessageBuilderTest {
     }
 
     private Document documentFrom(String xmlDocument) {
-        if (StringUtil.isNullOrEmpty(xmlDocument)) {
+        if (StringUtils.isBlank(xmlDocument)) {
             throw new IllegalArgumentException();
         }
 
