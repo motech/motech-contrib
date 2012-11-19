@@ -12,7 +12,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
 
@@ -38,7 +37,7 @@ public class DataImporterTest {
     }
 
     @Test
-    public void shouldImportSampleBean() {
+    public void shouldImportSampleBean() throws Exception {
         sampleCSVImporter.setValid(true);
 
         dataImporter.importData("sampleEntity", "sample.csv");
@@ -50,7 +49,7 @@ public class DataImporterTest {
     }
 
     @Test
-    public void shouldIgnoreFieldsThatAreNotPresentInFile() {
+    public void shouldIgnoreFieldsThatAreNotPresentInFile() throws Exception {
         sampleCSVImporter.setValid(true);
 
         dataImporter.importData("sampleEntity", "sample.csv");
@@ -59,7 +58,7 @@ public class DataImporterTest {
     }
 
     @Test
-    public void shouldUseSetterInjectionWhenSetterIsPresent() {
+    public void shouldUseSetterInjectionWhenSetterIsPresent() throws Exception {
         sampleCSVImporter.setValid(true);
 
         dataImporter.importData("sampleEntity", "sample.csv");
@@ -68,7 +67,7 @@ public class DataImporterTest {
     }
 
     @Test
-    public void shouldProcessValidationErrorsIfAny() throws IOException, URISyntaxException {
+    public void shouldProcessValidationErrorsIfAny() throws Exception, URISyntaxException {
         sampleCSVImporter.setValid(false);
 
         dataImporter.importData("sampleEntity", "sample.csv");

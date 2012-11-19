@@ -15,13 +15,13 @@ public class CSVDataImporter {
     AllCSVDataImportProcessor allCSVDataImportProcessor;
     public static final String APPLICATION_CONTEXT_XML = "applicationBulkImportContext.xml";
 
-    public static void main(String args[]) {
+    public static void main(String args[]) throws Exception {
         ApplicationContext context = new ClassPathXmlApplicationContext(APPLICATION_CONTEXT_XML);
         CSVDataImporter dataImporter = (CSVDataImporter) context.getBean("csvDataImporter");
         dataImporter.importData(args[0],args[1]);
     }
 
-    public void importData(String entity, String file) {
+    public void importData(String entity, String file) throws Exception {
         URL resource = CSVDataImporter.class.getClassLoader().getResource(file);
         allCSVDataImportProcessor.get(entity).process(resource == null? file : resource.getPath());
     }
