@@ -11,7 +11,6 @@ import org.slf4j.LoggerFactory;
 import java.io.*;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.List;
 
 public abstract class DataImportProcessor {
@@ -40,24 +39,39 @@ public abstract class DataImportProcessor {
 
     public void process(String... filePaths) {
         try {
-            List<Object> allValuesFromFile = new ArrayList<>();
             for (String filePath : filePaths) {
-                List<Object> valuesFromFile = parse(new FileReader(filePath));
-                ValidationResponse validationResponse = validate(valuesFromFile);
-                if (validationResponse.isValid()) {
-                    allValuesFromFile.addAll(valuesFromFile);
-                } else {
+                ValidationResponse validationResponse = process(new FileReader(filePath));
+
+                if (!validationResponse.isValid()) {
                     processErrors(validationResponse.getErrors(), filePath);
                 }
-            }
-
-            if (!allValuesFromFile.isEmpty()) {
-                invokePostMethod(allValuesFromFile);
             }
         } catch (Exception e) {
             System.err.println("Error while importing csv : " + ExceptionUtils.getFullStackTrace(e));
             logger.error("Error while importing csv : " + ExceptionUtils.getFullStackTrace(e));
         }
+    }
+
+    private ValidationResponse process(Reader reader) throws Exception {
+        List<Object> valuesFromFile = parse(reader);
+        ValidationResponse validationResponse = validate(valuesFromFile);
+        if (!validationResponse.isValid()) {
+            return validationResponse;
+        }
+        invokePostMethod(valuesFromFile);
+        return validationResponse;
+    }
+
+    public String processContent(String content) throws Exception {
+        ValidationResponse validationResponse = process(new StringReader(content));
+
+        if (validationResponse.isValid()) {
+            return null;
+        }
+
+        StringWriter stringWriter = new StringWriter();
+        processErrors(validationResponse.getErrors(), stringWriter);
+        return stringWriter.toString();
     }
 
     private void invokePostMethod(List<Object> entities) throws IllegalAccessException, InvocationTargetException {
@@ -79,9 +93,13 @@ public abstract class DataImportProcessor {
         errorsFile.createNewFile();
 
         BufferedWriter writer = new BufferedWriter(new FileWriter(errorsFile));
+        processErrors(errors, writer);
+    }
+
+    private void processErrors(List<Error> errors, Writer writer) throws IOException {
         for (Error error : errors) {
             writer.write(error.getMessage());
-            writer.newLine();
+            writer.write("\n");
         }
         writer.close();
     }
