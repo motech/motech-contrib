@@ -37,11 +37,10 @@ public class CSVDataImportProcessor extends DataImportProcessor {
     }
 
     public List<Object> parse(Reader reader) {
-        CSVReader csvReader = new CSVReader(reader, ',');
         HeaderColumnNameTranslateMappingStrategy columnNameMappingStrategy = new HeaderColumnNameTranslateMappingStrategy();
         columnNameMappingStrategy.setType(bean);
         columnNameMappingStrategy.setColumnMapping(getColumnMapping());
-        return csvToBean.parse(columnNameMappingStrategy, csvReader);
+        return csvToBean.parse(columnNameMappingStrategy, new CSVReader(reader, ','));
     }
 
     public static boolean isValid(Class beanClass) {
