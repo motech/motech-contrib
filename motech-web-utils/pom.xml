@@ -9,8 +9,10 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>motech-web-utils</artifactId>
     <name>motech-web-utils</name>
+    <artifactId>motech-web-utils</artifactId>
+    <groupId>org.motechproject.contrib-ananya-care</groupId>
+    <version>0.9-SNAPSHOT</version>
 
     <dependencies>
         <dependency>
