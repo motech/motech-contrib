@@ -1,0 +1,32 @@
+#parse( "case-logger-web/views/content/header.vm" )
+
+<br/><br/>
+
+<div class="row-fluid">
+    <div class="span8">
+        <table id="logs" class="table table-striped table-bordered table-condensed">
+            <thead>
+            <tr>
+                <th>Context Path</th>
+                <th>Request</th>
+                <th>Has Exception</th>
+                <th>Response</th>
+                <th>Log Date</th>
+            </tr>
+            </thead>
+            <tbody>
+                #foreach($entry in $caseLogs)
+                <tr>
+                    <td>$entry.getContextPath()</a></td>
+                    <td>$entry.getRequest()</td>
+                    <td>$entry.getHasException()</td>
+                    <td>$entry.getResponse()</td>
+                    <td>$entry.getLogDate()</td>
+                </tr>
+                #end
+            </tbody>
+        </table>
+    </div>
+</div>
+
+#parse( "case-logger-web/views/content/footer.vm" )
