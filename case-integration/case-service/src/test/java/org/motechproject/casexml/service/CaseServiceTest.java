@@ -98,7 +98,7 @@ public class CaseServiceTest extends BaseUnitTest {
     }
 
     private void assertCaseLog(String contextPath, boolean hasException, boolean hasContent, CaseLog caseLog) {
-        assertEquals(contextPath, caseLog.getContextPath());
+        assertEquals(contextPath, caseLog.getEndpoint());
         assertEquals(hasException, caseLog.getHasException());
         assertEquals(hasContent, StringUtils.isNotBlank(caseLog.getRequest()));
         assertTrue(StringUtils.isNotBlank(caseLog.getResponse()));

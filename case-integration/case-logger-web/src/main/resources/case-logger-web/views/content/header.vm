@@ -4,7 +4,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="$label.home.page.title">
     <meta name="author" content="$label.home.author">
-    <base href="/$contextPath/">
+    <base href="/$endpoint/">
 
     <link rel="shortcut icon" href="assets/ico/favicon.ico">
     <link href="case-logger-web/css/bootstrap.css" rel="stylesheet">

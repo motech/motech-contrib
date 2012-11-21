@@ -1,6 +1,8 @@
 package org.motechproject.provider.registration.parser;
 
-public class TestProvider {
+import org.motechproject.provider.registration.contract.OpenRosaXmlRequest;
+
+public class TestProvider implements OpenRosaXmlRequest {
     private String primary_mobile;
     private String secondary_mobile;
     private String tertiary_mobile;
@@ -91,5 +93,15 @@ public class TestProvider {
 
     public void setApi_key(String api_key) {
         this.api_key = api_key;
+    }
+
+    @Override
+    public String getId() {
+        return "test Id";
+    }
+
+    @Override
+    public String getType() {
+        return "test Type";
     }
 }

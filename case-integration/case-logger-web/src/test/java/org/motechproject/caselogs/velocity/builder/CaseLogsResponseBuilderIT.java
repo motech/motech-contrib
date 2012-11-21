@@ -23,13 +23,17 @@ public class CaseLogsResponseBuilderIT {
     @Test
     public void shouldBuildResponseFromCaseLogs() {
         List<CaseLog> caseLogs = new ArrayList<>();
-        CaseLog caseLog1 = new CaseLog("body", "url", false, DateTime.now());
-        CaseLog caseLog2 = new CaseLog("another body", "another url", false, DateTime.now());
+        CaseLog caseLog1 = new CaseLog("id1", "type1", "body", "url", false, DateTime.now());
+        CaseLog caseLog2 = new CaseLog("id2", "type2", "another body", "another url", false, DateTime.now());
         caseLogs.add(caseLog1);
         caseLogs.add(caseLog2);
 
         String responseMessage = responseBuilder.createResponseMessage(caseLogs);
 
+        assertTrue(responseMessage.contains("id1"));
+        assertTrue(responseMessage.contains("type1"));
+        assertTrue(responseMessage.contains("id2"));
+        assertTrue(responseMessage.contains("type2"));
         assertTrue(responseMessage.contains("body"));
         assertTrue(responseMessage.contains("another body"));
         assertTrue(responseMessage.contains("whp-test"));

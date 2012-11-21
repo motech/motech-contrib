@@ -2,6 +2,7 @@ package org.motechproject.casexml.service;
 
 import org.apache.log4j.Logger;
 import org.motechproject.casexml.builder.ResponseMessageBuilder;
+import org.motechproject.casexml.contract.CaseXmlRequest;
 import org.motechproject.casexml.domain.CaseLog;
 import org.motechproject.casexml.exception.CaseParserException;
 import org.motechproject.casexml.parser.CommcareCaseParser;
@@ -15,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
-public abstract class CaseService<T> {
+public abstract class CaseService<T extends CaseXmlRequest> {
 
     private ResponseMessageBuilder responseMessageBuilder;
 
@@ -45,32 +46,38 @@ public abstract class CaseService<T> {
         responseHeaders.setContentType(MediaType.TEXT_XML);
 
         CaseLog persistedLog = null;
+        String requestId = null;
+        String requestType = null;
         try {
             CommcareCaseParser<T> caseParser = new CommcareCaseParser<T>(clazz, requestEntity.getBody());
-            T object = caseParser.parseCase();
+            T caseXmlRequest = caseParser.parseCase();
+            if(caseXmlRequest != null) {
+                requestId = caseXmlRequest.getId();
+                requestType = caseXmlRequest.getType();
+            }
 
-            processCaseAction(caseParser, object);
-            persistedLog = createNewLog(request.getPathInfo(), requestEntity.getBody(), false);
+            processCaseAction(caseParser, caseXmlRequest);
+            persistedLog = createNewLog(requestId,  requestType, request.getPathInfo(), requestEntity.getBody(), false);
         } catch (CaseParserException exception) {
             logError(exception);
-            persistedLog = createNewLog(request.getPathInfo(), requestEntity.getBody(), true);
+            persistedLog = createNewLog(requestId, requestType, request.getPathInfo(), requestEntity.getBody(), true);
             return loggedResponse(new ResponseEntity<String>(responseMessageBuilder.createResponseMessage(exception), responseHeaders, HttpStatus.BAD_REQUEST), persistedLog);
 
         } catch (CaseException exception) {
             logError(exception);
-            persistedLog = createNewLog(request.getPathInfo(), requestEntity.getBody(), true);
+            persistedLog = createNewLog(requestId, requestType, request.getPathInfo(), requestEntity.getBody(), true);
             return loggedResponse(new ResponseEntity<String>(responseMessageBuilder.createResponseMessage(exception), responseHeaders, exception.getHttpStatusCode()), persistedLog);
 
         } catch (RuntimeException exception) {
             logError(exception);
-            persistedLog = createNewLog(request.getPathInfo(), requestEntity.getBody(), true);
+            persistedLog = createNewLog(requestId, requestType, request.getPathInfo(), requestEntity.getBody(), true);
             return loggedResponse(new ResponseEntity<String>(responseMessageBuilder.messageForRuntimeException(), responseHeaders, HttpStatus.INTERNAL_SERVER_ERROR), persistedLog);
         }
         return loggedResponse(new ResponseEntity<String>(responseMessageBuilder.messageForSuccess(), responseHeaders, HttpStatus.OK), persistedLog);
     }
 
-    private CaseLog createNewLog(String requestURI, String requestBody, boolean hasException) {
-        return new CaseLog(requestBody, requestURI, hasException, DateUtil.now().withMillisOfSecond(0));
+    private CaseLog createNewLog(String requestId, String requestType, String requestURI, String requestBody, boolean hasException) {
+        return new CaseLog(requestId, requestType, requestBody, requestURI, hasException, DateUtil.now().withMillisOfSecond(0));
     }
 
     private void log(CaseLog log) {

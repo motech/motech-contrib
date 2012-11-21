@@ -27,7 +27,7 @@ public class CaseLogsResponseBuilder {
     public String createResponseMessage(List<CaseLog> caseLogs) {
         Template template = velocityEngine.getTemplate(VIEW_PATH);
         VelocityContext context = new VelocityContext();
-        context.put("contextPath", caseLogConfiguration.contextPath());
+        context.put("endpoint", caseLogConfiguration.contextPath());
         context.put("caseLogs", caseLogs);
         StringWriter writer = new StringWriter();
         template.merge(context, writer);

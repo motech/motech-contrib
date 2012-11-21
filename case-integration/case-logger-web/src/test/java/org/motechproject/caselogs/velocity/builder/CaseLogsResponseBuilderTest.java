@@ -38,8 +38,8 @@ public class CaseLogsResponseBuilderTest {
         String viewPath = "case-logger-web/views/content/logs.vm";
         String contextPath = "context path";
         List<CaseLog> caseLogs = new ArrayList<>();
-        CaseLog caseLog1 = new CaseLog("body", "url", false, DateTime.now());
-        CaseLog caseLog2 = new CaseLog("another body", "another url", false, DateTime.now());
+        CaseLog caseLog1 = new CaseLog("id1", "type1", "body", "url", false, DateTime.now());
+        CaseLog caseLog2 = new CaseLog("id2", "type2", "another body", "another url", false, DateTime.now());
         caseLogs.add(caseLog1);
         caseLogs.add(caseLog2);
 

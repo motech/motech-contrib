@@ -8,7 +8,9 @@ import org.motechproject.util.DateUtil;
 @TypeDiscriminator("doc.type === 'CaseLog'")
 public class CaseLog extends MotechBaseDataObject {
 
-    private String contextPath;
+    private String endpoint;
+    private String entityId;
+    private String requestType;
     private String request;
     private boolean hasException;
     private String response;
@@ -17,19 +19,21 @@ public class CaseLog extends MotechBaseDataObject {
     public CaseLog() {
     }
 
-    public CaseLog(String requestBody, String requestURI, boolean hasException, DateTime logDate) {
+    public CaseLog(String entityId, String requestType, String requestBody, String requestURI, boolean hasException, DateTime logDate) {
+        this.entityId = entityId;
+        this.requestType = requestType;
         request = requestBody;
-        contextPath = requestURI;
+        endpoint = requestURI;
         this.hasException = hasException;
         this.logDate = logDate;
     }
 
-    public String getContextPath() {
-        return contextPath;
+    public String getEndpoint() {
+        return endpoint;
     }
 
-    public void setContextPath(String contextPath) {
-        this.contextPath = contextPath;
+    public void setEndpoint(String endpoint) {
+        this.endpoint = endpoint;
     }
 
     public String getRequest() {
@@ -62,5 +66,21 @@ public class CaseLog extends MotechBaseDataObject {
 
     public void setLogDate(DateTime logDate) {
         this.logDate = DateUtil.setTimeZone(logDate);
+    }
+
+    public String getEntityId() {
+        return entityId;
+    }
+
+    public void setEntityId(String entityId) {
+        this.entityId = entityId;
+    }
+
+    public String getRequestType() {
+        return requestType;
+    }
+
+    public void setRequestType(String requestType) {
+        this.requestType = requestType;
     }
 }
