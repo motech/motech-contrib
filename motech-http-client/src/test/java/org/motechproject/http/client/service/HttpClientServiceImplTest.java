@@ -87,4 +87,27 @@ public class HttpClientServiceImplTest {
         assertEquals(data, (String) parameters.get(EventDataKeys.DATA));
         assertEquals(url, parameters.get(EventDataKeys.URL));
     }
+
+    @Test
+    public void shouldAddHeadersWithPutRequest() {
+        Map<String, String> headers = new HashMap<>();
+        String apiKeyValue = "12345";
+        String data = "data";
+        String url = "url";
+        String key = "api-key";
+        headers.put(key, apiKeyValue);
+
+        httpClientService.put(url, data, headers);
+
+        ArgumentCaptor<MotechEvent> motechEventCaptor = ArgumentCaptor.forClass(MotechEvent.class);
+        verify(mockCommunicationType).send(motechEventCaptor.capture());
+        MotechEvent motechEvent = motechEventCaptor.getValue();
+        Map<String, Object> parameters = motechEvent.getParameters();
+        HashMap<String,String> actualHeaders = (HashMap<String, String>) parameters.get(EventDataKeys.HEADERS);
+
+        assertEquals(apiKeyValue, actualHeaders.get(key));
+        assertEquals(Method.PUT, parameters.get(EventDataKeys.METHOD));
+        assertEquals(data, (String) parameters.get(EventDataKeys.DATA));
+        assertEquals(url, parameters.get(EventDataKeys.URL));
+    }
 }

@@ -39,6 +39,13 @@ public class HttpClientServiceImpl implements HttpClientService {
         communicationType.send(motechEvent);
     }
 
+    @Override
+    public void put(String url, Object data, Map<String, String> headers) {
+        HashMap<String, Object> parameters = constructParametersFrom(url, data, Method.PUT, headers);
+        MotechEvent motechEvent = new MotechEvent(EventSubjects.HTTP_REQUEST, parameters);
+        communicationType.send(motechEvent);
+    }
+
     private HashMap<String, Object> constructParametersFrom(String url, Object data, Method method, Map<String, String> headers) {
         HashMap<String, Object> parameters = new HashMap<>();
         parameters.put(EventDataKeys.URL, url);

@@ -8,4 +8,6 @@ public interface HttpClientService {
     void post(String Url, Object data, Map<String, String> headers);
 
     void put(String url, Object data);
+
+    void put(String url, Object data, Map<String, String> headers);
 }

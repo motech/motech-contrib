@@ -30,8 +30,8 @@ public class HttpClientEventListener {
         String url = String.valueOf(parameters.get(EventDataKeys.URL));
         Object requestData = parameters.get(EventDataKeys.DATA);
         Method method = (Method) parameters.get(EventDataKeys.METHOD);
-        Map<String,String> headers = (Map<String, String>) parameters.get(EventDataKeys.HEADERS);
-        logger.info(String.format("Posting Http request -- Url: %s, Data: %s", url, String.valueOf(requestData)));
+        Map<String, String> headers = (Map<String, String>) parameters.get(EventDataKeys.HEADERS);
+        logger.info(String.format("Posting Http request -- Url: %s, Data: %s, Headers: %s", url, String.valueOf(requestData), headers));
         executeFor(url, requestData, method, headers);
     }
 
