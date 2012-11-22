@@ -56,6 +56,10 @@
 
     <repositories>
         <repository>
+            <id>maven-central</id>
+            <url>http://repo1.maven.org/maven2/</url>
+        </repository>
+        <repository>
             <id>sonatype-repo</id>
             <url>https://repository.sonatype.org/content/groups/forge/</url>
         </repository>
