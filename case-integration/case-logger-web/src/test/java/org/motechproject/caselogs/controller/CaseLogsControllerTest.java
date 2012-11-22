@@ -6,6 +6,7 @@ import org.mockito.Mock;
 import org.motechproject.caselogs.velocity.builder.CaseLogsResponseBuilder;
 import org.motechproject.casexml.domain.CaseLog;
 import org.motechproject.casexml.service.CaseLogService;
+import org.springframework.test.web.server.RequestBuilder;
 
 import java.util.ArrayList;
 
@@ -14,6 +15,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 import static org.springframework.test.web.server.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.server.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.server.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.server.setup.MockMvcBuilders.standaloneSetup;
 
@@ -42,11 +44,31 @@ public class CaseLogsControllerTest {
         standaloneSetup(caseLogsController)
                 .build()
                 .perform(get("/caselogs/all")
-        ).andExpect(
+                ).andExpect(
                 content().string(containsString(expectedLogs))
         );
 
         verify(caseLogService).getAll();
+        verify(caseLogsResponseBuilder).createResponseMessage(caseLogs);
+    }
+
+    @Test
+    public void shouldFilterCaseLogs_byEntityIdAndOrRequestType() throws Exception {
+        ArrayList<CaseLog> caseLogs = new ArrayList<>();
+        String entityId = "entityId";
+        String requestType = "Container Registration";
+        when(caseLogService.filter(entityId, requestType)).thenReturn(caseLogs);
+        String expectedLogs = "our own case logs";
+        when(caseLogsResponseBuilder.createResponseMessage(caseLogs)).thenReturn(expectedLogs);
+
+        standaloneSetup(caseLogsController)
+                .build()
+                .perform(post("/caselogs/filter").param("entityId", entityId).param("requestType", requestType)
+                ).andExpect(
+                content().string(containsString(expectedLogs))
+        );
+
+        verify(caseLogService).filter(entityId, requestType);
         verify(caseLogsResponseBuilder).createResponseMessage(caseLogs);
     }
 }

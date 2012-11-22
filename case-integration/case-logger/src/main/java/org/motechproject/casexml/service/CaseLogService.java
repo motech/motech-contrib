@@ -2,6 +2,7 @@ package org.motechproject.casexml.service;
 
 import org.motechproject.casexml.domain.CaseLog;
 import org.motechproject.casexml.repository.AllCaseLogs;
+import org.motechproject.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,5 +23,15 @@ public class CaseLogService {
 
     public List<CaseLog> getAll() {
         return allCaseLogs.getAll();
+    }
+
+    public List<CaseLog> filter(String entityId, String requestType) {
+
+        if (!StringUtil.isNullOrEmpty(entityId) && !StringUtil.isNullOrEmpty(requestType)) {
+            return allCaseLogs.filterByEntityIdAndRequestType(entityId, requestType);
+        } else {
+            return !StringUtil.isNullOrEmpty(entityId) ? allCaseLogs.filterByEntityId(entityId) :
+                    (!StringUtil.isNullOrEmpty(requestType) ? allCaseLogs.filterByRequestType(requestType) : getAll());
+        }
     }
 }
