@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.HashMap;
+import java.util.Map;
 
 @Service
 public class HttpClientServiceImpl implements HttpClientService {
@@ -24,34 +25,52 @@ public class HttpClientServiceImpl implements HttpClientService {
 
     @Override
     public void post(String url, Object data) {
-        HashMap<String, Object> parameters = constructParametersFrom(url, data, Method.POST);
-        sendMessage(parameters);
+        execute(url, data, Method.POST, null);
+    }
+
+    @Override
+    public void post(String url, Object data, Map<String, String> headers) {
+        execute(url, data, Method.POST, headers);
     }
 
     @Override
     public void put(String url, Object data) {
-        HashMap<String, Object> parameters = constructParametersFrom(url, data, Method.PUT);
-        sendMessage(parameters);
+        execute(url, data, Method.PUT, null);
+    }
+
+    @Override
+    public void put(String url, Object data, Map<String, String> headers) {
+        execute(url, data, Method.PUT, headers);
     }
 
     @Override
     public void execute(String url, Object data, Method method) {
-        HashMap<String, Object> parameters = constructParametersFrom(url, data, method);
+        execute(url, data, method, null);
+    }
+
+    @Override
+    public void execute(String url, Object data, Method method, Map<String, String> headers) {
+        HashMap<String, Object> parameters = constructParametersFrom(url, data, headers, method);
         sendMessage(parameters);
     }
 
     @Override
     public void executeSync(String url, Object data, Method method) {
-        HashMap<String, Object> parameters = constructParametersFrom(url, data, method);
+        executeSync(url, data, method, null);
+    }
+
+    @Override
+    public void executeSync(String url, Object data, Method method, Map<String, String> headers) {
+        HashMap<String, Object> parameters = constructParametersFrom(url, data, headers, method);
         sendMessageSync(parameters);
     }
 
-
-    private HashMap<String, Object> constructParametersFrom(String url, Object data, Method method) {
+    private HashMap<String, Object> constructParametersFrom(String url, Object data, Map<String, String> headers, Method method) {
         HashMap<String, Object> parameters = new HashMap<>();
         parameters.put(EventDataKeys.URL, url);
         parameters.put(EventDataKeys.METHOD, method);
         parameters.put(EventDataKeys.DATA, data);
+        parameters.put(EventDataKeys.HEADERS, headers);
         return parameters;
     }
 
