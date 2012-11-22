@@ -122,4 +122,73 @@ public class HttpClientServiceImplTest {
         assertEquals(data, (String) parameters.get(EventDataKeys.DATA));
         assertEquals(url, parameters.get(EventDataKeys.URL));
     }
+
+    @Test
+    public void shouldAddAPIHeadersWithPutWithHeaders() {
+        Map<String, String> headers = new HashMap<>();
+        String data = "data";
+        String url = "url";
+        String key = "api-key";
+        String apiKeyValue = "12345";
+        headers.put(key, apiKeyValue);
+
+        httpClientService.put(url, data, headers);
+
+        ArgumentCaptor<MotechEvent> motechEventCaptor = ArgumentCaptor.forClass(MotechEvent.class);
+        verify(mockCommunicationType).send(motechEventCaptor.capture());
+        MotechEvent motechEvent = motechEventCaptor.getValue();
+        Map<String, Object> parameters = motechEvent.getParameters();
+        HashMap<String, String> actualHeaders = (HashMap<String, String>) parameters.get(EventDataKeys.HEADERS);
+
+        assertEquals(apiKeyValue, actualHeaders.get(key));
+        assertEquals(Method.PUT, parameters.get(EventDataKeys.METHOD));
+        assertEquals(data, (String) parameters.get(EventDataKeys.DATA));
+        assertEquals(url, parameters.get(EventDataKeys.URL));
+    }
+
+    @Test
+    public void shouldAddAPIHeadersForExecuteRequests() {
+        Map<String, String> headers = new HashMap<>();
+        String url = "someurl";
+        String data = "data";
+        String key = "api-key";
+        String apiKeyValue = "12345";
+        headers.put(key, apiKeyValue);
+
+        httpClientService.execute(url, data, Method.POST, headers);
+
+        ArgumentCaptor<MotechEvent> motechEventArgumentCaptor = ArgumentCaptor.forClass(MotechEvent.class);
+        verify(mockCommunicationType).send(motechEventArgumentCaptor.capture());
+        MotechEvent motechEvent = motechEventArgumentCaptor.getValue();
+        Map<String, Object> parameters = motechEvent.getParameters();
+        HashMap<String, String> actualHeaders = (HashMap<String, String>) parameters.get(EventDataKeys.HEADERS);
+
+        assertEquals(apiKeyValue, actualHeaders.get(key));
+        assertEquals(Method.POST, motechEvent.getParameters().get(EventDataKeys.METHOD));
+        assertEquals(data, (String) motechEvent.getParameters().get(EventDataKeys.DATA));
+        assertEquals(url, motechEvent.getParameters().get(EventDataKeys.URL));
+    }
+
+    @Test
+    public void shouldExecuteSynchronousCallsWithHeaders() {
+        Map<String, String> headers = new HashMap<>();
+        String url = "someurl";
+        String data = "data";
+        String key = "api-key";
+        String apiKeyValue = "1234";
+        headers.put(key, apiKeyValue);
+
+        httpClientService.executeSync(url, data, Method.POST, headers);
+
+        ArgumentCaptor<MotechEvent> motechEventArgumentCaptor = ArgumentCaptor.forClass(MotechEvent.class);
+        verify(synchronousCall).send(motechEventArgumentCaptor.capture());
+        MotechEvent motechEvent = motechEventArgumentCaptor.getValue();
+        Map<String, Object> parameters = motechEvent.getParameters();
+        HashMap<String, String> actualHeaders = (HashMap<String, String>) parameters.get(EventDataKeys.HEADERS);
+
+        assertEquals(apiKeyValue, actualHeaders.get(key));
+        assertEquals(Method.POST, motechEvent.getParameters().get(EventDataKeys.METHOD));
+        assertEquals(data, (String) motechEvent.getParameters().get(EventDataKeys.DATA));
+        assertEquals(url, motechEvent.getParameters().get(EventDataKeys.URL));
+    }
 }
