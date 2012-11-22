@@ -4,6 +4,7 @@ import org.ektorp.support.TypeDiscriminator;
 import org.joda.time.DateTime;
 import org.motechproject.model.MotechBaseDataObject;
 import org.motechproject.util.DateUtil;
+import org.motechproject.util.StringUtil;
 
 @TypeDiscriminator("doc.type === 'CaseLog'")
 public class CaseLog extends MotechBaseDataObject {
@@ -53,7 +54,7 @@ public class CaseLog extends MotechBaseDataObject {
     }
 
     public String getResponse() {
-        return response;
+        return StringUtil.isNullOrEmpty(response) ? "Null" : response;
     }
 
     public void setResponse(String response) {

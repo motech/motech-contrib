@@ -41,6 +41,7 @@ public class CaseLogsController {
     public void filterLogs(@RequestParam("entityId") String entityId, @RequestParam("requestType") String requestType, HttpServletResponse response) throws IOException {
         List<CaseLog> allCaseLogs = caseLogService.filter(entityId, requestType);
         String caseLogsResponse = caseLogsResponseBuilder.createResponseMessage(allCaseLogs);
+
         response.getOutputStream().print(caseLogsResponse);
     }
 }
