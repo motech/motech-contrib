@@ -1,4 +1,4 @@
-#parse( "case-logger-web/views/content/header.vm" )
+#parse( "case-log-browser/views/content/header.vm" )
 
 <br/><br/>
 
@@ -33,4 +33,4 @@
     </div>
 </div>
 
-#parse( "case-logger-web/views/content/footer.vm" )
+#parse( "case-log-browser/views/content/footer.vm" )

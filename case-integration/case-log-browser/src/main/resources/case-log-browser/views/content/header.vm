@@ -7,11 +7,11 @@
     <base href="/$endpoint/">
 
     <link rel="shortcut icon" href="assets/ico/favicon.ico">
-    <link href="case-logger-web/css/bootstrap.css" rel="stylesheet">
-    <link href="case-logger-web/css/bootstrap-responsive.css" rel="stylesheet">
+    <link href="case-log-browser/css/bootstrap.css" rel="stylesheet">
+    <link href="case-log-browser/css/bootstrap-responsive.css" rel="stylesheet">
 
-    <script src="case-logger-web/js/jquery-min.js"></script>
-    <script src="case-logger-web/js/bootstrap.js"></script>
+    <script src="case-log-browser/js/jquery-min.js"></script>
+    <script src="case-log-browser/js/bootstrap.js"></script>
 </head>
 
 <body>
