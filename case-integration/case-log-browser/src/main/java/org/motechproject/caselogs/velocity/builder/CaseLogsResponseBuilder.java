@@ -14,7 +14,7 @@ import java.util.List;
 @Component
 public class CaseLogsResponseBuilder {
 
-    public static final String VIEW_PATH = "case-logger-web/views/content/logs.vm";
+    public static final String VIEW_PATH = "case-log-browser/views/content/logs.vm";
     private VelocityEngine velocityEngine;
     private CaseLogConfiguration caseLogConfiguration;
 

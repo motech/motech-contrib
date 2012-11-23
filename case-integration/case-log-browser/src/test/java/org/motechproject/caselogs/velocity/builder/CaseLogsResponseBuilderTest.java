@@ -35,7 +35,7 @@ public class CaseLogsResponseBuilderTest {
 
     @Test
     public void shouldBuildResponseFromCaseLogs() {
-        String viewPath = "case-logger-web/views/content/logs.vm";
+        String viewPath = "case-log-browser/views/content/logs.vm";
         String contextPath = "context path";
         List<CaseLog> caseLogs = new ArrayList<>();
         CaseLog caseLog1 = new CaseLog("id1", "type1", "body", "url", false, DateTime.now());

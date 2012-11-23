@@ -20,7 +20,7 @@
         <module>case-common</module>
         <module>case-service</module>
         <module>case-logger</module>
-        <module>case-logger-web</module>
+        <module>case-log-browser</module>
         <module>commcare-case-gateway</module>
         <module>openrosa-registration-service</module>
     </modules>
