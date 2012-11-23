@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletResponse;
-
 import java.io.IOException;
 import java.util.List;
 
@@ -20,6 +19,9 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
 @Controller
 @RequestMapping(value = "/caselogs/")
 public class CaseLogsController {
+
+    public static final String CONTENT_PATH = "case-log-browser/views/content/body.vm";
+    public static final String VIEW_PATH = "case-log-browser/views/content/logs.vm";
 
     private final CaseLogService caseLogService;
     private final CaseLogsResponseBuilder caseLogsResponseBuilder;
@@ -33,14 +35,14 @@ public class CaseLogsController {
     @RequestMapping(value = "all", method = GET)
     public void showAllLogs(HttpServletResponse response) throws IOException {
         List<CaseLog> allCaseLogs = caseLogService.getAll();
-        String caseLogsResponse = caseLogsResponseBuilder.createResponseMessage(allCaseLogs);
+        String caseLogsResponse = caseLogsResponseBuilder.createResponseMessage(allCaseLogs, CaseLogsController.VIEW_PATH);
         response.getOutputStream().print(caseLogsResponse);
     }
 
     @RequestMapping(value = "filter", method = POST)
     public void filterLogs(@RequestParam("entityId") String entityId, @RequestParam("requestType") String requestType, HttpServletResponse response) throws IOException {
         List<CaseLog> allCaseLogs = caseLogService.filter(entityId, requestType);
-        String caseLogsResponse = caseLogsResponseBuilder.createResponseMessage(allCaseLogs);
+        String caseLogsResponse = caseLogsResponseBuilder.createResponseMessage(allCaseLogs, CONTENT_PATH);
 
         response.getOutputStream().print(caseLogsResponse);
     }

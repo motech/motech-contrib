@@ -14,7 +14,6 @@ import java.util.List;
 @Component
 public class CaseLogsResponseBuilder {
 
-    public static final String VIEW_PATH = "case-log-browser/views/content/logs.vm";
     private VelocityEngine velocityEngine;
     private CaseLogConfiguration caseLogConfiguration;
 
@@ -24,8 +23,8 @@ public class CaseLogsResponseBuilder {
         this.caseLogConfiguration = caseLogConfiguration;
     }
 
-    public String createResponseMessage(List<CaseLog> caseLogs) {
-        Template template = velocityEngine.getTemplate(VIEW_PATH);
+    public String createResponseMessage(List<CaseLog> caseLogs, String viewPath) {
+        Template template = velocityEngine.getTemplate(viewPath);
         VelocityContext context = new VelocityContext();
         context.put("endpoint", caseLogConfiguration.contextPath());
         context.put("caseLogs", caseLogs);

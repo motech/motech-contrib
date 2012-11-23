@@ -6,7 +6,6 @@ import org.mockito.Mock;
 import org.motechproject.caselogs.velocity.builder.CaseLogsResponseBuilder;
 import org.motechproject.casexml.domain.CaseLog;
 import org.motechproject.casexml.service.CaseLogService;
-import org.springframework.test.web.server.RequestBuilder;
 
 import java.util.ArrayList;
 
@@ -39,7 +38,7 @@ public class CaseLogsControllerTest {
         ArrayList<CaseLog> caseLogs = new ArrayList<>();
         when(caseLogService.getAll()).thenReturn(caseLogs);
         String expectedLogs = "our own case logs";
-        when(caseLogsResponseBuilder.createResponseMessage(caseLogs)).thenReturn(expectedLogs);
+        when(caseLogsResponseBuilder.createResponseMessage(caseLogs, CaseLogsController.VIEW_PATH)).thenReturn(expectedLogs);
 
         standaloneSetup(caseLogsController)
                 .build()
@@ -49,7 +48,7 @@ public class CaseLogsControllerTest {
         );
 
         verify(caseLogService).getAll();
-        verify(caseLogsResponseBuilder).createResponseMessage(caseLogs);
+        verify(caseLogsResponseBuilder).createResponseMessage(caseLogs, CaseLogsController.VIEW_PATH);
     }
 
     @Test
@@ -59,7 +58,7 @@ public class CaseLogsControllerTest {
         String requestType = "Container Registration";
         when(caseLogService.filter(entityId, requestType)).thenReturn(caseLogs);
         String expectedLogs = "our own case logs";
-        when(caseLogsResponseBuilder.createResponseMessage(caseLogs)).thenReturn(expectedLogs);
+        when(caseLogsResponseBuilder.createResponseMessage(caseLogs, CaseLogsController.CONTENT_PATH)).thenReturn(expectedLogs);
 
         standaloneSetup(caseLogsController)
                 .build()
@@ -69,6 +68,6 @@ public class CaseLogsControllerTest {
         );
 
         verify(caseLogService).filter(entityId, requestType);
-        verify(caseLogsResponseBuilder).createResponseMessage(caseLogs);
+        verify(caseLogsResponseBuilder).createResponseMessage(caseLogs, CaseLogsController.CONTENT_PATH);
     }
 }

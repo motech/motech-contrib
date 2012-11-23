@@ -47,7 +47,7 @@ public class CaseLogsResponseBuilderTest {
         when(velocityEngine.getTemplate(viewPath)).thenReturn(template);
         when(caseLogConfiguration.contextPath()).thenReturn(contextPath);
 
-        responseBuilder.createResponseMessage(caseLogs);
+        responseBuilder.createResponseMessage(caseLogs, viewPath);
 
         verify(velocityEngine).getTemplate(viewPath);
         verify(caseLogConfiguration).contextPath();

@@ -22,13 +22,16 @@ public class CaseLogsResponseBuilderIT {
 
     @Test
     public void shouldBuildResponseFromCaseLogs() {
+        String viewPath = "case-log-browser/views/content/logs.vm";
+
         List<CaseLog> caseLogs = new ArrayList<>();
         CaseLog caseLog1 = new CaseLog("id1", "type1", "body", "url", false, DateTime.now());
         CaseLog caseLog2 = new CaseLog("id2", "type2", "another body", "another url", false, DateTime.now());
         caseLogs.add(caseLog1);
         caseLogs.add(caseLog2);
 
-        String responseMessage = responseBuilder.createResponseMessage(caseLogs);
+
+        String responseMessage = responseBuilder.createResponseMessage(caseLogs, viewPath);
 
         assertTrue(responseMessage.contains("id1"));
         assertTrue(responseMessage.contains("type1"));
