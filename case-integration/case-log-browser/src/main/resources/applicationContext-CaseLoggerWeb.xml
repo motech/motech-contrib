@@ -7,6 +7,7 @@
 
     <context:component-scan base-package="org.motechproject.caselogs"/>
     <context:annotation-config/>
+
     <util:properties id="caseLogProperties" location="classpath:caseLog.properties"/>
 
     <import resource="classpath:applicationContext-caselogger.xml"/>

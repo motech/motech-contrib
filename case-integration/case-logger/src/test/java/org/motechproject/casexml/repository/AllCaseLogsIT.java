@@ -16,12 +16,14 @@ import static junit.framework.Assert.*;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = "classpath:applicationContext-caselogger.xml")
 public class AllCaseLogsIT {
+
     private static final String ID_1 = "id1";
     private static final String ID_2 = "id2";
     private static final String ID_3 = "id3";
     private static final String ID_4 = "id4";
     private static final String TYPE_1 = "type1";
     private static final String TYPE_2 = "type2";
+    public static final int NUMBER_OF_TEST_LOGS = 4;
     private CaseLog log1;
     private CaseLog log2;
     private CaseLog log3;
@@ -51,11 +53,17 @@ public class AllCaseLogsIT {
     }
 
     @Test
+    public void shouldLimitLogsBasedOnConfiguredLimit() {
+        List<CaseLog> caseLogs = allCaseLogs.getLatestLogs(NUMBER_OF_TEST_LOGS - 2);
+        assertEquals(NUMBER_OF_TEST_LOGS - 2, caseLogs.size());
+    }
+
+    @Test
     public void shouldFilterCaseLogsByEntityId() {
-        List<CaseLog> caseLogs = allCaseLogs.filterByEntityId("junk");
+        List<CaseLog> caseLogs = allCaseLogs.filterByEntityId("junk", NUMBER_OF_TEST_LOGS);
         assertTrue(caseLogs.isEmpty());
 
-        caseLogs = allCaseLogs.filterByEntityId(ID_1);
+        caseLogs = allCaseLogs.filterByEntityId(ID_1, NUMBER_OF_TEST_LOGS);
         assertNotNull(caseLogs);
         assertEquals(1, caseLogs.size());
         assertEquals(ID_1, caseLogs.get(0).getEntityId());
@@ -63,10 +71,10 @@ public class AllCaseLogsIT {
 
     @Test
     public void shouldFilterCaseLogsByRequestType() {
-        List<CaseLog> caseLogs = allCaseLogs.filterByRequestType("junk");
+        List<CaseLog> caseLogs = allCaseLogs.filterByRequestType("junk", NUMBER_OF_TEST_LOGS);
         assertTrue(caseLogs.isEmpty());
 
-        caseLogs = allCaseLogs.filterByRequestType(TYPE_1);
+        caseLogs = allCaseLogs.filterByRequestType(TYPE_1, NUMBER_OF_TEST_LOGS);
         assertNotNull(caseLogs);
         assertEquals(2, caseLogs.size());
         assertEquals(TYPE_1, caseLogs.get(0).getRequestType());
@@ -75,10 +83,10 @@ public class AllCaseLogsIT {
 
     @Test
     public void shouldFilterCaseLogsByEntityIdAndRequestType() {
-        List<CaseLog> caseLogs = allCaseLogs.filterByEntityIdAndRequestType("junk", "junk");
+        List<CaseLog> caseLogs = allCaseLogs.filterByEntityIdAndRequestType("junk", "junk", NUMBER_OF_TEST_LOGS);
         assertTrue(caseLogs.isEmpty());
 
-        caseLogs = allCaseLogs.filterByEntityIdAndRequestType(ID_3, TYPE_2);
+        caseLogs = allCaseLogs.filterByEntityIdAndRequestType(ID_3, TYPE_2, NUMBER_OF_TEST_LOGS);
         assertNotNull(caseLogs);
         assertEquals(1, caseLogs.size());
         assertEquals(ID_3, caseLogs.get(0).getEntityId());

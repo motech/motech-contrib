@@ -2,14 +2,17 @@ package org.motechproject.casexml.service;
 
 import org.motechproject.casexml.domain.CaseLog;
 import org.motechproject.casexml.repository.AllCaseLogs;
-import org.motechproject.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
+
+import static org.motechproject.util.StringUtil.isNullOrEmpty;
 
 @Service
 public class CaseLogService {
+
     private AllCaseLogs allCaseLogs;
 
     @Autowired
@@ -21,17 +24,16 @@ public class CaseLogService {
         allCaseLogs.add(caseLog);
     }
 
-    public List<CaseLog> getAll() {
-        return allCaseLogs.getAll();
+    public List<CaseLog> getLatestLogs(int limit) {
+        return allCaseLogs.getLatestLogs(limit);
     }
 
-    public List<CaseLog> filter(String entityId, String requestType) {
-
-        if (!StringUtil.isNullOrEmpty(entityId) && !StringUtil.isNullOrEmpty(requestType)) {
-            return allCaseLogs.filterByEntityIdAndRequestType(entityId, requestType);
+    public List<CaseLog> filter(String entityId, String requestType, int limit) {
+        if (!isNullOrEmpty(entityId) && !isNullOrEmpty(requestType)) {
+            return allCaseLogs.filterByEntityIdAndRequestType(entityId, requestType, limit);
         } else {
-            return !StringUtil.isNullOrEmpty(entityId) ? allCaseLogs.filterByEntityId(entityId) :
-                    (!StringUtil.isNullOrEmpty(requestType) ? allCaseLogs.filterByRequestType(requestType) : getAll());
+            return !isNullOrEmpty(entityId) ? allCaseLogs.filterByEntityId(entityId, limit) :
+                    (!isNullOrEmpty(requestType) ? allCaseLogs.filterByRequestType(requestType, limit) : Collections.<CaseLog>emptyList());
         }
     }
 }

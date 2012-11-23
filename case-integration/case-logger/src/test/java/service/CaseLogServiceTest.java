@@ -34,30 +34,30 @@ public class CaseLogServiceTest {
 
     @Test
     public void shouldGetAllCaseLogs() {
-        caseLogService.getAll();
+        caseLogService.getLatestLogs(2);
 
-        verify(allCaseLogs).getAll();
+        verify(allCaseLogs).getLatestLogs(2);
     }
 
     @Test
     public void shouldFilterCaseLogsByEntityId() {
         String entityId = "entityId";
-        caseLogService.filter(entityId, null);
-        verify(allCaseLogs).filterByEntityId(entityId);
+        caseLogService.filter(entityId, null, 2);
+        verify(allCaseLogs).filterByEntityId(entityId, 2);
     }
 
     @Test
     public void shouldFilterCaseLogsByRequestType() {
         String requestType = "requestType";
-        caseLogService.filter(null, requestType);
-        verify(allCaseLogs).filterByRequestType(requestType);
+        caseLogService.filter(null, requestType, 2);
+        verify(allCaseLogs).filterByRequestType(requestType, 2);
     }
 
     @Test
     public void shouldFilterCaseLogsByEntityIdAndRequestType() {
         String entityId = "entityId";
         String requestType = "requestType";
-        caseLogService.filter(entityId, requestType);
-        verify(allCaseLogs).filterByEntityIdAndRequestType(entityId, requestType);
+        caseLogService.filter(entityId, requestType, 2);
+        verify(allCaseLogs).filterByEntityIdAndRequestType(entityId, requestType, 2);
     }
 }
