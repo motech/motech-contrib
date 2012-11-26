@@ -23,8 +23,8 @@
     </bean>
 
     <bean id="springBatchDiagnosticsCredentials" class="org.apache.commons.httpclient.UsernamePasswordCredentials">
-        <constructor-arg value="${spring.batch.username}"/>
-        <constructor-arg value="${spring.batch.password}"/>
+        <constructor-arg value="${spring.batch.username:}"/>
+        <constructor-arg value="${spring.batch.password:}"/>
     </bean>
 
     <bean id="springBatchDiagnosticsHttpClientFactory" class="org.springframework.http.client.CommonsClientHttpRequestFactory">

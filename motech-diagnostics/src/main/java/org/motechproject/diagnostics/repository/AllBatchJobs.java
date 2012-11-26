@@ -19,7 +19,7 @@ import java.util.Set;
 @Repository
 public class AllBatchJobs {
 
-    @Value("${spring.batch.api.end.point}")
+    @Value("${spring.batch.api.end.point:}")
     private String springBatchServiceEndPoint;
 
     @Autowired
@@ -27,7 +27,7 @@ public class AllBatchJobs {
     private CommonsClientHttpRequestFactory httpClientFactory;
 
     public boolean canFetchData() {
-        return !"${spring.batch.api.end.point}".equals(springBatchServiceEndPoint);
+        return !"".equals(springBatchServiceEndPoint);
     }
 
     public List<BatchJob> fetchAll() {

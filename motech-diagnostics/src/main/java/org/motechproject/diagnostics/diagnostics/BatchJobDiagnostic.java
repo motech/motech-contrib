@@ -38,7 +38,7 @@ public class BatchJobDiagnostic implements Diagnostics {
 
     @Override
     public String name() {
-        return null;
+        return DiagnosticServiceName.SPRING_BATCH;
     }
 
     @Override
