@@ -20,7 +20,7 @@
     <div class="navbar-inner">
         <div class="container-fluid">
             <a class="brand" href="">Home</a>
-            <a class="brand" href="caselogs/all">All CaseLogs</a>
+            <a class="brand" href="caselogs/all">Case Logs</a>
         </div>
     </div>
 </div>
