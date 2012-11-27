@@ -27,6 +27,7 @@ public class DiagnosticResponseBuilder {
         Template template = velocityEngine.getTemplate("diagnostics-web/views/content/diagnosticResponse.vm");
         VelocityContext context = new VelocityContext();
         context.put("contextPath", diagnosticConfiguration.contextPath());
+        context.put("links", diagnosticConfiguration.getLinks());
         context.put("serviceResults", serviceResults);
         StringWriter writer = new StringWriter();
         template.merge(context, writer);

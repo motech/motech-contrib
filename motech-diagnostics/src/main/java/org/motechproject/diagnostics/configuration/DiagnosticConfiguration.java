@@ -5,16 +5,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
-import java.util.Properties;
+import java.util.*;
 
 @Component
 public class DiagnosticConfiguration {
 
-    @Autowired
-    @Qualifier("diagnosticProperties")
     private Properties properties;
 
-    public DiagnosticConfiguration() {
+    @Autowired
+    public DiagnosticConfiguration(Properties diagnosticProperties) {
+        this.properties = diagnosticProperties;
     }
 
     public String activeMqQueueNames() {
@@ -34,6 +34,31 @@ public class DiagnosticConfiguration {
         return properties.getProperty("log.location");
     }
 
+
+    public List<Link> getLinks() {
+        Map<String, Link> linkMap = new TreeMap<>();
+        for(String key : properties.stringPropertyNames()){
+            if(isLinkProperty(key)){
+                createLink(key, properties.getProperty(key), linkMap);
+            }
+        }
+        return new ArrayList<>(linkMap.values());
+    }
+
+    private boolean isLinkProperty(String key) {
+        return key.startsWith("link.");
+    }
+
+    private void createLink(String key, String url, Map<String, Link> linkMap) {
+        String menuName = key.substring(key.indexOf(".") + 1, key.lastIndexOf("."));
+        String linkName = key.substring(key.lastIndexOf(".") + 1);
+
+        if(!linkMap.containsKey(menuName)){
+            linkMap.put(menuName, new Link(menuName));
+        }
+
+        linkMap.get(menuName).add(new Link(linkName, url));
+    }
 }
 
 

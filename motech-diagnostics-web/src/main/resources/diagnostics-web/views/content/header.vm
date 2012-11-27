@@ -12,6 +12,10 @@
 
     <script src="diagnostics-web/js/jquery-min.js"></script>
     <script src="diagnostics-web/js/bootstrap.js"></script>
+
+    <script type="text/javascript">
+        $('.dropdown-toggle').dropdown();
+    </script>
 </head>
 
 <body>
@@ -22,6 +26,22 @@
             <ul class="nav">
                 <li class="active"><a href="diagnostics/show/logs">Logs</a></li>
             </ul>
+
+            #foreach( $link in $links )
+            <ul class="nav">
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                        $link.name
+                        <b class="caret"></b>
+                    </a>
+                    <ul class="dropdown-menu">
+                        #foreach( $innerLink in $link.links )
+                            <li><a href="$innerLink.url" target="_new">$innerLink.name</a></li>
+                        #end
+                    </ul>
+                </li>
+            </ul>
+            #end
         </div>
     </div>
 </div>
