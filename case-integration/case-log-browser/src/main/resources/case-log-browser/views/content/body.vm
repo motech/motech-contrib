@@ -19,7 +19,7 @@
                     <td>$entry.getEntityId()</a></td>
                     <td>$entry.getRequestType()</a></td>
                     <td>$entry.getEndpoint()</a></td>
-                    <td>$entry.getRequest()</td>
+                    <td><a data-toggle="modal" class = "showRequestXml" href="#displayXML">$entry.getRequest()</a></td>
                     <td>$entry.getHasException()</td>
                     <td>$entry.getResponse()</td>
                     <td>$entry.getLogDate()</td>
@@ -29,3 +29,25 @@
         </table>
     </div>
 </div>
+
+<!-- Modal -->
+<div id="displayXML" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h3 id="myModalLabel">XML Request</h3>
+    </div>
+    <div class="modal-body">
+        <textarea class="textAreaBody" id = "requestXML" style="margin: 0px 0px 9px; height: 229px; width: 528px;"></textarea>
+    </div>
+    <div class="modal-footer">
+        <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).on("click", ".showRequestXml", function () {
+        var requestXML = $(this).html()
+        $(".modal-body #requestXML").val(requestXML);
+        $('#displayXML').modal('show');
+    });
+</script>
