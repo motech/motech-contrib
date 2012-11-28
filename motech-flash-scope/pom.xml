@@ -6,7 +6,7 @@
     <groupId>org.motechproject.whp-contrib</groupId>
     <artifactId>motech-flash-scope</artifactId>
     <name>motech-flash-scope</name>
-    <version>0.13-SNAPSHOT</version>
+    <version>0.14-SNAPSHOT</version>
 
     <properties>
         <spring-security.version>3.1.0.RELEASE</spring-security.version>
@@ -16,7 +16,7 @@
     <parent>
         <artifactId>motech-contrib</artifactId>
         <groupId>org.motechproject.whp-contrib</groupId>
-        <version>0.13-SNAPSHOT</version>
+        <version>0.14-SNAPSHOT</version>
     </parent>
 
     <repositories>
