@@ -5,7 +5,7 @@ import au.com.bytecode.opencsv.bean.HeaderColumnNameTranslateMappingStrategy;
 import org.motechproject.importer.annotation.CSVImporter;
 import org.motechproject.importer.annotation.ColumnName;
 
-import java.io.Reader;
+import java.io.FileReader;
 import java.lang.reflect.Field;
 import java.lang.reflect.Member;
 import java.lang.reflect.Method;
@@ -35,11 +35,12 @@ public class CSVDataImportProcessor extends DataImportProcessor {
         return importer.getClass().getAnnotation(CSVImporter.class).bean();
     }
 
-    public List<Object> parse(Reader reader) throws Exception {
+    public List<Object> parse(String filePath) throws Exception {
+        CSVReader reader = new CSVReader(new FileReader(filePath), ',');
         HeaderColumnNameTranslateMappingStrategy columnNameMappingStrategy = new HeaderColumnNameTranslateMappingStrategy();
         columnNameMappingStrategy.setType(bean());
         columnNameMappingStrategy.setColumnMapping(getColumnMapping());
-        return csvToBean.parse(columnNameMappingStrategy, new CSVReader(reader));
+        return csvToBean.parse(columnNameMappingStrategy, reader);
     }
 
     public static boolean isValid(Class beanClass) {
