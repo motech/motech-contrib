@@ -2,6 +2,7 @@ package org.motechproject.web.message.converters;
 
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
+import org.codehaus.jackson.annotate.JsonProperty;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
@@ -12,16 +13,20 @@ import java.util.List;
 public class Request {
 
     @XmlElement
+    @JsonProperty
     private String name;
 
     @XmlElement
+    @JsonProperty
     private int age;
 
     @XmlElement(name = "information")
+    @JsonProperty("information")
     private RequestInformation requestInformation;
 
     @XmlElement(name = "nickname")
     @XmlElementWrapper(name = "nicknames")
+    @JsonProperty("nicknames")
     private List<String> nickNames;
 
     public Request() {

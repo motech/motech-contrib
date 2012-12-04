@@ -20,6 +20,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <build.dir>../build</build.dir>
         <velocity.version>1.7</velocity.version>
+        <jackson.version>1.9.7</jackson.version>
     </properties>
 
     <modules>
