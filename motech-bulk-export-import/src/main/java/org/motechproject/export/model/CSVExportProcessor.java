@@ -2,7 +2,7 @@ package org.motechproject.export.model;
 
 import org.motechproject.export.annotation.CSVDataSource;
 import org.motechproject.export.annotation.DataProvider;
-import org.motechproject.export.utils.AnnotationUtil;
+import org.motechproject.export.utils.ReflectionUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -10,6 +10,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.motechproject.export.utils.ReflectionUtil.genericReturnType;
 
 public class CSVExportProcessor {
 
@@ -22,11 +24,11 @@ public class CSVExportProcessor {
     }
 
     public String name() {
-        return AnnotationUtil.findAnnotation(csvDataSource.getClass(), CSVDataSource.class).name();
+        return ReflectionUtil.findAnnotation(csvDataSource.getClass(), CSVDataSource.class).name();
     }
 
     public static boolean isValidDataSource(Class<?> beanClass) {
-        return AnnotationUtil.hasAnnotation(beanClass, CSVDataSource.class);
+        return ReflectionUtil.hasAnnotation(beanClass, CSVDataSource.class);
     }
 
     public List<Object> data() {
@@ -52,11 +54,11 @@ public class CSVExportProcessor {
     }
 
     public List<String> columnHeaders() {
-        return new ExportDataModel(getDataMethod().getGenericReturnType()).columnHeaders();
+        return new ExportDataModel(genericReturnType(csvDataSource, getDataMethod().getName())).columnHeaders();
     }
 
     public List<String> rowData(Object model) {
-        return new ExportDataModel(getDataMethod().getGenericReturnType()).rowData(model);
+        return new ExportDataModel(genericReturnType(csvDataSource, getDataMethod().getName())).rowData(model);
     }
 
     public ExportData getCSVData() {
@@ -73,7 +75,7 @@ public class CSVExportProcessor {
 
     private Method getDataMethod() {
         for (Method method : csvDataSource.getClass().getDeclaredMethods()) {
-            if (method.isAnnotationPresent(DataProvider.class)) {
+            if (ReflectionUtil.hasAnnotation(method, DataProvider.class)) {
                 return method;
             }
         }
