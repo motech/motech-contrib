@@ -1,7 +1,7 @@
 package org.motechproject.export.model;
 
 import org.motechproject.export.annotation.*;
-import org.motechproject.export.utils.AnnotationUtil;
+import org.motechproject.export.utils.ReflectionUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 import static org.apache.commons.lang.StringUtils.*;
+import static org.motechproject.export.utils.ReflectionUtil.genericReturnType;
 
 public class ExcelExportProcessor {
 
@@ -25,7 +26,7 @@ public class ExcelExportProcessor {
     }
 
     public String name() {
-        return AnnotationUtil.findAnnotation(excelDataSource.getClass(), ExcelDataSource.class).name();
+        return ReflectionUtil.findAnnotation(excelDataSource.getClass(), ExcelDataSource.class).name();
     }
 
     public String title() {
@@ -33,15 +34,15 @@ public class ExcelExportProcessor {
     }
 
     public static boolean isValidDataSource(Class<?> beanClass) {
-        return AnnotationUtil.hasAnnotation(beanClass, ExcelDataSource.class);
+        return ReflectionUtil.hasAnnotation(beanClass, ExcelDataSource.class);
     }
 
     public List<String> columnHeaders(String reportName) {
-        return new ExportDataModel(getDataMethod(reportName).getGenericReturnType()).columnHeaders();
+        return new ExportDataModel(genericReturnType(excelDataSource, reportName)).columnHeaders();
     }
 
     public List<String> rowData(String reportName, Object model) {
-        return new ExportDataModel(getDataMethod(reportName).getGenericReturnType()).rowData(model);
+        return new ExportDataModel(genericReturnType(excelDataSource, reportName)).rowData(model);
     }
 
     public ExportData getEntireExcelData(String reportName, Map<String, String> criteria) {
@@ -82,7 +83,7 @@ public class ExcelExportProcessor {
 
     private Method getDataMethod(String reportName) {
         for (Method method : excelDataSource.getClass().getDeclaredMethods()) {
-            if (method.isAnnotationPresent(DataProvider.class) && method.getName().equalsIgnoreCase(reportName)) {
+            if (ReflectionUtil.hasAnnotation(method, DataProvider.class) && method.getName().equalsIgnoreCase(reportName)) {
                 return method;
             }
         }
@@ -91,7 +92,7 @@ public class ExcelExportProcessor {
 
     private Method getHeaderMethod() {
         for (Method method : excelDataSource.getClass().getDeclaredMethods()) {
-            if (method.isAnnotationPresent(Header.class)) {
+            if (ReflectionUtil.hasAnnotation(method, Header.class)) {
                 return method;
             }
         }
@@ -100,7 +101,7 @@ public class ExcelExportProcessor {
 
     private Method getFooterMethod() {
         for (Method method : excelDataSource.getClass().getDeclaredMethods()) {
-            if (method.isAnnotationPresent(Footer.class)) {
+            if (ReflectionUtil.hasAnnotation(method, Footer.class)) {
                 return method;
             }
         }
