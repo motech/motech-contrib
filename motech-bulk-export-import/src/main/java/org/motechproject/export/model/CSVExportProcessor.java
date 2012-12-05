@@ -2,6 +2,7 @@ package org.motechproject.export.model;
 
 import org.motechproject.export.annotation.CSVDataSource;
 import org.motechproject.export.annotation.DataProvider;
+import org.motechproject.export.utils.AnnotationUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,11 +22,11 @@ public class CSVExportProcessor {
     }
 
     public String name() {
-        return csvDataSource.getClass().getAnnotation(CSVDataSource.class).name();
+        return AnnotationUtil.findAnnotation(csvDataSource.getClass(), CSVDataSource.class).name();
     }
 
     public static boolean isValidDataSource(Class<?> beanClass) {
-        return beanClass.isAnnotationPresent(CSVDataSource.class);
+        return AnnotationUtil.hasAnnotation(beanClass, CSVDataSource.class);
     }
 
     public List<Object> data() {
