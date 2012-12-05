@@ -1,9 +1,7 @@
 package org.motechproject.export.model;
 
-import org.motechproject.export.annotation.DataProvider;
-import org.motechproject.export.annotation.ExcelDataSource;
-import org.motechproject.export.annotation.Footer;
-import org.motechproject.export.annotation.Header;
+import org.motechproject.export.annotation.*;
+import org.motechproject.export.utils.AnnotationUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,7 +25,7 @@ public class ExcelExportProcessor {
     }
 
     public String name() {
-        return excelDataSource.getClass().getAnnotation(ExcelDataSource.class).name();
+        return AnnotationUtil.findAnnotation(excelDataSource.getClass(), ExcelDataSource.class).name();
     }
 
     public String title() {
@@ -35,7 +33,7 @@ public class ExcelExportProcessor {
     }
 
     public static boolean isValidDataSource(Class<?> beanClass) {
-        return beanClass.isAnnotationPresent(ExcelDataSource.class);
+        return AnnotationUtil.hasAnnotation(beanClass, ExcelDataSource.class);
     }
 
     public List<String> columnHeaders(String reportName) {
