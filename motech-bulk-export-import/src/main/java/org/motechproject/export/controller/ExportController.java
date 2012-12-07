@@ -1,11 +1,10 @@
 package org.motechproject.export.controller;
 
+import org.apache.log4j.Logger;
 import org.motechproject.export.service.ExportService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -14,6 +13,8 @@ import java.io.IOException;
 @Controller
 @Deprecated
 public class ExportController {
+
+    private Logger logger = Logger.getLogger(this.getClass().getName());
 
     public static final String CONTENT_DISPOSITION = "Content-Disposition";
     public static final String TEXT_CSV = "text/csv";
@@ -45,6 +46,13 @@ public class ExportController {
     private void initializeCSVResponse(HttpServletResponse response, String fileName) {
         response.setHeader(CONTENT_DISPOSITION, "inline; filename=" + fileName);
         response.setContentType(TEXT_CSV);
+    }
+
+    @ExceptionHandler(Exception.class)
+    @ResponseBody
+    public String handleException(Exception ex) {
+        logger.error("Error occurred", ex);
+        return "Error occurred while exporting.";
     }
 
 }
