@@ -21,9 +21,7 @@ import java.io.OutputStreamWriter;
 import java.nio.charset.Charset;
 import java.util.List;
 
-@Component
 public class CSVHttpMessageConverter extends AbstractHttpMessageConverter<Object> {
-    @Autowired
     public CSVHttpMessageConverter() {
         super(new MediaType("text", "csv", Charset.forName("UTF-8")));
     }
