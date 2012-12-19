@@ -6,13 +6,13 @@
     <name>motech-contrib</name>
     <artifactId>motech-contrib</artifactId>
     <groupId>org.motechproject.whp-contrib</groupId>
-    <version>0.13-SNAPSHOT</version>
+    <version>0.13</version>
 
     <packaging>pom</packaging>
 
     <properties>
         <motech.version>0.12.3</motech.version>
-        <motech.contrib.version>0.13-SNAPSHOT</motech.contrib.version>
+        <motech.contrib.version>0.13</motech.contrib.version>
         <motech.contrib.group>org.motechproject.whp-contrib</motech.contrib.group>
         <spring-security.version>3.1.0.RELEASE</spring-security.version>
         <spring.version>3.1.0.RELEASE</spring.version>

@@ -5,12 +5,12 @@
     <parent>
         <artifactId>case-integration</artifactId>
         <groupId>org.motechproject.whp-contrib</groupId>
-        <version>0.13-SNAPSHOT</version>
+        <version>0.13</version>
     </parent>
 
     <artifactId>commcare-case-gateway</artifactId>
     <groupId>org.motechproject.whp-contrib</groupId>
-    <version>0.13-SNAPSHOT</version>
+    <version>0.13</version>
     <packaging>jar</packaging>
     <name>commcare-case-gateway</name>
 

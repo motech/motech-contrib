@@ -5,13 +5,13 @@
     <parent>
         <artifactId>motech-contrib</artifactId>
         <groupId>org.motechproject.whp-contrib</groupId>
-        <version>0.13-SNAPSHOT</version>
+        <version>0.13</version>
     </parent>
 
     <name>motech-diagnostics</name>
     <artifactId>motech-diagnostics</artifactId>
     <groupId>org.motechproject.whp-contrib</groupId>
-    <version>0.13-SNAPSHOT</version>
+    <version>0.13</version>
 
     <properties>
         <spring.version>3.1.0.RELEASE</spring.version>
