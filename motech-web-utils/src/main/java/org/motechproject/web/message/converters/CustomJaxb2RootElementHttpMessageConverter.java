@@ -52,7 +52,7 @@ public class CustomJaxb2RootElementHttpMessageConverter extends Jaxb2RootElement
             }
         }
         catch (UnmarshalException ex) {
-            throw new HttpMessageNotReadableException("Could not unmarshal to [" + clazz + "]: " + ex.getMessage(), ex);
+            throw new HttpMessageNotReadableException("Unexpected element(s) present. ", ex);
 
         }
         catch (JAXBException ex) {
