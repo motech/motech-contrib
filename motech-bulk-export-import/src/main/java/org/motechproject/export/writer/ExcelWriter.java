@@ -22,7 +22,7 @@ public class ExcelWriter {
                 excelWorkbook.write(outputStream);
             outputStream.flush();
         } catch (IOException e) {
-            logger.error("Error while writing excel report to response: " + e.getMessage());
+            logger.error("Error while writing excel report to response",  e);
         }
     }
 
@@ -30,7 +30,7 @@ public class ExcelWriter {
         try {
             return new PagedExcelBuilder(excelExportProcessor, reportName).build();
         } catch (Exception e) {
-            logger.error("Error while generating excel report: " + e.getMessage());
+            logger.error("Error while generating excel report", e);
             return null;
         }
     }
