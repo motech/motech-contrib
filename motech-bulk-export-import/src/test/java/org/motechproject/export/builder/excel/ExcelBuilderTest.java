@@ -14,7 +14,7 @@ public class ExcelBuilderTest {
     public static class TestExcelBuilder extends ExcelBuilder<String> {
 
         protected TestExcelBuilder() {
-            super("Test", asList("Column 1", "Column 2"), Collections.<String>emptyList(), Collections.<String>emptyList());
+            super("Test", asList("Column 1", "Column 2"), Collections.<String>emptyList(), Collections.<String>emptyList(), Collections.<String>emptyList());
         }
 
         @Override

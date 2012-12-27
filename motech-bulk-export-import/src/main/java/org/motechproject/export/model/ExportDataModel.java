@@ -30,6 +30,14 @@ public class ExportDataModel {
         return columnHeaders;
     }
 
+    public List<String> columnFormats() {
+        List<String> columnFormats = new ArrayList<String>();
+        for (Column column : columns) {
+            columnFormats.add(column.format());
+        }
+        return columnFormats;
+    }
+
     public List<Object> rowData(Object model) {
         List<Object> rowData = new ArrayList<Object>();
         for (Column column : columns) {

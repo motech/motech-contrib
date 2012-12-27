@@ -12,7 +12,7 @@ public class WorkbookTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void shouldNotAddSheetWhenDataFitsIntoCurrentSheet() {
-        Workbook workbook = new Workbook("Test", asList("Column"), Collections.<String>emptyList(), Collections.<String>emptyList());
+        Workbook workbook = new Workbook("Test", asList("Column"), Collections.<String>emptyList(), Collections.<String>emptyList(), Collections.<String>emptyList());
         for (int i = 0; i <= Worksheet.MAX_ROW_INDEX - Worksheet.HEADER_ROW_COUNT; i++) {
             List<Object> test = asList((Object) "test");
             workbook.addRow(test);
@@ -23,7 +23,7 @@ public class WorkbookTest {
     @Test
     public void shouldAddSheetWhenDataExceedsTheLimitOfCurrentSheet() {
         List<Object> test = asList((Object)"test");
-        Workbook workbook = new Workbook("Test", asList("Column"), Collections.<String>emptyList(), Collections.<String>emptyList());
+        Workbook workbook = new Workbook("Test", asList("Column"), Collections.<String>emptyList(), Collections.<String>emptyList(), Collections.<String>emptyList());
         for (int i = 0; i <= Worksheet.MAX_ROW_INDEX - Worksheet.HEADER_ROW_COUNT; i++) {
             workbook.addRow(test);
         }

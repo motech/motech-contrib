@@ -11,10 +11,12 @@ public class Column implements Comparable<Column> {
 
     private Method method;
     private Integer order;
+    private String format;
 
     public Column(Method method) {
         this.method = method;
         order = method.getAnnotation(ExportValue.class).index();
+        format = method.getAnnotation(ExportValue.class).format();
     }
 
     public String name() {
@@ -50,5 +52,9 @@ public class Column implements Comparable<Column> {
             return exportValue.column();
         }
         return null;
+    }
+
+    public String format() {
+        return format;
     }
 }
