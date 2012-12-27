@@ -1,12 +1,15 @@
+
 package org.motechproject.export.builder.excel.model;
 
 
 import org.apache.poi.hssf.usermodel.*;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.CreationHelper;
 import org.apache.poi.ss.util.CellRangeAddress;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class Worksheet {
@@ -23,6 +26,7 @@ public class Worksheet {
     HSSFSheet sheet;
     private String title;
     private List<String> customHeaders;
+    private HSSFWorkbook workbook;
 
     public Worksheet(HSSFWorkbook workbook, String sheetName, String title, List<String> columnHeaders, List<String> customHeaders, List<String> customFooters) {
         this.title = title;
@@ -32,18 +36,31 @@ public class Worksheet {
         sheet = workbook.createSheet(sheetName);
         initializeLayout();
         sheet.createFreezePane(0, currentRowIndex);
+        this.workbook = workbook;
     }
 
-    public boolean addRow(List<String> rowData) {
+    public boolean addRow(List<Object> rowData) {
         if (dataRowIndex() > lastDataRowIndex()) {
             addCustomFooter();
             autoResizeAllColumns();
             return false;
         } else {
             HSSFRow row = sheet.createRow(currentRowIndex);
+            HSSFCell cell = null;
             for (int i = 0; i < rowData.size(); i++) {
-                HSSFCell cell = row.createCell(i);
-                cell.setCellValue(rowData.get(i));
+                Object value = rowData.get(i);
+                if(value instanceof Date){
+                    CellStyle cellStyle = workbook.createCellStyle();
+                    CreationHelper createHelper = workbook.getCreationHelper();
+                    cellStyle.setDataFormat(createHelper.createDataFormat().getFormat(
+                            "dd/MM/yyyy hh:mm:ss"));
+                    cell = row.createCell(i);
+                    cell.setCellValue((Date) value);
+                    cell.setCellStyle(cellStyle);
+                } else {
+                    cell = row.createCell(i);
+                    cell.setCellValue(value != null ? value.toString(): null);
+                }
             }
             currentRowIndex++;
         }

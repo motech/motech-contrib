@@ -5,6 +5,7 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.junit.Test;
 
 import java.util.Collections;
+import java.util.List;
 
 import static java.util.Arrays.asList;
 import static org.junit.Assert.*;
@@ -16,18 +17,19 @@ public class WorksheetTest {
         Worksheet worksheet = new Worksheet(new HSSFWorkbook(), "sheet", "Test", asList("Column"), Collections.<String>emptyList(), Collections.<String>emptyList());
         boolean addedSheet = true;
         for (int i = 0; i <= maxDataRowIndex(); i++) {
-            addedSheet &= worksheet.addRow(asList("test"));
+            addedSheet &= worksheet.addRow(asList((Object)"test"));
         }
         assertTrue(addedSheet);
     }
 
     @Test
     public void shouldNotAddRowWhenNumberOfRowsDoesNotExceedLimit() {
+        List<Object> rowData = asList((Object) "test");
         Worksheet worksheet = new Worksheet(new HSSFWorkbook(), "sheet", "Test", asList("Column"), Collections.<String>emptyList(), Collections.<String>emptyList());
         for (int i = 0; i <= maxDataRowIndex(); i++) {
-            worksheet.addRow(asList("test"));
+            worksheet.addRow(rowData);
         }
-        assertFalse(worksheet.addRow(asList("test")));
+        assertFalse(worksheet.addRow(rowData));
         assertNull(worksheet.sheet.getRow(Worksheet.MAX_ROW_INDEX + 1));
     }
 

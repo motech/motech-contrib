@@ -25,7 +25,7 @@ public class Workbook {
         worksheet = newWorksheet();
     }
 
-    public void addRow(List<String> rowData) {
+    public void addRow(List<Object> rowData) {
         if (!worksheet.addRow(rowData)) {
             worksheet = newWorksheet();
             worksheet.addRow(rowData);

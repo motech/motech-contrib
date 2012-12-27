@@ -57,13 +57,13 @@ public class CSVExportProcessor {
         return new ExportDataModel(genericReturnType(csvDataSource, getDataMethod().getName())).columnHeaders();
     }
 
-    public List<String> rowData(Object model) {
+    public List<Object> rowData(Object model) {
         return new ExportDataModel(genericReturnType(csvDataSource, getDataMethod().getName())).rowData(model);
     }
 
     public ExportData getCSVData() {
         List<String> headers = columnHeaders();
-        List<List<String>> allRowData = new ArrayList();
+        List<List<Object>> allRowData = new ArrayList();
         List<Object> data = data();
         if (data != null && !data.isEmpty()) {
             for (Object datum : data) {
