@@ -23,7 +23,7 @@ public abstract class ExcelBuilder<T> {
         return workbook.book();
     }
 
-    protected abstract List<String> createRowData(T modal);
+    protected abstract List<Object> createRowData(T modal);
 
     protected abstract List<T> data();
 }

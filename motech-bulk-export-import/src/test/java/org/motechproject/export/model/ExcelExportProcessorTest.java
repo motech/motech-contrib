@@ -78,7 +78,7 @@ public class ExcelExportProcessorTest {
         ExportData export = excelExportProcessor.getEntireExcelData("sampleExcel", criteria);
 
         List<String> columnHeaders = export.getColumnHeaders();
-        List<List<String>> allRowData = export.getAllRowData();
+        List<List<Object>> allRowData = export.getAllRowData();
 
         assertTrue(columnHeaders.size() == 3);
         assertEquals("Id", columnHeaders.get(0));
@@ -87,7 +87,7 @@ public class ExcelExportProcessorTest {
         assertTrue(allRowData.size() == 1);
         assertTrue(allRowData.get(0).contains("id"));
         assertTrue(allRowData.get(0).contains("title"));
-        assertTrue(allRowData.get(0).contains("true"));
+        assertTrue(allRowData.get(0).contains(true));
     }
 
     @Test
@@ -96,7 +96,7 @@ public class ExcelExportProcessorTest {
         ExportData export = excelExportProcessor.getPaginatedExcelData("sampleExcel");
 
         List<String> columnHeaders = export.getColumnHeaders();
-        List<List<String>> allRowData = export.getAllRowData();
+        List<List<Object>> allRowData = export.getAllRowData();
 
         assertTrue(columnHeaders.size() == 3);
         assertEquals("Id", columnHeaders.get(0));
@@ -105,7 +105,7 @@ public class ExcelExportProcessorTest {
         assertTrue(allRowData.size() == 1);
         assertTrue(allRowData.get(0).contains("id"));
         assertTrue(allRowData.get(0).contains("title"));
-        assertTrue(allRowData.get(0).contains("true"));
+        assertTrue(allRowData.get(0).contains(true));
     }
 
 }

@@ -5,10 +5,9 @@ import java.util.List;
 public class ExportData {
 
     private List<String> columnHeaders;
-    private List<List<String>> allRowData;
+    private List<List<Object>> allRowData;
 
-    public ExportData(List<String> columnHeaders, List<List<String>> allRowData) {
-
+    public ExportData(List<String> columnHeaders, List<List<Object>> allRowData) {
         this.columnHeaders = columnHeaders;
         this.allRowData = allRowData;
     }
@@ -17,7 +16,7 @@ public class ExportData {
         return columnHeaders;
     }
 
-    public List<List<String>> getAllRowData() {
+    public List<List<Object>> getAllRowData() {
         return allRowData;
     }
 }

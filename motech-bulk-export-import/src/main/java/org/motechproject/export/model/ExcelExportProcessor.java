@@ -41,13 +41,13 @@ public class ExcelExportProcessor {
         return new ExportDataModel(genericReturnType(excelDataSource, reportName)).columnHeaders();
     }
 
-    public List<String> rowData(String reportName, Object model) {
+    public List<Object> rowData(String reportName, Object model) {
         return new ExportDataModel(genericReturnType(excelDataSource, reportName)).rowData(model);
     }
 
     public ExportData getEntireExcelData(String reportName, Map<String, String> criteria) {
         List<String> headers = columnHeaders(reportName);
-        List<List<String>> allRowData = new ArrayList<List<String>>();
+        List<List<Object>> allRowData = new ArrayList<List<Object>>();
         List<Object> data = data(reportName, criteria);
         if (data != null && !data.isEmpty()) {
             for (Object datum : data) {
@@ -62,12 +62,12 @@ public class ExcelExportProcessor {
         boolean doneBuilding = false;
         int pageNumber = 1;
         List<String> headers = columnHeaders(reportName);
-        List<List<String>> allRowData = new ArrayList<List<String>>();
+        List<List<Object>> allRowData = new ArrayList<>();
 
         while (!doneBuilding) {
             List<Object> data = dataForPage(reportName, pageNumber);
             if (data != null && !data.isEmpty()) {
-                List<List<String>> rowsOfAPage = new ArrayList<List<String>>();
+                List<List<Object>> rowsOfAPage = new ArrayList<>();
                 for (Object datum : data) {
                     rowsOfAPage.add(rowData(reportName, datum));
                 }

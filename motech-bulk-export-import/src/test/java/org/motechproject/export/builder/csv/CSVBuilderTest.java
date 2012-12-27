@@ -31,7 +31,7 @@ public class CSVBuilderTest {
         String reportName = "csv_report";
         String fileName = "report_file";
         List<String> columnHeaders = Arrays.asList("Header1", "Header2");
-        List<List<String>> allRowData = Arrays.asList(Arrays.asList("Flw1", "Location1"), Arrays.asList("Flw2", "Location2"));
+        List<List<Object>> allRowData =  Arrays.asList(Arrays.asList((Object) "Flw1", (Object)"Location1"), Arrays.asList((Object)"Flw2",(Object) "Location2"));
         Map<String, String> criteria = new HashMap<String, String>();
         when(excelExportProcessor.getEntireExcelData(reportName, criteria)).thenReturn(new ExportData(columnHeaders, allRowData));
 
@@ -50,7 +50,7 @@ public class CSVBuilderTest {
     public void shouldCreateAnOutputFileWithDefaultNameIfNotGiven() throws IOException {
         String reportName = "csv_report";
         List<String> columnHeaders = Arrays.asList("Header1", "Header2");
-        List<List<String>> allRowData = Arrays.asList(Arrays.asList("Flw1", "Location1"), Arrays.asList("Flw2", "Location2"));
+        List<List<Object>> allRowData = Arrays.asList(Arrays.asList((Object)"Flw1", (Object)"Location1"), Arrays.asList((Object)"Flw2", (Object)"Location2"));
         Map<String, String> criteria = new HashMap<String, String>();
         when(excelExportProcessor.getEntireExcelData(reportName, criteria)).thenReturn(new ExportData(columnHeaders, allRowData));
         when(excelExportProcessor.name()).thenReturn("SampleData");

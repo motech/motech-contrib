@@ -21,11 +21,20 @@ public class CSVWriter {
         csvWriter.writeAll(getData(exportData.getAllRowData()));
     }
 
-    private List<String[]> getData(List<List<String>> allRowData) {
-        List<String[]> rows = new ArrayList<String[]>();
-        for (List<String> row : allRowData) {
-            rows.add(row.toArray(new String[]{}));
+    private List<String[]> getData(List<List<Object>> allRowData) {
+        List<String[]> rows = new ArrayList<>();
+        for (List<Object> row : allRowData) {
+            String [] colValues = new String[row.size()];
+            setColumnValues(row, colValues);
+            rows.add(colValues);
         }
         return rows;
+    }
+
+    private void setColumnValues(List<Object> row, String[] colValues) {
+        int i=0;
+        for(Object columnValue : row){
+            colValues[i++] = columnValue != null ? columnValue.toString() : null;
+        }
     }
 }

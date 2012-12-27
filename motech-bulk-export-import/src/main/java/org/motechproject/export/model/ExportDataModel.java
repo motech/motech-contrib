@@ -30,8 +30,8 @@ public class ExportDataModel {
         return columnHeaders;
     }
 
-    public List<String> rowData(Object model) {
-        List<String> rowData = new ArrayList<String>();
+    public List<Object> rowData(Object model) {
+        List<Object> rowData = new ArrayList<Object>();
         for (Column column : columns) {
             rowData.add(column.value(model));
         }

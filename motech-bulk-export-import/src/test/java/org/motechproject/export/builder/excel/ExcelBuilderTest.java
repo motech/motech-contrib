@@ -18,8 +18,8 @@ public class ExcelBuilderTest {
         }
 
         @Override
-        protected List<String> createRowData(String modal) {
-            return asList(modal, modal);
+        protected List<Object> createRowData(String modal) {
+            return asList((Object)modal,(Object) modal);
         }
 
         @Override

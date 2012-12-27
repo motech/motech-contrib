@@ -35,10 +35,10 @@ public class Column implements Comparable<Column> {
         return method;
     }
 
-    public String value(Object model) {
+    public Object value(Object model) {
         method.setAccessible(true);
         try {
-            return method.invoke(model).toString();
+            return method.invoke(model);
         } catch (Exception ignored) {
         }
         return "";

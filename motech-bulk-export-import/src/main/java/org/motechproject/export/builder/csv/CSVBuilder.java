@@ -45,15 +45,15 @@ public class CSVBuilder {
         ExportData export = excelExportProcessor.getEntireExcelData(reportName, criteria);
         bufferedWriter.write(getCsvRow(export.getColumnHeaders()));
 
-        for (List<String> row : export.getAllRowData())
+        for (List<Object> row : export.getAllRowData())
             bufferedWriter.write(getCsvRow(row));
 
         bufferedWriter.close();
     }
 
-    private String getCsvRow(List<String> dataList) {
+    private String getCsvRow(List dataList) {
         StringBuilder result = new StringBuilder();
-        for (String datum : dataList) {
+        for (Object datum : dataList) {
             result.append(datum);
             result.append(",");
         }
