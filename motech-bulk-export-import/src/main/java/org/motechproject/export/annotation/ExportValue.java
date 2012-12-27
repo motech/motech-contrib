@@ -9,6 +9,6 @@ import java.lang.annotation.Target;
 @Target(ElementType.METHOD)
 public @interface ExportValue {
     String column() default "";
-
+    String format() default "";
     int index();
 }

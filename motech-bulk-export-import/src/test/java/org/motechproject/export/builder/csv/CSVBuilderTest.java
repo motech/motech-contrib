@@ -31,9 +31,10 @@ public class CSVBuilderTest {
         String reportName = "csv_report";
         String fileName = "report_file";
         List<String> columnHeaders = Arrays.asList("Header1", "Header2");
+        List<String> columnFormats = Arrays.asList("", "");
         List<List<Object>> allRowData =  Arrays.asList(Arrays.asList((Object) "Flw1", (Object)"Location1"), Arrays.asList((Object)"Flw2",(Object) "Location2"));
         Map<String, String> criteria = new HashMap<String, String>();
-        when(excelExportProcessor.getEntireExcelData(reportName, criteria)).thenReturn(new ExportData(columnHeaders, allRowData));
+        when(excelExportProcessor.getEntireExcelData(reportName, criteria)).thenReturn(new ExportData(columnHeaders, columnFormats, allRowData));
 
         CSVBuilder CSVBuilder = new CSVBuilder(fileName, reportName, excelExportProcessor, criteria);
         File file = CSVBuilder.build();
@@ -50,9 +51,10 @@ public class CSVBuilderTest {
     public void shouldCreateAnOutputFileWithDefaultNameIfNotGiven() throws IOException {
         String reportName = "csv_report";
         List<String> columnHeaders = Arrays.asList("Header1", "Header2");
+        List<String> columnFormats = Arrays.asList("", "");
         List<List<Object>> allRowData = Arrays.asList(Arrays.asList((Object)"Flw1", (Object)"Location1"), Arrays.asList((Object)"Flw2", (Object)"Location2"));
         Map<String, String> criteria = new HashMap<String, String>();
-        when(excelExportProcessor.getEntireExcelData(reportName, criteria)).thenReturn(new ExportData(columnHeaders, allRowData));
+        when(excelExportProcessor.getEntireExcelData(reportName, criteria)).thenReturn(new ExportData(columnHeaders, columnFormats, allRowData));
         when(excelExportProcessor.name()).thenReturn("SampleData");
 
         CSVBuilder CSVBuilder = new CSVBuilder(null, reportName, excelExportProcessor, criteria);

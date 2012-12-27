@@ -57,6 +57,10 @@ public class CSVExportProcessor {
         return new ExportDataModel(genericReturnType(csvDataSource, getDataMethod().getName())).columnHeaders();
     }
 
+    public List<String> columnFormats() {
+        return new ExportDataModel(genericReturnType(csvDataSource, getDataMethod().getName())).columnFormats();
+    }
+
     public List<Object> rowData(Object model) {
         return new ExportDataModel(genericReturnType(csvDataSource, getDataMethod().getName())).rowData(model);
     }
@@ -70,7 +74,7 @@ public class CSVExportProcessor {
                 allRowData.add(rowData(datum));
             }
         }
-        return new ExportData(headers, allRowData);
+        return new ExportData(headers, columnFormats(), allRowData);
     }
 
     private Method getDataMethod() {

@@ -19,20 +19,23 @@ public class Worksheet {
     public static final int HEADER_ROW_COUNT = 2;
     public static final int HEADER_ROW_HEIGHT = 500;
     public static final int FIRST_COLUMN = 0;
+    public static final String DEFAULT_DATE_FORMAT = "dd/MM/yyyy hh:mm:ss";
 
     private int currentRowIndex = 0;
     private List<String> columnHeaders;
     private List<String> customFooters;
+    private List<String> columnFormats;
     HSSFSheet sheet;
     private String title;
     private List<String> customHeaders;
     private HSSFWorkbook workbook;
 
-    public Worksheet(HSSFWorkbook workbook, String sheetName, String title, List<String> columnHeaders, List<String> customHeaders, List<String> customFooters) {
+    public Worksheet(HSSFWorkbook workbook, String sheetName, String title, List<String> columnHeaders, List<String> customHeaders, List<String> customFooters, List<String> columnFormats) {
         this.title = title;
         this.customHeaders = customHeaders;
         this.columnHeaders = columnHeaders;
         this.customFooters = customFooters;
+        this.columnFormats = columnFormats;
         sheet = workbook.createSheet(sheetName);
         initializeLayout();
         sheet.createFreezePane(0, currentRowIndex);
@@ -46,25 +49,27 @@ public class Worksheet {
             return false;
         } else {
             HSSFRow row = sheet.createRow(currentRowIndex);
-            HSSFCell cell = null;
             for (int i = 0; i < rowData.size(); i++) {
                 Object value = rowData.get(i);
+                HSSFCell cell = row.createCell(i);
                 if(value instanceof Date){
                     CellStyle cellStyle = workbook.createCellStyle();
                     CreationHelper createHelper = workbook.getCreationHelper();
-                    cellStyle.setDataFormat(createHelper.createDataFormat().getFormat(
-                            "dd/MM/yyyy hh:mm:ss"));
-                    cell = row.createCell(i);
-                    cell.setCellValue((Date) value);
+                    String dateFormat = getDateFormat(columnFormats.get(i));
+                    cellStyle.setDataFormat(createHelper.createDataFormat().getFormat(dateFormat));
                     cell.setCellStyle(cellStyle);
+                    cell.setCellValue((Date) value);
                 } else {
-                    cell = row.createCell(i);
                     cell.setCellValue(value != null ? value.toString(): null);
                 }
             }
             currentRowIndex++;
         }
         return true;
+    }
+
+    private String getDateFormat(String specifiedColumnFormat) {
+        return specifiedColumnFormat != null && !specifiedColumnFormat.isEmpty() ? specifiedColumnFormat : DEFAULT_DATE_FORMAT;
     }
 
     private int dataRowIndex() {

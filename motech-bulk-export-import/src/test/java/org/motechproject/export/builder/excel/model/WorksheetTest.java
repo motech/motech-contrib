@@ -14,7 +14,7 @@ public class WorksheetTest {
 
     @Test
     public void shouldAddRowWhenNumberOfRowsDoesNotExceedLimit() {
-        Worksheet worksheet = new Worksheet(new HSSFWorkbook(), "sheet", "Test", asList("Column"), Collections.<String>emptyList(), Collections.<String>emptyList());
+        Worksheet worksheet = new Worksheet(new HSSFWorkbook(), "sheet", "Test", asList("Column"), Collections.<String>emptyList(), Collections.<String>emptyList(), Collections.<String>emptyList());
         boolean addedSheet = true;
         for (int i = 0; i <= maxDataRowIndex(); i++) {
             addedSheet &= worksheet.addRow(asList((Object)"test"));
@@ -25,7 +25,7 @@ public class WorksheetTest {
     @Test
     public void shouldNotAddRowWhenNumberOfRowsDoesNotExceedLimit() {
         List<Object> rowData = asList((Object) "test");
-        Worksheet worksheet = new Worksheet(new HSSFWorkbook(), "sheet", "Test", asList("Column"), Collections.<String>emptyList(), Collections.<String>emptyList());
+        Worksheet worksheet = new Worksheet(new HSSFWorkbook(), "sheet", "Test", asList("Column"), Collections.<String>emptyList(), Collections.<String>emptyList(), Collections.<String>emptyList());
         for (int i = 0; i <= maxDataRowIndex(); i++) {
             worksheet.addRow(rowData);
         }

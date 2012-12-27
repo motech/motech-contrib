@@ -41,6 +41,10 @@ public class ExcelExportProcessor {
         return new ExportDataModel(genericReturnType(excelDataSource, reportName)).columnHeaders();
     }
 
+    public List<String> columnFormats(String reportName) {
+        return new ExportDataModel(genericReturnType(excelDataSource, reportName)).columnFormats();
+    }
+
     public List<Object> rowData(String reportName, Object model) {
         return new ExportDataModel(genericReturnType(excelDataSource, reportName)).rowData(model);
     }
@@ -55,7 +59,7 @@ public class ExcelExportProcessor {
             }
         }
 
-        return new ExportData(headers, allRowData);
+        return new ExportData(headers, columnFormats(reportName), allRowData);
     }
 
     public ExportData getPaginatedExcelData(String reportName) {
@@ -78,7 +82,7 @@ public class ExcelExportProcessor {
             }
         }
 
-        return new ExportData(headers, allRowData);
+        return new ExportData(headers, columnFormats(reportName), allRowData);
     }
 
     private Method getDataMethod(String reportName) {
