@@ -21,15 +21,27 @@ public class HttpClientServiceImpl implements HttpClientService {
     @Override
     public void post(String url, Serializable data) {
         HashMap<String, Object> parameters = constructParametersFrom(url, data, Method.POST);
-        MotechEvent motechEvent = new MotechEvent(EventSubjects.HTTP_REQUEST, parameters);
-        communicationType.send(motechEvent);
+        parameters.put(EventDataKeys.HEADERS, new HashMap<String, String>());
+        communicationType.send(createMotechEvent(parameters));
     }
+
+    @Override
+    public void post(String url, Serializable data, HashMap<String, String> headers) {
+        HashMap<String, Object> parameters = constructParametersFrom(url, data, Method.POST);
+        parameters.put(EventDataKeys.HEADERS, headers);
+        communicationType.send(createMotechEvent(parameters));
+    }
+
 
     @Override
     public void put(String url, Serializable data) {
         HashMap<String, Object> parameters = constructParametersFrom(url, data, Method.PUT);
-        MotechEvent motechEvent = new MotechEvent(EventSubjects.HTTP_REQUEST, parameters);
-        communicationType.send(motechEvent);
+        parameters.put(EventDataKeys.HEADERS, new HashMap<String, String>());
+        communicationType.send(createMotechEvent(parameters));
+    }
+
+    private MotechEvent createMotechEvent(HashMap<String, Object> parameters) {
+        return new MotechEvent(EventSubjects.HTTP_REQUEST, parameters);
     }
 
     private HashMap<String, Object> constructParametersFrom(String url, Serializable data, Method method) {

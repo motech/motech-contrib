@@ -13,6 +13,8 @@ import org.motechproject.http.client.domain.Method;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.springframework.test.util.ReflectionTestUtils;
 
+import java.util.HashMap;
+
 import static junit.framework.Assert.assertEquals;
 import static org.mockito.Mockito.verify;
 import static org.mockito.MockitoAnnotations.initMocks;
@@ -60,5 +62,25 @@ public class HttpClientServiceImplTest {
         assertEquals(Method.PUT, eventMessageSent.getParameters().get(EventDataKeys.METHOD));
         assertEquals(data, (String) eventMessageSent.getParameters().get(EventDataKeys.DATA));
         assertEquals(url, eventMessageSent.getParameters().get(EventDataKeys.URL));
+    }
+
+    @Test
+    public void shouldInvokePostsWithHeaderParams() {
+        String url = "someurl";
+        String data = "data";
+        HashMap<String, String> headers  = new HashMap<>();
+        headers.put("api-key", "api-key-value");
+
+        httpClientService.post(url, data, headers);
+
+        ArgumentCaptor<MotechEvent> motechEventArgumentCaptor = ArgumentCaptor.forClass(MotechEvent.class);
+        verify(mockCommunicationType).send(motechEventArgumentCaptor.capture());
+        MotechEvent eventMessageSent = motechEventArgumentCaptor.getValue();
+
+        assertEquals(Method.POST, eventMessageSent.getParameters().get(EventDataKeys.METHOD));
+        assertEquals(data, (String) eventMessageSent.getParameters().get(EventDataKeys.DATA));
+        assertEquals(url, eventMessageSent.getParameters().get(EventDataKeys.URL));
+        assertEquals(headers, eventMessageSent.getParameters().get(EventDataKeys.HEADERS));
+
     }
 }
