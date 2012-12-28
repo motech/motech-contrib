@@ -20,35 +20,35 @@ public class HttpClientServiceImpl implements HttpClientService {
 
     @Override
     public void post(String url, Serializable data) {
-        HashMap<String, Object> parameters = constructParametersFrom(url, data, Method.POST);
-        parameters.put(EventDataKeys.HEADERS, new HashMap<String, String>());
-        communicationType.send(createMotechEvent(parameters));
+        sendMotechEvent(url, data, emptyHeaders(), Method.POST);
     }
 
     @Override
     public void post(String url, Serializable data, HashMap<String, String> headers) {
-        HashMap<String, Object> parameters = constructParametersFrom(url, data, Method.POST);
-        parameters.put(EventDataKeys.HEADERS, headers);
-        communicationType.send(createMotechEvent(parameters));
+        sendMotechEvent(url, data, headers, Method.POST);
     }
-
 
     @Override
     public void put(String url, Serializable data) {
-        HashMap<String, Object> parameters = constructParametersFrom(url, data, Method.PUT);
-        parameters.put(EventDataKeys.HEADERS, new HashMap<String, String>());
-        communicationType.send(createMotechEvent(parameters));
+        sendMotechEvent(url, data, emptyHeaders(), Method.PUT);
     }
 
-    private MotechEvent createMotechEvent(HashMap<String, Object> parameters) {
-        return new MotechEvent(EventSubjects.HTTP_REQUEST, parameters);
+    private void sendMotechEvent(String url, Serializable data, HashMap<String, String> headers, Method method){
+        HashMap<String, Object> parameters = constructParametersFrom(url, data, headers, method);
+        MotechEvent motechEvent = new MotechEvent(EventSubjects.HTTP_REQUEST, parameters);
+        communicationType.send(motechEvent);
     }
 
-    private HashMap<String, Object> constructParametersFrom(String url, Serializable data, Method method) {
+    private HashMap<String, Object> constructParametersFrom(String url, Serializable data, HashMap<String, String> headers, Method method) {
         HashMap<String, Object> parameters = new HashMap<>();
         parameters.put(EventDataKeys.URL, url);
         parameters.put(EventDataKeys.METHOD, method);
         parameters.put(EventDataKeys.DATA, data);
+        parameters.put(EventDataKeys.HEADERS, headers);
         return parameters;
+    }
+
+    private HashMap<String, String> emptyHeaders() {
+        return new HashMap<>();
     }
 }
