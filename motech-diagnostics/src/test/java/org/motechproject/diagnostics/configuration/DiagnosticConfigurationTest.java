@@ -6,9 +6,11 @@ import org.junit.Test;
 import java.util.List;
 import java.util.Properties;
 
+import static java.util.Arrays.asList;
 import static org.hamcrest.Matchers.hasItem;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 public class DiagnosticConfigurationTest{
 
@@ -32,4 +34,21 @@ public class DiagnosticConfigurationTest{
         assertThat(firstMenuLinks, hasItem(new Link("Name2", "url2")));
         assertThat(links.get(1).getLinks(), hasItem(new Link("Name3", "url3")));
     }
+
+    @Test
+    public void shouldReturnEmptyListIfNoScheduleJobNamesHaveBeenDefined() {
+        DiagnosticConfiguration diagnosticConfiguration = new DiagnosticConfiguration(new Properties());
+        assertTrue(diagnosticConfiguration.scheduleJobNames().isEmpty());
+    }
+
+    @Test
+    public void shouldReturnListOfScheduleJobNames() {
+        Properties diagnosticProperties = new Properties();
+        String commaSeperatedJobNames = "job1,job2";
+        diagnosticProperties.put("motech.scheduler.jobs", commaSeperatedJobNames);
+        DiagnosticConfiguration diagnosticConfiguration = new DiagnosticConfiguration(diagnosticProperties);
+
+        assertEquals(asList("job1", "job2"), diagnosticConfiguration.scheduleJobNames());
+    }
+
 }

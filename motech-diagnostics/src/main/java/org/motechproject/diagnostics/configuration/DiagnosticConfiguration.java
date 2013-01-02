@@ -2,10 +2,11 @@ package org.motechproject.diagnostics.configuration;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
+
+import static java.util.Arrays.asList;
 
 @Component
 public class DiagnosticConfiguration {
@@ -58,6 +59,14 @@ public class DiagnosticConfiguration {
         }
 
         linkMap.get(menuName).add(new Link(linkName, url));
+    }
+
+    public List<String> scheduleJobNames() {
+        String jobNames = properties.getProperty("motech.scheduler.jobs");
+        if(jobNames == null)
+            return new ArrayList<>();
+
+        return asList(jobNames.split(","));
     }
 }
 
