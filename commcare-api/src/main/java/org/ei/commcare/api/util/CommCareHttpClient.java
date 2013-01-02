@@ -9,13 +9,14 @@ import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicHeader;
-import org.apache.http.params.BasicHttpParams;
-import org.apache.http.params.HttpConnectionParams;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.util.concurrent.locks.ReentrantLock;
+
+import static org.apache.http.params.CoreConnectionPNames.CONNECTION_TIMEOUT;
+import static org.apache.http.params.CoreConnectionPNames.SO_TIMEOUT;
 
 @Component
 public class CommCareHttpClient {
@@ -25,9 +26,6 @@ public class CommCareHttpClient {
 
     public CommCareHttpClient() {
         this.httpClient = new DefaultHttpClient();
-        BasicHttpParams basicHttpParams = new BasicHttpParams();
-        HttpConnectionParams.setConnectionTimeout(basicHttpParams, 60000);
-        HttpConnectionParams.setSoTimeout(basicHttpParams, 60000);
     }
 
     public CommCareHttpResponse  get(String url, String commcareBaseUrl, String userName, String password) {
@@ -37,6 +35,8 @@ public class CommCareHttpClient {
 
         lock.lock();
         try {
+            httpClient.getParams().setParameter(CONNECTION_TIMEOUT, 300000);
+            httpClient.getParams().setParameter(SO_TIMEOUT, 300000);
             httpClient.getCredentialsProvider().setCredentials(
                     new AuthScope(commcareBaseUrl, 443, "DJANGO", "digest"),
                     new UsernamePasswordCredentials(userName, password));
