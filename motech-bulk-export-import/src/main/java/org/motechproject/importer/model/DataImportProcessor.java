@@ -1,9 +1,12 @@
 package org.motechproject.importer.model;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.motechproject.importer.annotation.Post;
 import org.motechproject.importer.annotation.Validate;
+import org.motechproject.importer.domain.CSVImportResponse;
 import org.motechproject.importer.domain.Error;
+import org.motechproject.importer.domain.ValidationException;
 import org.motechproject.importer.domain.ValidationResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,19 +40,24 @@ public abstract class DataImportProcessor {
         }
     }
 
-    public void process(String... filePaths) {
+    public CSVImportResponse process(String... filePaths) {
+        String lastRunFilePath = StringUtils.EMPTY;
         try {
             for (String filePath : filePaths) {
                 ValidationResponse validationResponse = process(new FileReader(filePath));
 
                 if (!validationResponse.isValid()) {
                     processErrors(validationResponse.getErrors(), filePath);
+                    throw new ValidationException();
                 }
+                lastRunFilePath = new File(filePath).getName();
             }
         } catch (Exception e) {
             System.err.println("Error while importing csv : " + ExceptionUtils.getFullStackTrace(e));
             logger.error("Error while importing csv : " + ExceptionUtils.getFullStackTrace(e));
+            return new CSVImportResponse(lastRunFilePath, false);
         }
+        return new CSVImportResponse(lastRunFilePath, true);
     }
 
     private ValidationResponse process(Reader reader) throws Exception {

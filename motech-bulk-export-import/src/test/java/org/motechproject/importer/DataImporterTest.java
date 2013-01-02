@@ -6,6 +6,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.motechproject.importer.domain.CSVImportResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -40,13 +41,16 @@ public class DataImporterTest {
     @Test
     public void shouldImportSampleBean() {
         sampleCSVImporter.setValid(true);
+        String fileName = "sample.csv";
 
-        dataImporter.importData("sampleEntity", "sample.csv");
+        CSVImportResponse csvImportResponse = dataImporter.importData("sampleEntity", fileName);
 
         assertTrue(sampleCSVImporter.isPostCalled);
         assertTrue(sampleCSVImporter.isValidateCalled);
         assertThat(sampleCSVImporter.sampleBeans.get(0).getSampleX(), is("123"));
         assertThat(sampleCSVImporter.sampleBeans.get(0).getSampleY(), is("456"));
+        assertEquals(fileName, csvImportResponse.getLastProcessedFileName());
+        assertTrue(csvImportResponse.isImportSuccessful());
     }
 
     @Test
@@ -71,8 +75,9 @@ public class DataImporterTest {
     public void shouldProcessValidationErrorsIfAny() throws IOException, URISyntaxException {
         sampleCSVImporter.setValid(false);
 
-        dataImporter.importData("sampleEntity", "sample.csv");
+        CSVImportResponse csvImportResponse = dataImporter.importData("sampleEntity", "sample.csv");
 
+        assertFalse(csvImportResponse.isImportSuccessful());
         assertTrue(sampleCSVImporter.isValidateCalled);
         assertFalse(sampleCSVImporter.isPostCalled);
         URL errorsFilePath = this.getClass().getResource("/errors.csv");
