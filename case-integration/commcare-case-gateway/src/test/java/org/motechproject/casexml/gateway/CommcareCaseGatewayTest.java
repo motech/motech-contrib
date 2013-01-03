@@ -49,6 +49,7 @@ public class CommcareCaseGatewayTest {
         parameters.put(EventDataKeys.URL, url);
         parameters.put(EventDataKeys.DATA, data);
         parameters.put(EventDataKeys.METHOD, Method.POST);
+        parameters.put(EventDataKeys.HEADERS, new HashMap<>());
         verify(mockCommunicationType).send(new MotechEvent(EventSubjects.HTTP_REQUEST, parameters));
     }
 
@@ -64,6 +65,7 @@ public class CommcareCaseGatewayTest {
         parameters.put(EventDataKeys.URL, url);
         parameters.put(EventDataKeys.DATA, data);
         parameters.put(EventDataKeys.METHOD, Method.POST);
+        parameters.put(EventDataKeys.HEADERS, new HashMap<>());
         verify(mockCommunicationType).send(new MotechEvent(EventSubjects.HTTP_REQUEST, parameters));
     }
 }
