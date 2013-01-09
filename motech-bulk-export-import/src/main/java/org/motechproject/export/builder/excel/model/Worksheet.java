@@ -1,4 +1,3 @@
-
 package org.motechproject.export.builder.excel.model;
 
 
@@ -20,15 +19,18 @@ public class Worksheet {
     public static final int HEADER_ROW_HEIGHT = 500;
     public static final int FIRST_COLUMN = 0;
     public static final String DEFAULT_DATE_FORMAT = "dd/MM/yyyy hh:mm:ss";
+    public static final String SHORT_DATE_FORMAT = "dd/MM/yyyy";
 
     private int currentRowIndex = 0;
     private List<String> columnHeaders;
     private List<String> customFooters;
     private List<String> columnFormats;
-    HSSFSheet sheet;
+    protected HSSFSheet sheet;
     private String title;
     private List<String> customHeaders;
     private HSSFWorkbook workbook;
+    private CellStyle dateTimeStyle;
+    private CellStyle dateStyle;
 
     public Worksheet(HSSFWorkbook workbook, String sheetName, String title, List<String> columnHeaders, List<String> customHeaders, List<String> customFooters, List<String> columnFormats) {
         this.title = title;
@@ -40,6 +42,8 @@ public class Worksheet {
         initializeLayout();
         sheet.createFreezePane(0, currentRowIndex);
         this.workbook = workbook;
+        this.dateTimeStyle = dateStyle(DEFAULT_DATE_FORMAT);
+        this.dateStyle = dateStyle(SHORT_DATE_FORMAT);
     }
 
     public boolean addRow(List<Object> rowData) {
@@ -49,18 +53,19 @@ public class Worksheet {
             return false;
         } else {
             HSSFRow row = sheet.createRow(currentRowIndex);
+
             for (int i = 0; i < rowData.size(); i++) {
                 Object value = rowData.get(i);
                 HSSFCell cell = row.createCell(i);
-                if(value instanceof Date){
-                    CellStyle cellStyle = workbook.createCellStyle();
-                    CreationHelper createHelper = workbook.getCreationHelper();
-                    String dateFormat = getDateFormat(columnFormats.get(i));
-                    cellStyle.setDataFormat(createHelper.createDataFormat().getFormat(dateFormat));
-                    cell.setCellStyle(cellStyle);
+                if (value instanceof Date) {
+                    if (DEFAULT_DATE_FORMAT.equalsIgnoreCase(columnFormats.get(i))) {
+                        cell.setCellStyle(dateTimeStyle);
+                    } else {
+                        cell.setCellStyle(dateStyle);
+                    }
                     cell.setCellValue((Date) value);
                 } else {
-                    cell.setCellValue(value != null ? value.toString(): null);
+                    cell.setCellValue(value != null ? value.toString() : null);
                 }
             }
             currentRowIndex++;
@@ -68,8 +73,32 @@ public class Worksheet {
         return true;
     }
 
-    private String getDateFormat(String specifiedColumnFormat) {
-        return specifiedColumnFormat != null && !specifiedColumnFormat.isEmpty() ? specifiedColumnFormat : DEFAULT_DATE_FORMAT;
+    public void addCustomFooter() {
+        if (this.customFooters != null && !this.customFooters.isEmpty()) {
+            buildTitle("", columnHeaders.size(), CellStyle.ALIGN_LEFT, false);
+            for (String headerValue : this.customFooters) {
+                buildTitle(headerValue, columnHeaders.size(), CellStyle.ALIGN_LEFT, false);
+            }
+        }
+    }
+
+    public void autoResizeAllColumns() {
+        for (int i = 0; i < columnHeaders.size(); i++) {
+            sheet.autoSizeColumn(i);
+        }
+    }
+
+    protected void initializeLayout() {
+        buildTitle(title, columnHeaders.size(), CellStyle.ALIGN_CENTER, true);
+        buildCustomHeaders();
+        buildColumnNamesHeader();
+    }
+
+    private CellStyle dateStyle(String dateFormat) {
+        CellStyle cellStyle = workbook.createCellStyle();
+        CreationHelper createHelper = workbook.getCreationHelper();
+        cellStyle.setDataFormat(createHelper.createDataFormat().getFormat(dateFormat));
+        return cellStyle;
     }
 
     private int dataRowIndex() {
@@ -82,12 +111,6 @@ public class Worksheet {
 
     private int lastDataRowIndex() {
         return MAX_ROW_INDEX - (getHeaderCount());
-    }
-
-    protected void initializeLayout() {
-        buildTitle(title, columnHeaders.size(), CellStyle.ALIGN_CENTER, true);
-        buildCustomHeaders();
-        buildColumnNamesHeader();
     }
 
     private void buildTitle(String title, int width, short alignment, boolean emphasize) {
@@ -143,21 +166,6 @@ public class Worksheet {
         for (ExcelColumn column : columns) {
             sheet.setColumnWidth(columnIndex, column.getWidth());
             columnIndex++;
-        }
-    }
-
-    public void addCustomFooter() {
-        if (this.customFooters != null && !this.customFooters.isEmpty()) {
-            buildTitle("", columnHeaders.size(), CellStyle.ALIGN_LEFT, false);
-            for (String headerValue : this.customFooters) {
-                buildTitle(headerValue, columnHeaders.size(), CellStyle.ALIGN_LEFT, false);
-            }
-        }
-    }
-
-    public void autoResizeAllColumns() {
-        for (int i = 0; i < columnHeaders.size(); i++) {
-            sheet.autoSizeColumn(i);
         }
     }
 }
