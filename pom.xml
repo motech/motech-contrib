@@ -99,6 +99,8 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>2.9</version>
                 <configuration>
+                    <!-- The following has been included because, i'm using PowerMock with java7: http://tinyurl.com/beptkck -->
+                    <argLine>-XX:-UseSplitVerifier</argLine>
                     <argLine>-XX:MaxPermSize=1024M -ea</argLine>
                     <printSummary>true</printSummary>
                 </configuration>
