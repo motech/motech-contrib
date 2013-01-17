@@ -39,6 +39,7 @@
         <module>motech-web-utils</module>
         <module>motech-performance-tests</module>
         <module>motech-report-query-executor</module>
+        <module>motech-jasper-reports-migration</module>
     </modules>
 
     <distributionManagement>
