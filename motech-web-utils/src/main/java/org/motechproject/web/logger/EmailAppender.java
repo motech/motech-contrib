@@ -1,12 +1,12 @@
 package org.motechproject.web.logger;
 
 import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Layout;
 import org.apache.log4j.PatternLayout;
 import org.apache.log4j.helpers.LogLog;
 import org.apache.log4j.net.SMTPAppender;
 import org.apache.log4j.spi.LoggingEvent;
-import org.motechproject.util.StringUtil;
 
 import javax.mail.MessagingException;
 import javax.mail.Multipart;
@@ -61,7 +61,7 @@ public class EmailAppender extends SMTPAppender {
 
     private String getBodyHash(LoggingEvent loggingEvent) {
         String body = getLogBody(loggingEvent);
-        return StringUtil.isNullOrEmpty(body) ? "" : DigestUtils.md5Hex(body);
+        return StringUtils.isEmpty(body) ? "" : DigestUtils.md5Hex(body);
     }
 
     private String getLogBody(LoggingEvent loggingEvent) {
