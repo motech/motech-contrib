@@ -38,6 +38,7 @@
         <module>motech-flash-scope</module>
         <module>motech-ivr-kookoo-v1</module>
         <module>motech-web-utils</module>
+        <module>motech-jasper-reports-migration</module>
     </modules>
 
     <distributionManagement>
