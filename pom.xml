@@ -23,6 +23,7 @@
 
     <modules>
         <module>motech-diagnostics</module>
+        <module>motech-http-client</module>
     </modules>
 
     <distributionManagement>

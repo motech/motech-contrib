@@ -1,6 +1,7 @@
 package org.motechproject.http.client.components;
 
-import org.motechproject.event.MotechEvent;
+
+import org.motechproject.model.MotechEvent;
 
 public interface CommunicationType {
 
