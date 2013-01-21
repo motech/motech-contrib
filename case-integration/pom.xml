@@ -5,7 +5,7 @@
     <parent>
         <artifactId>motech-contrib</artifactId>
         <groupId>org.motechproject.whp-contrib</groupId>
-        <version>0.14</version>
+        <version>0.15-SNAPSHOT</version>
     </parent>
 
     <name>case-integration</name>
@@ -13,7 +13,7 @@
     <artifactId>case-integration</artifactId>
 
     <packaging>pom</packaging>
-    <version>0.14</version>
+    <version>0.15-SNAPSHOT</version>
 
     <modules>
         <module>case-parser</module>

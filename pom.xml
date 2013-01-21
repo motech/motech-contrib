@@ -5,7 +5,7 @@
     <name>motech-contrib</name>
     <artifactId>motech-contrib</artifactId>
     <groupId>org.motechproject.whp-contrib</groupId>
-    <version>0.14</version>
+    <version>0.15-SNAPSHOT</version>
 
     <packaging>pom</packaging>
 
@@ -42,119 +42,119 @@
             <dependency>
                 <groupId>org.motechproject.whp-contrib</groupId>
                 <artifactId>case-common</artifactId>
-                <version>0.14</version>
+                <version>0.15-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>org.motechproject.whp-contrib</groupId>
                 <artifactId>case-log-browser</artifactId>
-                <version>0.14</version>
+                <version>0.15-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>org.motechproject.whp-contrib</groupId>
                 <artifactId>case-logger</artifactId>
-                <version>0.14</version>
+                <version>0.15-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>org.motechproject.whp-contrib</groupId>
                 <artifactId>case-parser</artifactId>
-                <version>0.14</version>
+                <version>0.15-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>org.motechproject.whp-contrib</groupId>
                 <artifactId>case-service</artifactId>
-                <version>0.14</version>
+                <version>0.15-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>org.motechproject.whp-contrib</groupId>
                 <artifactId>commcare-case-gateway</artifactId>
-                <version>0.14</version>
+                <version>0.15-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>org.motechproject.whp-contrib</groupId>
                 <artifactId>openrosa-registration-service</artifactId>
-                <version>0.14</version>
+                <version>0.15-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>org.motechproject.whp-contrib</groupId>
                 <artifactId>case-integration</artifactId>
-                <version>0.14</version>
+                <version>0.15-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>org.motechproject.whp-contrib</groupId>
                 <artifactId>commcare-api</artifactId>
-                <version>0.14</version>
+                <version>0.15-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>org.motechproject.whp-contrib</groupId>
                 <artifactId>commcare-listener</artifactId>
-                <version>0.14</version>
+                <version>0.15-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>org.motechproject.whp-contrib</groupId>
                 <artifactId>motech-bulk-export-import</artifactId>
-                <version>0.14</version>
+                <version>0.15-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>org.motechproject.whp-contrib</groupId>
                 <artifactId>motech-couchdb-lucene</artifactId>
-                <version>0.14</version>
+                <version>0.15-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>org.motechproject.whp-contrib</groupId>
                 <artifactId>motech-diagnostics</artifactId>
-                <version>0.14</version>
+                <version>0.15-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>org.motechproject.whp-contrib</groupId>
                 <artifactId>motech-diagnostics</artifactId>
                 <type>test-jar</type>
                 <scope>test</scope>
-                <version>0.14</version>
+                <version>0.15-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>org.motechproject.whp-contrib</groupId>
                 <artifactId>motech-diagnostics-web</artifactId>
-                <version>0.14</version>
+                <version>0.15-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>org.motechproject.whp-contrib</groupId>
                 <artifactId>motech-flash-scope</artifactId>
-                <version>0.14</version>
+                <version>0.15-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>org.motechproject.whp-contrib</groupId>
                 <artifactId>motech-http-client</artifactId>
-                <version>0.14</version>
+                <version>0.15-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>org.motechproject.whp-contrib</groupId>
                 <artifactId>motech-ivr-kookoo-v1</artifactId>
-                <version>0.14</version>
+                <version>0.15-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>org.motechproject.whp-contrib</groupId>
                 <artifactId>motech-paginator</artifactId>
-                <version>0.14</version>
+                <version>0.15-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>org.motechproject.whp-contrib</groupId>
                 <artifactId>motech-retry</artifactId>
-                <version>0.14</version>
+                <version>0.15-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>org.motechproject.whp-contrib</groupId>
                 <artifactId>motech-validation</artifactId>
-                <version>0.14</version>
+                <version>0.15-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>org.motechproject.whp-contrib</groupId>
                 <artifactId>motech-web-security</artifactId>
-                <version>0.14</version>
+                <version>0.15-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>org.motechproject.whp-contrib</groupId>
                 <artifactId>motech-web-utils</artifactId>
-                <version>0.14</version>
+                <version>0.15-SNAPSHOT</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -266,6 +266,6 @@
         <connection>scm:git:https://github.com/motech/motech-contrib</connection>
         <developerConnection>scm:git:https://github.com/motech/motech-contrib</developerConnection>
         <url>https://github.com/motech/motech-contrib</url>
-        <tag>motech-contrib-0.14</tag>
+        <tag>whp-motech-contrib-0.14</tag>
     </scm>
 </project>
