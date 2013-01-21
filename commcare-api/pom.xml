@@ -5,12 +5,12 @@
     <parent>
         <artifactId>motech-contrib</artifactId>
         <groupId>org.motechproject.whp-contrib</groupId>
-        <version>0.14-SNAPSHOT</version>
+        <version>0.14</version>
     </parent>
 
     <artifactId>commcare-api</artifactId>
     <groupId>org.motechproject.whp-contrib</groupId>
-    <version>0.14-SNAPSHOT</version>
+    <version>0.14</version>
     <name>commcare-api</name>
 
     <dependencies>

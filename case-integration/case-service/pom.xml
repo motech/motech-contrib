@@ -5,12 +5,12 @@
     <parent>
         <artifactId>case-integration</artifactId>
         <groupId>org.motechproject.whp-contrib</groupId>
-        <version>0.14-SNAPSHOT</version>
+        <version>0.14</version>
     </parent>
 
     <artifactId>case-service</artifactId>
     <groupId>org.motechproject.whp-contrib</groupId>
-    <version>0.14-SNAPSHOT</version>
+    <version>0.14</version>
     <packaging>jar</packaging>
     <name>case-service</name>
 
