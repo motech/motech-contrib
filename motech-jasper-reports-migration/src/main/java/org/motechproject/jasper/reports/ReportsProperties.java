@@ -27,8 +27,7 @@ public class ReportsProperties {
     }
 
     public String getJasperServerResourceURL() {
-        String resourcePath = properties.getProperty("jasper.resource.path");
-        return String.format("%s%s", getJasperServerURL(), resourcePath);
+        return String.format("%s%s", getJasperServerURL(), "/jasperserver/rest/resource/");
     }
 
     public String getJasperServerUserName() {
@@ -40,8 +39,7 @@ public class ReportsProperties {
     }
 
     public String getJasperRoleCreationURL() {
-        String roleCreationPath = properties.getProperty("jasper.role.creation.path");
-        return String.format("%s%s", getJasperServerURL(), roleCreationPath);
+        return String.format("%s%s", getJasperServerURL(), "/jasperserver/rest/role/");
     }
 
     private String getJasperServerURL() {
@@ -49,7 +47,6 @@ public class ReportsProperties {
     }
 
     public String getJasperPermissionsURL() {
-        String setPermissionsPath = properties.getProperty("jasper.set.permissions.path");
-        return String.format("%s%s", getJasperServerURL(), setPermissionsPath);
+        return String.format("%s%s", getJasperServerURL(), "/jasperserver/rest/permission/");
     }
 }
