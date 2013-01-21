@@ -28,7 +28,7 @@
         <dependency>
             <artifactId>motech-http-client</artifactId>
             <groupId>${motech.contrib.group}</groupId>
-            <version>${motech.contrib.version}</version>
+
         </dependency>
         <dependency>
             <groupId>org.motechproject</groupId>

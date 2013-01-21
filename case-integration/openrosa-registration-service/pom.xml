@@ -59,17 +59,14 @@
         <dependency>
             <groupId>${motech.contrib.group}</groupId>
             <artifactId>case-parser</artifactId>
-            <version>${motech.contrib.version}</version>
         </dependency>
         <dependency>
             <groupId>${motech.contrib.group}</groupId>
             <artifactId>case-logger</artifactId>
-            <version>${motech.contrib.version}</version>
         </dependency>
         <dependency>
             <groupId>${motech.contrib.group}</groupId>
             <artifactId>case-common</artifactId>
-            <version>${motech.contrib.version}</version>
         </dependency>
     </dependencies>
 </project>

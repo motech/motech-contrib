@@ -14,7 +14,7 @@
         <dependency>
             <groupId>org.motechproject.whp-contrib</groupId>
             <artifactId>motech-diagnostics</artifactId>
-            <version>${motech.contrib.version}</version>
+
         </dependency>
         <dependency>
             <groupId>junit</groupId>
@@ -30,7 +30,6 @@
         <dependency>
             <groupId>org.motechproject.whp-contrib</groupId>
             <artifactId>motech-diagnostics</artifactId>
-            <version>${motech.contrib.version}</version>
             <type>test-jar</type>
             <scope>test</scope>
         </dependency>

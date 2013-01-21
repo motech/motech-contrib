@@ -25,7 +25,6 @@
         <dependency>
             <groupId>org.motechproject.whp-contrib</groupId>
             <artifactId>case-logger</artifactId>
-            <version>${motech.contrib.version}</version>
         </dependency>
         <dependency>
             <groupId>junit</groupId>

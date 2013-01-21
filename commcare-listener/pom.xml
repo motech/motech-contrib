@@ -20,7 +20,7 @@
     <dependency>
       <groupId>${motech.contrib.group}</groupId>
       <artifactId>commcare-api</artifactId>
-      <version>${motech.contrib.version}</version>
+
     </dependency>
     <dependency>
       <groupId>org.motechproject</groupId>
