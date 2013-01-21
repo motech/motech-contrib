@@ -84,6 +84,14 @@
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-release-plugin</artifactId>
+                <version>2.3.2</version>
+                <configuration>
+                    <preparationGoals>clean install</preparationGoals>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-deploy-plugin</artifactId>
                 <version>2.5</version>
             </plugin>
@@ -138,5 +146,6 @@
         <connection>scm:git:https://github.com/motech/motech-contrib</connection>
         <developerConnection>scm:git:https://github.com/motech/motech-contrib</developerConnection>
         <url>https://github.com/motech/motech-contrib</url>
+        <tag>whp-motech-contrib-0.14</tag>
     </scm>
 </project>
