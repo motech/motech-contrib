@@ -18,6 +18,7 @@ import org.springframework.scheduling.quartz.SchedulerFactoryBean;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -47,7 +48,7 @@ public class RetryServiceIT {
         String externalId = "externalId";
         DateTime referenceTime = DateTime.now();
 
-        retryService.schedule(new RetryRequest(name, externalId, referenceTime), null);
+        retryService.schedule(new RetryRequest(name, externalId, referenceTime), new HashMap<String, Object>());
 
         Retry activeRetry = allRetries.getActiveRetry(externalId, name);
         assertThat(activeRetry.hasPendingRetires(), is(true));
@@ -61,7 +62,7 @@ public class RetryServiceIT {
     @Test
     public void shouldInvokeRetrySubjectListener() throws InterruptedException {
         String externalId = UUID.randomUUID().toString();
-        retryService.schedule(new RetryRequest("retry-every-second", externalId, DateTime.now()), null);
+        retryService.schedule(new RetryRequest("retry-every-second", externalId, DateTime.now()), new HashMap<String, Object>());
         int counter = 0;
         while(true) {
             if(eventHandler.hasEventBeenFired()) {
