@@ -1,7 +1,7 @@
 package org.motechproject.jasper.reports;
 
 import db.migration.domain.EntityResource;
-import db.migration.domain.Item;
+import db.migration.domain.PermissionItem;
 import db.migration.domain.PermissionRecipient;
 import org.junit.Before;
 import org.junit.Test;
@@ -41,9 +41,9 @@ public class ReportsPermissionsTest {
         ArgumentCaptor<EntityResource> captor = ArgumentCaptor.forClass(EntityResource.class);
         verify(jasperRESTClient).put(eq(url), captor.capture());
         EntityResource actualRequestBody = captor.getValue();
-        assertEquals(2, actualRequestBody.getItem().size());
-        assertEquals(new Item(AccessRights.READ_ONLY.getPermissionMask(), new PermissionRecipient("ROLE 1"), "repo:/Report1"), actualRequestBody.getItem().get(0));
-        assertEquals(new Item(AccessRights.NO_ACCESS.getPermissionMask(), new PermissionRecipient("ROLE 2"), "repo:/Report2"), actualRequestBody.getItem().get(1));
+        assertEquals(2, actualRequestBody.getPermissionItem().size());
+        assertEquals(new PermissionItem(AccessRights.READ_ONLY.getPermissionMask(), new PermissionRecipient("ROLE 1"), "repo:/Report1"), actualRequestBody.getPermissionItem().get(0));
+        assertEquals(new PermissionItem(AccessRights.NO_ACCESS.getPermissionMask(), new PermissionRecipient("ROLE 2"), "repo:/Report2"), actualRequestBody.getPermissionItem().get(1));
     }
 
     private class TestPermissions extends ReportsPermissions {
@@ -53,10 +53,10 @@ public class ReportsPermissionsTest {
 
         @Override
         protected EntityResource getResourcePermissions() {
-            ArrayList<Item> items = new ArrayList<>();
-            items.add(new Item(AccessRights.READ_ONLY.getPermissionMask(), new PermissionRecipient("ROLE 1"), "repo:/Report1"));
-            items.add(new Item(AccessRights.NO_ACCESS.getPermissionMask(), new PermissionRecipient("ROLE 2"), "repo:/Report2"));
-            return new EntityResource(items);
+            ArrayList<PermissionItem> permissionItems = new ArrayList<>();
+            permissionItems.add(new PermissionItem(AccessRights.READ_ONLY.getPermissionMask(), new PermissionRecipient("ROLE 1"), "repo:/Report1"));
+            permissionItems.add(new PermissionItem(AccessRights.NO_ACCESS.getPermissionMask(), new PermissionRecipient("ROLE 2"), "repo:/Report2"));
+            return new EntityResource(permissionItems);
         }
     }
 }

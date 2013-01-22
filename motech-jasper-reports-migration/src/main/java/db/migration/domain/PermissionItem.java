@@ -8,7 +8,7 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
-public class Item {
+public class PermissionItem {
     @XmlAttribute(name = "xsi:type")
     private String xsiType;
     @XmlAttribute(name = "xmlns:xsi")
@@ -22,12 +22,12 @@ public class Item {
     private String URI;
 
 
-    public Item() {
+    public PermissionItem() {
         this.xsiType = "objectPermissionImpl";
         this.xmlnsXsi = "http://www.w3.org/2001/XMLSchema-instance";
     }
 
-    public Item(Integer permissionMask, PermissionRecipient permissionRecipient, String URI) {
+    public PermissionItem(Integer permissionMask, PermissionRecipient permissionRecipient, String URI) {
         this();
         this.permissionMask = permissionMask;
         this.permissionRecipient = permissionRecipient;
