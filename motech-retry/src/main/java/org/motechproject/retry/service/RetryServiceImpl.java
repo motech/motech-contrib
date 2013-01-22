@@ -2,6 +2,7 @@ package org.motechproject.retry.service;
 
 import org.joda.time.DateTime;
 import org.joda.time.Period;
+import org.motechproject.event.MotechEvent;
 import org.motechproject.retry.dao.AllRetries;
 import org.motechproject.retry.dao.AllRetriesDefinition;
 import org.motechproject.retry.domain.Retry;
@@ -9,14 +10,13 @@ import org.motechproject.retry.domain.RetryRecord;
 import org.motechproject.retry.domain.RetryRequest;
 import org.motechproject.retry.domain.RetryStatus;
 import org.motechproject.scheduler.MotechSchedulerService;
-import org.motechproject.event.MotechEvent;
 import org.motechproject.scheduler.domain.RepeatingSchedulableJob;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.motechproject.retry.EventKeys.*;
 
@@ -34,7 +34,7 @@ public class RetryServiceImpl implements RetryService {
         this.allRetriesDefinition = allRetriesDefinition;
     }
 
-    public void schedule(RetryRequest retryRequest) {
+    public void schedule(RetryRequest retryRequest, Map<String, Object> parameters) {
         RetryRecord retryRecord = createNewRetryGroup(retryRequest);
         String externalId = retryRequest.getExternalId();
         String groupName = allRetriesDefinition.getRetryGroup(retryRequest.getName()).getName();
@@ -42,7 +42,7 @@ public class RetryServiceImpl implements RetryService {
 
         unscheduleRetryJob(externalId, groupName, retryName);
         final DateTime retryStartTime = retryRequest.getReferenceTime().plus(retryRecord.offset());
-        schedulerService.scheduleRepeatingJob(new RepeatingSchedulableJob(motechEvent(retryRecord, retryRequest, jobIdKey(externalId, groupName, retryName)), retryStartTime.toDate(),
+        schedulerService.scheduleRepeatingJob(new RepeatingSchedulableJob(motechEvent(retryRecord, retryRequest, jobIdKey(externalId, groupName, retryName), parameters), retryStartTime.toDate(),
                 endTime(retryStartTime, retryRecord.retryCount(), retryRecord.retryInterval()), retryRecord.retryCount(), intervalInMillis(retryRecord), false));
     }
 
@@ -52,11 +52,11 @@ public class RetryServiceImpl implements RetryService {
         return retryRecord;
     }
 
-    protected boolean scheduleNextGroup(RetryRequest retryRequest) {
+    protected boolean scheduleNextGroup(RetryRequest retryRequest, Map<String, Object> parameters) {
         RetryRecord nextRetryRecord = allRetriesDefinition.getNextRetryRecord(retryRequest.getName());
         boolean isLastRetryGroup = (null == nextRetryRecord);
         if (!isLastRetryGroup)
-            schedule(new RetryRequest(nextRetryRecord.name(), retryRequest.getExternalId(), retryRequest.getReferenceTime()));
+            schedule(new RetryRequest(nextRetryRecord.name(), retryRequest.getExternalId(), retryRequest.getReferenceTime()), parameters);
         return isLastRetryGroup;
     }
 
@@ -92,13 +92,12 @@ public class RetryServiceImpl implements RetryService {
         return (retryRecord.retryInterval().toStandardDuration().getMillis());
     }
 
-    private MotechEvent motechEvent(final RetryRecord retryRecord, final RetryRequest retryRequest, final String jobId) {
-        return new MotechEvent(RetryService.RETRY_INTERNAL_SUBJECT, new HashMap<String, Object>() {{
-            put(EXTERNAL_ID, retryRequest.getExternalId());
-            put(NAME, retryRecord.name());
-            put(REFERENCE_TIME, retryRequest.getReferenceTime());
-            put(MotechSchedulerService.JOB_ID_KEY, jobId);
-        }});
+    private MotechEvent motechEvent(final RetryRecord retryRecord, final RetryRequest retryRequest, final String jobId, Map<String, Object> parameters) {
+        parameters.put(EXTERNAL_ID, retryRequest.getExternalId());
+        parameters.put(NAME, retryRecord.name());
+        parameters.put(REFERENCE_TIME, retryRequest.getReferenceTime());
+        parameters.put(MotechSchedulerService.JOB_ID_KEY, jobId);
+        return new MotechEvent(RetryService.RETRY_INTERNAL_SUBJECT, parameters);
     }
 
     private String jobIdKey(String externalId, String groupName, String name) {

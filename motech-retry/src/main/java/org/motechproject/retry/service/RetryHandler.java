@@ -37,13 +37,12 @@ public class RetryHandler {
         DateTime referenceTime = (DateTime) event.getParameters().get(REFERENCE_TIME);
         String retryRecordName = (String) event.getParameters().get(NAME);
 
-
         final Retry retry = decrementPendingRetryCount(externalId, retryRecordName);
         boolean lastRetryWithinCurrentGroup = !retry.hasPendingRetires();
 
         boolean lastRetryBatch = false;
         if (lastRetryWithinCurrentGroup) {
-             lastRetryBatch = retryServiceImpl.scheduleNextGroup(new RetryRequest(retryRecordName, externalId, referenceTime));
+            lastRetryBatch = retryServiceImpl.scheduleNextGroup(new RetryRequest(retryRecordName, externalId, referenceTime), event.getParameters());
         }
         String retryEventSubject = allRetriesDefinition.getRetryGroup(retryRecordName).getEventSubject();
         outboundEventGateway.sendEventMessage(motechEvent(retryEventSubject, event.getParameters(), lastRetryBatch));
@@ -52,7 +51,7 @@ public class RetryHandler {
     private Retry decrementPendingRetryCount(String externalId, String retryRecordName) {
         Retry activeRetry = allRetries.getActiveRetry(externalId, retryRecordName);
         activeRetry.decrementRetriesLeft();
-        if(!activeRetry.hasPendingRetires())
+        if (!activeRetry.hasPendingRetires())
             activeRetry.setRetryStatus(RetryStatus.DEFAULTED);
         allRetries.update(activeRetry);
         return activeRetry;

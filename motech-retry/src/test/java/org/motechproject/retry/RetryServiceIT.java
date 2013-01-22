@@ -47,7 +47,7 @@ public class RetryServiceIT {
         String externalId = "externalId";
         DateTime referenceTime = DateTime.now();
 
-        retryService.schedule(new RetryRequest(name, externalId, referenceTime));
+        retryService.schedule(new RetryRequest(name, externalId, referenceTime), null);
 
         Retry activeRetry = allRetries.getActiveRetry(externalId, name);
         assertThat(activeRetry.hasPendingRetires(), is(true));
@@ -61,7 +61,7 @@ public class RetryServiceIT {
     @Test
     public void shouldInvokeRetrySubjectListener() throws InterruptedException {
         String externalId = UUID.randomUUID().toString();
-        retryService.schedule(new RetryRequest("retry-every-second", externalId, DateTime.now()));
+        retryService.schedule(new RetryRequest("retry-every-second", externalId, DateTime.now()), null);
         int counter = 0;
         while(true) {
             if(eventHandler.hasEventBeenFired()) {

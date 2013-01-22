@@ -7,19 +7,21 @@ import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Matchers;
 import org.mockito.Mock;
+import org.motechproject.event.MotechEvent;
+import org.motechproject.event.OutboundEventGateway;
 import org.motechproject.retry.dao.AllRetries;
 import org.motechproject.retry.dao.AllRetriesDefinition;
 import org.motechproject.retry.domain.Retry;
 import org.motechproject.retry.domain.RetryGroupRecord;
 import org.motechproject.retry.domain.RetryRequest;
 import org.motechproject.retry.domain.RetryStatus;
-import org.motechproject.event.MotechEvent;
-import org.motechproject.event.OutboundEventGateway;
 
 import java.util.HashMap;
 
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Matchers.anyMap;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
@@ -60,7 +62,7 @@ public class RetryHandlerTest {
         retryGroupRecord.setEventSubject(retryEventSubject);
         when(mockAllRetriesDefinitions.getRetryGroup(name)).thenReturn(retryGroupRecord);
         when(mockAllRetries.getActiveRetry(externalId, name)).thenReturn(retry);
-        when(mockRetryServiceImpl.scheduleNextGroup(Matchers.<RetryRequest>any())).thenReturn(true);
+        when(mockRetryServiceImpl.scheduleNextGroup(Matchers.<RetryRequest>any(), anyMap())).thenReturn(true);
 
         retryHandler.handle(event);
 
@@ -69,7 +71,7 @@ public class RetryHandlerTest {
         assertMotechEvent(true, retryEventSubject);
 
         ArgumentCaptor<RetryRequest> retryRequestCaptor = ArgumentCaptor.forClass(RetryRequest.class);
-        verify(mockRetryServiceImpl).scheduleNextGroup(retryRequestCaptor.capture());
+        verify(mockRetryServiceImpl).scheduleNextGroup(retryRequestCaptor.capture(), eq(event.getParameters()));
         RetryRequest request = retryRequestCaptor.getValue();
 
         assertThat(request.getName(), is(name));

@@ -7,16 +7,17 @@ import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Matchers;
 import org.mockito.Mock;
+import org.motechproject.event.MotechEvent;
 import org.motechproject.retry.dao.AllRetries;
 import org.motechproject.retry.dao.AllRetriesDefinition;
 import org.motechproject.retry.domain.*;
 import org.motechproject.scheduler.MotechSchedulerService;
-import org.motechproject.event.MotechEvent;
 import org.motechproject.scheduler.domain.RepeatingSchedulableJob;
 import org.motechproject.util.DateUtil;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static java.util.Arrays.asList;
 import static org.hamcrest.core.Is.is;
@@ -56,7 +57,9 @@ public class RetryServiceImplTest {
         retryGroupRecord.setName(groupName);
         when(mockAllRetriesDef.getRetryGroup(name)).thenReturn(retryGroupRecord);
 
-        retryServiceImpl.schedule(new RetryRequest(name, externalId, referenceTime));
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put("KEY1", "VALUE1");
+        retryServiceImpl.schedule(new RetryRequest(name, externalId, referenceTime), parameters);
 
         ArgumentCaptor<RepeatingSchedulableJob> jobCaptor = ArgumentCaptor.forClass(RepeatingSchedulableJob.class);
         verify(mockSchedulerService).safeUnscheduleJob(RETRY_INTERNAL_SUBJECT, externalId + "." + groupName + "." + name + "-repeat");
@@ -64,6 +67,7 @@ public class RetryServiceImplTest {
 
         RepeatingSchedulableJob actualJob = jobCaptor.getValue();
         assertThat(actualJob.getMotechEvent(), is(new MotechEvent(RETRY_INTERNAL_SUBJECT, new HashMap<String, Object>() {{
+            put("KEY1", "VALUE1");
             put(EXTERNAL_ID, externalId);
             put(NAME, name);
             put(REFERENCE_TIME, referenceTime);
@@ -82,6 +86,8 @@ public class RetryServiceImplTest {
         DateTime referenceTime = DateTime.now();
         String externalId = "externalId";
         String name = "retrySchedule1";
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put("KEY1", "VALUE1");
 
         RetryRecord nextRetryRecord = new RetryRecord();
         nextRetryRecord.setName("retrySchedule2");
@@ -89,11 +95,11 @@ public class RetryServiceImplTest {
         when(mockAllRetriesDef.getNextRetryRecord(name)).thenReturn(nextRetryRecord);
 
         RetryServiceImpl service = spy(retryServiceImpl);
-        doNothing().when(service).schedule(Matchers.<RetryRequest>any());
-        service.scheduleNextGroup(new RetryRequest(name, externalId, referenceTime));
+        doNothing().when(service).schedule(Matchers.<RetryRequest>any(), anyMap());
+        service.scheduleNextGroup(new RetryRequest(name, externalId, referenceTime), parameters);
 
         ArgumentCaptor<RetryRequest> requestCaptor = ArgumentCaptor.forClass(RetryRequest.class);
-        verify(service).schedule(requestCaptor.capture());
+        verify(service).schedule(requestCaptor.capture(), eq(parameters));
 
         RetryRequest request = requestCaptor.getValue();
         assertThat(request.getName(), is("retrySchedule2"));
@@ -106,6 +112,8 @@ public class RetryServiceImplTest {
         DateTime referenceTime = DateTime.now();
         String externalId = "externalId";
         String name = "retrySchedule1";
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put("KEY1", "VALUE1");
 
         RetryRecord nextRetryRecord = new RetryRecord();
         nextRetryRecord.setName("retrySchedule2");
@@ -115,10 +123,10 @@ public class RetryServiceImplTest {
         when(mockAllRetriesDef.getNextRetryRecord(name)).thenReturn(null);
 
         RetryServiceImpl service = spy(retryServiceImpl);
-        doNothing().when(service).schedule(Matchers.<RetryRequest>any());
-        service.scheduleNextGroup(new RetryRequest(name, externalId, referenceTime));
+        doNothing().when(service).schedule(Matchers.<RetryRequest>any(), anyMap());
+        service.scheduleNextGroup(new RetryRequest(name, externalId, referenceTime), parameters);
 
-        verify(service, never()).schedule(Matchers.<RetryRequest>any());
+        verify(service, never()).schedule(Matchers.<RetryRequest>any(), anyMap());
     }
 
     @Test
