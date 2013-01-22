@@ -7,16 +7,16 @@ import java.util.List;
 @XmlRootElement(name = "entityResource")
 public class EntityResource {
     @XmlElement(name = "Item")
-    private List<Item> item;
+    private List<PermissionItem> permissionItem;
 
     public EntityResource() {
     }
 
-    public EntityResource(List<Item> item) {
-        this.item = item;
+    public EntityResource(List<PermissionItem> permissionItem) {
+        this.permissionItem = permissionItem;
     }
 
-    public List<Item> getItem() {
-        return item;
+    public List<PermissionItem> getPermissionItem() {
+        return permissionItem;
     }
 }
