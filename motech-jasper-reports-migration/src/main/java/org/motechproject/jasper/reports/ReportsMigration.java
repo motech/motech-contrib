@@ -12,7 +12,7 @@ import java.io.InputStreamReader;
 public abstract class ReportsMigration implements JavaMigration {
 
     private static final String REPORTS_PATH = "/Reports/";
-    private static final String IMPORT_COMMAND = "cd $JASPER_HOME/buildomatic/ && $JASPER_HOME/buildomatic/js-import.sh --input-zip %s --update";
+    private static final String IMPORT_COMMAND = "cd $JASPER_HOME/buildomatic/ && $JASPER_HOME/buildomatic/js-import.sh --input-dir %s --update";
 
     private final ReportsProperties reportsProperties;
 
@@ -44,7 +44,7 @@ public abstract class ReportsMigration implements JavaMigration {
     }
 
     private void processImportOfReportWithName(String reportName) throws Exception {
-        File file = new File(reportsProperties.getReportsSourceLocation() + File.separator + reportName + ".zip");
+        File file = new File(reportsProperties.getReportsSourceLocation() + File.separator + reportName);
         if (!file.exists())
             throw new RuntimeException("Report " + reportName + " does not exist in the resources directory at location " + file.getPath());
         System.out.println(String.format("Importing of report %s started.", reportName));
