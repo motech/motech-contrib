@@ -55,7 +55,7 @@ public class MotechSchedulerDiagnostics implements Diagnostics {
     public DiagnosticsResult jobSummaries() throws SchedulerException, SQLException {
         String quartzDataSourceName = diagnosticConfiguration.getQuartzDataSourceName();
         if(quartzDataSourceName == null){
-            new DiagnosticsResult("Summary Of Jobs", "No Quartz Data Source Name defined.", Status.Unknown);
+            return new DiagnosticsResult("Summary Of Jobs", "No Quartz Data Source Name defined.", Status.Unknown);
         }
 
         List<DiagnosticsResult> diagnosticsResults = new ArrayList<>();
