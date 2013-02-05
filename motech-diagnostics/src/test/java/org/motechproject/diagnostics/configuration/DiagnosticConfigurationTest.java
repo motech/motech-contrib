@@ -8,9 +8,7 @@ import java.util.Properties;
 
 import static java.util.Arrays.asList;
 import static org.hamcrest.Matchers.hasItem;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class DiagnosticConfigurationTest{
 
@@ -49,6 +47,18 @@ public class DiagnosticConfigurationTest{
         DiagnosticConfiguration diagnosticConfiguration = new DiagnosticConfiguration(diagnosticProperties);
 
         assertEquals(asList("job1", "job2"), diagnosticConfiguration.scheduleJobNames());
+    }
+
+    @Test
+    public void shouldReturnQuartzDataSource() {
+        Properties diagnosticProperties = new Properties();
+        DiagnosticConfiguration diagnosticConfiguration = new DiagnosticConfiguration(diagnosticProperties);
+
+        assertNull(diagnosticConfiguration.getQuartzDataSourceName());
+
+        diagnosticProperties.put("quartz.dataSource", "motechDS");
+
+        assertEquals("motechDS", diagnosticConfiguration.getQuartzDataSourceName());
     }
 
 }

@@ -11,6 +11,7 @@ import org.motechproject.diagnostics.response.ServiceResult;
 import org.motechproject.diagnostics.util.TestClass;
 import org.motechproject.testing.utils.SpringIntegrationTest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 
 import java.lang.reflect.InvocationTargetException;
@@ -22,6 +23,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 
 @ContextConfiguration(locations = "classpath*:/applicationContext-DiagnosticsTest.xml")
+@DirtiesContext
 public class DiagnosticsServiceIT extends SpringIntegrationTest {
 
     @Before

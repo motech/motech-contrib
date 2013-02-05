@@ -1,18 +1,28 @@
 package org.motechproject.diagnostics.diagnostics;
 
+import org.joda.time.LocalDateTime;
 import org.motechproject.diagnostics.Diagnostics;
 import org.motechproject.diagnostics.annotation.Diagnostic;
+import org.motechproject.diagnostics.common.JdbcUtils;
 import org.motechproject.diagnostics.configuration.DiagnosticConfiguration;
 import org.motechproject.diagnostics.response.DiagnosticsResult;
+import org.motechproject.diagnostics.response.Status;
 import org.quartz.*;
 import org.quartz.impl.matchers.GroupMatcher;
+import org.quartz.utils.DBConnectionManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.management.*;
+import java.lang.management.ManagementFactory;
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
+import static java.util.Arrays.asList;
 import static org.motechproject.diagnostics.response.Status.Fail;
 import static org.motechproject.diagnostics.response.Status.Success;
 
@@ -38,6 +48,84 @@ public class MotechSchedulerDiagnostics implements Diagnostics {
                 schedulerRunning ? "Running": "Not Running",
                 schedulerRunning ?  Success : Fail);
     }
+
+    @Diagnostic(name = "Quartz JMX")
+    public DiagnosticsResult quartzMonitoring() throws SchedulerException {
+        MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
+        MBeanInfo mBeanInfo;
+        ObjectName objectName;
+        List<DiagnosticsResult> results = new ArrayList<>();
+
+        try {
+            objectName =  new ObjectName("quartz:type=QuartzScheduler,name=schedulerFactoryBean,instance=NON_CLUSTERED");
+            mBeanInfo = mbs.getMBeanInfo(objectName);
+            MBeanAttributeInfo[] attributes = mBeanInfo.getAttributes();
+
+            String []  attributeNames = new String[attributes.length];
+            List<String>excludedAttributes = asList("CurrentlyExecutingJobs", "AllJobDetails", "AllTriggers");
+
+            int count = 0;
+            for(MBeanAttributeInfo attributeInfo : attributes){
+                if(excludedAttributes.contains(attributeInfo.getName()))
+                    continue;
+                attributeNames[count ++] = attributeInfo.getName();
+            }
+
+            AttributeList attributeList = mbs.getAttributes(objectName, attributeNames);
+
+            for(Object object : attributeList){
+                Attribute attribute = (Attribute) object;
+                results.add(new DiagnosticsResult(attribute.getName(), String.valueOf(attribute.getValue()), Status.Success));
+            }
+        } catch (Exception e) {
+            return new DiagnosticsResult("Quartz Monitoring", "Error Occurred", Status.Fail);
+        }
+
+        return new DiagnosticsResult("Quartz Monitoring", results);
+    }
+
+    private static final String GET_JOB_SUMMARY = "SELECT job_group, trigger_state, count(1), next_fire_time FROM qrtz_triggers " +
+            "group by next_fire_time,  job_group, trigger_state " +
+            "order by job_group, next_fire_time, trigger_state";
+
+
+    @Diagnostic(name = "Summary Of Jobs")
+    public DiagnosticsResult jobSummaries() throws SchedulerException, SQLException {
+        String quartzDataSourceName = diagnosticConfiguration.getQuartzDataSourceName();
+        if(quartzDataSourceName == null){
+            return new DiagnosticsResult("Summary Of Jobs", "No Quartz Data Source Name defined.", Status.Unknown);
+        }
+
+        List<DiagnosticsResult> diagnosticsResults = new ArrayList<>();
+        Connection connection = null;
+        try{
+            connection = DBConnectionManager.getInstance().getConnection(quartzDataSourceName);
+            List<Map<String,Object>> queryResults = JdbcUtils.query(connection, GET_JOB_SUMMARY);
+            for(Map<String, Object> result : queryResults){
+                String jobGroup = (String) result.get("job_group");
+                String triggerState = (String) result.get("trigger_state");
+                String count = String.valueOf(result.get("count"));
+                Long nextFireTime = (Long) result.get("next_fire_time");
+                String diagnosticResultValue = String.format("Job Group: %s Trigger State: %s Next Fire Time: %s Count:", jobGroup, triggerState, getFormattedTime(nextFireTime));
+                diagnosticsResults.add(new DiagnosticsResult(diagnosticResultValue, count, Status.Success));
+            }
+        } finally {
+            connection.close();
+        }
+
+        return new DiagnosticsResult("Summary Of Jobs", diagnosticsResults);
+    }
+
+    private String getFormattedTime(Long nextFireTime) {
+        String formattedNextFireTime;
+        if(nextFireTime == null || nextFireTime == -1) {
+            formattedNextFireTime = "NULL";
+        } else {
+            formattedNextFireTime = new LocalDateTime(nextFireTime).toString("yyyy-MM-dd HH:mm:ss");
+        }
+        return formattedNextFireTime;
+    }
+
 
     private List<DiagnosticsResult> getJobDetailsFor(List<String> jobs) throws SchedulerException {
         List<TriggerKey> triggerKeys = new ArrayList<>(motechScheduler.getTriggerKeys(GroupMatcher.triggerGroupContains("default")));

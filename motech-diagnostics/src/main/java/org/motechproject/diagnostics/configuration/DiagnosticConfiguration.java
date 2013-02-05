@@ -68,6 +68,10 @@ public class DiagnosticConfiguration {
 
         return asList(jobNames.split(","));
     }
+
+    public String getQuartzDataSourceName() {
+        return properties.getProperty("quartz.dataSource");
+    }
 }
 
 
