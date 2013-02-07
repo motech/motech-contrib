@@ -13,6 +13,8 @@ import org.quartz.utils.DBConnectionManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.management.*;
+import java.lang.management.ManagementFactory;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -20,6 +22,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import static java.util.Arrays.asList;
 import static org.motechproject.diagnostics.response.Status.Fail;
 import static org.motechproject.diagnostics.response.Status.Success;
 
@@ -44,6 +47,41 @@ public class MotechSchedulerDiagnostics implements Diagnostics {
         return new DiagnosticsResult("Motech Scheduler",
                 schedulerRunning ? "Running": "Not Running",
                 schedulerRunning ?  Success : Fail);
+    }
+
+    @Diagnostic(name = "Quartz JMX")
+    public DiagnosticsResult quartzMonitoring() throws SchedulerException {
+        MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
+        MBeanInfo mBeanInfo;
+        ObjectName objectName;
+        List<DiagnosticsResult> results = new ArrayList<>();
+
+        try {
+            objectName =  new ObjectName("quartz:type=QuartzScheduler,name=schedulerFactoryBean,instance=NON_CLUSTERED");
+            mBeanInfo = mbs.getMBeanInfo(objectName);
+            MBeanAttributeInfo[] attributes = mBeanInfo.getAttributes();
+
+            String []  attributeNames = new String[attributes.length];
+            List<String>excludedAttributes = asList("CurrentlyExecutingJobs", "AllJobDetails", "AllTriggers");
+
+            int count = 0;
+            for(MBeanAttributeInfo attributeInfo : attributes){
+                if(excludedAttributes.contains(attributeInfo.getName()))
+                    continue;
+                attributeNames[count ++] = attributeInfo.getName();
+            }
+
+            AttributeList attributeList = mbs.getAttributes(objectName, attributeNames);
+
+            for(Object object : attributeList){
+                Attribute attribute = (Attribute) object;
+                results.add(new DiagnosticsResult(attribute.getName(), String.valueOf(attribute.getValue()), Status.Success));
+            }
+        } catch (Exception e) {
+            return new DiagnosticsResult("Quartz Monitoring", "Error Occurred", Status.Fail);
+        }
+
+        return new DiagnosticsResult("Quartz Monitoring", results);
     }
 
     private static final String GET_JOB_SUMMARY = "SELECT job_group, trigger_state, count(1), next_fire_time FROM qrtz_triggers " +
