@@ -1,5 +1,6 @@
 package org.motechproject.paginator.controller;
 
+import org.apache.log4j.Logger;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.motechproject.paginator.contract.FilterParams;
 import org.motechproject.paginator.contract.SortParams;
@@ -18,6 +19,7 @@ import static java.lang.Integer.parseInt;
 @RequestMapping(value = "/page")
 public class PaginationController {
 
+    private Logger logger = Logger.getLogger(this.getClass().getName());
     private AllPagingServices allPagingServices;
 
     @Autowired
@@ -34,6 +36,12 @@ public class PaginationController {
                             @RequestParam(value = "sortCriteria", required = false, defaultValue = "{}") String sortCriteria) throws IOException {
         Paging pagingService = getPagingService(entity);
         return fetchData(pageNo, rowsPerPage, createCriteria(searchCriteria), createSortCriteria(sortCriteria), pagingService);
+    }
+
+    @ExceptionHandler(Exception.class)
+    public String handleException(RuntimeException ex) {
+        logger.error("Error occurred", ex);
+        throw ex;
     }
 
     private PageResults fetchData(String pageNo, String rowsPerPage, FilterParams searchCriteria, SortParams sortCriteria, Paging pagingService) {
