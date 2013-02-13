@@ -9,7 +9,6 @@ import java.util.Collection;
 @Getter
 @EqualsAndHashCode
 public class QueryCriteria implements Criteria {
-    static final String QUERY_SEPARATOR = ":";
     public static final String OR = " OR ";
     private QueryField field;
     private Object value;
@@ -24,7 +23,9 @@ public class QueryCriteria implements Criteria {
         if (value instanceof Collection) {
             return buildOrCriteria((Collection) value);
         } else {
-            return field.getName() + QUERY_SEPARATOR + field.transform(value.toString());
+            return queryString(field.getName(),
+                    field.getType().getValue(),
+                    field.transform(this.value.toString()));
         }
     }
 
@@ -35,13 +36,21 @@ public class QueryCriteria implements Criteria {
             StringBuilder builder = new StringBuilder();
             builder.append("(");
             for (Object element : value) {
-                builder.append(field.getName());
-                builder.append(":");
-                builder.append(field.transform(element.toString()));
+                builder.append(queryString(field.getName(),
+                        field.getType().getValue(),
+                        field.transform(element.toString())));
+
                 builder.append(OR);
             }
             return builder.substring(0, builder.lastIndexOf(OR)) + ")";
         }
+    }
+
+    private String queryString(String name, String type, String value) {
+        return String.format("%s<%s>:%s",
+                name,
+                type,
+                value);
     }
 }
 

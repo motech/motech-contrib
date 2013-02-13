@@ -27,9 +27,9 @@ public class QueryBuilderTest {
         filterParam.put("field4", "17/10/2012");
 
         QueryBuilder queryBuilder = new QueryBuilder(filterParam, null, new QueryDefinitionImpl());
-        String expectedQuery = "field1:val1 AND field2<string>:[val2 TO val3] " +
+        String expectedQuery = "field1<string>:val1 AND field2<string>:[val2 TO val3] " +
                 "AND field3<date>:[2012-10-16 TO 2012-12-18] " +
-                "AND field4:2012-10-17";
+                "AND field4<date>:2012-10-17";
 
         assertThat(queryBuilder.buildQuery(), is(expectedQuery));
         assertNull(queryBuilder.buildSortCriteria());
@@ -59,9 +59,9 @@ public class QueryBuilderTest {
         filterParam.put("field4", "17/10/2012");
 
         QueryBuilder queryBuilder = new QueryBuilder(filterParam, null, new QueryDefinitionImpl());
-        String expectedQuery = "(field1:val1 OR field1:val2) AND field2<string>:[val2 TO val3] " +
+        String expectedQuery = "(field1<string>:val1 OR field1<string>:val2) AND field2<string>:[val2 TO val3] " +
                 "AND field3<date>:[2012-10-16 TO 2012-12-18] " +
-                "AND field4:2012-10-17";
+                "AND field4<date>:2012-10-17";
 
         assertThat(queryBuilder.buildQuery(), is(expectedQuery));
     }
