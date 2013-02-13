@@ -109,7 +109,7 @@ public class LuceneAwareMotechBaseRepositoryTest {
 
     private LuceneQuery expectedLuceneQuery(String viewName, String searchFunctionName) {
         LuceneQuery expectedQuery = new LuceneQuery(viewName, searchFunctionName);
-        String queryString = "field1:value1 AND field2<string>:[value2 TO value3]";
+        String queryString = "field1<string>:value1 AND field2<string>:[value2 TO value3]";
         expectedQuery.setQuery(queryString.toString());
         expectedQuery.setIncludeDocs(true);
         expectedQuery.setLimit(10);
