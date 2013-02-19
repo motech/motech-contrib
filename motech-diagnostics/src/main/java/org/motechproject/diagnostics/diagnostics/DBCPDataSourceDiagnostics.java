@@ -26,7 +26,7 @@ public class DBCPDataSourceDiagnostics implements Diagnostics {
 
     @Override
     public String name() {
-        return "Apache DBCP Diagnostics";
+        return DiagnosticServiceName.DBCP;
     }
 
     @Override
