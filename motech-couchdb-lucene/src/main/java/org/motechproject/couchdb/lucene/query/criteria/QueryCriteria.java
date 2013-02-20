@@ -2,6 +2,7 @@ package org.motechproject.couchdb.lucene.query.criteria;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import org.motechproject.couchdb.lucene.query.field.FieldType;
 import org.motechproject.couchdb.lucene.query.field.QueryField;
 
 import java.util.Collection;
@@ -24,7 +25,7 @@ public class QueryCriteria implements Criteria {
             return buildOrCriteria((Collection) value);
         } else {
             return queryString(field.getName(),
-                    field.getType().getValue(),
+                    field.getType(),
                     field.transform(this.value.toString()));
         }
     }
@@ -37,7 +38,7 @@ public class QueryCriteria implements Criteria {
             builder.append("(");
             for (Object element : value) {
                 builder.append(queryString(field.getName(),
-                        field.getType().getValue(),
+                        field.getType(),
                         field.transform(element.toString())));
 
                 builder.append(OR);
@@ -46,10 +47,13 @@ public class QueryCriteria implements Criteria {
         }
     }
 
-    private String queryString(String name, String type, String value) {
+    private String queryString(String name, FieldType type, String value) {
+        if(type == FieldType.STRING){
+            return name + ":" +  value;
+        }else
         return String.format("%s<%s>:%s",
                 name,
-                type,
+                type.getValue(),
                 value);
     }
 }
