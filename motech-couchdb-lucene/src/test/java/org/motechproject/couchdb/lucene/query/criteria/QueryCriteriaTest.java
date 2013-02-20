@@ -11,12 +11,21 @@ import static org.hamcrest.core.Is.is;
 public class QueryCriteriaTest {
 
     @Test
-    public void shouldBuildQueryCriteria(){
+    public void shouldBuildQueryCriteriaForString(){
         QueryField field = new QueryField("field1", FieldType.STRING);
         String expectedValue = "value1";
         Criteria criteria = new QueryCriteria(field, expectedValue);
 
-        assertThat(criteria.buildCriteriaString(), is("field1<string>:value1"));
+        assertThat(criteria.buildCriteriaString(), is("field1:value1"));
+    }
+
+    @Test
+    public void shouldBuildQueryCriteriaForInt(){
+        QueryField field = new QueryField("field1", FieldType.INT);
+        String expectedValue = "value1";
+        Criteria criteria = new QueryCriteria(field, expectedValue);
+
+        assertThat(criteria.buildCriteriaString(), is("field1<int>:value1"));
     }
 
     @Test
@@ -25,6 +34,6 @@ public class QueryCriteriaTest {
 
         Criteria criteria = new QueryCriteria(field, asList("value1", "value2"));
 
-        assertThat(criteria.buildCriteriaString(), is("(field1<string>:value1 OR field1<string>:value2)"));
+        assertThat(criteria.buildCriteriaString(), is("(field1:value1 OR field1:value2)"));
     }
 }
