@@ -12,6 +12,7 @@ import org.motechproject.couchdb.lucene.query.QueryDefinition;
 import org.motechproject.couchdb.lucene.query.field.Field;
 import org.motechproject.couchdb.lucene.query.field.QueryField;
 import org.motechproject.couchdb.lucene.query.field.RangeField;
+import org.motechproject.couchdb.lucene.util.WhiteSpaceEscape;
 import org.motechproject.model.MotechBaseDataObject;
 
 import java.util.*;
@@ -27,6 +28,9 @@ public class LuceneAwareMotechBaseRepositoryTest {
     @Mock
     LuceneAwareCouchDbConnector connector;
 
+    @Mock
+    WhiteSpaceEscape whiteSpaceEscape;
+
     @Before
     public void setUp() {
         initMocks(this);
@@ -36,7 +40,12 @@ public class LuceneAwareMotechBaseRepositoryTest {
     public void shouldFilterResultsBasedOnQueryDefinition() {
         Map<String, Object> filterParams = buildFilterParameters();
 
-        LuceneAwareMotechBaseRepositoryImpl repository = new LuceneAwareMotechBaseRepositoryImpl(connector);
+        LuceneAwareMotechBaseRepositoryImpl repository = new LuceneAwareMotechBaseRepositoryImpl(connector, whiteSpaceEscape);
+
+        Map<String, Object> expectedFilterParams = new HashMap<>();
+        expectedFilterParams.put("field1", "value1");
+        expectedFilterParams.put("field2From", "value2");
+        expectedFilterParams.put("field2To", "value3");
 
         QueryDefinitionImpl queryDefinition = new QueryDefinitionImpl();
         LuceneQuery expectedQuery = expectedLuceneQuery(queryDefinition.viewName(), queryDefinition.searchFunctionName());
@@ -45,16 +54,19 @@ public class LuceneAwareMotechBaseRepositoryTest {
         CustomLuceneResult<Entity> luceneResult = createLuceneResult(entity);
 
         when(connector.queryLucene(expectedQuery, repository.getTypeReference())).thenReturn(luceneResult);
+        when(whiteSpaceEscape.escape(filterParams)).thenReturn(expectedFilterParams);
 
         assertEquals(expectedResult, repository.filter(queryDefinition, filterParams, null, 0, 10));
         verify(connector).queryLucene(expectedQuery, repository.getTypeReference());
+        verify(whiteSpaceEscape).escape(filterParams);
     }
 
     @Test
     public void shouldFilterAndSortResultsBasedOnQueryDefinition() {
         Map<String, Object> filterParams = buildFilterParameters();
 
-        LuceneAwareMotechBaseRepositoryImpl repository = new LuceneAwareMotechBaseRepositoryImpl(connector);
+        LuceneAwareMotechBaseRepositoryImpl repository = new LuceneAwareMotechBaseRepositoryImpl(connector, whiteSpaceEscape);
+        repository.whiteSpaceEscape = whiteSpaceEscape;
 
         LinkedHashMap<String, Object> sortParams = new LinkedHashMap<>();
         sortParams.put("field1", "ASC");
@@ -68,6 +80,7 @@ public class LuceneAwareMotechBaseRepositoryTest {
         CustomLuceneResult<Entity> luceneResult = createLuceneResult(entity);
 
         when(connector.queryLucene(expectedQuery, repository.getTypeReference())).thenReturn(luceneResult);
+        when(whiteSpaceEscape.escape(filterParams)).thenReturn(filterParams);
 
         assertEquals(expectedResult, repository.filter(queryDefinition, filterParams, sortParams, 0, 10));
         verify(connector).queryLucene(expectedQuery, repository.getTypeReference());
@@ -77,7 +90,9 @@ public class LuceneAwareMotechBaseRepositoryTest {
     public void shouldGetTotalRecordsForGivenFilter(){
         Map<String, Object> filterParams = buildFilterParameters();
 
-        LuceneAwareMotechBaseRepositoryImpl repository = new LuceneAwareMotechBaseRepositoryImpl(connector);
+        LuceneAwareMotechBaseRepositoryImpl repository = new LuceneAwareMotechBaseRepositoryImpl(connector, whiteSpaceEscape);
+        repository.whiteSpaceEscape = whiteSpaceEscape;
+
         QueryDefinitionImpl queryDefinition = new QueryDefinitionImpl();
         LuceneQuery expectedQuery = expectedLuceneQuery(queryDefinition.viewName(), queryDefinition.searchFunctionName());
         expectedQuery.setLimit(1);
@@ -87,6 +102,7 @@ public class LuceneAwareMotechBaseRepositoryTest {
         luceneResult.setTotalRows(1);
 
         when(connector.queryLucene(expectedQuery, repository.getTypeReference())).thenReturn(luceneResult);
+        when(whiteSpaceEscape.escape(filterParams)).thenReturn(filterParams);
 
         assertEquals(1, repository.count(queryDefinition, filterParams));
         verify(connector).queryLucene(expectedQuery, repository.getTypeReference());
@@ -141,8 +157,9 @@ class Entity extends MotechBaseDataObject {
 
 class LuceneAwareMotechBaseRepositoryImpl extends LuceneAwareMotechBaseRepository<Entity> {
 
-    protected LuceneAwareMotechBaseRepositoryImpl(LuceneAwareCouchDbConnector db) {
-        super(Entity.class, db);
+
+    protected LuceneAwareMotechBaseRepositoryImpl(LuceneAwareCouchDbConnector db, WhiteSpaceEscape whiteSpaceEscape) {
+        super(Entity.class, db, whiteSpaceEscape);
     }
 
     @Override

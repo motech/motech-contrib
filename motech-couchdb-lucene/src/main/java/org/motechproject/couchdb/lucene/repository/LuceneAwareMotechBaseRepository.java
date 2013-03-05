@@ -6,6 +6,7 @@ import com.github.ldriscoll.ektorplucene.LuceneQuery;
 import org.codehaus.jackson.type.TypeReference;
 import org.motechproject.couchdb.lucene.query.QueryBuilder;
 import org.motechproject.couchdb.lucene.query.QueryDefinition;
+import org.motechproject.couchdb.lucene.util.WhiteSpaceEscape;
 import org.motechproject.dao.MotechBaseRepository;
 import org.motechproject.model.MotechBaseDataObject;
 
@@ -16,8 +17,12 @@ import java.util.Map;
 
 public abstract class LuceneAwareMotechBaseRepository<T extends MotechBaseDataObject> extends MotechBaseRepository<T> {
 
-    protected LuceneAwareMotechBaseRepository(Class<T> type, LuceneAwareCouchDbConnector db) {
+
+    WhiteSpaceEscape whiteSpaceEscape;
+
+    protected LuceneAwareMotechBaseRepository(Class<T> type, LuceneAwareCouchDbConnector db, WhiteSpaceEscape whiteSpaceEscape) {
         super(type, db);
+        this.whiteSpaceEscape = whiteSpaceEscape;
     }
 
     protected List<T> filter(QueryDefinition queryDefinition, Map<String, Object> filterParams, LinkedHashMap<String, Object> sortParams, Integer skip, Integer limit) {
@@ -34,7 +39,7 @@ public abstract class LuceneAwareMotechBaseRepository<T extends MotechBaseDataOb
     }
 
     private CustomLuceneResult getLuceneResult(QueryDefinition queryDefinition, Map<String, Object> queryParams, LinkedHashMap<String, Object> sortParams, Integer limit, Integer skip) {
-        LuceneQuery query = getLuceneQuery(queryDefinition, queryParams, sortParams, limit, skip);
+        LuceneQuery query = getLuceneQuery(queryDefinition, whiteSpaceEscape.escape(queryParams), sortParams, limit, skip);
         TypeReference resultDocType = getTypeReference();
         return ((LuceneAwareCouchDbConnector) db).queryLucene(query, resultDocType);
     }
