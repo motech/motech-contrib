@@ -2,6 +2,7 @@ package org.motechproject.paginator.controller;
 
 import org.codehaus.jackson.map.ObjectMapper;
 import org.motechproject.paginator.contract.FilterParams;
+import org.motechproject.paginator.contract.SortParams;
 import org.motechproject.paginator.repository.AllPagingServices;
 import org.motechproject.paginator.response.PageResults;
 import org.motechproject.paginator.service.Paging;
@@ -32,15 +33,19 @@ public class PaginationController {
                             @RequestParam(value = "searchCriteria", required = false, defaultValue = "{}") String searchCriteria,
                             @RequestParam(value = "sortCriteria", required = false, defaultValue = "{}") String sortCriteria) throws IOException {
         Paging pagingService = getPagingService(entity);
-        return fetchData(pageNo, rowsPerPage, createCriteria(searchCriteria), createCriteria(sortCriteria), pagingService);
+        return fetchData(pageNo, rowsPerPage, createCriteria(searchCriteria), createSortCriteria(sortCriteria), pagingService);
     }
 
-    private PageResults fetchData(String pageNo, String rowsPerPage, FilterParams searchCriteria, FilterParams sortCriteria, Paging pagingService) {
+    private PageResults fetchData(String pageNo, String rowsPerPage, FilterParams searchCriteria, SortParams sortCriteria, Paging pagingService) {
         return (pagingService != null) ? pagingService.page(parseInt(pageNo), parseInt(rowsPerPage), searchCriteria, sortCriteria) : null;
     }
 
     private FilterParams createCriteria(String searchCriteria) throws IOException {
         return new ObjectMapper().readValue(searchCriteria, FilterParams.class);
+    }
+
+    private SortParams createSortCriteria(String sortCriteria) throws IOException {
+        return new ObjectMapper().readValue(sortCriteria, SortParams.class);
     }
 
     private Paging getPagingService(String entity) {

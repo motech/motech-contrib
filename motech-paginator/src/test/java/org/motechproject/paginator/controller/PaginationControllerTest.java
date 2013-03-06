@@ -5,6 +5,7 @@ import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.motechproject.paginator.contract.FilterParams;
+import org.motechproject.paginator.contract.SortParams;
 import org.motechproject.paginator.repository.AllPagingServices;
 import org.motechproject.paginator.response.PageResults;
 import org.motechproject.paginator.service.Paging;
@@ -40,7 +41,7 @@ public class PaginationControllerTest {
 
         Paging pagingService = mock(Paging.class);
         when(allPagingServices.getPagingServiceFor("entity1")).thenReturn(pagingService);
-        when(pagingService.page(any(Integer.class), any(Integer.class), any(FilterParams.class), any(FilterParams.class))).thenReturn(results);
+        when(pagingService.page(any(Integer.class), any(Integer.class), any(FilterParams.class), any(SortParams.class))).thenReturn(results);
 
         standaloneSetup(paginationController).build()
                 .perform(get("/page/entity1").param("pageNo", "1").param("rowsPerPage", "2").param("searchCriteria", "{\"name\":\"goodName\"}")
@@ -50,7 +51,7 @@ public class PaginationControllerTest {
                 .andExpect(content().string("{\"pageNo\":0,\"totalRows\":1,\"results\":[\"someString\"]}"));
 
         ArgumentCaptor<FilterParams> searchCriteriaCaptor = ArgumentCaptor.forClass(FilterParams.class);
-        ArgumentCaptor<FilterParams> sortCriteriaCaptor = ArgumentCaptor.forClass(FilterParams.class);
+        ArgumentCaptor<SortParams> sortCriteriaCaptor = ArgumentCaptor.forClass(SortParams.class);
         verify(pagingService).page(eq(1), eq(2), searchCriteriaCaptor.capture(), sortCriteriaCaptor.capture());
         assertEquals("goodName", searchCriteriaCaptor.getValue().get("name"));
         assertEquals("asc", sortCriteriaCaptor.getValue().get("name"));

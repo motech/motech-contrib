@@ -4,6 +4,7 @@ package org.motechproject.paginator.repository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.motechproject.paginator.contract.FilterParams;
+import org.motechproject.paginator.contract.SortParams;
 import org.motechproject.paginator.response.PageResults;
 import org.motechproject.paginator.service.Paging;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +34,7 @@ class PagingServiceStub implements Paging {
 
 
     @Override
-    public PageResults<Object> page(Integer pageNo, Integer rowsPerPage, FilterParams filterCriteria, FilterParams sortCriteria) {
+    public PageResults<Object> page(Integer pageNo, Integer rowsPerPage, FilterParams filterCriteria, SortParams sortCriteria) {
         return null;
     }
 
