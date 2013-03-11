@@ -266,6 +266,6 @@
         <connection>scm:git:https://github.com/motech/motech-contrib</connection>
         <developerConnection>scm:git:https://github.com/motech/motech-contrib</developerConnection>
         <url>https://github.com/motech/motech-contrib</url>
-        <tag>whp-motech-contrib-0.14</tag>
+        <tag>whp-motech-contrib-0.15</tag>
     </scm>
 </project>
