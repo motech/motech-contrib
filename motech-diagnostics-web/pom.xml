@@ -6,7 +6,7 @@
         <version>0.15-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-
+    <name>motech-diagnostics-web</name>
     <artifactId>motech-diagnostics-web</artifactId>
     <dependencies>
         <dependency>
