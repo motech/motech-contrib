@@ -3,14 +3,19 @@ package org.motechproject.http.client.service;
 
 import org.motechproject.event.MotechEvent;
 import org.motechproject.http.client.components.CommunicationType;
+import org.motechproject.http.client.domain.EventCallBack;
 import org.motechproject.http.client.domain.EventDataKeys;
-import org.motechproject.http.client.domain.EventSubjects;
 import org.motechproject.http.client.domain.Method;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.io.Serializable;
 import java.util.HashMap;
+
+import static org.motechproject.http.client.domain.EventDataKeys.*;
+import static org.motechproject.http.client.domain.EventSubjects.HTTP_REQUEST;
+import static org.motechproject.http.client.domain.Method.POST;
+import static org.motechproject.http.client.domain.Method.PUT;
 
 @Service
 public class HttpClientServiceImpl implements HttpClientService {
@@ -20,31 +25,42 @@ public class HttpClientServiceImpl implements HttpClientService {
 
     @Override
     public void post(String url, Serializable data) {
-        sendMotechEvent(url, data, emptyHeaders(), Method.POST);
+        createAndSendMotechEvent(url, data, emptyHeaders(), POST);
     }
 
     @Override
     public void post(String url, Serializable data, HashMap<String, String> headers) {
-        sendMotechEvent(url, data, headers, Method.POST);
+        createAndSendMotechEvent(url, data, headers, POST);
+    }
+
+    @Override
+    public void post(String url, String data, HashMap<String, String> headers, EventCallBack eventCallBack) {
+        HashMap<String, Object> parameters = constructParametersFrom(url, data, headers, POST);
+        parameters.put(EventDataKeys.CALLBACK, eventCallBack);
+        sendMotechEvent(parameters);
     }
 
     @Override
     public void put(String url, Serializable data) {
-        sendMotechEvent(url, data, emptyHeaders(), Method.PUT);
+        createAndSendMotechEvent(url, data, emptyHeaders(), PUT);
     }
 
-    private void sendMotechEvent(String url, Serializable data, HashMap<String, String> headers, Method method){
+    private void createAndSendMotechEvent(String url, Serializable data, HashMap<String, String> headers, Method method){
         HashMap<String, Object> parameters = constructParametersFrom(url, data, headers, method);
-        MotechEvent motechEvent = new MotechEvent(EventSubjects.HTTP_REQUEST, parameters);
+        sendMotechEvent(parameters);
+    }
+
+    private void sendMotechEvent(HashMap<String, Object> parameters) {
+        MotechEvent motechEvent = new MotechEvent(HTTP_REQUEST, parameters);
         communicationType.send(motechEvent);
     }
 
     private HashMap<String, Object> constructParametersFrom(String url, Serializable data, HashMap<String, String> headers, Method method) {
         HashMap<String, Object> parameters = new HashMap<>();
-        parameters.put(EventDataKeys.URL, url);
-        parameters.put(EventDataKeys.METHOD, method);
-        parameters.put(EventDataKeys.DATA, data);
-        parameters.put(EventDataKeys.HEADERS, headers);
+        parameters.put(URL, url);
+        parameters.put(METHOD, method);
+        parameters.put(DATA, data);
+        parameters.put(HEADERS, headers);
         return parameters;
     }
 

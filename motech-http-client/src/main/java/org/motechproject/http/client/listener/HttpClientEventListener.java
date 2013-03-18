@@ -2,8 +2,10 @@ package org.motechproject.http.client.listener;
 
 
 import org.apache.log4j.Logger;
+import org.motechproject.event.EventRelay;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.annotations.MotechListener;
+import org.motechproject.http.client.domain.EventCallBack;
 import org.motechproject.http.client.domain.EventDataKeys;
 import org.motechproject.http.client.domain.EventSubjects;
 import org.motechproject.http.client.domain.Method;
@@ -19,11 +21,13 @@ import java.util.Map;
 public class HttpClientEventListener {
 
     private RestTemplate restTemplate;
+    private EventRelay eventRelay;
     Logger logger = Logger.getLogger(HttpClientEventListener.class);
 
     @Autowired
-    public HttpClientEventListener(RestTemplate restTemplate) {
+    public HttpClientEventListener(RestTemplate restTemplate, EventRelay eventRelay) {
         this.restTemplate = restTemplate;
+        this.eventRelay = eventRelay;
     }
 
     @MotechListener(subjects = EventSubjects.HTTP_REQUEST)
@@ -36,6 +40,14 @@ public class HttpClientEventListener {
         Method method = (Method) parameters.get(EventDataKeys.METHOD);
         logger.info(String.format("Posting Http request -- Url: %s, Data: %s", url, String.valueOf(requestData)));
         executeFor(url, entity, method);
+        fireCallBackEvent(parameters);
+    }
+
+    private void fireCallBackEvent(Map<String, Object> parameters) {
+        if(parameters.containsKey(EventDataKeys.CALLBACK)){
+            EventCallBack callBack = (EventCallBack) parameters.get(EventDataKeys.CALLBACK);
+            eventRelay.sendEventMessage(callBack.getCallBackEvent());
+        }
     }
 
     private void executeFor(String url, Object requestData, Method method) {

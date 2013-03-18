@@ -8,6 +8,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.http.client.components.CommunicationType;
+import org.motechproject.http.client.domain.EventCallBack;
 import org.motechproject.http.client.domain.EventDataKeys;
 import org.motechproject.http.client.domain.Method;
 import org.powermock.modules.junit4.PowerMockRunner;
@@ -16,6 +17,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 import java.util.HashMap;
 
 import static junit.framework.Assert.assertEquals;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.MockitoAnnotations.initMocks;
 
@@ -81,6 +83,26 @@ public class HttpClientServiceImplTest {
         assertEquals(data, (String) eventMessageSent.getParameters().get(EventDataKeys.DATA));
         assertEquals(url, eventMessageSent.getParameters().get(EventDataKeys.URL));
         assertEquals(headers, eventMessageSent.getParameters().get(EventDataKeys.HEADERS));
+    }
 
+    @Test
+    public void shouldCreateMotechEventWithEventCallBack() {
+        String url = "someurl";
+        String data = "data";
+
+        HashMap<String, String> headers  = mock(HashMap.class);
+        EventCallBack eventCallBack = mock(EventCallBack.class);
+
+        httpClientService.post(url, data, headers, eventCallBack);
+
+        ArgumentCaptor<MotechEvent> motechEventArgumentCaptor = ArgumentCaptor.forClass(MotechEvent.class);
+        verify(mockCommunicationType).send(motechEventArgumentCaptor.capture());
+        MotechEvent eventMessageSent = motechEventArgumentCaptor.getValue();
+
+        assertEquals(Method.POST, eventMessageSent.getParameters().get(EventDataKeys.METHOD));
+        assertEquals(data, (String) eventMessageSent.getParameters().get(EventDataKeys.DATA));
+        assertEquals(url, eventMessageSent.getParameters().get(EventDataKeys.URL));
+        assertEquals(headers, eventMessageSent.getParameters().get(EventDataKeys.HEADERS));
+        assertEquals(eventCallBack, eventMessageSent.getParameters().get(EventDataKeys.CALLBACK));
     }
 }
