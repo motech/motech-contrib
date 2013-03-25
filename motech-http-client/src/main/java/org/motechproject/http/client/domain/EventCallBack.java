@@ -2,9 +2,12 @@ package org.motechproject.http.client.domain;
 
 import org.motechproject.event.MotechEvent;
 
+import java.io.Serializable;
 import java.util.Map;
 
-public class EventCallBack {
+public class EventCallBack implements Serializable {
+    private static final long serialVersionUID = 1L;
+    
     private String subject;
     private Map<String, Object> parameters;
 
