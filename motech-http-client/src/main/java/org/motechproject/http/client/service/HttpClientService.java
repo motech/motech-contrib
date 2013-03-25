@@ -9,5 +9,5 @@ public interface HttpClientService {
     void put(String url, Serializable data);
     void post(String url, Serializable data);
     void post(String url, Serializable data, HashMap<String, String> headers);
-    void post(String url, String data, HashMap<String, String> headers, EventCallBack eventCallBack);
+    void post(String url, Serializable data, HashMap<String, String> headers, EventCallBack eventCallBack);
 }

@@ -34,7 +34,7 @@ public class HttpClientServiceImpl implements HttpClientService {
     }
 
     @Override
-    public void post(String url, String data, HashMap<String, String> headers, EventCallBack eventCallBack) {
+    public void post(String url, Serializable data, HashMap<String, String> headers, EventCallBack eventCallBack) {
         HashMap<String, Object> parameters = constructParametersFrom(url, data, headers, POST);
         parameters.put(EventDataKeys.CALLBACK, eventCallBack);
         sendMotechEvent(parameters);
