@@ -9,8 +9,8 @@ import org.springframework.web.client.RestTemplate;
 
 public class JasperRESTClient {
 
-    private RestTemplate restTemplate;
     private final ReportsProperties properties;
+    private RestTemplate restTemplate;
 
     public JasperRESTClient() {
         properties = new ReportsProperties();
@@ -27,7 +27,8 @@ public class JasperRESTClient {
         String authorisation = properties.getJasperServerUserName() + ":" + properties.getJasperServerPassword();
         byte[] encodedBytes = new Base64().encode(authorisation.getBytes());
         httpHeaders.add("Authorization", "Basic " + new String(encodedBytes).replace("\n", ""));
-        HttpEntity<Object> httpEntity = new HttpEntity<Object>(null, httpHeaders);
+        HttpEntity<Object> httpEntity = new HttpEntity<>(null, httpHeaders);
+        System.out.println("Deleting :" + properties.getJasperServerResourceURL() + resourceName);
         restTemplate.exchange(properties.getJasperServerResourceURL() + resourceName, HttpMethod.DELETE, httpEntity, Object.class);
     }
 
