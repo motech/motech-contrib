@@ -143,12 +143,12 @@
         <dependency>
             <groupId>org.motechproject</groupId>
             <artifactId>motech-platform-ivr-api</artifactId>
-            <version>0.12-SNAPSHOT</version>
+            <version>${motech.version}</version>
         </dependency>
         <dependency>
             <groupId>org.motechproject</groupId>
             <artifactId>motech-platform-decisiontree</artifactId>
-            <version>0.12-SNAPSHOT</version>
+            <version>${motech.version}</version>
         </dependency>
         <dependency>
             <groupId>org.motechproject</groupId>
