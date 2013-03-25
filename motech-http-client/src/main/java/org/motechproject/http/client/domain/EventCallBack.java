@@ -16,4 +16,24 @@ public class EventCallBack {
     public MotechEvent getCallBackEvent(){
         return new MotechEvent(subject, parameters);
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof EventCallBack)) return false;
+
+        EventCallBack that = (EventCallBack) o;
+
+        if (parameters != null ? !parameters.equals(that.parameters) : that.parameters != null) return false;
+        if (subject != null ? !subject.equals(that.subject) : that.subject != null) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = subject != null ? subject.hashCode() : 0;
+        result = 31 * result + (parameters != null ? parameters.hashCode() : 0);
+        return result;
+    }
 }
