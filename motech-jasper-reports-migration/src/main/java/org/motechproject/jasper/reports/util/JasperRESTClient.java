@@ -28,7 +28,7 @@ public class JasperRESTClient {
         byte[] encodedBytes = new Base64().encode(authorisation.getBytes());
         httpHeaders.add("Authorization", "Basic " + new String(encodedBytes).replace("\n", ""));
         HttpEntity<Object> httpEntity = new HttpEntity<>(null, httpHeaders);
-        System.out.println("Deleting :" + properties.getJasperServerResourceURL() + resourceName);
+        System.out.println("DELETE : " + properties.getJasperServerResourceURL() + resourceName);
         restTemplate.exchange(properties.getJasperServerResourceURL() + resourceName, HttpMethod.DELETE, httpEntity, Object.class);
     }
 
@@ -37,7 +37,8 @@ public class JasperRESTClient {
         String authorisation = properties.getJasperServerUserName() + ":" + properties.getJasperServerPassword();
         byte[] encodedBytes = new Base64().encode(authorisation.getBytes());
         httpHeaders.add("Authorization", "Basic " + new String(encodedBytes).replace("\n", ""));
-        HttpEntity<Object> httpEntity = new HttpEntity<Object>(requestBody, httpHeaders);
+        HttpEntity<Object> httpEntity = new HttpEntity<>(requestBody, httpHeaders);
+        System.out.printf("PUT : url => %s resource => %s \n", url, requestBody);
         restTemplate.exchange(url, HttpMethod.PUT, httpEntity, Object.class);
     }
 }

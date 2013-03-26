@@ -13,14 +13,12 @@ public class PermissionItem {
     private String xsiType;
     @XmlAttribute(name = "xmlns:xsi")
     private String xmlnsXsi;
-
     @XmlElement
     private Integer permissionMask;
     @XmlElement
     private PermissionRecipient permissionRecipient;
     @XmlElement
     private String URI;
-
 
     public PermissionItem() {
         this.xsiType = "objectPermissionImpl";
@@ -42,5 +40,12 @@ public class PermissionItem {
     @Override
     public int hashCode() {
         return HashCodeBuilder.reflectionHashCode(this);
+    }
+
+    @Override
+    public String toString() {
+        return " {permissionMask=" + permissionMask +
+                ", permissionRecipient=" + permissionRecipient +
+                ", URI='" + URI + "\'}";
     }
 }

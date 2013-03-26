@@ -36,4 +36,8 @@ public class PermissionRecipient {
         return HashCodeBuilder.reflectionHashCode(this);
     }
 
+    @Override
+    public String toString() {
+        return '\'' + name + '\'';
+    }
 }

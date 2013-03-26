@@ -19,4 +19,11 @@ public class EntityResource {
     public List<PermissionItem> getPermissionItem() {
         return permissionItem;
     }
+
+    @Override
+    public String toString() {
+        return "EntityResource{" +
+                "permissionItem=" + permissionItem +
+                '}';
+    }
 }
