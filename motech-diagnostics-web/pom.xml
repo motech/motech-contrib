@@ -33,7 +33,7 @@
             <groupId>org.motechproject</groupId>
             <artifactId>motech-diagnostics</artifactId>
             <version>${motech.contrib.version}</version>
-            <type>test-jar</type>
+            <classifier>tests</classifier>
             <scope>test</scope>
         </dependency>
     </dependencies>
