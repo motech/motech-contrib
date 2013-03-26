@@ -4,13 +4,11 @@
 
   <parent>
     <artifactId>motech-contrib</artifactId>
-    <groupId>org.motechproject</groupId>
-    <version>0.12-SNAPSHOT</version>
+      <groupId>org.motechproject.tama-motech-contrib</groupId>
+      <version>0.10-SNAPSHOT</version>
   </parent>
 
   <artifactId>commcare-listener</artifactId>
-  <groupId>org.motechproject</groupId>
-  <version>0.12-SNAPSHOT</version>
 
   <name>commcare-listener</name>
 
@@ -29,7 +27,7 @@
     </dependency>
     <dependency>
       <groupId>org.motechproject</groupId>
-      <artifactId>motech-platform-common-api</artifactId>
+      <artifactId>motech-platform-common</artifactId>
       <version>${motech.version}</version>
     </dependency>
 

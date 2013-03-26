@@ -12,7 +12,7 @@
 
     <context:annotation-config/>
     <context:component-scan base-package="org.motechproject.casexml"/>
-    <import resource="classpath*:applicationPlatformCommonAPI.xml"/>
+    <import resource="classpath*:applicationPlatformCommon.xml"/>
     <import resource="classpath*:applicationContext-case.xml"/>
 
 </beans>

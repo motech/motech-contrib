@@ -4,8 +4,8 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <artifactId>case-integration</artifactId>
-        <groupId>org.motechproject</groupId>
-        <version>0.12-SNAPSHOT</version>
+        <groupId>org.motechproject.tama-motech-contrib</groupId>
+        <version>0.10-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <name>case-logger</name>
@@ -24,7 +24,7 @@
         </dependency>
         <dependency>
             <groupId>org.motechproject</groupId>
-            <artifactId>motech-platform-common-api</artifactId>
+            <artifactId>motech-platform-common</artifactId>
             <version>${motech.version}</version>
         </dependency>
         <dependency>

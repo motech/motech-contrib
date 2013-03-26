@@ -5,10 +5,10 @@ import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.motechproject.event.MotechEvent;
 import org.motechproject.http.client.domain.EventDataKeys;
 import org.motechproject.http.client.domain.EventSubjects;
 import org.motechproject.http.client.domain.Method;
+import org.motechproject.model.MotechEvent;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.util.MultiValueMap;
@@ -69,7 +69,7 @@ public class HttpClientEventListenerTest {
 
     private MultiValueMap<String, String> getHttpHeaders(HashMap<String, String> headers) {
         HttpHeaders httpHeaders = new HttpHeaders();
-        for(String param : headers.keySet()){
+        for (String param : headers.keySet()) {
             httpHeaders.add(param, headers.get(param));
         }
         return httpHeaders;

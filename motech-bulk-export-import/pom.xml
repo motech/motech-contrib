@@ -4,12 +4,11 @@
 
     <name>motech-bulk-export-import</name>
     <artifactId>motech-bulk-export-import</artifactId>
-    <groupId>org.motechproject</groupId>
 
     <parent>
         <artifactId>motech-contrib</artifactId>
-        <groupId>org.motechproject</groupId>
-        <version>0.12-SNAPSHOT</version>
+        <groupId>org.motechproject.tama-motech-contrib</groupId>
+        <version>0.10-SNAPSHOT</version>
     </parent>
 
     <dependencies>

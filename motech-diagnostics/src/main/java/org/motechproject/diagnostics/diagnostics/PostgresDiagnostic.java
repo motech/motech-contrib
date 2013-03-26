@@ -3,7 +3,6 @@ package org.motechproject.diagnostics.diagnostics;
 import org.motechproject.diagnostics.Diagnostics;
 import org.motechproject.diagnostics.annotation.Diagnostic;
 import org.motechproject.diagnostics.response.DiagnosticsResult;
-import org.motechproject.diagnostics.response.Status;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
@@ -13,7 +12,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Properties;
 
-import static org.hibernate.exception.ExceptionUtils.getFullStackTrace;
+import static org.apache.commons.lang.exception.ExceptionUtils.getFullStackTrace;
 import static org.motechproject.diagnostics.response.Status.Fail;
 import static org.motechproject.diagnostics.response.Status.Success;
 

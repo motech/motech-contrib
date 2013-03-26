@@ -8,6 +8,6 @@
   <context:annotation-config/>
   <context:component-scan base-package="org.ei.commcare.listener"/>
 
-  <import resource="classpath:integrationCommonAPI.xml"/>
+  <import resource="classpath:integrationCommon.xml"/>
   <import resource="classpath:applicationContext-commcare-api.xml"/>
 </beans>
