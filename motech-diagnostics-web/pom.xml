@@ -13,7 +13,7 @@
     <artifactId>motech-diagnostics-web</artifactId>
     <dependencies>
         <dependency>
-            <groupId>org.motechproject</groupId>
+            <groupId>org.motechproject.tama-motech-contrib</groupId>
             <artifactId>motech-diagnostics</artifactId>
             <version>${motech.contrib.version}</version>
         </dependency>
@@ -29,7 +29,7 @@
             <version>${spring.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.motechproject</groupId>
+            <groupId>org.motechproject.tama-motech-contrib</groupId>
             <artifactId>motech-diagnostics</artifactId>
             <version>${motech.contrib.version}</version>
             <classifier>tests</classifier>
