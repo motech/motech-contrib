@@ -35,6 +35,7 @@
         <module>motech-paginator</module>
         <module>motech-couchdb-lucene</module>
         <module>motech-diagnostics-web</module>
+        <module>motech-call-log</module>
     </modules>
 
     <dependencyManagement>
