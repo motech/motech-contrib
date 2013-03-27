@@ -215,7 +215,9 @@
                             <password>${jdbc.password}</password>
                             <driver>${jdbc.driverClassName}</driver>
                             <url>${jdbc.url}</url>
-                            <schemas>${jdbc.schema}</schemas>
+                            <schemas>
+                                <schema>${jdbc.schema}</schema>
+                            </schemas>
                             <locations>
                                 <location>db/callLogMigration</location>
                             </locations>
