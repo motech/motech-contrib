@@ -1,6 +1,6 @@
 CREATE EXTENSION IF NOT EXISTS hstore;
 
-CREATE TABLE whp_reports.call_log
+CREATE TABLE call_log
 (
   call_log_id serial NOT NULL,
   call_id text,

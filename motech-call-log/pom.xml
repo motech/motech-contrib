@@ -146,4 +146,83 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>properties-maven-plugin</artifactId>
+                <version>1.0-alpha-2</version>
+                <executions>
+                    <execution>
+                        <phase>initialize</phase>
+                        <goals>
+                            <goal>read-project-properties</goal>
+                        </goals>
+                        <configuration>
+                            <files>
+                                <file>src/test/resources/callLog.properties</file>
+                            </files>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <version>1.7</version>
+                <executions>
+                    <execution>
+                        <phase>initialize</phase>
+                        <configuration>
+                            <target name="init">
+                                <echo message="init call log db" />
+                                <exec executable="dropdb">
+                                    <arg line="-U postgres call_log" />
+                                </exec>
+
+                                <exec executable="createdb">
+                                    <arg line="-U postgres call_log" />
+                                </exec>
+                                <echo message="Setting up schema" />
+                                <exec executable="psql">
+                                    <arg line="-U postgres" />
+                                    <arg line="-d call_log" />
+                                    <arg line="-f ${project.basedir}/src/test/resources/base_setup.sql" />
+                                </exec>
+                            </target>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>com.googlecode.flyway</groupId>
+                <artifactId>flyway-maven-plugin</artifactId>
+                <version>2.1.1</version>
+                <executions>
+                    <execution>
+                        <id>process-resources2</id>
+                        <goals>
+                            <goal>clean</goal>
+                            <goal>migrate</goal>
+                        </goals>
+                        <phase>pre-integration-test</phase>
+                        <configuration>
+                            <user>${jdbc.username}</user>
+                            <password>${jdbc.password}</password>
+                            <driver>${jdbc.driverClassName}</driver>
+                            <url>${jdbc.url}</url>
+                            <schemas>${jdbc.schema}</schemas>
+                            <locations>
+                                <location>db/callLogMigration</location>
+                            </locations>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 </project>
