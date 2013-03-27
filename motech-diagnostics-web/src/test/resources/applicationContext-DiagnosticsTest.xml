@@ -9,6 +9,7 @@
 
     <util:properties id="postgresProperties" location="classpath:postgres.properties"/>
     <util:properties id="diagnosticProperties" location="classpath:diagnostics.properties"/>
+    <util:properties id="couchdbProperties" location="classpath:couchdb.properties"/>
     <context:property-placeholder location="classpath*:spring-batch-diagnostics.properties" ignore-unresolvable="true"/>
 
     <import resource="classpath:applicationContext-DiagnosticsWeb.xml"/>
