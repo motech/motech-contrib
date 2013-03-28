@@ -8,6 +8,8 @@ import java.io.Serializable;
 @Data
 public class OutboundDetails implements Serializable {
 
+    private static final long serialVersionUID = 1L;
+
     private String callType;
 
     private String requestId;

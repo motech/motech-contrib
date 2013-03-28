@@ -12,6 +12,8 @@ import java.util.Map;
 @Data
 public class CallLogRequest implements Serializable {
 
+    private static final long serialVersionUID = 1L;
+
     @NotNullOrEmpty
     private String callId;
 

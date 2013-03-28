@@ -75,7 +75,7 @@ public class CallLogHandlerIT {
     @Test
     public void shouldValidateDispositionTypeCallLogRequest() throws Exception {
         exceptionThrown.expect(RuntimeException.class);
-        exceptionThrown.expectMessage("field:disposition:The value should be one of : [FAILED]");
+        exceptionThrown.expectMessage("field:disposition:The value should be one of : [ANSWERED, BUSY, FAILED, NO_ANSWER, UNKNOWN, PATIENT_HUNG_UP, CALL_COMPLETE]");
 
 
         CallLogRequest callLogRequest = new CallLogRequest();
