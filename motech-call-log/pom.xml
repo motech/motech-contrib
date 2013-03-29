@@ -41,6 +41,18 @@
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-entitymanager</artifactId>
             <version>4.1.6.Final</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.hibernate.common</groupId>
+                    <artifactId>hibernate-commons-annotations</artifactId>
+                </exclusion>
+            </exclusions>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-annotations</artifactId>
+            <version>3.5.6-Final</version>
             <type>jar</type>
         </dependency>
         <dependency>
