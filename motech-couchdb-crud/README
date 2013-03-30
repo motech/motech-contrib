@@ -1,0 +1,21 @@
+1. Add couchdb crud controller to component scanning
+
+    <context:component-scan base-package="org.motechproject.couchdbcrud.controller">
+        <context:include-filter expression="org.springframework.stereotype.Controller" type="annotation"/>
+    </context:component-scan>
+
+2. Import the couchdbcrud module context file
+<import resource="classpath*:applicationCouchdbCrudModuleContext.xml"/>
+
+3. Expose static content from the module as mvc resource
+
+<mvc:resources mapping="/motech-couchdb-crud/**" location="classpath:/motech-couchdb-crud/"/>
+
+4. Add "class path:/views/" to templateLoaderPaths along with original path of your web app.
+Also set "preferFileSystemAccess" to  "true" to allow access of free marker template from jars.
+    <bean id="freemarkerConfig" class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer">
+        <property name="templateLoaderPaths" value="/WEB-INF/views/,classpath:/views/"/>
+        <property name="preferFileSystemAccess" value="false" />
+    </bean>
+
+5. Implement CrudEntity for entities that should be available for crud and register bean in spring context.
