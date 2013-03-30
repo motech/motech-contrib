@@ -36,6 +36,7 @@
         <module>motech-couchdb-lucene</module>
         <module>motech-diagnostics-web</module>
         <module>motech-call-log</module>
+        <module>motech-couchdb-crud</module>
     </modules>
 
     <dependencyManagement>
@@ -155,6 +156,11 @@
             <dependency>
                 <groupId>org.motechproject.whp-contrib</groupId>
                 <artifactId>motech-web-utils</artifactId>
+                <version>0.16-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>org.motechproject.whp-contrib</groupId>
+                <artifactId>motech-couchdb-crud</artifactId>
                 <version>0.16-SNAPSHOT</version>
             </dependency>
         </dependencies>
