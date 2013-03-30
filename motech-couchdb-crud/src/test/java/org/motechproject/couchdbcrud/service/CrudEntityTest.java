@@ -100,9 +100,4 @@ class ExampleCrudEntity extends CrudEntity {
     public Class getEntityType() {
         return Entity.class;
     }
-
-    @Override
-    public String entityName() {
-        return "Entity";
-    }
 }

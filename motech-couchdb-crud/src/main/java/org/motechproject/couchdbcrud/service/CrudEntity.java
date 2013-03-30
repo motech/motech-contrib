@@ -37,7 +37,7 @@ public abstract class CrudEntity<T extends MotechBaseDataObject> implements Pagi
     public abstract Class getEntityType();
 
     public String entityName(){
-        return this.getClass().getSimpleName();
+        return this.getEntityType().getSimpleName();
     }
 
     public PageResults page(Integer pageNumber, Integer rowsPerPage, FilterParams filterParams, SortParams sortCriteria) {
