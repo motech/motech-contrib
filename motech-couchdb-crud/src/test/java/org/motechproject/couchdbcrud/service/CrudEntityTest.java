@@ -73,12 +73,12 @@ class Entity extends MotechBaseDataObject {
 
 }
 
-class ExampleCrudEntity extends CrudEntity {
+class ExampleCrudEntity extends CouchDBCrudEntity {
 
     private CrudRepository crudRepository;
 
     ExampleCrudEntity(CrudRepository crudRepository) {
-        this.crudRepository = crudRepository;
+        super(crudRepository);
     }
 
     @Override
@@ -89,11 +89,6 @@ class ExampleCrudEntity extends CrudEntity {
     @Override
     public List<String> getFilterFields() {
         return new ArrayList<>();
-    }
-
-    @Override
-    public CrudRepository getRepository() {
-        return crudRepository;
     }
 
     @Override

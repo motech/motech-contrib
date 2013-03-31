@@ -61,21 +61,13 @@ public class CrudServiceTest {
     }
 
     @Test
-    public void shouldCreateNewEntityIfDocIdIsNull() {
-        MotechBaseDataObject value = mock(MotechBaseDataObject.class);
-        crudService.saveEntity(entity1, value);
-
-        verify(crudRepository1).add(value);
-    }
-
-    @Test
-    public void shouldUpdateEntityIfDocIdIsNotNull() {
+    public void shouldSaveEntity() {
         MotechBaseDataObject value = mock(MotechBaseDataObject.class);
         when(value.getId()).thenReturn("anId");
 
         crudService.saveEntity(entity1, value);
 
-        verify(crudRepository1).update(value);
+        verify(crudRepository1).save(value);
     }
 
     @Test

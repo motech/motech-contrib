@@ -1,7 +1,6 @@
 package org.motechproject.couchdbcrud.service;
 
 import org.motechproject.couchdbcrud.repository.CrudRepository;
-import org.motechproject.model.MotechBaseDataObject;
 import org.motechproject.paginator.contract.FilterParams;
 import org.motechproject.paginator.contract.SortParams;
 import org.motechproject.paginator.response.PageResults;
@@ -10,7 +9,14 @@ import org.motechproject.paginator.service.Paging;
 import java.util.List;
 import java.util.Map;
 
-public abstract class CrudEntity<T extends MotechBaseDataObject> implements Paging {
+public abstract class CrudEntity<T> implements Paging {
+
+    private CrudRepository<T> crudRepository;
+
+    protected CrudEntity(CrudRepository<T> crudRepository) {
+        this.crudRepository = crudRepository;
+    }
+
     /**
      * Fields you want to display in the listing section
      * @return
@@ -24,11 +30,11 @@ public abstract class CrudEntity<T extends MotechBaseDataObject> implements Pagi
      */
     public abstract List<String> getFilterFields();
 
-    /**
-     * The CrudRepository for this entity
-     * @return
-     */
-    public abstract CrudRepository<T> getRepository();
+    public abstract List<String> getHiddenFields();
+
+    public abstract String getIdFieldName();
+
+    public abstract Map<String, String> getDefaultValues();
 
     /**
      * Type of the entity
@@ -38,6 +44,10 @@ public abstract class CrudEntity<T extends MotechBaseDataObject> implements Pagi
 
     public String entityName(){
         return this.getEntityType().getSimpleName();
+    }
+
+    public CrudRepository getRepository(){
+        return crudRepository;
     }
 
     public PageResults page(Integer pageNumber, Integer rowsPerPage, FilterParams filterParams, SortParams sortCriteria) {

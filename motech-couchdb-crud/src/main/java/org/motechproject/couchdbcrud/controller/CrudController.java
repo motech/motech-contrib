@@ -5,7 +5,6 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.schema.JsonSchema;
 import org.motechproject.couchdbcrud.service.CrudEntity;
 import org.motechproject.couchdbcrud.service.CrudService;
-import org.motechproject.model.MotechBaseDataObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -34,6 +33,9 @@ public class CrudController {
         model.addAttribute("entity", entityName);
         model.addAttribute("displayFields", entity.getDisplayFields());
         model.addAttribute("filterFields", entity.getFilterFields());
+        model.addAttribute("hiddenFields", entity.getHiddenFields());
+        model.addAttribute("defaultValues", entity.getDefaultValues());
+        model.addAttribute("idField", entity.getIdFieldName());
         return "crud/list";
     }
 
@@ -53,7 +55,7 @@ public class CrudController {
     @ResponseBody
     public void save(@PathVariable("entity") String entityName, @RequestBody String entityJson) throws IOException {
         CrudEntity crudEntity = crudService.getCrudEntity(entityName);
-        MotechBaseDataObject object = (MotechBaseDataObject) objectMapper.readValue(entityJson, crudEntity.getEntityType());
+        Object object = objectMapper.readValue(entityJson, crudEntity.getEntityType());
         crudService.saveEntity(entityName, object);
     }
 

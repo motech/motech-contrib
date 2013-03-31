@@ -1,7 +1,6 @@
 package org.motechproject.couchdbcrud.service;
 
 import org.motechproject.couchdbcrud.repository.CrudRepository;
-import org.motechproject.model.MotechBaseDataObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -31,13 +30,9 @@ public class CrudService {
         repository.remove(entity);
     }
 
-    public void saveEntity(String name, MotechBaseDataObject entity) {
+    public void saveEntity(String name, Object entity) {
         CrudRepository repository = getCrudEntity(name).getRepository();
-        if (entity.getId() == null) {
-            repository.add(entity);
-        } else {
-            repository.update(entity);
-        }
+        repository.save(entity);
     }
 
     public Object getEntity(String entityName, String entityId) {

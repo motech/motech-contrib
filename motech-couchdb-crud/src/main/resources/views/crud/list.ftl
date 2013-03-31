@@ -54,7 +54,7 @@
 <div class="row-fluid">
     <div class="results">
         <div id="${entity}s">
-            <@paginator.paginate id = "listing" entity="${entity}" filterSectionId="filter" contextRoot="/whp" rowsPerPage="20"  stylePath="/resources-${applicationVersion}/styles">
+            <@paginator.paginate id = "listing" entity="${entity}" filterSectionId="filter" contextRoot="/${contextRoot}" rowsPerPage="20">
                 <table id="${entity}List" class="table table-striped table-bordered table-condensed"
                        redirectOnRowClick="true">
                     <thead>
@@ -71,8 +71,8 @@
                         <#list displayFields as displayField>
                             <td id="${entity}_{{item.${displayField}}}">{{item.${displayField}}}</td>
                         </#list>
-                        <td><a href="#" class = "editEntity" data-toggle="modal" data-target="#createOrEditEntityModal" onclick="editEntity(this)" entityId = "{{item._id}}">Edit</a></td>
-                        <td><a href="#" class = "deleteEntity" onclick="deleteEntity(this)" entityId = "{{item._id}}">Delete</a></td>
+                        <td><a href="#" class = "editEntity" data-toggle="modal" data-target="#createOrEditEntityModal" onclick="editEntity(this)" entityId = "{{item.${idField}}}">Edit</a></td>
+                        <td><a href="#" class = "deleteEntity" onclick="deleteEntity(this)" entityId = "{{item.${idField}}}">Delete</a></td>
                     </tr>
                     <tr type="no-results" class="hide">
                         <td class="warning text-center" colspan="17"></td>
@@ -129,9 +129,12 @@
                 "schema":jsonSchema.properties,
                 "form":[
                     "*",
-                    {"key":"type", "type":"hidden"},
-                    {"key":"_id", "type":"hidden"},
-                    {"key":"_rev", "type":"hidden"},
+                    <#list hiddenFields as hiddenField>
+                    {"key":"${hiddenField}", "type":"hidden"},
+                    </#list>
+//                {"key":"type", "type":"hidden"},
+//                    {"key":"_id", "type":"hidden"},
+//                    {"key":"_rev", "type":"hidden"},
                     {"type":"submit", "title":"Submit"}
                 ],
                 "onSubmitValid": submitValues,
@@ -146,9 +149,12 @@
             "schema":jsonSchema.properties,
             "form":[
                 "*",
-                {"key":"type", "type":"hidden"},
-                {"key":"_id", "type":"hidden"},
-                {"key":"_rev", "type":"hidden"},
+            <#list hiddenFields as hiddenField>
+                {"key":"${hiddenField}", "type":"hidden"},
+            </#list>
+//                {"key":"type", "type":"hidden"},
+//                {"key":"_id", "type":"hidden"},
+//                {"key":"_rev", "type":"hidden"},
                 {"type":"submit", "title":"Submit"}
             ],
             "onSubmitValid": submitValues
@@ -172,7 +178,10 @@
 
         $.getJSON("<@spring.url '/crud/${entity}/schema/'/>", function (json) {
             jsonSchema = json;
-            jsonSchema.properties.type.default = "${entity}";
+            <#list defaultValues?keys as key>
+                jsonSchema.properties.${key}.default = "${defaultValues[key]}";
+            </#list>
+            <#--jsonSchema.properties.type.default = "${entity}";-->
         });
     });
 </script>
