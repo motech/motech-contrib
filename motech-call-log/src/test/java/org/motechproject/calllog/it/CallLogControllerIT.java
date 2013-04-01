@@ -7,6 +7,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
+import org.motechproject.calllog.request.OutboundDetails;
 import org.motechproject.scheduler.context.EventContext;
 import org.motechproject.calllog.controller.CallLogController;
 import org.motechproject.calllog.domain.CallLog;
@@ -57,6 +58,13 @@ public class CallLogControllerIT {
         callLogRequest.setCallId(callId);
         callLogRequest.setPhoneNumber(phoneNumber);
         callLogRequest.setDisposition(DispositionType.FAILED.name());
+        OutboundDetails outboundDetails = new OutboundDetails();
+        outboundDetails.setAttempt("1");
+        outboundDetails.setCallType("reminder");
+        outboundDetails.setRequestId("23");
+        outboundDetails.setAttemptTime("20/12/1986 23:23:23");
+        callLogRequest.setOutboundDetails(outboundDetails);
+
         HashMap<String, String> customData = new HashMap<>();
         String key = "patientId";
         String value = "12345";

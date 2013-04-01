@@ -3,10 +3,10 @@ package org.motechproject.calllog.handler;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
-import org.motechproject.event.MotechEvent;
-import org.motechproject.validation.validator.BeanValidator;
 import org.motechproject.calllog.request.CallLogRequest;
 import org.motechproject.calllog.service.CallLogService;
+import org.motechproject.event.MotechEvent;
+import org.springframework.validation.Validator;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -23,12 +23,13 @@ public class CallLogHandlerTest {
     @Mock
     private CallLogService callLogService;
     @Mock
-    private BeanValidator beanValidator;
+    private Validator validator;
 
     @Before
     public void setUp() {
         initMocks(this);
-        callLogHandler = new CallLogHandler(callLogService, beanValidator);
+
+        callLogHandler = new CallLogHandler(callLogService, validator);
     }
 
     @Test

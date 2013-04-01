@@ -49,6 +49,8 @@
           p:entityManagerFactory-ref="callLogEntityManagerFactory">
     </bean>
 
+    <bean id="callLogValidator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean" />
+
     <tx:annotation-driven transaction-manager="callLogTransactionManager"/>
 
 </beans>

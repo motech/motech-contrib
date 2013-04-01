@@ -36,7 +36,11 @@ public class CallLogHandlerIT {
     @Test
     public void shouldValidateCallLogRequest() throws Exception {
         exceptionThrown.expect(RuntimeException.class);
-        exceptionThrown.expectMessage("field:callId:value should not be null,field:phoneNumber:value should not be null,field:disposition:value should not be null");
+        exceptionThrown.expectMessage("field:outboundDetails:may not be null");
+        exceptionThrown.expectMessage("field:disposition:may not be null");
+        exceptionThrown.expectMessage("field:phoneNumber:may not be null");
+        exceptionThrown.expectMessage("field:disposition:invalid value");
+        exceptionThrown.expectMessage("field:callId:may not be null");
 
         CallLogRequest callLogRequest = new CallLogRequest();
         Map<String, Object> params = new HashMap<>();
@@ -51,8 +55,13 @@ public class CallLogHandlerIT {
     @Test
     public void shouldValidateDateFormatCallLogRequest() throws Exception {
         exceptionThrown.expect(RuntimeException.class);
-        exceptionThrown.expectMessage("field:startTime:Invalid format: \"12/12/12\" is too short,field:disposition:value should not be null");
-
+        exceptionThrown.expectMessage("field:startTime:invalid date format");
+        exceptionThrown.expectMessage("field:outboundDetails.attempt:may not be null");
+        exceptionThrown.expectMessage("field:outboundDetails.callType:may not be null");
+        exceptionThrown.expectMessage("field:disposition:may not be null");
+        exceptionThrown.expectMessage("field:disposition:invalid value");
+        exceptionThrown.expectMessage("field:outboundDetails.requestId:may not be null");
+        exceptionThrown.expectMessage("field:outboundDetails.attemptTime:invalid date format");
 
         CallLogRequest callLogRequest = new CallLogRequest();
         callLogRequest.setCallId("callid");
@@ -75,8 +84,8 @@ public class CallLogHandlerIT {
     @Test
     public void shouldValidateDispositionTypeCallLogRequest() throws Exception {
         exceptionThrown.expect(RuntimeException.class);
-        exceptionThrown.expectMessage("field:disposition:The value should be one of : [ANSWERED, BUSY, FAILED, NO_ANSWER, UNKNOWN, PATIENT_HUNG_UP, CALL_COMPLETE]");
-
+        exceptionThrown.expectMessage("field:disposition:invalid value");
+        exceptionThrown.expectMessage("field:outboundDetails:may not be null");
 
         CallLogRequest callLogRequest = new CallLogRequest();
         callLogRequest.setCallId("callid");
