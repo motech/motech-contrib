@@ -25,7 +25,7 @@ public class JpaCrudRepository<T, ID extends Serializable> implements CrudReposi
     }
 
     public List<T> findBy(String fieldName, String value) {
-        Method method = ReflectionUtils.findMethod(jpaRepository.getClass(), "findBy" + WordUtils.capitalize(value), String.class);
+        Method method = ReflectionUtils.findMethod(jpaRepository.getClass(), "findBy" + WordUtils.capitalize(fieldName), String.class);
         return (List<T>) ReflectionUtils.invokeMethod(method, jpaRepository, value);
     }
 
