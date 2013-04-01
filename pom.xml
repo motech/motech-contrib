@@ -37,6 +37,7 @@
         <module>motech-diagnostics-web</module>
         <module>motech-call-log</module>
         <module>motech-couchdb-crud</module>
+        <module>motech-excel-builder</module>
     </modules>
 
     <dependencyManagement>
