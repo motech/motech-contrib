@@ -42,7 +42,7 @@ public class ReportBuilderTest {
         reportBuilder.buildReport(reportType, outputStream);
 
         ArgumentCaptor<Map> captor = ArgumentCaptor.forClass(Map.class);
-        verify(excelReportBuilder).build(eq(outputStream), captor.capture(), eq(reportType + ".xls"));
+        verify(excelReportBuilder).build(eq(outputStream), captor.capture(), eq("/xls/templates/" + reportType + ".xls"));
         Map params = captor.getValue();
         assertThat((List<Map<String, Object>>) params.get(DATA), is(data));
     }

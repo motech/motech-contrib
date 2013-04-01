@@ -12,6 +12,7 @@ import java.util.Map;
 @Component
 public class ReportBuilder {
 
+    public static final String TEMPLATE_FILES_PATH = "/xls/templates/";
     public static final String TEMPLATE_FILE_EXTENSION = ".xls";
     private final QueryService queryService;
     private ExcelReportBuilder excelReportBuilder;
@@ -25,7 +26,7 @@ public class ReportBuilder {
     }
 
     public void buildReport(String reportType, OutputStream outputStream) {
-        excelReportBuilder.build(outputStream, getReportData(reportType), reportType + TEMPLATE_FILE_EXTENSION);
+        excelReportBuilder.build(outputStream, getReportData(reportType), TEMPLATE_FILES_PATH + reportType + TEMPLATE_FILE_EXTENSION);
     }
 
     private Map<String, Object> getReportData(String reportType) {
