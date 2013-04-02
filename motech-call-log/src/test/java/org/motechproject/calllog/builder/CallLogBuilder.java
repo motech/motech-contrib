@@ -69,6 +69,14 @@ public class CallLogBuilder {
         return this;
     }
 
+    public CallLogBuilder withCustomData(String key, String value){
+        if(callLog.getCustomData() == null){
+            callLog.setCustomData(new HashMap<String, String>());
+        }
+        callLog.getCustomData().put(key, value);
+        return this;
+    }
+
     public CallLogBuilder withNullOutboundDetails() {
         callLog.setAttemptTime(null);
         callLog.setAttempt(null);
