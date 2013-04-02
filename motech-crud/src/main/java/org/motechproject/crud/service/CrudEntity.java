@@ -30,10 +30,22 @@ public abstract class CrudEntity<T> implements Paging {
      */
     public abstract List<String> getFilterFields();
 
+    /**
+     * Fields that should be hidden in the edit form
+     * @return
+     */
     public abstract List<String> getHiddenFields();
 
+    /**
+     * Field name of the ID
+     * @return
+     */
     public abstract String getIdFieldName();
 
+    /**
+     * Default values for field names
+     * @return
+     */
     public abstract Map<String, String> getDefaultValues();
 
     /**
