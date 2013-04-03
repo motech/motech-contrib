@@ -9,20 +9,11 @@
 
     <context:annotation-config/>
     <context:component-scan base-package="org.motechproject.excel.builder"/>
-    <util:properties id="reportQueryProperty" location="classpath:/reportQueries.properties"/>
+    <util:properties id="reportQueryProperty" location="classpath:/excel-builder-queries.properties"/>
 
     <context:component-scan base-package="org.motechproject.excel.builder"/>
-    <context:property-placeholder location="classpath:excelBuilder.properties" ignore-unresolvable="true"/>
 
-    <bean id="excelBuilderDataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
-        <property name="driverClassName" value="${jdbc.driverClassName}"/>
-        <property name="url" value="${jdbc.url}"/>
-        <property name="username" value="${jdbc.username}"/>
-        <property name="password" value="${jdbc.password}"/>
+    <bean id="excelExportJdbcTemplate"  class="org.springframework.jdbc.core.JdbcTemplate">
+        <constructor-arg ref="dataSource"/>
     </bean>
-
-    <bean id="excelBuilderJdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
-        <constructor-arg ref="excelBuilderDataSource"/>
-    </bean>
-
 </beans>

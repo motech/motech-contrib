@@ -2,6 +2,7 @@ package org.motechproject.excel.builder.dao;
 
 import org.motechproject.excel.builder.config.ReportQueries;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
@@ -12,11 +13,10 @@ import java.util.Map;
 public class QueryDAO {
 
     private JdbcTemplate jdbcTemplate;
-
     private ReportQueries reportQueries;
 
     @Autowired
-    public QueryDAO(JdbcTemplate jdbcTemplate, ReportQueries reportQueries) {
+    public QueryDAO(@Qualifier(value = "excelExportJdbcTemplate") JdbcTemplate jdbcTemplate, ReportQueries reportQueries) {
         this.jdbcTemplate = jdbcTemplate;
         this.reportQueries = reportQueries;
     }

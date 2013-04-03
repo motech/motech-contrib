@@ -12,7 +12,7 @@ import static org.junit.Assert.assertThat;
 
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = "classpath*:/applicationExcelBuilderContext.xml")
+@ContextConfiguration(locations = "classpath*:/test-applicationExcelBuilderContext.xml")
 
 public class ReportQueriesIT {
 

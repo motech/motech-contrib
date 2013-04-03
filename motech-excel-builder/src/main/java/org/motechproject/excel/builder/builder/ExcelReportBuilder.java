@@ -12,7 +12,6 @@ import java.util.Map;
 
 @Component
 public class ExcelReportBuilder {
-    public static final String GENERATED_ON = "generatedOn";
     private final ExcelExporter excelExporter;
     private final Logger logger = Logger.getLogger(this.getClass().getName());
 

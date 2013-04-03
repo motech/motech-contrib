@@ -4,7 +4,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.motechproject.excel.builder.config.ReportQueries;
 import org.motechproject.excel.builder.dao.QueryDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -20,12 +19,10 @@ import static org.junit.Assert.assertThat;
 
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = "classpath*:/applicationExcelBuilderContext.xml")
+@ContextConfiguration(locations = "classpath*:/test-applicationExcelBuilderContext.xml")
 
 public class QueryDAOIT {
 
-    @Autowired
-    private ReportQueries reportQueries;
     @Autowired
     private JdbcTemplate jdbcTemplate;
     @Autowired
