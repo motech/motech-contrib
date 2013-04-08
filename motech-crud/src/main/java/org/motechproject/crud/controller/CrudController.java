@@ -1,17 +1,16 @@
 package org.motechproject.crud.controller;
 
+import org.apache.log4j.Logger;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.schema.JsonSchema;
 import org.motechproject.crud.service.CrudEntity;
 import org.motechproject.crud.service.CrudService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 
@@ -19,6 +18,7 @@ import java.io.IOException;
 public class CrudController {
     private CrudService crudService;
     private ObjectMapper objectMapper;
+    protected Logger logger = Logger.getLogger(this.getClass().getName());
 
     @Autowired
     public CrudController(CrudService crudService) {
@@ -65,4 +65,11 @@ public class CrudController {
         Class entityType = crudService.getCrudEntity(entityName).getEntityType();
         return objectMapper.generateJsonSchema(entityType);
     }
+
+    @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
+    @ExceptionHandler(Exception.class)
+    public void handleException(Exception ex) {
+        logger.error("Error occurred", ex);
+    }
+
 }
