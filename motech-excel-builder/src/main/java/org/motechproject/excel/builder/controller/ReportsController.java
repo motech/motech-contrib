@@ -1,6 +1,8 @@
 package org.motechproject.excel.builder.controller;
 
 import org.apache.log4j.Logger;
+import org.codehaus.jackson.map.ObjectMapper;
+import org.motechproject.bigquery.model.FilterParams;
 import org.motechproject.excel.builder.builder.ReportBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -28,9 +30,9 @@ public class ReportsController {
 
     @RequestMapping(value = "/{reportType}.xls", method = RequestMethod.GET)
     @ResponseBody
-    public void log(@PathVariable String reportType, HttpServletResponse response) throws IOException {
+    public void log(@PathVariable String reportType, @RequestParam(required = false, defaultValue = "{}") String filterParams, HttpServletResponse response) throws IOException {
         initializeExcelResponse(response, reportType);
-        reportBuilder.buildReport(reportType, response.getOutputStream());
+        reportBuilder.buildReport(reportType, getFilterParams(filterParams), response.getOutputStream());
     }
 
     @ExceptionHandler(Exception.class)
@@ -43,4 +45,9 @@ public class ReportsController {
         response.setHeader(CONTENT_DISPOSITION, "inline; filename=" + reportType + TEMPLATE_FILE_EXTENSION);
         response.setContentType(APPLICATION_VND_MS_EXCEL);
     }
+
+    private FilterParams getFilterParams(String filterParams) throws IOException {
+        return new ObjectMapper().readValue(filterParams, FilterParams.class).removeEmptyParams();
+    }
+
 }

@@ -3,7 +3,9 @@ package org.motechproject.excel.builder.service;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
-import org.motechproject.excel.builder.dao.QueryDAO;
+import org.motechproject.bigquery.model.FilterParams;
+import org.motechproject.bigquery.response.QueryResult;
+import org.motechproject.bigquery.service.BigQueryService;
 
 import java.util.List;
 import java.util.Map;
@@ -12,17 +14,16 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
 
-public class QueryServiceTest {
+public class ReportServiceTest {
 
     @Mock
-    QueryDAO queryDAO;
-
-    QueryService queryService;
+    BigQueryService bigQueryService;
+    ReportService reportService;
 
     @Before
     public void setUp() throws Exception {
         initMocks(this);
-        queryService = new QueryService(queryDAO);
+        reportService = new ReportService(bigQueryService);
     }
 
     @Test
@@ -30,11 +31,12 @@ public class QueryServiceTest {
         String reportType = "reportType";
 
         List<Map<String, Object>> resultSet = mock(List.class);
-        when(queryDAO.getData(reportType)).thenReturn(resultSet);
+        QueryResult queryResult = new QueryResult(resultSet);
 
-        List<Map<String, Object>> expectedResultSet = queryService.getData(reportType);
+        when(bigQueryService.executeQuery(reportType, new FilterParams())).thenReturn(queryResult);
+
+        List<Map<String, Object>> expectedResultSet = reportService.getData(reportType, new FilterParams());
 
         assertEquals(expectedResultSet, resultSet);
-        verify(queryDAO).getData(reportType);
     }
 }

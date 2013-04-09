@@ -4,7 +4,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
-import org.motechproject.excel.builder.service.QueryService;
+import org.motechproject.bigquery.model.FilterParams;
+import org.motechproject.excel.builder.service.ReportService;
 
 import java.io.OutputStream;
 import java.util.List;
@@ -24,12 +25,12 @@ public class ReportBuilderTest {
     @Mock
     private ExcelReportBuilder excelReportBuilder;
     @Mock
-    private QueryService queryService;
+    private ReportService reportService;
 
     @Before
     public void setUp() throws Exception {
         initMocks(this);
-        reportBuilder = new ReportBuilder(queryService, excelReportBuilder);
+        reportBuilder = new ReportBuilder(reportService, excelReportBuilder);
     }
 
     @Test
@@ -37,9 +38,11 @@ public class ReportBuilderTest {
         OutputStream outputStream = mock(OutputStream.class);
         String reportType = "reportType";
         List<Map<String, Object>> data = mock(List.class);
-        when(queryService.getData(reportType)).thenReturn(data);
+        FilterParams filterParams = mock(FilterParams.class);
 
-        reportBuilder.buildReport(reportType, outputStream);
+        when(reportService.getData(reportType, filterParams)).thenReturn(data);
+
+        reportBuilder.buildReport(reportType, filterParams, outputStream);
 
         ArgumentCaptor<Map> captor = ArgumentCaptor.forClass(Map.class);
         verify(excelReportBuilder).build(eq(outputStream), captor.capture(), eq("/xls/templates/" + reportType + ".xls"));

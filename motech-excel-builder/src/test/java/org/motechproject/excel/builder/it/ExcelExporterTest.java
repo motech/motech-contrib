@@ -13,7 +13,7 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 
 
-public class ExcelExporterIT extends ExcelTest{
+public class ExcelExporterTest extends ExcelTest{
 
     private Workbook workbook;
     public static final String TEMPLATE_RESULT_KEY = "data";
@@ -23,14 +23,12 @@ public class ExcelExporterIT extends ExcelTest{
 
     @Test
     public void shouldBuildExcelWithDataProvided() throws IOException {
-
-
-        Map<String, Object> patient1 = new HashMap<String, Object>(){{
+        Map<String, Object> patient1 = new HashMap(){{
             put("uniq_id", 123);
             put("patient_name", "name1");
             put("started_at", started_at);
         }};
-        Map<String, Object> patient2 = new HashMap<String, Object>(){{
+        Map<String, Object> patient2 = new HashMap(){{
             put("uniq_id", 456);
             put("patient_name", "name2");
             put("started_at", started_at);
