@@ -1,0 +1,7 @@
+<query-definitions>
+    <named-queries>
+        <named-query name="test.query">
+            <query><![CDATA[select name from patient]]></query>
+        </named-query>
+    </named-queries>
+</query-definitions>

@@ -38,6 +38,7 @@
         <module>motech-call-log</module>
         <module>motech-excel-builder</module>
         <module>motech-crud</module>
+        <module>motech-bigquery</module>
     </modules>
 
     <dependencyManagement>
@@ -162,6 +163,11 @@
             <dependency>
                 <groupId>org.motechproject.whp-contrib</groupId>
                 <artifactId>motech-crud</artifactId>
+                <version>0.16-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>org.motechproject.whp-contrib</groupId>
+                <artifactId>motech-bigquery</artifactId>
                 <version>0.16-SNAPSHOT</version>
             </dependency>
         </dependencies>
