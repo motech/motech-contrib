@@ -1,5 +1,6 @@
 package org.motechproject.excel.builder.builder;
 
+import org.joda.time.DateTime;
 import org.motechproject.bigquery.model.FilterParams;
 import org.motechproject.excel.builder.service.ReportService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,8 @@ public class ReportBuilder {
     private ExcelReportBuilder excelReportBuilder;
 
     public static final String DATA = "data";
+    public static final String GENERATED_ON = "generated_on";
+
 
     @Autowired
     public ReportBuilder(ReportService reportService, ExcelReportBuilder excelReportBuilder) {
@@ -32,13 +35,17 @@ public class ReportBuilder {
 
     private Map<String, Object> getReportData(String reportType, FilterParams filterParams) {
         List<Map<String,Object>> data = reportService.getData(reportType, filterParams);
-        return setReportParameters(data);
+        return setReportParameters(data, filterParams);
     }
 
-    private Map<String, Object> setReportParameters(List<Map<String, Object>> data) {
-        Map<String, Object> params = new HashMap<>();
+    protected Map<String, Object> setReportParameters(List<Map<String, Object>> data, FilterParams filterParams) {
 
+        Map<String, Object> params = new HashMap<>();
         params.put(DATA, data);
+        params.put(GENERATED_ON, new DateTime().toString("dd/MM/yyyy hh:mm:ss"));
+        for (Map.Entry entry : filterParams.entrySet()) {
+            params.put(entry.getKey().toString(), entry.getValue());
+        }
         return params;
     }
 }
