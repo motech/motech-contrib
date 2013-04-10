@@ -77,6 +77,14 @@ public class CallLogBuilder {
         return this;
     }
 
+    public CallLogBuilder withCallEvents(String key, String value){
+        if(callLog.getCallEvents() == null){
+            callLog.setCallEvents(new HashMap<String, String>());
+        }
+        callLog.getCallEvents().put(key, value);
+        return this;
+    }
+
     public CallLogBuilder withNullOutboundDetails() {
         callLog.setAttemptTime(null);
         callLog.setAttempt(null);
