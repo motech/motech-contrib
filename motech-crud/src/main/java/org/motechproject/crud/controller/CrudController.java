@@ -3,7 +3,6 @@ package org.motechproject.crud.controller;
 import org.apache.log4j.Logger;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
-import org.codehaus.jackson.schema.JsonSchema;
 import org.motechproject.crud.service.CrudEntity;
 import org.motechproject.crud.service.CrudService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,9 +60,9 @@ public class CrudController {
 
     @ResponseBody
     @RequestMapping(value = "/crud/{entity}/schema")
-    public JsonSchema schema(@PathVariable("entity") String entityName) throws JsonMappingException {
+    public String schema(@PathVariable("entity") String entityName) throws JsonMappingException {
         Class entityType = crudService.getCrudEntity(entityName).getEntityType();
-        return objectMapper.generateJsonSchema(entityType);
+        return objectMapper.generateJsonSchema(entityType).toString();
     }
 
     @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
