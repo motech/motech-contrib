@@ -39,6 +39,7 @@
         <module>motech-excel-builder</module>
         <module>motech-crud</module>
         <module>motech-bigquery</module>
+        <module>motech-user-management</module>
     </modules>
 
     <dependencyManagement>
