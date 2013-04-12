@@ -69,6 +69,11 @@ public class CallLogBuilder {
         return this;
     }
 
+    public CallLogBuilder withCallId(String callId) {
+        callLog.setCallId(callId);
+        return this;
+    }
+
     public CallLogBuilder withCustomData(String key, String value){
         if(callLog.getCustomData() == null){
             callLog.setCustomData(new HashMap<String, String>());
