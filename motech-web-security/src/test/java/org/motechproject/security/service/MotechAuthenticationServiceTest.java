@@ -19,9 +19,10 @@ import java.util.Arrays;
 import java.util.List;
 
 import static java.util.Arrays.asList;
-import static junit.framework.Assert.*;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertNotNull;
+import static junit.framework.Assert.assertNull;
+import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = "classpath*:/applicationWebSecurityContext.xml")
@@ -53,10 +54,39 @@ public class MotechAuthenticationServiceTest extends SpringIntegrationTest {
     @Test
     public void shouldActivateUser() throws WebSecurityException {
         motechAuthenticationService.register("userName", "password", "1234", asList("IT_ADMIN", "DB_ADMIN"), false);
-        motechAuthenticationService.activateUser("userName");
+        Boolean activationResult = motechAuthenticationService.activateUser("userName");
         MotechWebUser motechWebUser = allMotechWebUsers.findByUserName("userName");
 
+        assertTrue(activationResult);
         assertTrue(motechWebUser.isActive());
+    }
+
+    @Test
+    public void shouldReturnFalseIfUserNotActivated() throws WebSecurityException {
+        motechAuthenticationService.register("userName", "password", "1234", asList("IT_ADMIN", "DB_ADMIN"), false);
+        Boolean activationResult = motechAuthenticationService.activateUser("userName1");
+        MotechWebUser motechWebUser = allMotechWebUsers.findByUserName("userName");
+
+        assertFalse(activationResult);
+        assertFalse(motechWebUser.isActive());
+    }
+
+    @Test
+    public void shouldRemoveUser() throws WebSecurityException {
+        motechAuthenticationService.register("userName", "password", "1234", asList("IT_ADMIN", "DB_ADMIN"), false);
+        Boolean removalResult = motechAuthenticationService.remove("userName");
+
+        assertTrue(removalResult);
+        assertNull(allMotechWebUsers.findByUserName("userName"));
+    }
+
+    @Test
+    public void shouldReturnFalseIfRemoveUserFails() throws WebSecurityException {
+        motechAuthenticationService.register("userName", "password", "1234", asList("IT_ADMIN", "DB_ADMIN"), false);
+        Boolean removalResult = motechAuthenticationService.remove("userName1");
+
+        assertFalse(removalResult);
+        assertNotNull(allMotechWebUsers.findByUserName("userName"));
     }
 
     @Test(expected = WebSecurityException.class)

@@ -1,5 +1,6 @@
 <#import "/spring.ftl" as spring />
 <#include "changePassword.ftl">
+<#include "activateUser.ftl">
 
 <html>
 <head>
@@ -12,6 +13,7 @@
     <script type="text/javascript" src="<@spring.url '/motech-user-management/js/list.js'/>"></script>
     <script type="text/javascript" src="<@spring.url '/motech-user-management/js/jquery/jquery-ui-1.9.1.custom.min.js'/>"></script>
     <script type="text/javascript" src="<@spring.url '/motech-user-management/js/bootstrap/bootstrap.min.js'/>"></script>
+    <script type="text/javascript" src="<@spring.url '/motech-user-management/js/removeUser.js'/>"></script>
 </head>
 </html>
 <body class="main">
@@ -26,13 +28,15 @@
             <th>User Name</th>
             <th>External Id</th>
             <th>Is Active</th>
-            <th></th>
+            <th>Change Password</th>
+            <th>Activate User</th>
+            <th>Remove User</th>
         </tr>
         </thead>
         <tbody>
         <#if users?size == 0>
         <tr>
-            <td class="warning" style="text-align: center" colspan="5">
+            <td class="warning" style="text-align: center" colspan="6">
                 No registered users to show
             </td>
         </tr>
@@ -43,6 +47,8 @@
                 <td class="externalId">${user.externalId}</td>
                 <td class="isActive">${user.active?string}</td>
                 <td><a class="changePassword" id="changePasswordLink" data-toggle="modal" href="#changePasswordModal">Change password</a></td>
+                <td><a class="activateUser" id="activateUserLink" data-toggle="modal" href="#activateUserModal">Activate user</a></td>
+                <td><a class="removeUserLink" href="<@spring.url "/userManagement/removeUser?userName=${user.userName}"/>">Remove user</a></td>
             </tr>
             </#list>
         </#if>
@@ -51,5 +57,6 @@
 </div>
 </div>
 <@changePassword/>
+<@activateUser/>
 </body>
 

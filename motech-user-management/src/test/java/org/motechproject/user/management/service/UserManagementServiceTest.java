@@ -12,6 +12,7 @@ import java.util.List;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
 
@@ -44,7 +45,7 @@ public class UserManagementServiceTest {
     }
 
     @Test
-    public void shouldFindUsersBelongsToARole(){
+    public void shouldFindUsersBelongsToARole() {
         String roleName = "roleName";
         List<MotechUser> users = new ArrayList<>();
         when(motechAuthenticationService.findByRole(roleName)).thenReturn(users);
@@ -52,6 +53,38 @@ public class UserManagementServiceTest {
         List<MotechUser> expectedUsers = userManagementService.findByRole(roleName);
 
         assertThat(expectedUsers, is(users));
+    }
+
+    @Test
+    public void shouldActivateGivenUser() {
+        String userName = "userName";
+        when(motechAuthenticationService.activateUser(userName)).thenReturn(true);
+
+        Boolean activatedResult = userManagementService.activateUser(userName);
+        assertTrue(activatedResult);
+        verify(motechAuthenticationService).activateUser(userName);
+    }
+
+    @Test
+    public void shouldDeleteGivenUser() {
+        String userName = "userName";
+        when(motechAuthenticationService.remove(userName)).thenReturn(true);
+
+        Boolean activatedResult = userManagementService.removeUser(userName);
+        assertTrue(activatedResult);
+        verify(motechAuthenticationService).remove(userName);
+    }
+
+    @Test
+    public void shouldResetPasswordForGivenUser(){
+        String userName = "userName";
+        String newPassword = "newPassword";
+        when(motechAuthenticationService.resetPassword(userName, newPassword)).thenReturn(true);
+
+        Boolean resetPasswordResult = userManagementService.resetPassword(userName, newPassword);
+
+        assertTrue(resetPasswordResult);
+        verify(motechAuthenticationService).resetPassword(userName, newPassword);
     }
 
 }

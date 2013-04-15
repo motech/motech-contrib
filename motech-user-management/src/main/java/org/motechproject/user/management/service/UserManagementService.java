@@ -23,4 +23,16 @@ public class UserManagementService {
     public List<MotechUser> findByRole(String role) {
         return motechAuthenticationService.findByRole(role);
     }
+
+    public boolean activateUser(String userName) {
+         return motechAuthenticationService.activateUser(userName);
+    }
+
+    public boolean removeUser(String userName) {
+        return motechAuthenticationService.remove(userName);
+    }
+
+    public boolean resetPassword(String userName, String newPassword) {
+        return motechAuthenticationService.resetPassword(userName, newPassword);
+    }
 }

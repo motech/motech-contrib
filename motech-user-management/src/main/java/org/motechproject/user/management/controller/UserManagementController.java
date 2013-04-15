@@ -27,7 +27,7 @@ public class UserManagementController {
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     public String list(@RequestParam String[] userRoles, Model uiModel) {
         ArrayList<MotechUser> users = new ArrayList<>();
-        for(String role : userRoles)
+        for (String role : userRoles)
             users.addAll(userManagementService.findByRole(role));
 
         uiModel.addAttribute("users", users);
@@ -38,8 +38,34 @@ public class UserManagementController {
     @ResponseBody
     public String list(@RequestParam String userName, @RequestParam String currentPassword, @RequestParam String newPassword) {
         MotechUser motechUser = userManagementService.changePassword(userName, currentPassword, newPassword);
-        if(motechUser == null)
+        if (motechUser == null)
             return "Current Password you entered is incorrect";
         return "success";
     }
+
+
+    @RequestMapping(method = RequestMethod.POST, value = "/activateUser")
+    @ResponseBody
+    public String activateUser(@RequestParam String userName, @RequestParam String newPassword) {
+        boolean hasResetPassword = userManagementService.resetPassword(userName, newPassword);
+        if (hasResetPassword)
+            if (userManagementService.activateUser(userName)) {
+                return "success";
+            } else {
+                return "error";
+            }
+        else
+            return "User does not exist";
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/removeUser")
+    @ResponseBody
+    public String removeUser(@RequestParam String userName) {
+        if (userManagementService.removeUser(userName)) {
+            return "success";
+        } else {
+            return "error";
+        }
+    }
+
 }
