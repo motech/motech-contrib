@@ -3,16 +3,21 @@ package org.motechproject.user.management.service;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
+import org.motechproject.paginator.contract.FilterParams;
+import org.motechproject.paginator.contract.SortParams;
+import org.motechproject.paginator.response.PageResults;
+import org.motechproject.security.domain.MotechWebUser;
+import org.motechproject.security.exceptions.WebSecurityException;
+import org.motechproject.security.repository.AllMotechWebUsers;
 import org.motechproject.security.service.MotechAuthenticationService;
 import org.motechproject.security.service.MotechUser;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
 
@@ -20,28 +25,15 @@ public class UserManagementServiceTest {
 
     @Mock
     MotechAuthenticationService motechAuthenticationService;
+    @Mock
+    AllMotechWebUsers allMotechWebUsers;
 
     UserManagementService userManagementService;
 
     @Before
     public void setUp() {
         initMocks(this);
-        userManagementService = new UserManagementService(motechAuthenticationService);
-    }
-
-    @Test
-    public void shouldChangePassword() {
-        String userName = "userName";
-        String currentPassword = "currentPassword";
-        String newPassword = "newPassword";
-
-        MotechUser motechUser = mock(MotechUser.class);
-        when(motechAuthenticationService.changePassword(userName, currentPassword, newPassword)).thenReturn(motechUser);
-
-        MotechUser foundUser = userManagementService.changePassword(userName, currentPassword, newPassword);
-        assertEquals(foundUser, motechUser);
-
-        verify(motechAuthenticationService, times(1)).changePassword(userName, currentPassword, newPassword);
+        userManagementService = new UserManagementService(motechAuthenticationService, allMotechWebUsers);
     }
 
     @Test
@@ -85,6 +77,109 @@ public class UserManagementServiceTest {
 
         assertTrue(resetPasswordResult);
         verify(motechAuthenticationService).resetPassword(userName, newPassword);
+    }
+
+    @Test
+    public void shouldDeactivateGivenUser(){
+        String username = "username";
+        when(motechAuthenticationService.deactivateUser(username)).thenReturn(true);
+
+        assertTrue(userManagementService.deactivate(username));
+
+        verify(motechAuthenticationService).deactivateUser(username);
+    }
+
+    @Test
+    public void shouldFilterOnUserName(){
+        FilterParams filterParams = new FilterParams();
+        String userName = "abc";
+        filterParams.put("userName", userName);
+
+        MotechWebUser expectedUser = mock(MotechWebUser.class);
+        when(allMotechWebUsers.findByUserName(userName)).thenReturn(expectedUser);
+
+        PageResults pageResults = userManagementService.page(1, 20, filterParams, new SortParams());
+
+        assertEquals(1, pageResults.getTotalRows().intValue());
+        assertEquals(1, pageResults.getResults().size());
+        assertEquals(expectedUser, pageResults.getResults().get(0));
+    }
+
+    @Test
+    public void shouldFilterOnUserName_whenThereAreNoResults(){
+        FilterParams filterParams = new FilterParams();
+        String userName = "abc";
+        filterParams.put("userName", userName);
+
+        when(allMotechWebUsers.findByUserName(userName)).thenReturn(null);
+
+        PageResults pageResults = userManagementService.page(1, 20, filterParams, new SortParams());
+
+        assertEquals(0, pageResults.getTotalRows().intValue());
+        assertEquals(0, pageResults.getResults().size());
+    }
+
+    @Test
+    public void shouldFilterOnRole(){
+        FilterParams filterParams = new FilterParams();
+        String roleName = "USER";
+        filterParams.put("role", roleName);
+
+        MotechWebUser motechWebUser = mock(MotechWebUser.class);
+
+        List<MotechWebUser> expectedUsers = asList(motechWebUser);
+
+        when(allMotechWebUsers.findByRole(roleName, 0, 20)).thenReturn(expectedUsers);
+        when(allMotechWebUsers.countByRole(roleName)).thenReturn(2);
+
+        PageResults pageResults = userManagementService.page(1, 20, filterParams, new SortParams());
+
+        assertEquals(2, pageResults.getTotalRows().intValue());
+        assertEquals(expectedUsers, pageResults.getResults());
+    }
+
+    @Test
+    public void shouldFilterOnRoleWithNoResults(){
+        FilterParams filterParams = new FilterParams();
+        String roleName = "USER";
+        filterParams.put("role", roleName);
+
+
+        List<MotechWebUser> expectedUsers = new ArrayList<>();
+
+        when(allMotechWebUsers.findByRole(roleName, 0, 20)).thenReturn(expectedUsers);
+        when(allMotechWebUsers.countByRole(roleName)).thenReturn(0);
+
+        PageResults pageResults = userManagementService.page(1, 20, filterParams, new SortParams());
+
+        assertEquals(0, pageResults.getTotalRows().intValue());
+        assertEquals(expectedUsers, pageResults.getResults());
+    }
+
+    @Test
+    public void shouldReturnAllUsersIfNoFiltersApplied(){
+        FilterParams filterParams = new FilterParams();
+
+        MotechWebUser motechWebUser = mock(MotechWebUser.class);
+
+        List<MotechWebUser> expectedUsers = asList(motechWebUser);
+
+        when(allMotechWebUsers.findAllUsers(0, 20)).thenReturn(expectedUsers);
+        when(allMotechWebUsers.countAllUsers()).thenReturn(3);
+
+        PageResults pageResults = userManagementService.page(1, 20, filterParams, new SortParams());
+
+        assertEquals(3, pageResults.getTotalRows().intValue());
+        assertEquals(expectedUsers, pageResults.getResults());
+    }
+
+    @Test
+    public void shouldAddNewUser() throws WebSecurityException {
+        MotechWebUser motechWebUser = new MotechWebUser();
+
+        userManagementService.addNewUser(motechWebUser);
+
+        verify(motechAuthenticationService).register(motechWebUser.getUserName(), motechWebUser.getPassword(), motechWebUser.getExternalId(), motechWebUser.getRoles());
     }
 
 }

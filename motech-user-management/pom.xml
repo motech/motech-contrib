@@ -14,13 +14,17 @@
     </parent>
 
     <properties>
-        <spring.version>3.2.0.RELEASE</spring.version>
+        <spring.version>3.1.0.RELEASE</spring.version>
     </properties>
 
     <dependencies>
         <dependency>
             <groupId>org.motechproject.whp-contrib</groupId>
             <artifactId>motech-web-security</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.motechproject.whp-contrib</groupId>
+            <artifactId>motech-paginator</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
@@ -81,6 +85,11 @@
             <artifactId>spring-test-mvc</artifactId>
             <version>1.0.0.M1</version>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-webmvc</artifactId>
+            <version>${spring.version}</version>
         </dependency>
         <dependency>
             <groupId>org.mockito</groupId>

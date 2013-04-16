@@ -19,9 +19,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import static java.util.Arrays.asList;
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertNotNull;
-import static junit.framework.Assert.assertNull;
 import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -70,6 +67,18 @@ public class MotechAuthenticationServiceTest extends SpringIntegrationTest {
         assertFalse(activationResult);
         assertFalse(motechWebUser.isActive());
     }
+
+    @Test
+    public void shouldDeActivateUser() throws WebSecurityException {
+        motechAuthenticationService.register("userName", "password", "1234", asList("IT_ADMIN", "DB_ADMIN"), true);
+
+        Boolean deactivationResult = motechAuthenticationService.deactivateUser("userName");
+        MotechWebUser motechWebUser = allMotechWebUsers.findByUserName("userName");
+
+        assertTrue(deactivationResult);
+        assertFalse(motechWebUser.isActive());
+    }
+
 
     @Test
     public void shouldRemoveUser() throws WebSecurityException {

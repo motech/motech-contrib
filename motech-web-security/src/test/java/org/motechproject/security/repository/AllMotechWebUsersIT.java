@@ -79,6 +79,51 @@ public class AllMotechWebUsersIT {
         assertNull(null, allMotechWebUsers.findByUserName(null));
     }
 
+    @Test
+    public void shouldPageWebUsersByRole(){
+        createMotechUser("provider1", "PROVIDER");
+        createMotechUser("provider2", "PROVIDER");
+        createMotechUser("provider3", "PROVIDER");
+        createMotechUser("provider4", "PROVIDER");
+        createMotechUser("provider5", "PROVIDER");
+        createMotechUser("cmfAdmin1", "CMF_ADMIN");
+
+
+        assertEquals(5, allMotechWebUsers.findByRole("PROVIDER", 0, 6).size());
+        assertEquals(2, allMotechWebUsers.findByRole("PROVIDER", 2, 2).size());
+        assertEquals(1, allMotechWebUsers.findByRole("PROVIDER", 4, 2).size());
+        assertEquals(0, allMotechWebUsers.findByRole("IT_ADMIN", 4, 2).size());
+    }
+
+
+    @Test
+    public void shouldReturnCountOfUsersByRole(){
+        createMotechUser("provider1", "PROVIDER");
+        createMotechUser("provider2", "PROVIDER");
+        createMotechUser("cmfAdmin1", "CMF_ADMIN");
+
+        assertEquals(2, allMotechWebUsers.countByRole("PROVIDER"));
+        assertEquals(0, allMotechWebUsers.countByRole("IT_ADMIN"));
+    }
+
+    @Test
+    public void shouldReturnCountOfAllUsers(){
+        createMotechUser("provider1", "PROVIDER");
+        createMotechUser("provider2", "PROVIDER");
+        createMotechUser("cmfAdmin1", "CMF_ADMIN");
+
+        assertEquals(3, allMotechWebUsers.findAllUsers(0, 20).size());
+        assertEquals(2, allMotechWebUsers.findAllUsers(0, 2).size());
+        assertEquals(1, allMotechWebUsers.findAllUsers(2, 2).size());
+        assertEquals(3, allMotechWebUsers.countAllUsers());
+    }
+
+
+    private void createMotechUser(String userName, String role) {
+        MotechWebUser provider1 = new MotechWebUser(userName, "testpassword", "id1", asList(role));
+        allMotechWebUsers.add(provider1);
+    }
+
     @After
     public void tearDown() {
         allMotechWebUsers.removeAll();

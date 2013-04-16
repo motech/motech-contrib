@@ -6,4 +6,5 @@
                                  http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd">
 
     <context:component-scan base-package="org.motechproject.user.management"/>
+    <import resource="classpath*:applicationWebSecurityContext.xml"/>
 </beans>

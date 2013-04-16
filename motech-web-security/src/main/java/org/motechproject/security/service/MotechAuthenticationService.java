@@ -98,5 +98,15 @@ public class MotechAuthenticationService {
         }
         return users;
     }
+
+    public boolean deactivateUser(String username) {
+        MotechWebUser motechWebUser = allMotechWebUsers.findByUserName(username);
+        if (motechWebUser != null) {
+            motechWebUser.setActive(false);
+            allMotechWebUsers.update(motechWebUser);
+            return true;
+        }
+        return false;
+    }
 }
 
