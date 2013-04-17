@@ -13,7 +13,7 @@
 
             <div class="controls">
                 <input class="input-xlarge" type="hidden" name="userName" id="userName" value=""/>
-                <span name="userNameSpan" id="userNameSpan"></span>
+                <span name="userNameSpan" id="userNameSpan" style="font-weight: bold;"></span>
             </div>
         </div>
         <div class="control-group">

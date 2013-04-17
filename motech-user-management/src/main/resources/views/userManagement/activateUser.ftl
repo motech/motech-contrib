@@ -10,7 +10,7 @@
         <div class="control-group">
             <label class="float-left">User Name :&nbsp;</label>
             <input class="input-xlarge" type="hidden" name="userName" id="activateUserUserName" value=""/>
-            <span name="activateUserUserNameSpan" id="activateUserUserNameSpan"></span>
+            <span name="activateUserUserNameSpan" id="activateUserUserNameSpan" style="font-weight: bold;"></span>
         </div>
         <div class="control-group">
             <label class="control-label" for="activateUserNewPassword">Password *</label>
