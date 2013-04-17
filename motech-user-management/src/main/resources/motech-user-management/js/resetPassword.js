@@ -18,17 +18,19 @@ $(function () {
         else {
             event.preventDefault();
             var $form = $(this), url = $form.attr('action');
-            $.post(url, $form.serialize(),
-                function (data) {
-                    if (data == '') {
-                        $('#resetPasswordModal').modal('hide');
-                    }
-                    else {
-                        $('#resetPasswordServerSideError').text(data);
-                        $('#resetPasswordServerSideError').show();
-                    }
+
+            $.ajax({
+                type: 'POST',
+                url: url,
+                data: $form.serialize(),
+                success: function () {
+                    $('#resetPasswordModal').modal('hide');
+                },
+                error: function (response) {
+                    $('#resetPasswordServerSideError').text(data);
+                    $('#resetPasswordServerSideError').show();
                 }
-            );
+            })
         }
     });
 

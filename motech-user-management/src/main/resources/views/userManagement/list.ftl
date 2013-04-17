@@ -10,6 +10,7 @@
     <link rel="stylesheet" type="text/css" href="<@spring.url '/motech-user-management/css/bootstrap.min.css'/>"/>
     <link rel="stylesheet" type="text/css" href="<@spring.url '/motech-user-management/css/jquery-ui-1.9.1.custom.min.css'/>"/>
     <link rel="stylesheet" type="text/css" href="<@spring.url '/motech-user-management/css/motech-paginator-pagination.css'/>"/>
+    <link rel="stylesheet" type="text/css" href="<@spring.url '/motech-user-management/css/userManagement.css'/>"/>
     <script type="text/javascript"  src="<@spring.url '/motech-user-management/js/jquery/jquery-1.8.2.min.js'/>"></script>
     <script type="text/javascript" src="<@spring.url '/motech-user-management/js/jquery/jquery.validate.js'/>"></script>
     <script type="text/javascript" src="<@spring.url '/motech-user-management/js/jquery/jquery-ui-1.9.1.custom.min.js'/>"></script>
@@ -38,7 +39,12 @@
                             <label class="control-label">Role</label>
 
                             <div class="controls">
-                                <input type="text" name="role" id="role" value="{{searchCriteria.role}}"/>
+                                <select id="role" name="role" value="{{searchCriteria.role}}">
+                                    <option value=""></option>
+                                    <#list roles as role>
+                                        <option value="${role}">${role}</option>
+                                    </#list>
+                                </select>
                             </div>
                         </div>
                 </div>
@@ -77,7 +83,9 @@
                 <tbody>
                 <tr ng-repeat="item in data.results" username={{item.userName}}>
                     <td>{{item.userName}}</td>
-                    <td>{{item.roles}}</td>
+                    <td>
+                        <span ng-repeat="role in item.roles">{{role}}&nbsp;&nbsp;</span>
+                    </td>
                     <td type="status">
                         <div ng-show="item.active">
                             Active
@@ -87,8 +95,8 @@
                         </div>
                     </td>
                     <td><a class="resetPassword" id="resetPasswordLink" data-toggle="modal" href="#resetPasswordModal" onclick="resetPassword(this)" data-username="{{item.userName}}" >Reset password</a></td>
-                    <td><a class="activateUser" id="activateUserLink" data-toggle="modal" href="#activateUserModal"  ng-disabled="item.active"  onclick="activateUser(this)" data-username="{{item.userName}}">Activate user</a></td>
-                    <td><a class="deactivateUserLink" data-url="<@spring.url "/userManagement/deactivateUser?userName={{item.userName}}"/>" ng-disabled="!item.active"  onclick="deactivateUser(this)">Deactivate user</a></td>
+                    <td><a class="activateUser" id="activateUserLink" data-toggle="modal" href="#activateUserModal"  ng-hide="item.active"  onclick="activateUser(this)" data-username="{{item.userName}}">Activate</a></td>
+                    <td><a class="deactivateUserLink" data-url="<@spring.url "/userManagement/deactivateUser?userName={{item.userName}}"/>" ng-hide="!item.active"  onclick="deactivateUser(this)">Deactivate</a></td>
                     <td><a class="removeUserLink" data-url="<@spring.url "/userManagement/removeUser?userName={{item.userName}}"/>" onclick="removeUser(this)">Delete</a></td>
                 </tr>
                 <tr type="no-results" class="hide">
@@ -97,7 +105,7 @@
                 </tbody>
             </table>
         </@paginator.paginate>
-            <button class="btn addNewUser" id="addNewUser"data-toggle="modal" href="#addNewUserModal">Add new User</button>
+            <button class="btn btn-primary addNewUser" id="addNewUser"data-toggle="modal" href="#addNewUserModal">Add New User</button>
         </div>
     </div>
 </div>

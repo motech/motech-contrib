@@ -61,7 +61,7 @@ public class AllMotechWebUsers extends MotechBaseRepository<MotechWebUser> {
         return getCount(viewQuery);
     }
 
-    @View(name = "all_users", map = "function(doc) { if(doc.type == 'MotechWebUser') {emit(null, doc._id)} }", reduce = "_count")
+    @View(name = "all_users", map = "function(doc) { if(doc.type == 'MotechWebUser') {emit(doc.userName, doc.userName)} }", reduce = "_count")
     public List<MotechWebUser> findAllUsers(int skip, int limit) {
         ViewQuery viewQuery = createQuery("all_users").skip(skip).limit(limit).inclusiveEnd(true).includeDocs(true).reduce(false);
         return db.queryView(viewQuery, MotechWebUser.class);

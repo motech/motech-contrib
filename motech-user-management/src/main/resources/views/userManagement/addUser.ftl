@@ -9,23 +9,33 @@
         <div id="addUserError" class="alert alert-error hide"></div>
 
         <div class="control-group">
-            <label class="control-label" for="newUserUserName">User Name</label>
+            <label class="control-label" for="newUserUserName">User Name *</label>
             <div class="controls">
                 <input class="input-xlarge" type="text" name='newUserUserName' id="newUserUserName"/>
             </div>
         </div>
         <div class="control-group">
-            <label class="control-label" for="newUserPassword">Password</label>
+            <label class="control-label" for="newUserPassword">Password *</label>
 
             <div class="controls">
                 <input class="input-xlarge" type="password" name='newUserPassword' id="newUserPassword"/>
             </div>
         </div>
         <div class="control-group">
-            <label class="control-label" for="newUserConfirmPassword">Confirm Password</label>
+            <label class="control-label" for="newUserConfirmPassword">Confirm Password *</label>
 
             <div class="controls">
                 <input class="input-xlarge" type="password" name='newUserConfirmPassword' id="newUserConfirmPassword"/>
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label" for="roles">Role *</label>
+            <div class="controls">
+                <select id="roles" name="roles" multiple>
+                    <#list roles as role>
+                        <option value="${role}">${role}</option>
+                    </#list>
+                </select>
             </div>
         </div>
         <div class="control-group">
@@ -34,15 +44,6 @@
             <div class="controls">
                 <input class="input-xlarge" type="text" name='externalId' id="externalId"/>
             </div>
-        </div>
-        <div class="control-group">
-            <label class="control-label" for="role">Role</label>
-            <select id="role" name="role">
-                <option value=""></option>
-                <#list roles as role>
-                    <option value="${role}">${role}</option>
-                </#list>
-            </select>
         </div>
     <div class="modal-footer">
 

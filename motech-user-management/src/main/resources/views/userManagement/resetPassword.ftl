@@ -2,7 +2,7 @@
 <form class="modal hide form-horizontal" id="resetPasswordModal" submitOnEnterKey="true" action="<@spring.url '/userManagement/resetPassword'/>">
     <div class="modal-header">
         <button class="close" data-dismiss="modal">x</button>
-        <h3>Change Password</h3>
+        <h3>Reset Password</h3>
     </div>
     <div class="modal-body">
         <div id="resetPasswordServerSideError" class="alert alert-error hide"></div>

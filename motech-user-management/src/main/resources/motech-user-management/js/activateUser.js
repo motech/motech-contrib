@@ -20,17 +20,19 @@ $('#activateUserModal').submit(function (event) {
     else {
         event.preventDefault();
         var $form = $(this), url = $form.attr('action');
-        $.post(url, $form.serialize(), function ( response) {
-                if (response == '') {
-                    $('#activateUserModal').modal('hide');
-                    $('#activateUserModal').trigger('activateUserSuccess', [$('#activateUserUserNameLabel').text()]);
-                }
-                else {
-                    $('#activateUserServerSideError').text(response);
-                    $('#activateUserServerSideError').show();
-                }
+        $.ajax({
+            type: 'POST',
+            url: url,
+            data: $form.serialize(),
+            success: function () {
+                $('#activateUserModal').modal('hide');
+            },
+            error: function (response) {
+                $('#activateUserServerSideError').text(response);
+                $('#activateUserServerSideError').show();
             }
-        );
+        })
+
     }
 });
 

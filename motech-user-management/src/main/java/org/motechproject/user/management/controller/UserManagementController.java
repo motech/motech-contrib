@@ -89,6 +89,7 @@ public class UserManagementController {
     @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(Exception.class)
     public void handleException(Exception ex) {
+        logger.error(ex.getMessage());
     }
 
 }

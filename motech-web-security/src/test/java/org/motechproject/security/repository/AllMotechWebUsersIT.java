@@ -16,6 +16,8 @@ import static ch.lambdaj.Lambda.extract;
 import static ch.lambdaj.Lambda.on;
 import static java.util.Arrays.asList;
 import static junit.framework.Assert.*;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = "classpath*:applicationWebSecurityContext.xml")
@@ -107,15 +109,24 @@ public class AllMotechWebUsersIT {
     }
 
     @Test
-    public void shouldReturnCountOfAllUsers(){
+    public void shouldReturnAllUsersOrderedByUserNameAndRole(){
         createMotechUser("provider1", "PROVIDER");
         createMotechUser("provider2", "PROVIDER");
         createMotechUser("cmfAdmin1", "CMF_ADMIN");
+        createMotechUser("fieldStaff", "FIELD_STAFF");
+        createMotechUser("cmfAdmin2", "CMF_ADMIN");
 
-        assertEquals(3, allMotechWebUsers.findAllUsers(0, 20).size());
+        List<MotechWebUser> allUsers = allMotechWebUsers.findAllUsers(0, 20);
+        assertEquals(5, allUsers.size());
+        assertThat(allUsers.get(0).getUserName(), is("cmfadmin1"));
+        assertThat(allUsers.get(1).getUserName(), is("cmfadmin2"));
+        assertThat(allUsers.get(2).getUserName(), is("fieldstaff"));
+        assertThat(allUsers.get(3).getUserName(), is("provider1"));
+        assertThat(allUsers.get(4).getUserName(), is("provider2"));
+
         assertEquals(2, allMotechWebUsers.findAllUsers(0, 2).size());
-        assertEquals(1, allMotechWebUsers.findAllUsers(2, 2).size());
-        assertEquals(3, allMotechWebUsers.countAllUsers());
+        assertEquals(1, allMotechWebUsers.findAllUsers(4, 2).size());
+        assertEquals(5, allMotechWebUsers.countAllUsers());
     }
 
 

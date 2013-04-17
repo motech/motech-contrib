@@ -16,21 +16,33 @@ $(function () {
         else {
             event.preventDefault();
             var $form = $(this), url = $form.attr('action');
-            $.post(url, $form.serialize(),
-                    function (data) {
-                    if (data == '') {
+
+            var person = {
+                userName: $('input[name="newUserUserName"]').val(),
+                password: $('input[name="newUserPassword"]').val(),
+                roles: $('select[name="roles"]').val(),
+                externalId: $('input[name="externalId"]').val()
+            };
+
+            $.ajax({
+                type: 'POST',
+                url: url,
+                data: JSON.stringify(person),
+                success: function () {
                         $('#addNewUserModal').modal('hide');
-                    }
-                    else {
+                    },
+                error: function (data) {
                         $('#addUserServerSideError').text(data);
                         $('#addUserServerSideError').show();
-                    }
                 },
-                "json"
-            );
+                contentType: "application/json; charset=utf-8"
+            })
         }
     });
 
+    $('#addNewUserModal').on('hidden', function () {
+        location.reload();
+    })
 
     $('#addNewUserModal').validate({
         rules: {
@@ -45,11 +57,14 @@ $(function () {
             newUserUserName: {
                 required: true
             },
-            externalId: {
-                required: true
-            },
-            role: {
-                required: true
+            roles: {
+                required: function(element) {
+                    if($("#roles").val() != null && $("#roles").val() !=''){
+                        return false;
+                    }else{
+                        return true;
+                    }
+                }
             }
         },
         messages: {
@@ -67,7 +82,7 @@ $(function () {
             externalId: {
                 required: "External Id is required"
             },
-            role: {
+            roles: {
                 required: "Role is required"
             }
         },
