@@ -22,7 +22,7 @@ import static org.mockito.Mockito.verify;
 import static org.motechproject.calllog.handler.EventKeys.CALL_LOG_RECEIVED;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = "classpath*:/test-applicationCallLogContext.xml")
+@ContextConfiguration(locations = "classpath*:/applicationCallLogContext.xml")
 public class CallLogHandlerIT {
 
     @Autowired

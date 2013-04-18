@@ -31,7 +31,7 @@ import static org.springframework.test.web.server.result.MockMvcResultMatchers.s
 import static org.springframework.test.web.server.setup.MockMvcBuilders.standaloneSetup;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = "classpath*:/test-applicationCallLogContext.xml")
+@ContextConfiguration(locations = "classpath*:/applicationCallLogContext.xml")
 public class CallLogControllerIT {
 
     private CallLogController callLogController;
