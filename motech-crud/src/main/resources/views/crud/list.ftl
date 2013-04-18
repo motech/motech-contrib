@@ -162,9 +162,17 @@
 
     }
 
+    function trimmed(values){
+        for(var a in values){
+            if(!$.isNumeric(values[a]) && values[a] != undefined)
+                values[a] = values[a].trim();
+        }
+        return values;
+    };
+
     function submitValues(values){
         $.ajax("<@spring.url '/crud/${entity}/save/'/>", {
-            data:JSON.stringify(values),
+            data:JSON.stringify(trimmed(values)),
             contentType:'application/json',
             type:'POST'
         }).done(function () {
