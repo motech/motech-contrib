@@ -17,7 +17,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration("classpath:applicationCallLogContext.xml")
+@ContextConfiguration("classpath:test-applicationCallLogContext.xml")
 public class GenericCallLogRepositoryIT{
 
     @Autowired

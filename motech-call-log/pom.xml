@@ -160,10 +160,6 @@
             </exclusions>
         </dependency>
         <dependency>
-            <groupId>${motech.contrib.group}</groupId>
-            <artifactId>motech-validation</artifactId>
-        </dependency>
-        <dependency>
             <groupId>org.kubek2k</groupId>
             <artifactId>springockito</artifactId>
             <version>1.0.4</version>
