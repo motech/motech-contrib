@@ -61,7 +61,7 @@ public class CallLogControllerIT {
         OutboundDetails outboundDetails = new OutboundDetails();
         outboundDetails.setAttempt("1");
         outboundDetails.setCallType("reminder");
-        outboundDetails.setRequestId("23");
+        outboundDetails.setRequestId("1234567890123456789012345678901234567890");
         outboundDetails.setAttemptTime("20/12/1986 23:23:23");
         callLogRequest.setOutboundDetails(outboundDetails);
 
