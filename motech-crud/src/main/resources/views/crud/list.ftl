@@ -164,7 +164,7 @@
 
     function trimmed(values){
         for(var a in values){
-            if(values.hasOwnProperty(a) && values[a] != undefined)
+            if(values.hasOwnProperty(a) && !$.isNumeric(values[a]) && values[a] != undefined)
                 values[a] = values[a].trim();
         }
         return values;
