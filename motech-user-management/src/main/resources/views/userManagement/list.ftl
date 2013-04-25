@@ -117,3 +117,4 @@
 <script type="text/javascript" src="<@spring.url '/motech-user-management/js/paginator/motech-paginator-pagination.js'/>"></script>
 <script type="text/javascript" src="<@spring.url '/motech-user-management/js/paginator/motech-paginator-filter.js'/>"></script>
 <script type="text/javascript" src="<@spring.url '/motech-user-management/js/list.js'/>"></script>
+<script type="text/javascript" src="<@spring.url '/motech-user-management/js/util.js'/>"></script>
