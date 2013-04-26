@@ -6,13 +6,13 @@
     <name>motech-contrib</name>
     <artifactId>motech-contrib</artifactId>
     <groupId>org.motechproject.tama-motech-contrib</groupId>
-    <version>0.10-SNAPSHOT</version>
+    <version>0.10</version>
 
     <packaging>pom</packaging>
 
     <properties>
         <motech.version>0.10.5-TAMA</motech.version>
-        <motech.contrib.version>0.10-SNAPSHOT</motech.contrib.version>
+        <motech.contrib.version>0.10</motech.contrib.version>
         <motech.contrib.group>org.motechproject.tama-motech-contrib</motech.contrib.group>
         <spring-security.version>3.0.5.RELEASE</spring-security.version>
         <spring.version>3.1.2.RELEASE</spring.version>
