@@ -112,6 +112,8 @@
     }
 
     function deleteEntity(elem){
+        var answer = confirm('Are you sure?');
+        if (answer) {
         $.ajax({
             type:"GET",
             url:"<@spring.url '/crud/${entity}/delete/'/>" + $(elem).attr('entityId'),
@@ -119,6 +121,7 @@
                 reloadPage();
             }
         });
+        }
     }
 
     function editEntity(elem){
@@ -132,9 +135,6 @@
                     <#list hiddenFields as hiddenField>
                     {"key":"${hiddenField}", "type":"hidden"},
                     </#list>
-//                {"key":"type", "type":"hidden"},
-//                    {"key":"_id", "type":"hidden"},
-//                    {"key":"_rev", "type":"hidden"},
                     {"type":"submit", "title":"Submit"}
                 ],
                 "onSubmitValid": submitValues,
@@ -152,9 +152,6 @@
             <#list hiddenFields as hiddenField>
                 {"key":"${hiddenField}", "type":"hidden"},
             </#list>
-//                {"key":"type", "type":"hidden"},
-//                {"key":"_id", "type":"hidden"},
-//                {"key":"_rev", "type":"hidden"},
                 {"type":"submit", "title":"Submit"}
             ],
             "onSubmitValid": submitValues
