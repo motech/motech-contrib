@@ -161,11 +161,11 @@
 
     function trimmed(values){
         for(var a in values){
-            if(values.hasOwnProperty(a) && !$.isNumeric(values[a]) && values[a] != undefined)
+            if(jQuery.type(values[a]) == "string" && values[a] != undefined)
                 values[a] = values[a].trim();
         }
         return values;
-    };
+    }
 
     function submitValues(values){
         $.ajax("<@spring.url '/crud/${entity}/save/'/>", {
