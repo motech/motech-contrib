@@ -30,6 +30,7 @@ public class CrudController {
         CrudEntity entity = crudService.getCrudEntity(entityName);
 
         model.addAttribute("entity", entityName);
+        model.addAttribute("displayName", entity.getDisplayName());
         model.addAttribute("displayFields", entity.getDisplayFields());
         model.addAttribute("filterFields", entity.getFilterFields());
         model.addAttribute("hiddenFields", entity.getHiddenFields());

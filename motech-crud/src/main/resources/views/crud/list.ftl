@@ -2,9 +2,9 @@
 <#import "paginator.ftl" as paginator>
 
 <!DOCTYPE html>
-<html ng-app="whp">
+<html ng-app="crud">
 <head>
-    <title>  ${entity} - Admin </title>
+    <title>  ${displayName} - Admin </title>
 
     <script type="text/javascript" src="<@spring.url '/motech-crud/js/jquery/jquery-1.8.2.min.js'/>"></script>
     <script type="text/javascript" src="<@spring.url '/motech-crud/js/bootstrap/bootstrap.min.js'/>"></script>
@@ -15,7 +15,7 @@
 </head>
 
 <body class="main">
-<h1>${entity} Listing</h1>
+<h1>${displayName} - Listing</h1>
 
 <div class="row-fluid">
     <@paginator.filter id = "filter"  pagination_id = "listing">
@@ -88,7 +88,7 @@
 <div id="createOrEditEntityModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
     <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-        <h3 id="modalLabel">Create/Edit Entity</h3>
+        <h3 id="modalLabel">Add or Edit Entity</h3>
     </div>
     <div class="modal-body">
         <form id = "jsonForm"></form>
@@ -156,7 +156,6 @@
             ],
             "onSubmitValid": submitValues
         });
-
     }
 
     function trimmed(values){

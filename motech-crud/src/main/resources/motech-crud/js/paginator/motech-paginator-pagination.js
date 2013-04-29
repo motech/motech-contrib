@@ -1,4 +1,4 @@
-var app = angular.module('whp', []);
+var app = angular.module('crud', []);
 
 function PaginationCtrl($scope, $http, $rootScope, $location) {
 

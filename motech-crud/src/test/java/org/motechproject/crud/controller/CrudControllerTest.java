@@ -83,6 +83,7 @@ public class CrudControllerTest {
                 .perform(get("/crud/AlternateDiagnosis/list"))
                 .andExpect(status().isOk())
                 .andExpect(model().attribute("entity", ENTITY_NAME))
+                .andExpect(model().attribute("displayName", crudEntity.getDisplayName()))
                 .andExpect(model().attribute("displayFields", crudEntity.getDisplayFields()))
                 .andExpect(model().attribute("filterFields", crudEntity.getFilterFields()))
                 .andExpect(view().name("crud/list"));

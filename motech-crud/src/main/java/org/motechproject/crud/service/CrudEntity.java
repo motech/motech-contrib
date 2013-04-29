@@ -1,5 +1,6 @@
 package org.motechproject.crud.service;
 
+import org.apache.commons.lang.StringUtils;
 import org.motechproject.crud.repository.CrudRepository;
 import org.motechproject.paginator.contract.FilterParams;
 import org.motechproject.paginator.contract.SortParams;
@@ -56,6 +57,10 @@ public abstract class CrudEntity<T> implements Paging {
 
     public String entityName(){
         return this.getEntityType().getSimpleName();
+    }
+
+    public String getDisplayName(){
+        return StringUtils.join(entityName().split("(?=[A-Z])"), " ").trim();
     }
 
     public CrudRepository getRepository(){

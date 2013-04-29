@@ -22,7 +22,7 @@ public class CrudEntityTest {
     @Mock
     CrudRepository crudRepository;
 
-    CrudEntity<Entity> crudEntity;
+    CrudEntity<SomeEntity> crudEntity;
 
     @Before
     public void setUp() {
@@ -33,7 +33,7 @@ public class CrudEntityTest {
     @Test
     public void shouldPageAllRecords_whenFilterParamsAreEmpty() {
         int expectedCount = 2;
-        List<Entity> expectedResults = asList(new Entity(), new Entity());
+        List<SomeEntity> expectedResults = asList(new SomeEntity(), new SomeEntity());
         when(crudRepository.count()).thenReturn(expectedCount);
         when(crudRepository.getAll(0, 10)).thenReturn(expectedResults);
 
@@ -48,7 +48,7 @@ public class CrudEntityTest {
 
     @Test
     public void shouldFilterRecords_whenFilterParamsAreSet() {
-        List<Entity> expectedResults = asList(new Entity(), new Entity());
+        List<SomeEntity> expectedResults = asList(new SomeEntity(), new SomeEntity());
         String filterName = "name";
         String filterValue = "abcd";
 
@@ -65,11 +65,16 @@ public class CrudEntityTest {
 
     @Test
     public void shouldReturnSimpleNameAsEntityName() {
-        assertEquals("Entity", crudEntity.entityName());
+        assertEquals("SomeEntity", crudEntity.entityName());
+    }
+
+    @Test
+    public void shouldReturnDisplayNameBySeperatingCamelCaseWords() {
+        assertEquals("Some Entity", crudEntity.getDisplayName());
     }
 }
 
-class Entity extends MotechBaseDataObject {
+class SomeEntity extends MotechBaseDataObject {
 
 }
 
@@ -93,6 +98,6 @@ class ExampleCrudEntity extends CouchDBCrudEntity {
 
     @Override
     public Class getEntityType() {
-        return Entity.class;
+        return SomeEntity.class;
     }
 }
