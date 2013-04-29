@@ -102,6 +102,7 @@
 <script type="text/javascript" src="<@spring.url '/motech-crud/js/paginator/motech-paginator-pagination.js'/>"></script>
 <script type="text/javascript" src="<@spring.url '/motech-crud/js/paginator/motech-paginator-filter.js'/>"></script>
 <script type="text/javascript" src="<@spring.url '/motech-crud/js/jsonform/underscore.js'/>"></script>
+<script type="text/javascript" src="<@spring.url '/motech-crud/js/crud/crudHelper.js'/>"></script>
 <script type="text/javascript" src="<@spring.url '/motech-crud/js/jsonform/jsv.js'/>"></script>
 <script type="text/javascript" src="<@spring.url '/motech-crud/js/jsonform/jsonform.js'/>"></script>
 
@@ -156,14 +157,6 @@
             ],
             "onSubmitValid": submitValues
         });
-    }
-
-    function trimmed(values){
-        for(var a in values){
-            if(jQuery.type(values[a]) == "string" && values[a] != undefined)
-                values[a] = values[a].trim();
-        }
-        return values;
     }
 
     function submitValues(values){

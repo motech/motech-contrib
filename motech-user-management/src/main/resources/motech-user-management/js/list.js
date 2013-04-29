@@ -29,7 +29,6 @@ function deactivateUser(elem){
             }
         );
     }
-
     return false;
 }
 
