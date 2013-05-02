@@ -10,7 +10,7 @@ import static java.util.Arrays.asList;
 
 public abstract class CouchDBCrudEntity<T> extends CrudEntity<T>{
 
-    protected CouchDBCrudEntity(CrudRepository<T> crudRepository) {
+    protected CouchDBCrudEntity(CrudRepository crudRepository) {
         super(crudRepository);
     }
 

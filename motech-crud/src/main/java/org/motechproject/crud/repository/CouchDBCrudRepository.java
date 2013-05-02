@@ -11,7 +11,7 @@ public class CouchDBCrudRepository<T extends MotechBaseDataObject> extends Motec
 
     private Class<T> type;
 
-    protected CouchDBCrudRepository(Class type, CouchDbConnector db) {
+    public CouchDBCrudRepository(Class type, CouchDbConnector db) {
         super(type, db);
         this.type = type;
     }

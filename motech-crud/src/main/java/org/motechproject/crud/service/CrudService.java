@@ -12,14 +12,17 @@ import java.util.Set;
 public class CrudService {
     Map<String, CrudEntity> allCrudEntities;
 
-    @Autowired
+    @Autowired(required = false)
     public CrudService(Set<CrudEntity> crudEntities) {
-        allCrudEntities = new HashMap<>();
+        this();
         for (CrudEntity crudEntity : crudEntities) {
             allCrudEntities.put(crudEntity.entityName(), crudEntity);
         }
     }
 
+    public CrudService() {
+        allCrudEntities = new HashMap<>();
+    }
     public CrudEntity getCrudEntity(String name) {
         return allCrudEntities.get(name);
     }
