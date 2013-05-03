@@ -23,23 +23,28 @@ public class CrudService {
     public CrudService() {
         allCrudEntities = new HashMap<>();
     }
-    public CrudEntity getCrudEntity(String name) {
-        return allCrudEntities.get(name);
-    }
 
     public void deleteEntity(String name, String entityId) {
-        CrudRepository repository = allCrudEntities.get(name).getRepository();
-        Object entity = repository.get(entityId);
-        repository.remove(entity);
+        CrudEntity crudEntity = getCrudEntity(name);
+        CrudRepository repository = crudEntity.getRepository();
+        Object object = repository.get(entityId);
+        repository.remove(object);
+        crudEntity.deleted(object);
     }
 
-    public void saveEntity(String name, Object entity) {
-        CrudRepository repository = getCrudEntity(name).getRepository();
-        repository.save(entity);
+    public void saveEntity(String name, Object object) {
+        CrudEntity crudEntity = getCrudEntity(name);
+        CrudRepository repository = crudEntity.getRepository();
+        repository.save(object);
+        crudEntity.updated(object);
     }
 
     public Object getEntity(String entityName, String entityId) {
         CrudRepository repository = getCrudEntity(entityName).getRepository();
         return repository.get(entityId);
+    }
+
+    public CrudEntity getCrudEntity(String name) {
+        return allCrudEntities.get(name);
     }
 }

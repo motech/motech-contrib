@@ -6,16 +6,13 @@ import org.codehaus.jackson.schema.JsonSchema;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
-import org.motechproject.crud.repository.CrudRepository;
-import org.motechproject.crud.service.CouchDBCrudEntity;
+import org.motechproject.crud.builder.CrudModelBuilder;
+import org.motechproject.crud.model.CrudModel;
+import org.motechproject.crud.service.CrudEntity;
 import org.motechproject.crud.service.CrudService;
 import org.motechproject.model.MotechBaseDataObject;
 
-import java.util.List;
-
-import static java.util.Arrays.asList;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
 import static org.springframework.test.web.server.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.server.request.MockMvcRequestBuilders.post;
@@ -31,14 +28,18 @@ public class CrudControllerTest {
     CrudService crudService;
 
     ObjectMapper objectMapper;
-    private AlternateDiagnosisCrudEntity crudEntity;
+    private CrudEntity crudEntity;
 
     @Before
     public void setUp() {
         initMocks(this);
         objectMapper = new ObjectMapper();
         crudController = new CrudController(crudService);
-        crudEntity = new AlternateDiagnosisCrudEntity();
+        crudEntity = mock(CrudEntity.class);
+        CrudModel crudModel = CrudModelBuilder.couchDBCrudModel(AlternateDiagnosis.class)
+                .displayFields("name", "code").filterFields("code").build();
+        when(crudEntity.getModel()).thenReturn(crudModel);
+        when(crudEntity.getEntityType()).thenReturn(AlternateDiagnosis.class);
         when(crudService.getCrudEntity(ENTITY_NAME)).thenReturn(crudEntity);
     }
 
@@ -83,9 +84,7 @@ public class CrudControllerTest {
                 .perform(get("/crud/AlternateDiagnosis/list"))
                 .andExpect(status().isOk())
                 .andExpect(model().attribute("entity", ENTITY_NAME))
-                .andExpect(model().attribute("displayName", crudEntity.getDisplayName()))
-                .andExpect(model().attribute("displayFields", crudEntity.getDisplayFields()))
-                .andExpect(model().attribute("filterFields", crudEntity.getFilterFields()))
+                .andExpect(model().attribute("model", crudEntity.getModel()))
                 .andExpect(view().name("crud/list"));
     }
 
@@ -113,32 +112,5 @@ class AlternateDiagnosis extends MotechBaseDataObject {
     public AlternateDiagnosis(String name, String code) {
         this.name = name;
         this.code = code;
-    }
-}
-
-class AlternateDiagnosisCrudEntity extends CouchDBCrudEntity<AlternateDiagnosis> {
-
-    protected AlternateDiagnosisCrudEntity() {
-        super(null);
-    }
-
-    @Override
-    public List<String> getDisplayFields() {
-        return asList("name", "code");
-    }
-
-    @Override
-    public List<String> getFilterFields() {
-        return asList("code");
-    }
-
-    @Override
-    public CrudRepository<AlternateDiagnosis> getRepository() {
-        return null;
-    }
-
-    @Override
-    public Class getEntityType() {
-        return AlternateDiagnosis.class;
     }
 }

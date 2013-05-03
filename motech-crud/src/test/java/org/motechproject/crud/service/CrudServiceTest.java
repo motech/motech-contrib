@@ -20,9 +20,9 @@ public class CrudServiceTest {
 
     CrudService crudService;
     @Mock
-    CrudEntity crudEntity1;
+    CrudEntityImpl crudEntity1;
     @Mock
-    CrudEntity crudEntity2;
+    CrudEntityImpl crudEntity2;
     @Mock
     CrudRepository crudRepository1;
 
@@ -68,6 +68,7 @@ public class CrudServiceTest {
         crudService.saveEntity(entity1, value);
 
         verify(crudRepository1).save(value);
+        verify(crudEntity1).updated(value);
     }
 
     @Test
@@ -79,5 +80,6 @@ public class CrudServiceTest {
         crudService.deleteEntity(entity1, docId);
 
         verify(crudRepository1).remove(value);
+        verify(crudEntity1).deleted(value);
     }
 }

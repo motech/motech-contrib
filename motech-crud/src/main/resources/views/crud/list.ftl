@@ -4,7 +4,7 @@
 <!DOCTYPE html>
 <html ng-app="crud">
 <head>
-    <title>  ${displayName} - Admin </title>
+    <title>  ${model.displayName} - Admin </title>
 
     <script type="text/javascript" src="<@spring.url '/motech-crud/js/jquery/jquery-1.8.2.min.js'/>"></script>
     <script type="text/javascript" src="<@spring.url '/motech-crud/js/bootstrap/bootstrap.min.js'/>"></script>
@@ -15,7 +15,7 @@
 </head>
 
 <body class="main">
-<h1>${displayName} - Listing</h1>
+<h2>${model.displayName} - Listing</h2>
 
 <div class="row-fluid">
     <@paginator.filter id = "filter"  pagination_id = "listing">
@@ -23,7 +23,7 @@
             <div id="search-pane">
                 <fieldset class="filters">
                 <div class="row-fluid sel-result">
-                    <#list filterFields as filterField>
+                    <#list model.filterFields as filterField>
 
                         <div class="control-group span2">
                             <label class="control-label">${filterField}</label>
@@ -59,7 +59,7 @@
                        redirectOnRowClick="true">
                     <thead>
                     <tr>
-                        <#list displayFields as displayField>
+                        <#list model.displayFields as displayField>
                         <th>${displayField}</th>
                         </#list>
                         <th>Edit</th>
@@ -68,11 +68,11 @@
                     </thead>
                     <tbody>
                     <tr ng-repeat="item in data.results">
-                        <#list displayFields as displayField>
+                        <#list model.displayFields as displayField>
                             <td id="${entity}_{{item.${displayField}}}">{{item.${displayField}}}</td>
                         </#list>
-                        <td><a href="#" class = "editEntity" data-toggle="modal" data-target="#createOrEditEntityModal" onclick="editEntity(this)" entityId = "{{item.${idField}}}">Edit</a></td>
-                        <td><a href="#" class = "deleteEntity" onclick="deleteEntity(this)" entityId = "{{item.${idField}}}">Delete</a></td>
+                        <td><a href="#" class = "editEntity" data-toggle="modal" data-target="#createOrEditEntityModal" onclick="editEntity(this)" entityId = "{{item.${model.idFieldName}}}">Edit</a></td>
+                        <td><a href="#" class = "deleteEntity" onclick="deleteEntity(this)" entityId = "{{item.${model.idFieldName}}}">Delete</a></td>
                     </tr>
                     <tr type="no-results" class="hide">
                         <td class="warning text-center" colspan="17"></td>
@@ -133,7 +133,7 @@
                 "schema":jsonSchema.properties,
                 "form":[
                     "*",
-                    <#list hiddenFields as hiddenField>
+                    <#list model.hiddenFields as hiddenField>
                     {"key":"${hiddenField}", "type":"hidden"},
                     </#list>
                     {"type":"submit", "title":"Submit"}
@@ -150,7 +150,7 @@
             "schema":jsonSchema.properties,
             "form":[
                 "*",
-            <#list hiddenFields as hiddenField>
+            <#list model.hiddenFields as hiddenField>
                 {"key":"${hiddenField}", "type":"hidden"},
             </#list>
                 {"type":"submit", "title":"Submit"}
@@ -172,11 +172,10 @@
 
     var jsonSchema;
     $(document).ready(function(){
-
         $.getJSON("<@spring.url '/crud/${entity}/schema/'/>", function (json) {
             jsonSchema = json;
-            <#list defaultValues?keys as key>
-                jsonSchema.properties.${key}.default = "${defaultValues[key]}";
+            <#list model.defaultValues?keys as key>
+                jsonSchema.properties.${key}.default = "${model.defaultValues[key]}";
             </#list>
             <#--jsonSchema.properties.type.default = "${entity}";-->
         });

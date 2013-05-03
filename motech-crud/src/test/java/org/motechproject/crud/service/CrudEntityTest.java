@@ -3,31 +3,37 @@ package org.motechproject.crud.service;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
+import org.motechproject.crud.builder.CrudEntityBuilder;
+import org.motechproject.crud.event.CrudEventHandler;
 import org.motechproject.crud.repository.CrudRepository;
 import org.motechproject.model.MotechBaseDataObject;
 import org.motechproject.paginator.contract.FilterParams;
 import org.motechproject.paginator.contract.SortParams;
 import org.motechproject.paginator.response.PageResults;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static java.util.Arrays.asList;
 import static junit.framework.Assert.assertEquals;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
+import static org.motechproject.crud.builder.CrudModelBuilder.couchDBCrudModel;
 
 public class CrudEntityTest {
 
     @Mock
     CrudRepository crudRepository;
-
-    CrudEntity<SomeEntity> crudEntity;
+    CrudEntity crudEntity;
 
     @Before
     public void setUp() {
         initMocks(this);
-        crudEntity = new ExampleCrudEntity(crudRepository);
+        crudEntity = new CrudEntityBuilder(SomeEntity.class)
+                .crudRepository(crudRepository)
+                .model(couchDBCrudModel(SomeEntity.class))
+                .build();
     }
 
     @Test
@@ -64,40 +70,36 @@ public class CrudEntityTest {
     }
 
     @Test
+    public void shouldNotInvokeEventHandlerIfNull() {
+        SomeEntity object = mock(SomeEntity.class);
+        crudEntity.updated(object);
+        crudEntity.deleted(object);
+    }
+
+    @Test
+    public void shouldInvokeEventHandlerWhenItIsNotNull() {
+        SomeEntity object = mock(SomeEntity.class);
+        CrudEventHandler eventHandler = mock(CrudEventHandler.class);
+        CrudEntity crudEntityWithEventHandler = new CrudEntityBuilder(SomeEntity.class)
+                .crudRepository(crudRepository)
+                .model(couchDBCrudModel(SomeEntity.class))
+                .eventHandler(eventHandler)
+                .build();
+
+        crudEntityWithEventHandler.updated(object);
+        verify(eventHandler).updated(object);
+
+        crudEntityWithEventHandler.deleted(object);
+        verify(eventHandler).deleted(object);
+
+    }
+    @Test
     public void shouldReturnSimpleNameAsEntityName() {
         assertEquals("SomeEntity", crudEntity.entityName());
     }
 
-    @Test
-    public void shouldReturnDisplayNameBySeperatingCamelCaseWords() {
-        assertEquals("Some Entity", crudEntity.getDisplayName());
-    }
 }
 
 class SomeEntity extends MotechBaseDataObject {
 
-}
-
-class ExampleCrudEntity extends CouchDBCrudEntity {
-
-    private CrudRepository crudRepository;
-
-    ExampleCrudEntity(CrudRepository crudRepository) {
-        super(crudRepository);
-    }
-
-    @Override
-    public List<String> getDisplayFields() {
-        return new ArrayList<>();
-    }
-
-    @Override
-    public List<String> getFilterFields() {
-        return new ArrayList<>();
-    }
-
-    @Override
-    public Class getEntityType() {
-        return SomeEntity.class;
-    }
 }

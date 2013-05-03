@@ -22,8 +22,8 @@ public class CouchDBCrudRepository<T extends MotechBaseDataObject> extends Motec
     }
 
     public int count() {
-        ViewQuery q = createQuery("all").includeDocs(false);
-        return db.queryView(q).getSize();
+        ViewQuery q = createQuery("all").skip(0).limit(1).includeDocs(false);
+        return db.queryView(q).getTotalRows();
     }
 
     public List<T> findBy(String fieldName, String value) {
