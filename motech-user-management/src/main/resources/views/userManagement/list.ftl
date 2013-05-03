@@ -94,7 +94,7 @@
                             Inactive
                         </div>
                     </td>
-                    <td><a class="resetPassword" id="resetPasswordLink" data-toggle="modal" href="#resetPasswordModal" onclick="resetPassword(this)" data-username="{{item.userName}}" >Reset password</a></td>
+                    <td><a class="resetPassword" id="resetPasswordLink" data-toggle="modal" href="#resetPasswordModal" ng-hide="!item.active" onclick="resetPassword(this)" data-username="{{item.userName}}" >Reset password</a></td>
                     <td><a class="activateUser" id="activateUserLink" data-toggle="modal" href="#activateUserModal"  ng-hide="item.active"  onclick="activateUser(this)" data-username="{{item.userName}}">Activate</a></td>
                     <td><a class="deactivateUserLink" data-url="<@spring.url "/userManagement/deactivateUser?userName={{item.userName}}"/>" ng-hide="!item.active"  onclick="deactivateUser(this)">Deactivate</a></td>
                     <td><a class="removeUserLink" data-url="<@spring.url "/userManagement/removeUser?userName={{item.userName}}"/>" onclick="removeUser(this)">Delete</a></td>
