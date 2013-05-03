@@ -1,8 +1,6 @@
 package org.motechproject.crud.repository;
 
 import org.apache.commons.lang.WordUtils;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.util.ReflectionUtils;
 
@@ -21,7 +19,7 @@ public class JpaCrudRepository<T, ID extends Serializable> implements CrudReposi
     }
 
     public List<T> getAll(final int skip, final int limit) {
-        return jpaRepository.findAll(pageable(skip, limit)).getContent();
+        return jpaRepository.findAll(new PageRequest(skip, limit)).getContent();
     }
 
     public List<T> findBy(String fieldName, String value) {
@@ -61,27 +59,4 @@ public class JpaCrudRepository<T, ID extends Serializable> implements CrudReposi
         jpaRepository.delete(object);
     }
 
-    private Pageable pageable(final int skip, final int limit) {
-        return new Pageable() {
-            @Override
-            public int getPageNumber() {
-                return (skip/limit) + 1;
-            }
-
-            @Override
-            public int getPageSize() {
-                return skip;
-            }
-
-            @Override
-            public int getOffset() {
-                return skip;
-            }
-
-            @Override
-            public Sort getSort() {
-                return null;
-            }
-        };
-    }
 }
