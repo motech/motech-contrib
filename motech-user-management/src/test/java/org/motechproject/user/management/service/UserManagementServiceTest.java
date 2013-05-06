@@ -11,6 +11,7 @@ import org.motechproject.security.exceptions.WebSecurityException;
 import org.motechproject.security.repository.AllMotechWebUsers;
 import org.motechproject.security.service.MotechAuthenticationService;
 import org.motechproject.security.service.MotechUser;
+import org.motechproject.user.management.domain.UserRoles;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,11 +30,13 @@ public class UserManagementServiceTest {
     AllMotechWebUsers allMotechWebUsers;
 
     UserManagementService userManagementService;
+    @Mock
+    private UserRoles userRoles;
 
     @Before
     public void setUp() {
         initMocks(this);
-        userManagementService = new UserManagementService(motechAuthenticationService, allMotechWebUsers);
+        userManagementService = new UserManagementService(motechAuthenticationService, allMotechWebUsers, userRoles);
     }
 
     @Test
@@ -106,6 +109,25 @@ public class UserManagementServiceTest {
     }
 
     @Test
+    public void shouldDisplayOnlyAllowedUserRolesAfterFilteringByUserName(){
+        FilterParams filterParams = new FilterParams();
+        String userName = "abc";
+        filterParams.put("userName", userName);
+
+        when(userRoles.all()).thenReturn(asList("ROLE1", "ROLE2"));
+
+        MotechWebUser expectedUser = mock(MotechWebUser.class);
+        when(expectedUser.getRoles()).thenReturn(asList("ROLE3"));
+
+        when(allMotechWebUsers.findByUserName(userName)).thenReturn(expectedUser);
+
+        PageResults pageResults = userManagementService.page(1, 20, filterParams, new SortParams());
+
+        assertEquals(0, pageResults.getTotalRows().intValue());
+        assertEquals(0, pageResults.getResults().size());
+    }
+
+    @Test
     public void shouldFilterOnUserName_whenThereAreNoResults(){
         FilterParams filterParams = new FilterParams();
         String userName = "abc";
@@ -157,20 +179,15 @@ public class UserManagementServiceTest {
     }
 
     @Test
-    public void shouldReturnAllUsersIfNoFiltersApplied(){
+    public void shouldReturnNoUsersIfNoFiltersApplied(){
         FilterParams filterParams = new FilterParams();
-
-        MotechWebUser motechWebUser = mock(MotechWebUser.class);
-
-        List<MotechWebUser> expectedUsers = asList(motechWebUser);
-
-        when(allMotechWebUsers.findAllUsers(0, 20)).thenReturn(expectedUsers);
-        when(allMotechWebUsers.countAllUsers()).thenReturn(3);
+        List<MotechWebUser> emptyUsers = new ArrayList<>();
 
         PageResults pageResults = userManagementService.page(1, 20, filterParams, new SortParams());
 
-        assertEquals(3, pageResults.getTotalRows().intValue());
-        assertEquals(expectedUsers, pageResults.getResults());
+        assertEquals(0, pageResults.getTotalRows().intValue());
+        assertEquals(emptyUsers, pageResults.getResults());
+        verifyZeroInteractions(allMotechWebUsers);
     }
 
     @Test

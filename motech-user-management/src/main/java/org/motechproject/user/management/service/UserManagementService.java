@@ -10,6 +10,7 @@ import org.motechproject.security.repository.AllMotechWebUsers;
 import org.motechproject.security.service.MotechAuthenticationService;
 import org.motechproject.security.service.MotechUser;
 import org.motechproject.user.management.domain.UserManagementFilter;
+import org.motechproject.user.management.domain.UserRoles;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,11 +23,13 @@ import static java.util.Arrays.asList;
 public class UserManagementService implements Paging<MotechWebUser> {
     private MotechAuthenticationService motechAuthenticationService;
     private AllMotechWebUsers allMotechWebUsers;
+    private UserRoles userRoles;
 
     @Autowired
-    public UserManagementService(MotechAuthenticationService motechAuthenticationService, AllMotechWebUsers allMotechWebUsers) {
+    public UserManagementService(MotechAuthenticationService motechAuthenticationService, AllMotechWebUsers allMotechWebUsers, UserRoles userRoles) {
         this.motechAuthenticationService = motechAuthenticationService;
         this.allMotechWebUsers = allMotechWebUsers;
+        this.userRoles = userRoles;
     }
 
     public List<MotechUser> findByRole(String role) {
@@ -59,10 +62,9 @@ public class UserManagementService implements Paging<MotechWebUser> {
         else if(filter.hasRole()){
             results = allMotechWebUsers.findByRole(filter.getRole(), startIndex, rowsPerPage);
             totalCount = allMotechWebUsers.countByRole(filter.getRole());
-
         } else {
-            results = allMotechWebUsers.findAllUsers(startIndex, rowsPerPage);
-            totalCount = allMotechWebUsers.countAllUsers();
+            results = new ArrayList<>();
+            totalCount = 0;
         }
 
         PageResults pageResults = new PageResults();
@@ -73,7 +75,8 @@ public class UserManagementService implements Paging<MotechWebUser> {
 
     private List<MotechWebUser> getResultsForUserName(UserManagementFilter userManagementFilter) {
         MotechWebUser webUser = allMotechWebUsers.findByUserName(userManagementFilter.getUserName());
-        if(webUser != null) {
+
+        if(webUser != null && userRoles.all().containsAll(webUser.getRoles())) {
             return asList(webUser);
         } else {
             return  new ArrayList();
