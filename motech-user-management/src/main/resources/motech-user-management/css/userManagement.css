@@ -56,3 +56,7 @@ body:after {
 input[type="text"], input[type="password"] {
     height: 30px;
 }
+
+.table th, .table td {
+    border: 1px solid #DDDDDD;
+}
