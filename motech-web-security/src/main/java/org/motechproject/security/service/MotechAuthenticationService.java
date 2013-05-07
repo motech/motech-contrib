@@ -39,12 +39,14 @@ public class MotechAuthenticationService {
         }
     }
 
-    public void activateUser(String username) {
+    public boolean activateUser(String username) {
         MotechWebUser motechWebUser = allMotechWebUsers.findByUserName(username);
         if (motechWebUser != null) {
             motechWebUser.setActive(true);
             allMotechWebUsers.update(motechWebUser);
+            return true;
         }
+        return false;
     }
 
     public boolean resetPassword(String userName, String newPassword) {
@@ -75,10 +77,13 @@ public class MotechAuthenticationService {
         return null;
     }
 
-    public void remove(String username) {
+    public boolean remove(String username) {
         MotechWebUser motechWebUser = allMotechWebUsers.findByUserName(username);
-        if (motechWebUser != null)
+        if (motechWebUser != null){
             allMotechWebUsers.remove(motechWebUser);
+            return true;
+        }
+        return false;
     }
 
     public boolean hasUser(String username) {
@@ -92,6 +97,16 @@ public class MotechAuthenticationService {
             users.add(new MotechUser(user));
         }
         return users;
+    }
+
+    public boolean deactivateUser(String username) {
+        MotechWebUser motechWebUser = allMotechWebUsers.findByUserName(username);
+        if (motechWebUser != null) {
+            motechWebUser.setActive(false);
+            allMotechWebUsers.update(motechWebUser);
+            return true;
+        }
+        return false;
     }
 }
 
