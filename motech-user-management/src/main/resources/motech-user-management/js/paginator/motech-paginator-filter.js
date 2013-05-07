@@ -1,4 +1,4 @@
-var app = angular.module('whp', []);
+var app = angular.module('usermanagement', []);
 
 function FilterCtrl($scope, $http, $rootScope, $location) {
 

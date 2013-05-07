@@ -4,7 +4,7 @@
 <#include "addUser.ftl">
 <#import "paginator.ftl" as paginator>
 
-<html ng-app="whp">
+<html ng-app="usermanagement">
 <head>
     <title> User Management </title>
     <link rel="stylesheet" type="text/css" href="<@spring.url '/motech-user-management/css/bootstrap.min.css'/>"/>
