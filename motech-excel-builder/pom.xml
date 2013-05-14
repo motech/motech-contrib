@@ -3,7 +3,7 @@
     <parent>
         <artifactId>motech-contrib</artifactId>
         <groupId>org.motechproject.whp-contrib</groupId>
-        <version>0.16</version>
+        <version>0.17-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <packaging>jar</packaging>
@@ -18,7 +18,7 @@
         <dependency>
             <groupId>org.motechproject.whp-contrib</groupId>
             <artifactId>motech-bigquery</artifactId>
-            <version>0.16</version>
+            <version>0.17-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
