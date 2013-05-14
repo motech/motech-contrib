@@ -53,4 +53,16 @@ public class CrudModel {
     public void addDefaultValue(String key, String value) {
         defaultValues.put(key, value);
     }
+
+    public boolean allowCreate() {
+        return allowedActions.contains(CrudActions.Create);
+    }
+
+    public boolean allowDelete() {
+        return allowedActions.contains(CrudActions.Delete);
+    }
+
+    public boolean allowUpdate() {
+        return allowedActions.contains(CrudActions.Update);
+    }
 }

@@ -62,8 +62,12 @@
                         <#list model.displayFields as displayField>
                         <th>${displayField}</th>
                         </#list>
+                        <#if model.allowUpdate()>
                         <th>Edit</th>
+                        </#if>
+                        <#if model.allowDelete()>
                         <th>Delete</th>
+                        </#if>
                     </tr>
                     </thead>
                     <tbody>
@@ -71,8 +75,12 @@
                         <#list model.displayFields as displayField>
                             <td id="${entity}_{{item.${displayField}}}">{{item.${displayField}}}</td>
                         </#list>
+                        <#if model.allowUpdate() == true>
                         <td><a href="#" class = "editEntity" data-toggle="modal" data-target="#createOrEditEntityModal" onclick="editEntity(this)" entityId = "{{item.${model.idFieldName}}}">Edit</a></td>
+                        </#if>
+                        <#if model.allowDelete()>
                         <td><a href="#" class = "deleteEntity" onclick="deleteEntity(this)" entityId = "{{item.${model.idFieldName}}}">Delete</a></td>
+                        </#if>
                     </tr>
                     <tr type="no-results" class="hide">
                         <td class="warning text-center" colspan="17"></td>
@@ -82,7 +90,9 @@
             </@paginator.paginate>
         </div>
     </div>
+    <#if model.allowCreate()>
     <a href= "#" data-toggle="modal" data-target="#createOrEditEntityModal" onclick="newEntity(this)">Add Entity</a>
+    </#if>
 </div>
 
 <div id="createOrEditEntityModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
