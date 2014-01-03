@@ -23,6 +23,6 @@ public class ExcelDataImporter {
 
     public void importData(String entity, String file) {
         URL resource = ExcelDataImporter.class.getClassLoader().getResource(file);
-        allDataImportProcessor.get(entity).process(resource == null? file : resource.getPath());
+        allDataImportProcessor.get(entity).process(false, resource == null? file : resource.getPath());
     }
 }

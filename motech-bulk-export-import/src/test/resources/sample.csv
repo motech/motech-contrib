@@ -1,2 +1,3 @@
 sampleX,y,setUsingSetter
-123,456,defaultValue
+sampleX1,sampleY1,defaultValue1
+sampleX2,sampleY2,defaultValue2

@@ -17,12 +17,16 @@ public class SampleCSVImporter {
     public boolean isValidateCalled;
     private boolean isValid;
     public List<SampleBean> sampleBeans;
+    private boolean setInvalidRecords;
 
     @Validate
     public ValidationResponse validate(List<Object> objects) {
         isValidateCalled = true;
         ValidationResponse validationResponse = new ValidationResponse(isValid);
-        validationResponse.addError(new Error("this is a sample error"));
+        validationResponse.addError(new Error("this is a sample error for first record"));
+        if (setInvalidRecords) {
+            validationResponse.addInvalidRecord(objects.get(0));
+        }
         return validationResponse;
     }
 
@@ -37,5 +41,9 @@ public class SampleCSVImporter {
 
     public void setValid(boolean valid) {
         isValid = valid;
+    }
+
+    public void setInvalidRecords() {
+        setInvalidRecords = true;
     }
 }

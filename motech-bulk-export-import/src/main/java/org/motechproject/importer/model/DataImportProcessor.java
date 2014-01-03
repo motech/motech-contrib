@@ -1,5 +1,6 @@
 package org.motechproject.importer.model;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.motechproject.importer.annotation.Post;
@@ -11,7 +12,15 @@ import org.motechproject.importer.domain.ValidationResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.*;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.Reader;
+import java.io.StringReader;
+import java.io.StringWriter;
+import java.io.Writer;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.List;
@@ -40,11 +49,11 @@ public abstract class DataImportProcessor {
         }
     }
 
-    public CSVImportResponse process(String... filePaths) {
+    public CSVImportResponse process(Boolean shouldUpdateValidRecords, String... filePaths) {
         String lastRunFilePath = StringUtils.EMPTY;
         try {
             for (String filePath : filePaths) {
-                ValidationResponse validationResponse = process(new FileReader(filePath));
+                ValidationResponse validationResponse = process(new FileReader(filePath), shouldUpdateValidRecords);
 
                 if (!validationResponse.isValid()) {
                     processErrors(validationResponse.getErrors(), filePath);
@@ -60,18 +69,20 @@ public abstract class DataImportProcessor {
         return new CSVImportResponse(lastRunFilePath, true);
     }
 
-    private ValidationResponse process(Reader reader) throws Exception {
+    private ValidationResponse process(Reader reader, Boolean shouldUpdateValidRecords) throws Exception {
         List<Object> valuesFromFile = parse(reader);
         ValidationResponse validationResponse = validate(valuesFromFile);
-        if (!validationResponse.isValid()) {
-            return validationResponse;
+        if (validationResponse.isValid()) {
+            invokePostMethod(valuesFromFile);
+        } else if (shouldUpdateValidRecords) {
+            List<Object> validRecords = (List<Object>) CollectionUtils.disjunction(valuesFromFile, validationResponse.getInvalidRecords());
+            invokePostMethod(validRecords);
         }
-        invokePostMethod(valuesFromFile);
         return validationResponse;
     }
 
-    public String processContent(String content) throws Exception {
-        ValidationResponse validationResponse = process(new StringReader(content));
+    public String processContent(String content, Boolean shouldUpdateValidRecords) throws Exception {
+        ValidationResponse validationResponse = process(new StringReader(content), shouldUpdateValidRecords);
 
         if (validationResponse.isValid()) {
             return null;

@@ -23,12 +23,16 @@ public class CSVDataImporter {
     }
 
     public CSVImportResponse importData(String entity, String... filePaths) {
+        return importData(entity, false, filePaths);
+    }
+
+    public CSVImportResponse importData(String entity, Boolean shouldUpdateValidRecords, String... filePaths) {
         String[] absoluteFilePaths = new String[filePaths.length];
-        for(int i = 0; i < absoluteFilePaths.length; ++i){
+        for (int i = 0; i < absoluteFilePaths.length; ++i) {
             URL resource = CSVDataImporter.class.getClassLoader().getResource(filePaths[i]);
-            absoluteFilePaths[i] = resource == null? filePaths[i] : resource.getPath();
+            absoluteFilePaths[i] = resource == null ? filePaths[i] : resource.getPath();
         }
 
-        return allCSVDataImportProcessor.get(entity).process(absoluteFilePaths);
+        return allCSVDataImportProcessor.get(entity).process(shouldUpdateValidRecords, absoluteFilePaths);
     }
 }

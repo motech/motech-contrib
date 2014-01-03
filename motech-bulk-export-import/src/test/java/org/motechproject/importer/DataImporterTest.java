@@ -18,7 +18,11 @@ import java.net.URISyntaxException;
 import java.net.URL;
 
 import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = "classpath*:applicationBulkImportContext.xml")
@@ -47,8 +51,8 @@ public class DataImporterTest {
 
         assertTrue(sampleCSVImporter.isPostCalled);
         assertTrue(sampleCSVImporter.isValidateCalled);
-        assertThat(sampleCSVImporter.sampleBeans.get(0).getSampleX(), is("123"));
-        assertThat(sampleCSVImporter.sampleBeans.get(0).getSampleY(), is("456"));
+        assertThat(sampleCSVImporter.sampleBeans.get(0).getSampleX(), is("sampleX1"));
+        assertThat(sampleCSVImporter.sampleBeans.get(0).getSampleY(), is("sampleY1"));
         assertEquals(fileName, csvImportResponse.getLastProcessedFileName());
         assertTrue(csvImportResponse.isImportSuccessful());
     }
@@ -85,7 +89,29 @@ public class DataImporterTest {
         FileInputStream fileInputStream = new FileInputStream(errorsFilePath.toURI().getPath());
         String fileContent = IOUtils.toString(fileInputStream);
 
-        assertEquals("this is a sample error", fileContent.trim());
+        assertEquals("this is a sample error for first record", fileContent.trim());
         FileUtils.deleteQuietly(new File(errorsFilePath.toString()));
+    }
+
+    @Test
+    public void shouldUpdateValidRecordsAndProcessValidationErrorsForInvalidRecords() throws URISyntaxException, IOException {
+        sampleCSVImporter.setValid(false);
+        sampleCSVImporter.setInvalidRecords();
+
+        CSVImportResponse csvImportResponse = dataImporter.importData("sampleEntity", true, "sample.csv");
+
+        assertFalse(csvImportResponse.isImportSuccessful());
+
+        assertTrue(sampleCSVImporter.isValidateCalled);
+        URL errorsFilePath = this.getClass().getResource("/errors.csv");
+        FileInputStream fileInputStream = new FileInputStream(errorsFilePath.toURI().getPath());
+        String fileContent = IOUtils.toString(fileInputStream);
+        assertEquals("this is a sample error for first record", fileContent.trim());
+        FileUtils.deleteQuietly(new File(errorsFilePath.toString()));
+
+        assertTrue(sampleCSVImporter.isPostCalled);
+        assertEquals(1, sampleCSVImporter.sampleBeans.size());
+        assertEquals("sampleX2", sampleCSVImporter.sampleBeans.get(0).getSampleX());
+        assertEquals("sampleY2", sampleCSVImporter.sampleBeans.get(0).getSampleY());
     }
 }

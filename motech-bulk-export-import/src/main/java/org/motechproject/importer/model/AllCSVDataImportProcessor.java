@@ -10,7 +10,7 @@ import java.util.Map;
 @Component
 public class AllCSVDataImportProcessor implements BeanPostProcessor {
 
-    private Map<String, CSVDataImportProcessor> dataImportProcessors = new Hashtable<String, CSVDataImportProcessor>();
+    private Map<String, CSVDataImportProcessor> dataImportProcessors = new Hashtable<>();
 
     public CSVDataImportProcessor get(String groupName) {
         return dataImportProcessors.get(groupName);
