@@ -5,6 +5,7 @@ import org.apache.log4j.rolling.TimeBasedRollingPolicy;
 import org.apache.log4j.rolling.helper.Action;
 import org.apache.log4j.rolling.helper.CompositeAction;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -18,6 +19,7 @@ import static org.powermock.api.mockito.PowerMockito.when;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({TimeBasedRollingPolicy.class})
+@Ignore
 public class TimeBasedFixedBackupCountRollingPolicyTest {
 
     private String logBasePath;

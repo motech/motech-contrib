@@ -1,5 +1,6 @@
 package org.motechproject.web.logger;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.File;
@@ -8,6 +9,7 @@ import java.io.IOException;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+@Ignore
 public class FileDeleteActionTest {
     @Test
     public void shouldDeleteFilesWhenExecuted() throws IOException {
