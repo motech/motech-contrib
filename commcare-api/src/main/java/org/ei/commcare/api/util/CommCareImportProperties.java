@@ -1,7 +1,7 @@
 package org.ei.commcare.api.util;
 
 import org.ei.commcare.api.contract.CommCareModuleDefinitions;
-import org.motechproject.dao.MotechJsonReader;
+import org.motechproject.commons.api.json.MotechJsonReader;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;

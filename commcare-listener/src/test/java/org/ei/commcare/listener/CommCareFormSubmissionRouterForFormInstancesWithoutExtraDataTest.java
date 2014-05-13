@@ -11,11 +11,11 @@ import org.motechproject.event.MotechEvent;
 
 import java.util.ArrayList;
 
-import static com.ibm.icu.impl.Assert.fail;
 import static java.util.Arrays.asList;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 import static org.mockito.Mockito.*;
 
 public class CommCareFormSubmissionRouterForFormInstancesWithoutExtraDataTest extends CommCareFormSubmissionRouterTestBase {

@@ -3,7 +3,7 @@ package org.motechproject.casexml.gateway;
 import org.joda.time.DateTimeZone;
 import org.junit.Test;
 import org.motechproject.casexml.domain.CaseTask;
-import org.motechproject.util.DateUtil;
+import org.motechproject.commons.date.util.DateUtil;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.xml.sax.InputSource;

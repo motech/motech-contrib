@@ -13,7 +13,9 @@
 
     <context:component-scan base-package="org.motechproject.diagnostics"/>
 
-    <import resource="classpath:applicationPlatformServerAPI.xml"/>
+    <import resource="classpath:/META-INF/motech/activemqConnection.xml"/>
+    <import resource="classpath:/META-INF/motech/eventQueueConsumer.xml"/>
+    <import resource="classpath:/META-INF/motech/eventQueuePublisher.xml"/>
 
     <bean id="velocityEngine" class="org.springframework.ui.velocity.VelocityEngineFactoryBean">
         <property name="velocityProperties">

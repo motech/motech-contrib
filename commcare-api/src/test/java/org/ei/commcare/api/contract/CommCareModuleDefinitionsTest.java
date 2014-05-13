@@ -1,7 +1,7 @@
 package org.ei.commcare.api.contract;
 
 import org.junit.Test;
-import org.motechproject.dao.MotechJsonReader;
+import org.motechproject.commons.api.json.MotechJsonReader;
 
 import java.util.List;
 

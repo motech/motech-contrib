@@ -12,10 +12,13 @@
         <prop key="communication.type">asynchronous</prop>
     </util:properties>
 
-    <import resource="classpath:applicationPlatformServerAPI.xml"/>
+    <import resource="classpath:/META-INF/motech/activemqConnection.xml"/>
+    <import resource="classpath:/META-INF/motech/eventQueueConsumer.xml"/>
+    <import resource="classpath:/META-INF/motech/eventQueuePublisher.xml"/>
 
     <context:annotation-config/>
     <context:component-scan base-package="org.motechproject.http.client"/>
+    <context:component-scan base-package="org.motechproject.event"/>
 
     <bean id="restTemplate" class="org.springframework.web.client.RestTemplate">
         <constructor-arg>

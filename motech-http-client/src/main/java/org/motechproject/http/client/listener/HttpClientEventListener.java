@@ -3,7 +3,7 @@ package org.motechproject.http.client.listener;
 
 import org.apache.log4j.Logger;
 import org.motechproject.event.MotechEvent;
-import org.motechproject.event.annotations.MotechListener;
+import org.motechproject.event.listener.annotations.MotechListener;
 import org.motechproject.http.client.domain.EventDataKeys;
 import org.motechproject.http.client.domain.EventSubjects;
 import org.motechproject.http.client.domain.Method;

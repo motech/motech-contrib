@@ -12,7 +12,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.motechproject.casexml.builder.ResponseMessageBuilder;
 import org.motechproject.casexml.service.exception.CaseError;
 import org.motechproject.casexml.service.exception.CaseException;
-import org.motechproject.util.StringUtil;
+import org.motechproject.commons.date.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.ContextConfiguration;
