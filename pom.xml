@@ -6,13 +6,13 @@
     <name>motech-contrib</name>
     <artifactId>motech-contrib</artifactId>
     <groupId>org.motechproject.contrib-ananya-care</groupId>
-    <version>0.9-SNAPSHOT</version>
+    <version>0.10-SNAPSHOT</version>
 
     <packaging>pom</packaging>
 
     <properties>
         <motech.version>0.21.1</motech.version>
-        <motech.contrib.version>0.9-SNAPSHOT</motech.contrib.version>
+        <motech.contrib.version>0.10-SNAPSHOT</motech.contrib.version>
         <motech.contrib.group>org.motechproject.contrib-ananya-care</motech.contrib.group>
         <spring-security.version>3.1.0.RELEASE</spring-security.version>
         <spring.version>3.1.0.RELEASE</spring.version>
