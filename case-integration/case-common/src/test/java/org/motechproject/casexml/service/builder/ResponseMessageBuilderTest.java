@@ -1,6 +1,6 @@
 package org.motechproject.casexml.service.builder;
 
-import com.sun.org.apache.xerces.internal.parsers.DOMParser;
+import org.apache.xerces.parsers.DOMParser;
 import junit.framework.Assert;
 import org.apache.velocity.Template;
 import org.apache.velocity.app.VelocityEngine;

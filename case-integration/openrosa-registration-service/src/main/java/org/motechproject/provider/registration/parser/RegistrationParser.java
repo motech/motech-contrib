@@ -1,6 +1,6 @@
 package org.motechproject.provider.registration.parser;
 
-import com.sun.org.apache.xerces.internal.parsers.DOMParser;
+import org.apache.xerces.parsers.DOMParser;
 import org.motechproject.provider.registration.domain.Provider;
 import org.motechproject.provider.registration.exception.OpenRosaRegistrationParserException;
 import org.motechproject.provider.registration.utils.RegistrationMapper;

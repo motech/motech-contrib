@@ -1,6 +1,6 @@
 package org.motechproject.casexml.parser;
 
-import com.sun.org.apache.xerces.internal.parsers.DOMParser;
+import org.apache.xerces.parsers.DOMParser;
 import org.motechproject.casexml.domain.Case;
 import org.motechproject.casexml.exception.CaseParserException;
 import org.motechproject.casexml.utils.CaseMapper;
