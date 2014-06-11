@@ -13,7 +13,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.Map;
 
-@Component
+@Component("listener")
 public class HttpClientEventListener {
 
     private RestTemplate restTemplate;

@@ -21,7 +21,7 @@ public class ResponseMessageBuilder {
     }
 
     public String createResponseMessage(CaseException exception) {
-        Template template = velocityEngine.getTemplate("/templates/responses/responseWithMultipleErrors.vm");
+        Template template = velocityEngine.getTemplate("responses/responseWithMultipleErrors.vm");
         VelocityContext context = new VelocityContext();
         context.put("message", exception.getMessage());
         context.put("status", "submit_error");
@@ -44,7 +44,7 @@ public class ResponseMessageBuilder {
     }
 
     private String responseWithMessage(String message, String status) {
-        Template template = velocityEngine.getTemplate("/templates/responses/simpleResponse.vm");
+        Template template = velocityEngine.getTemplate("responses/simpleResponse.vm");
         VelocityContext context = new VelocityContext();
         context.put("message", message);
         context.put("status", status);
