@@ -4,14 +4,7 @@
 
     <modelVersion>4.0.0</modelVersion>
 
-    <parent>
-        <artifactId>motech</artifactId>
-        <groupId>org.motechproject</groupId>
-        <version>0.24-SNAPSHOT</version>
-        <relativePath>../../</relativePath>
-    </parent>
-
-    <artifactId>motech-event-aggregation</artifactId>
+    <artifactId>event-aggregation</artifactId>
     <groupId>org.motechproject</groupId>
     <version>0.24-SNAPSHOT</version>
     <name>MOTECH Event Aggregation</name>
@@ -19,16 +12,27 @@
     <packaging>bundle</packaging>
 
     <properties>
-        <modules.root.dir>${basedir}/../..</modules.root.dir>
+        <jdk.version>1.7</jdk.version>
+        <spring.version>3.1.0.RELEASE</spring.version>
+        <external.dependency.release.tag>r027</external.dependency.release.tag>
     </properties>
 
     <dependencies>
-
         <dependency>
             <artifactId>motech-platform-server-config</artifactId>
             <groupId>${project.groupId}</groupId>
             <version>${project.version}</version>
         </dependency>
+	<dependency>
+	  <groupId>javax.servlet</groupId>
+	  <artifactId>com.springsource.javax.servlet</artifactId>
+	  <version>2.5.0</version>
+	</dependency>
+	<dependency>
+	  <groupId>org.hibernate</groupId>
+	  <artifactId>org.motechproject.org.hibernate.validator</artifactId>
+	  <version>4.1.0.Final-${external.dependency.release.tag}</version>
+	</dependency>
         <dependency>
             <artifactId>motech-platform-commons-couchdb</artifactId>
             <groupId>${project.groupId}</groupId>
@@ -61,27 +65,17 @@
             <scope>test</scope>
         </dependency>
 
-        <dependency>
-            <groupId>org.codehaus.jackson</groupId>
-            <artifactId>org.motechproject.org.codehaus.jackson</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.mvel</groupId>
-            <artifactId>org.motechproject.org.mvel</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>org.springframework.web.servlet</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>org.motechproject.org.hibernate.validator</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>com.springsource.javax.servlet</artifactId>
-        </dependency>
+	<dependency>
+	  <groupId>org.springframework</groupId>
+	  <artifactId>org.springframework.web</artifactId>
+	  <version>${spring.version}</version>
+	  <exclusions>
+	    <exclusion>
+	      <groupId>org.apache.commons</groupId>
+	      <artifactId>com.springsource.org.apache.commons.logging</artifactId>
+	    </exclusion>
+	  </exclusions>
+	</dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>motech-testing-utils</artifactId>
@@ -91,34 +85,65 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-test-mvc</artifactId>
-            <scope>test</scope>
+	    <version>1.0.0.M1</version>
+	    <scope>test</scope>
+	    <!-- excluding bundle dependencies so they won't be loaded in BundleITs -->
+	    <exclusions>
+	      <exclusion>
+		<groupId>org.springframework</groupId>
+		<artifactId>spring-context</artifactId>
+	      </exclusion>
+	      <exclusion>
+		<groupId>org.springframework</groupId>
+		<artifactId>spring-webmvc</artifactId>
+	      </exclusion>
+	      <exclusion>
+		<groupId>org.springframework</groupId>
+		<artifactId>spring-test</artifactId>
+	      </exclusion>
+	      <exclusion>
+		<groupId>org.hamcrest</groupId>
+		<artifactId>hamcrest-library</artifactId>
+	      </exclusion>
+	    </exclusions>
         </dependency>
         <dependency>
             <groupId>org.hamcrest</groupId>
             <artifactId>hamcrest-all</artifactId>
+	    <version>1.1</version>
             <scope>test</scope>
         </dependency>
+	<dependency>
+	  <groupId>org.mvel</groupId>
+	  <artifactId>org.motechproject.org.mvel</artifactId>
+	  <version>2.0beta1-${external.dependency.release.tag}</version>
+	</dependency>
+	<dependency>
+	  <groupId>org.mockito</groupId>
+	  <artifactId>com.springsource.org.mockito</artifactId>
+	  <version>1.8.4</version>
+	  <scope>test</scope>
+	</dependency>
     </dependencies>
 
     <build>
         <plugins>
             <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>jslint-maven-plugin</artifactId>
-                <version>1.0.1</version>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>2.5.1</version>
+                <configuration>
+                    <source>${jdk.version}</source>
+                    <target>${jdk.version}</target>
+                </configuration>
                 <executions>
                     <execution>
-                        <goals>
-                            <goal>jslint</goal>
-                        </goals>
+                        <id>default-testCompile</id>
+                        <phase>test-compile</phase>
                         <configuration>
-                            <sourceJsFolder>${basedir}/src/main/resources/webapp/js</sourceJsFolder>
-                            <disallowIncrAndDecr>true</disallowIncrAndDecr>
-                            <requireUseStrict>true</requireUseStrict>
-                            <predefinedVars>
-                                $, angular, moment, window, defaultLayout
-                            </predefinedVars>
-                            <failOnIssues>${jslint.enable}</failOnIssues>
+                            <testExcludes>
+                                <exclude>**/ft/*.java</exclude>
+                            </testExcludes>
                         </configuration>
                     </execution>
                 </executions>
@@ -187,6 +212,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-resources-plugin</artifactId>
+		<version>2.6</version>
                 <executions>
                     <execution>
                         <id>copy-bundles</id>
@@ -244,5 +270,13 @@
             </build>
         </profile>
     </profiles>
+
+    <repositories>
+        <repository>
+            <id>motech-repo</id>
+            <name>MOTECH Maven Repository</name>
+            <url>http://nexus.motechproject.org/content/repositories/public</url>
+        </repository>
+    </repositories>
 
 </project>
