@@ -41,7 +41,9 @@
         <module>motech-crud</module>
         <module>motech-bigquery</module>
         <module>motech-user-management</module>
-    <module>motech-transliteration</module>
+	    <module>motech-transliteration</module>
+	    <module>metrics</module>
+	    <module>event-aggregation</module>
   </modules>
 
     <distributionManagement>
