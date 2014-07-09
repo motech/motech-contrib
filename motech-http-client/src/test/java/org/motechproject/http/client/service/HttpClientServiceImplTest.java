@@ -36,7 +36,7 @@ public class HttpClientServiceImplTest {
     public void shouldInvokeSendOfCommunicationType() {
         String url = "someurl";
         String data = "data";
-        httpClientService.post(url, data);
+        httpClientService.post(url, data, null, null);
 
         ArgumentCaptor<MotechEvent> motechEventArgumentCaptor = ArgumentCaptor.forClass(MotechEvent.class);
         verify(mockCommunicationType).send(motechEventArgumentCaptor.capture());
@@ -51,7 +51,7 @@ public class HttpClientServiceImplTest {
     public void shouldInvokePutRequests() {
         String url = "someurl";
         String data = "data";
-        httpClientService.put(url, data);
+        httpClientService.put(url, data, null, null);
 
         ArgumentCaptor<MotechEvent> motechEventArgumentCaptor = ArgumentCaptor.forClass(MotechEvent.class);
         verify(mockCommunicationType).send(motechEventArgumentCaptor.capture());

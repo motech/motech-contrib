@@ -26,7 +26,7 @@ public class HttpClientServiceIT {
 
     @Test
     public void shouldUseAsynchronousTypeAsDefaultCommunicationType() {
-        httpClientService.post("url", "data");
+        httpClientService.post("url", "data", null, null);
         verify(asynchronous).send(any(MotechEvent.class));
     }
 }

@@ -18,24 +18,26 @@ public class HttpClientServiceImpl implements HttpClientService {
     private CommunicationType communicationType;
 
     @Override
-    public void post(String url, Object data) {
-        HashMap<String, Object> parameters = constructParametersFrom(url, data, Method.POST);
+    public void post(String url, Object data, String username, String password) {
+        HashMap<String, Object> parameters = constructParametersFrom(url, data, Method.POST, username, password);
         MotechEvent motechEvent = new MotechEvent(EventSubjects.HTTP_REQUEST, parameters);
         communicationType.send(motechEvent);
     }
 
     @Override
-    public void put(String url, Object data) {
-        HashMap<String, Object> parameters = constructParametersFrom(url, data, Method.PUT);
+    public void put(String url, Object data, String username, String password) {
+        HashMap<String, Object> parameters = constructParametersFrom(url, data, Method.PUT, username, password);
         MotechEvent motechEvent = new MotechEvent(EventSubjects.HTTP_REQUEST, parameters);
         communicationType.send(motechEvent);
     }
 
-    private HashMap<String, Object> constructParametersFrom(String url, Object data, Method method) {
+    private HashMap<String, Object> constructParametersFrom(String url, Object data, Method method, String username, String password) {
         HashMap<String, Object> parameters = new HashMap<>();
         parameters.put(EventDataKeys.URL, url);
         parameters.put(EventDataKeys.METHOD, method);
         parameters.put(EventDataKeys.DATA, data);
+        parameters.put(EventDataKeys.USERNAME, username);
+        parameters.put(EventDataKeys.PASSWORD, password);
         return parameters;
     }
 }

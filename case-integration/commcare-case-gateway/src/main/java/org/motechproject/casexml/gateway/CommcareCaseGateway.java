@@ -16,13 +16,13 @@ public class CommcareCaseGateway{
         this.httpClientService = httpClientService;
     }
 
-    public void submitCase(String commcareUrl, CaseTask task){
+    public void submitCase(String commcareUrl, CaseTask task, String username, String password){
         String request = caseTaskXmlConverter.convertToCaseXml(task);
-        httpClientService.post(commcareUrl,request);
+        httpClientService.post(commcareUrl, request, username, password);
     }
 
-    public void closeCase(String commcareUrl, CaseTask task) {
+    public void closeCase(String commcareUrl, CaseTask task, String username, String password) {
         String request = caseTaskXmlConverter.convertToCloseCaseXml(task);
-        httpClientService.post(commcareUrl,request);
+        httpClientService.post(commcareUrl, request, username, password);
     }
 }

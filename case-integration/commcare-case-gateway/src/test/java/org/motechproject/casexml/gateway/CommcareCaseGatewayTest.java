@@ -43,12 +43,14 @@ public class CommcareCaseGatewayTest {
         String data = "request";
         String url = "someUrl";
         when(caseTaskXmlConverter.convertToCaseXml(task)).thenReturn(data);
-        commcareCaseGateway.submitCase(url, task);
+        commcareCaseGateway.submitCase(url, task, null, null);
         verify(caseTaskXmlConverter).convertToCaseXml(task);
         HashMap<String, Object> parameters = new HashMap<>();
         parameters.put(EventDataKeys.URL, url);
         parameters.put(EventDataKeys.DATA, data);
         parameters.put(EventDataKeys.METHOD, Method.POST);
+        parameters.put(EventDataKeys.USERNAME, null);
+        parameters.put(EventDataKeys.PASSWORD, null);
         verify(mockCommunicationType).send(new MotechEvent(EventSubjects.HTTP_REQUEST, parameters));
     }
 
@@ -58,12 +60,14 @@ public class CommcareCaseGatewayTest {
         String data = "request";
         String url = "someUrl";
         when(caseTaskXmlConverter.convertToCloseCaseXml(task)).thenReturn(data);
-        commcareCaseGateway.closeCase(url, task);
+        commcareCaseGateway.closeCase(url, task, null, null);
         verify(caseTaskXmlConverter).convertToCloseCaseXml(task);
         HashMap<String, Object> parameters = new HashMap<String, Object>();
         parameters.put(EventDataKeys.URL, url);
         parameters.put(EventDataKeys.DATA, data);
         parameters.put(EventDataKeys.METHOD, Method.POST);
+        parameters.put(EventDataKeys.USERNAME, null);
+        parameters.put(EventDataKeys.PASSWORD, null);
         verify(mockCommunicationType).send(new MotechEvent(EventSubjects.HTTP_REQUEST, parameters));
     }
 }
