@@ -42,7 +42,7 @@ public class HttpClientServiceImplTest {
         verify(mockCommunicationType).send(motechEventArgumentCaptor.capture());
         MotechEvent eventMessageSent = motechEventArgumentCaptor.getValue();
 
-        assertEquals(Method.POST, eventMessageSent.getParameters().get(EventDataKeys.METHOD));
+        assertEquals("POST", eventMessageSent.getParameters().get(EventDataKeys.METHOD));
         assertEquals(data, (String) eventMessageSent.getParameters().get(EventDataKeys.DATA));
         assertEquals(url, eventMessageSent.getParameters().get(EventDataKeys.URL));
     }
@@ -57,7 +57,7 @@ public class HttpClientServiceImplTest {
         verify(mockCommunicationType).send(motechEventArgumentCaptor.capture());
         MotechEvent eventMessageSent = motechEventArgumentCaptor.getValue();
 
-        assertEquals(Method.PUT, eventMessageSent.getParameters().get(EventDataKeys.METHOD));
+        assertEquals("PUT", eventMessageSent.getParameters().get(EventDataKeys.METHOD));
         assertEquals(data, (String) eventMessageSent.getParameters().get(EventDataKeys.DATA));
         assertEquals(url, eventMessageSent.getParameters().get(EventDataKeys.URL));
     }
