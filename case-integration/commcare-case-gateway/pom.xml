@@ -14,6 +14,10 @@
     <packaging>jar</packaging>
     <name>commcare-case-gateway</name>
 
+    <properties>
+        <motech.version>0.21.1</motech.version>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>org.springframework</groupId>
@@ -26,9 +30,9 @@
             <version>4.8.2</version>
         </dependency>
         <dependency>
-            <artifactId>motech-http-client</artifactId>
-            <groupId>${motech.contrib.group}</groupId>
-            <version>${motech.contrib.version}</version>
+            <groupId>org.motechproject</groupId>
+            <artifactId>motech-http-agent</artifactId>
+            <version>${motech.version}-r2</version>
         </dependency>
         <dependency>
             <groupId>org.motechproject</groupId>

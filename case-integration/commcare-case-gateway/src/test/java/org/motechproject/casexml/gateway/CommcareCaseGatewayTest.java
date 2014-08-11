@@ -7,12 +7,9 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.motechproject.casexml.domain.CaseTask;
 import org.motechproject.event.MotechEvent;
-import org.motechproject.http.client.components.CommunicationType;
-import org.motechproject.http.client.domain.EventDataKeys;
-import org.motechproject.http.client.domain.EventSubjects;
-import org.motechproject.http.client.domain.Method;
-import org.motechproject.http.client.service.HttpClientServiceImpl;
-import org.springframework.test.util.ReflectionTestUtils;
+import org.motechproject.http.agent.components.SynchronousCall;
+import org.motechproject.http.agent.domain.EventDataKeys;
+import org.motechproject.http.agent.domain.EventSubjects;
 
 import java.util.HashMap;
 
@@ -26,15 +23,13 @@ public class CommcareCaseGatewayTest {
     private CaseTaskXmlConverter caseTaskXmlConverter;
 
     @Mock
-    private CommunicationType mockCommunicationType;
+    private SynchronousCall mockCommunicationType;
 
     private CommcareCaseGateway commcareCaseGateway;
 
     @Before
     public void before() {
-        HttpClientServiceImpl httpClientService = new HttpClientServiceImpl();
-        ReflectionTestUtils.setField(httpClientService, "communicationType", mockCommunicationType);
-        commcareCaseGateway = new CommcareCaseGateway(caseTaskXmlConverter, httpClientService);
+        commcareCaseGateway = new CommcareCaseGateway(caseTaskXmlConverter, mockCommunicationType);
     }
 
     @Test
@@ -43,7 +38,7 @@ public class CommcareCaseGatewayTest {
         String data = "request";
         String url = "someUrl";
         when(caseTaskXmlConverter.convertToCaseXml(task)).thenReturn(data);
-        commcareCaseGateway.submitCase(url, task, null, null);
+        commcareCaseGateway.submitCase(url, task, null, null, 3);
         verify(caseTaskXmlConverter).convertToCaseXml(task);
         HashMap<String, Object> parameters = new HashMap<>();
         parameters.put(EventDataKeys.URL, url);
@@ -60,7 +55,7 @@ public class CommcareCaseGatewayTest {
         String data = "request";
         String url = "someUrl";
         when(caseTaskXmlConverter.convertToCloseCaseXml(task)).thenReturn(data);
-        commcareCaseGateway.closeCase(url, task, null, null);
+        commcareCaseGateway.closeCase(url, task, null, null, 3);
         verify(caseTaskXmlConverter).convertToCloseCaseXml(task);
         HashMap<String, Object> parameters = new HashMap<String, Object>();
         parameters.put(EventDataKeys.URL, url);
