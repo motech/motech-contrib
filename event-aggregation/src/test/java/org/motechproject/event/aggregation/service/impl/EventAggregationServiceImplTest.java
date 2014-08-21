@@ -5,24 +5,25 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.motechproject.event.aggregation.aggregate.EventAggregator;
-import org.motechproject.event.aggregation.model.rule.domain.AggregationRuleRecord;
-import org.motechproject.event.aggregation.model.rule.AggregationState;
 import org.motechproject.event.aggregation.model.event.PeriodicDispatchEvent;
 import org.motechproject.event.aggregation.model.event.SporadicDispatchEvent;
 import org.motechproject.event.aggregation.model.mapper.AggregationRuleMapper;
-import org.motechproject.event.aggregation.model.schedule.domain.CronBasedAggregationRecord;
-import org.motechproject.event.aggregation.model.schedule.domain.PeriodicAggregationRecord;
-import org.motechproject.event.aggregation.repository.AllAggregatedEvents;
-import org.motechproject.event.aggregation.repository.AllAggregationRules;
 import org.motechproject.event.aggregation.model.rule.AggregationRuleRequest;
+import org.motechproject.event.aggregation.model.rule.AggregationState;
+import org.motechproject.event.aggregation.model.rule.domain.AggregationRuleRecord;
 import org.motechproject.event.aggregation.model.schedule.CronBasedAggregationRequest;
 import org.motechproject.event.aggregation.model.schedule.CustomAggregationRequest;
-import org.motechproject.event.aggregation.service.EventAggregationService;
 import org.motechproject.event.aggregation.model.schedule.PeriodicAggregationRequest;
+import org.motechproject.event.aggregation.model.schedule.domain.CronBasedAggregationRecord;
+import org.motechproject.event.aggregation.model.schedule.domain.PeriodicAggregationRecord;
+import org.motechproject.event.aggregation.service.AggregatedEventRecordService;
+import org.motechproject.event.aggregation.service.AggregationRecordService;
+import org.motechproject.event.aggregation.service.AggregationRuleRecordService;
+import org.motechproject.event.aggregation.service.EventAggregationService;
 import org.motechproject.event.listener.EventListenerRegistryService;
-import org.motechproject.scheduler.service.MotechSchedulerService;
 import org.motechproject.scheduler.contract.CronSchedulableJob;
 import org.motechproject.scheduler.contract.RepeatingSchedulableJob;
+import org.motechproject.scheduler.service.MotechSchedulerService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,11 +40,13 @@ import static org.motechproject.testing.utils.TimeFaker.stopFakingTime;
 public class EventAggregationServiceImplTest {
 
     @Mock
-    private AllAggregationRules allAggregationRules;
+    private AggregationRuleRecordService aggregationRuleRecordService;
     @Mock
     EventListenerRegistryService eventListenerRegistryService;
     @Mock
-    private AllAggregatedEvents allAggregatedEvents;
+    private AggregatedEventRecordService aggregatedEventRecordService;
+    @Mock
+    private AggregationRecordService aggregationRecordService;
     @Mock
     private MotechSchedulerService schedulerService;
 
@@ -56,7 +59,8 @@ public class EventAggregationServiceImplTest {
     @Before
     public void setup() {
         initMocks(this);
-        eventAggregationService = new EventAggregationServiceImpl(allAggregationRules, eventListenerRegistryService, allAggregatedEvents, schedulerService);
+        eventAggregationService = new EventAggregationServiceImpl(aggregationRuleRecordService, eventListenerRegistryService,
+                aggregatedEventRecordService, schedulerService, aggregationRecordService);
         aggregationRuleMapper = new AggregationRuleMapper();
     }
 
@@ -64,29 +68,36 @@ public class EventAggregationServiceImplTest {
     public void shouldCreateAggregationRule() {
         eventAggregationService.createRule(new AggregationRuleRequest("foo", "", "event", new ArrayList<String>(), new PeriodicAggregationRequest("1 day", newDateTime(2012, 5, 22)), "aggregation", AggregationState.Running));
 
-        verify(allAggregationRules).addOrReplace(aggregationRuleMapper.toRecord(new AggregationRuleRequest("foo", "", "event", new ArrayList<String>(), new PeriodicAggregationRequest("1 day", newDateTime(2012, 5, 22)), "aggregation", AggregationState.Running)));
+        verify(aggregationRecordService).addOrReplaceAggregationRule(aggregationRuleMapper.toRecord(new AggregationRuleRequest("foo", "", "event", new ArrayList<String>(), new PeriodicAggregationRequest("1 day", newDateTime(2012, 5, 22)), "aggregation", AggregationState.Running)));
     }
 
     @Test
     public void shouldSubscribeToAggregatedEventsOnStartup() {
         List<AggregationRuleRecord> rules = asList(
-            new AggregationRuleRecord("foo1", "", "event1", asList("bar", "maz"), new PeriodicAggregationRecord(Period.days(1), newDateTime(2012, 5, 22)), "aggregation", AggregationState.Running),
-            new AggregationRuleRecord("foo3", "", "event3", asList("bar", "maz"), new CronBasedAggregationRecord("* * * * *"), "aggregation", AggregationState.Running)
+            new AggregationRuleRecord("foo1", "", "event1", asList("bar", "maz"), new PeriodicAggregationRecord(Period.days(1),
+                    newDateTime(2012, 5, 22)), "aggregation", AggregationState.Running),
+            new AggregationRuleRecord("foo3", "", "event3", asList("bar", "maz"), new CronBasedAggregationRecord("* * * * *"),
+                    "aggregation", AggregationState.Running)
         );
-        when(allAggregationRules.getAll()).thenReturn(rules);
+        when(aggregationRuleRecordService.retrieveAll()).thenReturn(rules);
 
         EventListenerRegistryService mockEventListenerRegistryService = mock(EventListenerRegistryService.class);
-        eventAggregationService = new EventAggregationServiceImpl(allAggregationRules, mockEventListenerRegistryService, allAggregatedEvents, schedulerService);
+        eventAggregationService = new EventAggregationServiceImpl(aggregationRuleRecordService, mockEventListenerRegistryService,
+                aggregatedEventRecordService, schedulerService, aggregationRecordService);
 
-        verify(mockEventListenerRegistryService).registerListener(new EventAggregator("foo1", asList("bar", "maz"), allAggregatedEvents, allAggregationRules), "event1");
-        verify(mockEventListenerRegistryService).registerListener(new EventAggregator("foo3", asList("bar", "maz"), allAggregatedEvents, allAggregationRules), "event3");
+        verify(mockEventListenerRegistryService).registerListener(new EventAggregator("foo1", asList("bar", "maz"),
+                aggregatedEventRecordService, aggregationRuleRecordService), "event1");
+        verify(mockEventListenerRegistryService).registerListener(new EventAggregator("foo3", asList("bar", "maz"),
+                aggregatedEventRecordService, aggregationRuleRecordService), "event3");
     }
 
     @Test
     public void shouldSubscribeToAggregationEventsForAllRulesOnStartup() {
-        eventAggregationService.createRule(new AggregationRuleRequest("foo", "", "event", asList("bar", "maz"), new PeriodicAggregationRequest("1 day", newDateTime(2012, 5, 22)), "aggregation", AggregationState.Running));
+        eventAggregationService.createRule(new AggregationRuleRequest("foo", "", "event", asList("bar", "maz"),
+                new PeriodicAggregationRequest("1 day", newDateTime(2012, 5, 22)), "aggregation", AggregationState.Running));
 
-        verify(eventListenerRegistryService).registerListener(new EventAggregator("foo", asList("bar", "maz"), allAggregatedEvents, allAggregationRules), "event");
+        verify(eventListenerRegistryService).registerListener(new EventAggregator("foo", asList("bar", "maz"),
+                aggregatedEventRecordService, aggregationRuleRecordService), "event");
     }
 
 

@@ -2,23 +2,24 @@ package org.motechproject.event.aggregation.service.impl;
 
 import org.apache.log4j.Logger;
 import org.motechproject.event.aggregation.aggregate.EventAggregator;
-import org.motechproject.event.aggregation.model.rule.domain.AggregationRuleRecord;
 import org.motechproject.event.aggregation.model.event.PeriodicDispatchEvent;
 import org.motechproject.event.aggregation.model.event.SporadicDispatchEvent;
 import org.motechproject.event.aggregation.model.mapper.AggregationRuleMapper;
-import org.motechproject.event.aggregation.repository.AllAggregatedEvents;
-import org.motechproject.event.aggregation.repository.AllAggregationRules;
 import org.motechproject.event.aggregation.model.rule.AggregationRule;
 import org.motechproject.event.aggregation.model.rule.AggregationRuleRequest;
+import org.motechproject.event.aggregation.model.rule.domain.AggregationRuleRecord;
 import org.motechproject.event.aggregation.model.schedule.AggregationScheduleRequest;
 import org.motechproject.event.aggregation.model.schedule.CronBasedAggregationRequest;
 import org.motechproject.event.aggregation.model.schedule.CustomAggregationRequest;
-import org.motechproject.event.aggregation.service.EventAggregationService;
 import org.motechproject.event.aggregation.model.schedule.PeriodicAggregationRequest;
+import org.motechproject.event.aggregation.service.AggregatedEventRecordService;
+import org.motechproject.event.aggregation.service.AggregationRecordService;
+import org.motechproject.event.aggregation.service.AggregationRuleRecordService;
+import org.motechproject.event.aggregation.service.EventAggregationService;
 import org.motechproject.event.listener.EventListenerRegistryService;
-import org.motechproject.scheduler.service.MotechSchedulerService;
 import org.motechproject.scheduler.contract.CronSchedulableJob;
 import org.motechproject.scheduler.contract.RepeatingSchedulableJob;
+import org.motechproject.scheduler.service.MotechSchedulerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,9 +28,10 @@ import static org.motechproject.commons.date.util.DateUtil.now;
 @Service
 public class EventAggregationServiceImpl implements EventAggregationService {
 
-    private AllAggregationRules allAggregationRules;
+    private AggregationRecordService aggregationRecordService;
+    private AggregationRuleRecordService aggregationRuleRecordService;
     private EventListenerRegistryService eventListenerRegistryService;
-    private AllAggregatedEvents allAggregatedEvents;
+    private AggregatedEventRecordService aggregatedEventRecordService;
     private MotechSchedulerService schedulerService;
 
     public static final int MILLIS_IN_A_SEC = 1000;
@@ -38,17 +40,20 @@ public class EventAggregationServiceImpl implements EventAggregationService {
     private Logger logger = Logger.getLogger(EventAggregationService.class);
 
     @Autowired
-    public EventAggregationServiceImpl(AllAggregationRules allAggregationRules, EventListenerRegistryService eventListenerRegistryService, AllAggregatedEvents allAggregatedEvents, MotechSchedulerService schedulerService) {
-        this.allAggregationRules = allAggregationRules;
+    public EventAggregationServiceImpl(AggregationRuleRecordService aggregationRuleRecordService, EventListenerRegistryService eventListenerRegistryService,
+                                       AggregatedEventRecordService aggregatedEventRecordService, MotechSchedulerService schedulerService,
+                                       AggregationRecordService aggregationRecordService) {
+        this.aggregationRuleRecordService = aggregationRuleRecordService;
         this.eventListenerRegistryService = eventListenerRegistryService;
-        this.allAggregatedEvents = allAggregatedEvents;
+        this.aggregatedEventRecordService = aggregatedEventRecordService;
+        this.aggregationRecordService = aggregationRecordService;
         this.schedulerService = schedulerService;
         this.aggregationRuleMapper = new AggregationRuleMapper();
         registerListenersForRules();
     }
 
     private void registerListenersForRules() {
-        for (AggregationRuleRecord rule : allAggregationRules.getAll()) {
+        for (AggregationRuleRecord rule : aggregationRuleRecordService.retrieveAll()) {
             registerListenerForRule(rule);
         }
     }
@@ -59,7 +64,9 @@ public class EventAggregationServiceImpl implements EventAggregationService {
             logger.info("Creating aggregation rule " + request.getName());
         }
         AggregationRuleRecord aggregationRule = aggregationRuleMapper.toRecord(request);
-        allAggregationRules.addOrReplace(aggregationRule);
+
+        aggregationRecordService.addOrReplaceAggregationRule(aggregationRule);
+
         registerListenerForRule(request);
 
         AggregationScheduleRequest aggregationSchedule = request.getAggregationSchedule();
@@ -77,7 +84,7 @@ public class EventAggregationServiceImpl implements EventAggregationService {
 
     private void registerListenerForRule(AggregationRule rule) {
         if (!eventListenerRegistryService.hasListener(rule.getSubscribedTo())) {
-            eventListenerRegistryService.registerListener(new EventAggregator(rule.getName(), rule.getFields(), allAggregatedEvents, allAggregationRules), rule.getSubscribedTo());
+            eventListenerRegistryService.registerListener(new EventAggregator(rule.getName(), rule.getFields(), aggregatedEventRecordService, aggregationRuleRecordService), rule.getSubscribedTo());
         }
     }
 }

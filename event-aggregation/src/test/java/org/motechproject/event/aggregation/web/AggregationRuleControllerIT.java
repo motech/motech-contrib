@@ -5,15 +5,16 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.motechproject.event.aggregation.model.rule.domain.AggregationRuleRecord;
-import org.motechproject.event.aggregation.model.rule.AggregationState;
 import org.motechproject.event.aggregation.model.event.EventStrings;
 import org.motechproject.event.aggregation.model.mapper.AggregationRuleMapper;
-import org.motechproject.event.aggregation.repository.AllAggregationRules;
 import org.motechproject.event.aggregation.model.rule.AggregationRuleRequest;
+import org.motechproject.event.aggregation.model.rule.AggregationState;
+import org.motechproject.event.aggregation.model.rule.domain.AggregationRuleRecord;
 import org.motechproject.event.aggregation.model.schedule.CronBasedAggregationRequest;
 import org.motechproject.event.aggregation.model.schedule.CustomAggregationRequest;
 import org.motechproject.event.aggregation.model.schedule.PeriodicAggregationRequest;
+import org.motechproject.event.aggregation.service.AggregationRecordService;
+import org.motechproject.event.aggregation.service.AggregationRuleRecordService;
 import org.motechproject.scheduler.service.MotechSchedulerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -28,7 +29,9 @@ import static java.util.Arrays.asList;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;
 import static org.motechproject.commons.date.util.DateUtil.newDateTime;
-import static org.springframework.test.web.server.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.server.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.server.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.server.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.server.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.server.result.MockMvcResultMatchers.status;
 
@@ -42,7 +45,10 @@ public class AggregationRuleControllerIT {
     AggregationRuleController aggregationRuleController;
 
     @Autowired
-    AllAggregationRules allAggregationRules;
+    AggregationRuleRecordService aggregationRuleRecordService;
+
+    @Autowired
+    AggregationRecordService aggregationRecordService;
 
     @Autowired
     private MotechSchedulerService schedulerService;
@@ -57,32 +63,36 @@ public class AggregationRuleControllerIT {
 
     @After
     public void teardown() {
-        allAggregationRules.removeAll();
+        aggregationRuleRecordService.deleteAll();
     }
 
     @Test
     public void shouldReturnAllRulesAsJson() throws Exception {
         List<AggregationRuleRecord> rules = asList(
-            aggregationRuleMapper.toRecord(new AggregationRuleRequest("aggregation1", "", "subscribedEvent1", asList("foo"), new CronBasedAggregationRequest("* * * * * ?"), "publishEvent1", AggregationState.Running)),
-            aggregationRuleMapper.toRecord(new AggregationRuleRequest("aggregation2", "", "subscribedEvent2", asList("fuu"), new CustomAggregationRequest(""), "publishEvent2", AggregationState.Running))
+            aggregationRuleMapper.toRecord(new AggregationRuleRequest("aggregation1", "", "subscribedEvent1", asList("foo"),
+                    new CronBasedAggregationRequest("* * * * * ?"), "publishEvent1", AggregationState.Running)),
+            aggregationRuleMapper.toRecord(new AggregationRuleRequest("aggregation2", "", "subscribedEvent2", asList("fuu"),
+                    new CustomAggregationRequest(""), "publishEvent2", AggregationState.Running))
         );
-        allAggregationRules.addOrReplace(rules.get(0));
-        allAggregationRules.addOrReplace(rules.get(1));
+        aggregationRecordService.addOrReplaceAggregationRule(rules.get(0));
+        aggregationRecordService.addOrReplaceAggregationRule(rules.get(1));
 
         mockAggregationRuleController.perform(
             get("/rules"))
         .andExpect(
-            content().string(new ObjectMapper().writeValueAsString(allAggregationRules.getAll())));
+            content().string(new ObjectMapper().writeValueAsString(aggregationRuleRecordService.retrieveAll())));
     }
 
     @Test
     public void shouldReturnASingleRuleByNameAsJson() throws Exception {
         List<AggregationRuleRequest> rules = asList(
-            new AggregationRuleRequest("aggregation1", "eve", "subscribedEvent1", asList("foo"), new CronBasedAggregationRequest("* * * * * ?"), "publishEvent1", AggregationState.Running),
-            new AggregationRuleRequest("aggregation2", "eve", "subscribedEvent2", asList("fuu"), new CustomAggregationRequest("true"), "publishEvent2", AggregationState.Running)
+            new AggregationRuleRequest("aggregation1", "eve", "subscribedEvent1", asList("foo"),
+                    new CronBasedAggregationRequest("* * * * * ?"), "publishEvent1", AggregationState.Running),
+            new AggregationRuleRequest("aggregation2", "eve", "subscribedEvent2", asList("fuu"),
+                    new CustomAggregationRequest("true"), "publishEvent2", AggregationState.Running)
         );
-        allAggregationRules.addOrReplace(aggregationRuleMapper.toRecord(rules.get(0)));
-        allAggregationRules.addOrReplace(aggregationRuleMapper.toRecord(rules.get(1)));
+        aggregationRecordService.addOrReplaceAggregationRule(aggregationRuleMapper.toRecord(rules.get(0)));
+        aggregationRecordService.addOrReplaceAggregationRule(aggregationRuleMapper.toRecord(rules.get(1)));
 
         mockAggregationRuleController.perform(
             get("/rules/aggregation2"))
@@ -93,7 +103,8 @@ public class AggregationRuleControllerIT {
     @Test
     public void shouldCreateARule() throws Exception {
         final String externalId = "aggregation1";
-        AggregationRuleRequest ruleRequest = new AggregationRuleRequest(externalId, "", "subscribedEvent1", asList("foo"), new CronBasedAggregationRequest("* * * * * ?"), "publishEvent1", AggregationState.Running);
+        AggregationRuleRequest ruleRequest = new AggregationRuleRequest(externalId, "", "subscribedEvent1", asList("foo"),
+                new CronBasedAggregationRequest("* * * * * ?"), "publishEvent1", AggregationState.Running);
 
         try {
             mockAggregationRuleController.perform(
@@ -103,7 +114,7 @@ public class AggregationRuleControllerIT {
                     .andExpect(
                             status().is(201)
                     );
-            assertNotNull(allAggregationRules.findByName(externalId));
+            assertNotNull(aggregationRuleRecordService.findByName(externalId));
         } finally {
             schedulerService.safeUnscheduleJob(EventStrings.PERIODIC_DISPATCH_EVENT, externalId);
         }
@@ -114,15 +125,18 @@ public class AggregationRuleControllerIT {
         final String externalId1 = "aggregation1";
         final String externalId2 = "aggregation1";
         List<AggregationRuleRecord> rules = asList(
-                aggregationRuleMapper.toRecord(new AggregationRuleRequest(externalId1, "", "subscribedEvent1", asList("foo"), new CronBasedAggregationRequest("* * * * * ?"), "publishEvent1", AggregationState.Running)),
-                aggregationRuleMapper.toRecord(new AggregationRuleRequest(externalId2, "", "subscribedEvent2", asList("fuu"), new CustomAggregationRequest(""), "publishEvent2", AggregationState.Running))
+                aggregationRuleMapper.toRecord(new AggregationRuleRequest(externalId1, "", "subscribedEvent1", asList("foo"),
+                        new CronBasedAggregationRequest("* * * * * ?"), "publishEvent1", AggregationState.Running)),
+                aggregationRuleMapper.toRecord(new AggregationRuleRequest(externalId2, "", "subscribedEvent2", asList("fuu"),
+                        new CustomAggregationRequest(""), "publishEvent2", AggregationState.Running))
         );
 
         try {
-            allAggregationRules.addOrReplace(rules.get(0));
-            allAggregationRules.addOrReplace(rules.get(1));
+            aggregationRecordService.addOrReplaceAggregationRule(rules.get(0));
+            aggregationRecordService.addOrReplaceAggregationRule(rules.get(1));
 
-            AggregationRuleRequest updatedRule = new AggregationRuleRequest(externalId1, "", "subscribedEvent3", asList("foo"), new CronBasedAggregationRequest("* * * * * ?"), "publishEvent3", AggregationState.Running);
+            AggregationRuleRequest updatedRule = new AggregationRuleRequest(externalId1, "", "subscribedEvent3", asList("foo"),
+                    new CronBasedAggregationRequest("* * * * * ?"), "publishEvent3", AggregationState.Running);
 
             mockAggregationRuleController.perform(
                     put("/rules")
@@ -131,7 +145,7 @@ public class AggregationRuleControllerIT {
                     .andExpect(
                             status().is(201)
                     );
-            assertEquals("subscribedEvent3", allAggregationRules.findByName(externalId1).getSubscribedTo());
+            assertEquals("subscribedEvent3", aggregationRuleRecordService.findByName(externalId1).getSubscribedTo());
         } finally {
             schedulerService.safeUnscheduleJob(EventStrings.PERIODIC_DISPATCH_EVENT, externalId1);
             schedulerService.safeUnscheduleRepeatingJob(EventStrings.PERIODIC_DISPATCH_EVENT, externalId2);
@@ -150,7 +164,8 @@ public class AggregationRuleControllerIT {
 
     @Test
     public void shouldValidateRequestFields() throws Exception {
-        AggregationRuleRequest request = new AggregationRuleRequest(null, "foo", "bar", asList("baz"), new CustomAggregationRequest("true"), "fuu", AggregationState.Running);
+        AggregationRuleRequest request = new AggregationRuleRequest(null, "foo", "bar", asList("baz"),
+                new CustomAggregationRequest("true"), "fuu", AggregationState.Running);
         FieldError error = new FieldError("name", "Must be present");
         mockAggregationRuleController.perform(
             put("/rules")
@@ -164,7 +179,8 @@ public class AggregationRuleControllerIT {
 
     @Test
     public void shouldValidateNestedFields() throws Exception {
-        AggregationRuleRequest request = new AggregationRuleRequest("aggregation", "", "subscribeEvent", asList("foo"), new PeriodicAggregationRequest("foo", newDateTime(2012, 10, 5)), "publishEvent", AggregationState.Running);
+        AggregationRuleRequest request = new AggregationRuleRequest("aggregation", "", "subscribeEvent", asList("foo"),
+                new PeriodicAggregationRequest("foo", newDateTime(2012, 10, 5)), "publishEvent", AggregationState.Running);
         FieldError error = new FieldError("aggregationSchedule.period", "Not a valid period value");
         mockAggregationRuleController.perform(
             put("/rules")
@@ -179,16 +195,18 @@ public class AggregationRuleControllerIT {
     @Test
     public void shouldDeleteAnExistingRule() throws Exception {
         List<AggregationRuleRecord> rules = asList(
-            aggregationRuleMapper.toRecord(new AggregationRuleRequest("aggregation1", "", "subscribedEvent1", asList("foo"), new CronBasedAggregationRequest("* * * * * ?"), "publishEvent1", AggregationState.Running)),
-            aggregationRuleMapper.toRecord(new AggregationRuleRequest("aggregation2", "", "subscribedEvent2", asList("fuu"), new CustomAggregationRequest(""), "publishEvent2", AggregationState.Running))
+            aggregationRuleMapper.toRecord(new AggregationRuleRequest("aggregation1", "", "subscribedEvent1", asList("foo"),
+                    new CronBasedAggregationRequest("* * * * * ?"), "publishEvent1", AggregationState.Running)),
+            aggregationRuleMapper.toRecord(new AggregationRuleRequest("aggregation2", "", "subscribedEvent2", asList("fuu"),
+                    new CustomAggregationRequest(""), "publishEvent2", AggregationState.Running))
         );
-        allAggregationRules.addOrReplace(rules.get(0));
-        allAggregationRules.addOrReplace(rules.get(1));
+        aggregationRecordService.addOrReplaceAggregationRule(rules.get(0));
+        aggregationRecordService.addOrReplaceAggregationRule(rules.get(1));
 
         mockAggregationRuleController.perform(
             delete("/rules/aggregation2"));
 
-        List<AggregationRuleRecord> allRules = allAggregationRules.getAll();
+        List<AggregationRuleRecord> allRules = aggregationRuleRecordService.retrieveAll();
         assertEquals(asList(rules.get(0)), allRules);
     }
 }

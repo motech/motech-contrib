@@ -26,14 +26,14 @@
     <osgi:service id="eventAggregationServiceOsgi" auto-export="interfaces" ref="eventAggregationServiceImpl"
                   interface="org.motechproject.event.aggregation.service.EventAggregationService"/>
 
-    <osgi:reference id="couchDbManager" interface="org.motechproject.commons.couchdb.service.CouchDbManager" />
-
     <osgi:reference id="eventRelay" interface="org.motechproject.event.listener.EventRelay" />
 
     <osgi:reference id="eventListenerRegistryService" interface="org.motechproject.event.listener.EventListenerRegistryService"/>
 
     <osgi:reference id="schedulerService" interface="org.motechproject.scheduler.service.MotechSchedulerService" />
 
+    <osgi:reference id="aggregatedEventRecordService" interface="org.motechproject.event.aggregation.service.AggregatedEventRecordService" />
 
+    <osgi:reference id="aggregationRuleRecordService" interface="org.motechproject.event.aggregation.service.AggregationRuleRecordService" />
 
 </beans>

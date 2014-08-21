@@ -1,41 +1,24 @@
 package org.motechproject.event.aggregation.model.rule.domain;
 
-import org.codehaus.jackson.annotate.JsonIgnore;
-import org.codehaus.jackson.annotate.JsonProperty;
-import org.ektorp.support.TypeDiscriminator;
-import org.motechproject.commons.couchdb.model.MotechBaseDataObject;
 import org.motechproject.event.aggregation.model.rule.AggregationRule;
 import org.motechproject.event.aggregation.model.rule.AggregationState;
 import org.motechproject.event.aggregation.model.schedule.domain.AggregationScheduleRecord;
+import org.motechproject.mds.annotations.Entity;
 
 import java.util.List;
 
-@TypeDiscriminator("doc.type === 'AggregationRule'")
-public class AggregationRuleRecord extends MotechBaseDataObject implements AggregationRule {
+@Entity
+public class AggregationRuleRecord implements AggregationRule {
 
-    @JsonProperty
     private String name;
-
-    @JsonProperty
     private String description;
-
-    @JsonProperty
     private String subscribedTo;
-
-    @JsonProperty
     private List<String> fields;
-
-    @JsonProperty
     private AggregationScheduleRecord aggregationSchedule;
-
-    @JsonProperty
     private String publishAs;
-
-    @JsonProperty
     private AggregationState state;
 
     public AggregationRuleRecord() {
-        super("AggregationRule");
         this.state = AggregationState.Running;
     }
 
@@ -50,79 +33,65 @@ public class AggregationRuleRecord extends MotechBaseDataObject implements Aggre
         this.state = state;
     }
 
-    @JsonIgnore
     @Override
     public String getName() {
         return name;
     }
 
-    @JsonIgnore
     @Override
     public String getDescription() {
         return description;
     }
 
-    @JsonIgnore
     @Override
     public String getSubscribedTo() {
         return subscribedTo;
     }
 
-    @JsonIgnore
     @Override
     public List<String> getFields() {
         return fields;
     }
 
-    @JsonIgnore
     @Override
     public AggregationScheduleRecord getAggregationSchedule() {
         return aggregationSchedule;
     }
 
-    @JsonIgnore
     @Override
     public String getPublishAs() {
         return publishAs;
     }
 
-    @JsonIgnore
     @Override
     public AggregationState getState() {
         return state;
     }
 
-    @JsonIgnore
     public void setName(String name) {
         this.name = name;
     }
 
-    @JsonIgnore
     public void setDescription(String description) {
         this.description = description;
     }
 
-    @JsonIgnore
     public void setSubscribedTo(String subscribedTo) {
         this.subscribedTo = subscribedTo;
     }
 
-    @JsonIgnore
     public void setFields(List<String> fields) {
         this.fields = fields;
     }
 
-    @JsonIgnore
     public void setAggregationSchedule(AggregationScheduleRecord aggregationSchedule) {
         this.aggregationSchedule = aggregationSchedule;
     }
 
-    @JsonIgnore
     public void setPublishAs(String publishAs) {
         this.publishAs = publishAs;
     }
 
-    @JsonIgnore
     public void setState(AggregationState state) {
         this.state = state;
     }

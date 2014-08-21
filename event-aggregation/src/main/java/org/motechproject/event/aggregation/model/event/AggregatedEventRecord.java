@@ -1,36 +1,33 @@
 package org.motechproject.event.aggregation.model.event;
 
-import org.codehaus.jackson.annotate.JsonIgnore;
-import org.codehaus.jackson.annotate.JsonProperty;
-import org.ektorp.support.TypeDiscriminator;
 import org.joda.time.DateTime;
-import org.motechproject.commons.couchdb.model.MotechBaseDataObject;
 import org.motechproject.commons.date.util.DateUtil;
+import org.motechproject.mds.annotations.Entity;
+import org.motechproject.mds.annotations.Field;
 
 import java.util.Map;
 
 import static org.motechproject.commons.date.util.DateUtil.now;
 
-@TypeDiscriminator("doc.type === 'AggregatedEvent'")
-public class AggregatedEventRecord extends MotechBaseDataObject implements AggregatedEvent {
+@Entity
+public class AggregatedEventRecord implements AggregatedEvent {
 
-    @JsonProperty
+    @Field
     private String aggregationRuleName;
 
-    @JsonProperty
+    @Field
     private Map<String, Object> aggregationParams;
 
-    @JsonProperty
+    @Field
     private Map<String, Object> nonAggregationParams;
 
-    @JsonProperty
+    @Field
     private DateTime timeStamp;
 
-    @JsonProperty
+    @Field
     private boolean hasError;
 
     private AggregatedEventRecord() {
-        super("AggregatedEvent");
     }
 
     public AggregatedEventRecord(String aggregationRuleName, Map<String, Object> aggregationParams, Map<String, Object> nonAggregationParams, boolean hasError) {
@@ -46,18 +43,15 @@ public class AggregatedEventRecord extends MotechBaseDataObject implements Aggre
         this(aggregationRuleName, aggregationParams, nonAggregationParams, false);
     }
 
-    @JsonIgnore
     public String getAggregationRuleName() {
         return aggregationRuleName;
     }
 
-    @JsonIgnore
     @Override
     public Map<String, Object> getAggregationParams() {
         return aggregationParams;
     }
 
-    @JsonIgnore
     @Override
     public Map<String, Object> getNonAggregationParams() {
         return nonAggregationParams;
@@ -68,7 +62,6 @@ public class AggregatedEventRecord extends MotechBaseDataObject implements Aggre
         return DateUtil.setTimeZoneUTC(timeStamp);
     }
 
-    @JsonIgnore
     public boolean hasError() {
         return hasError;
     }
