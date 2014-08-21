@@ -4,9 +4,9 @@ import org.codehaus.jackson.annotate.JsonProperty;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.hibernate.validator.ValidatorFactoryBean;
 import org.motechproject.event.aggregation.model.mapper.AggregationRuleMapper;
-import org.motechproject.event.aggregation.repository.AllAggregationRules;
 import org.motechproject.event.aggregation.model.rule.AggregationRule;
 import org.motechproject.event.aggregation.model.rule.AggregationRuleRequest;
+import org.motechproject.event.aggregation.service.AggregationRuleRecordService;
 import org.motechproject.event.aggregation.service.EventAggregationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -31,28 +31,28 @@ import java.util.Set;
 @RequestMapping("/rules")
 public class AggregationRuleController {
 
-    private AllAggregationRules allAggregationRules;
+    private AggregationRuleRecordService aggregationRuleRecordService;
     private Validator validator;
 
     @Autowired
     private EventAggregationService aggregationService;
 
     @Autowired
-    public AggregationRuleController(AllAggregationRules allAggregationRules) {
-        this.allAggregationRules = allAggregationRules;
+    public AggregationRuleController(AggregationRuleRecordService aggregationRuleRecordService) {
+        this.aggregationRuleRecordService = aggregationRuleRecordService;
         validator = ValidatorFactoryBean.getInstance().getValidator();
     }
 
     @RequestMapping(value = "", method = RequestMethod.GET)
     @ResponseBody
     public List<? extends AggregationRule> getAllAggregationRules() {
-        return allAggregationRules.getAll();
+        return aggregationRuleRecordService.retrieveAll();
     }
 
     @RequestMapping(value = "/{ruleName}", method = RequestMethod.GET)
     @ResponseBody
     public AggregationRuleRequest get(@PathVariable String ruleName) {
-        return new AggregationRuleMapper().toRequest(allAggregationRules.findByName(ruleName));
+        return new AggregationRuleMapper().toRequest(aggregationRuleRecordService.findByName(ruleName));
     }
 
     @ExceptionHandler({BadRequestException.class, HttpMessageNotReadableException.class })
@@ -85,7 +85,7 @@ public class AggregationRuleController {
     @RequestMapping(value = "{ruleName}", method = RequestMethod.DELETE)
     @ResponseStatus(HttpStatus.CREATED)
     public void delete(@PathVariable String ruleName) {
-        allAggregationRules.remove(ruleName);
+        aggregationRuleRecordService.delete("ruleName", ruleName);
     }
 }
 

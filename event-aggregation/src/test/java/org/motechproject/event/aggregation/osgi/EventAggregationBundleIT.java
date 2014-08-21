@@ -36,8 +36,10 @@ public class EventAggregationBundleIT extends BasePaxIT {
 
     @Inject
     private EventListenerRegistryService eventListenerRegistry;
+
     @Inject
     private MotechSchedulerService schedulerService;
+
     @Inject
     private EventAggregationService eventAggregationService;
 

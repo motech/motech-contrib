@@ -5,14 +5,15 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.motechproject.event.aggregation.model.event.AggregatedEventRecord;
 import org.motechproject.event.aggregation.model.Aggregation;
-import org.motechproject.event.aggregation.model.rule.AggregationState;
+import org.motechproject.event.aggregation.model.event.AggregatedEventRecord;
 import org.motechproject.event.aggregation.model.mapper.AggregationRuleMapper;
-import org.motechproject.event.aggregation.repository.AllAggregatedEvents;
-import org.motechproject.event.aggregation.repository.AllAggregationRules;
 import org.motechproject.event.aggregation.model.rule.AggregationRuleRequest;
+import org.motechproject.event.aggregation.model.rule.AggregationState;
 import org.motechproject.event.aggregation.model.schedule.CronBasedAggregationRequest;
+import org.motechproject.event.aggregation.service.AggregatedEventRecordService;
+import org.motechproject.event.aggregation.service.AggregationRecordService;
+import org.motechproject.event.aggregation.service.AggregationRuleRecordService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -37,10 +38,13 @@ public class AggregationControllerIT {
     AggregationController aggregationController;
 
     @Autowired
-    AllAggregatedEvents allAggregatedEvents;
+    AggregatedEventRecordService aggregatedEventRecordService;
 
     @Autowired
-    private AllAggregationRules allAggregationRules;
+    private AggregationRuleRecordService aggregationRuleRecordService;
+
+    @Autowired
+    private AggregationRecordService aggregationRecordService;
 
     private AggregationRuleMapper aggregationRuleMapper;
 
@@ -52,27 +56,28 @@ public class AggregationControllerIT {
 
     @After
     public void teardown() {
-        allAggregatedEvents.removeAll();
-        allAggregationRules.removeAll();
+        aggregatedEventRecordService.deleteAll();
+        aggregationRuleRecordService.deleteAll();
     }
 
     @Test
     public void shouldReturnAllAggregationsForARuleAsJson() throws Exception {
-        allAggregationRules.addOrReplace(aggregationRuleMapper.toRecord(new AggregationRuleRequest("my_aggregation", "", "subscribedEvent", asList("foo"), new CronBasedAggregationRequest("* * * * * ?"), "publishEvent", AggregationState.Running)));
+        aggregationRecordService.addOrReplaceAggregationRule(aggregationRuleMapper.toRecord(new AggregationRuleRequest("my_aggregation",
+                "", "subscribedEvent", asList("foo"), new CronBasedAggregationRequest("* * * * * ?"), "publishEvent", AggregationState.Running)));
 
         Map<String, Object> aggregationParams = new LinkedHashMap<>();
         aggregationParams.put("flw_id", "123");
         Map<String, Object> nonAggregationParams = new LinkedHashMap<>();
         nonAggregationParams.put("data1", "foo");
-        allAggregatedEvents.add(new AggregatedEventRecord("my_aggregation", aggregationParams, nonAggregationParams));
+        aggregatedEventRecordService.create(new AggregatedEventRecord("my_aggregation", aggregationParams, nonAggregationParams));
 
         aggregationParams = new LinkedHashMap<>();
         aggregationParams.put("flw_id", "123");
         nonAggregationParams = new LinkedHashMap<>();
         nonAggregationParams.put("data2", "fii");
-        allAggregatedEvents.add(new AggregatedEventRecord("my_aggregation", aggregationParams, nonAggregationParams));
+        aggregatedEventRecordService.create(new AggregatedEventRecord("my_aggregation", aggregationParams, nonAggregationParams));
 
-        List<Aggregation> aggregation = allAggregatedEvents.findAllAggregations("my_aggregation");
+        List<Aggregation> aggregation = aggregationRecordService.findAllAggregations("my_aggregation");
 
         mockAggregationController.perform(
             get("/aggregations/my_aggregation/valid"))
@@ -82,21 +87,21 @@ public class AggregationControllerIT {
 
     @Test
     public void shouldReturnErrorEventAggregationsForAGivenRuleAsJson() throws Exception {
-        allAggregationRules.addOrReplace(aggregationRuleMapper.toRecord(new AggregationRuleRequest("my_aggregation", "", "subscribedEvent", asList("foo"), new CronBasedAggregationRequest("* * * * * ?"), "publishEvent", AggregationState.Running)));
+        aggregationRecordService.addOrReplaceAggregationRule(aggregationRuleMapper.toRecord(new AggregationRuleRequest("my_aggregation",                "", "subscribedEvent", asList("foo"), new CronBasedAggregationRequest("* * * * * ?"), "publishEvent", AggregationState.Running)));
 
         Map<String, Object> aggregationParams = new LinkedHashMap<>();
         aggregationParams.put("flw_id", "123");
         Map<String, Object> nonAggregationParams = new LinkedHashMap<>();
         nonAggregationParams.put("data1", "foo");
-        allAggregatedEvents.add(new AggregatedEventRecord("my_aggregation", aggregationParams, nonAggregationParams));
+        aggregatedEventRecordService.create(new AggregatedEventRecord("my_aggregation", aggregationParams, nonAggregationParams));
 
         aggregationParams = new LinkedHashMap<>();
         aggregationParams.put("flw_id", "123");
         nonAggregationParams = new LinkedHashMap<>();
         nonAggregationParams.put("data2", "fii");
-        allAggregatedEvents.add(new AggregatedEventRecord("my_aggregation", aggregationParams, nonAggregationParams, true));
+        aggregatedEventRecordService.create(new AggregatedEventRecord("my_aggregation", aggregationParams, nonAggregationParams, true));
 
-        List<Aggregation> aggregation = allAggregatedEvents.findAllErrorEventsForAggregations("my_aggregation");
+        List<Aggregation> aggregation = aggregationRecordService.findAllErrorEventsForAggregations("my_aggregation");
 
         mockAggregationController.perform(
             get("/aggregations/my_aggregation/invalid"))

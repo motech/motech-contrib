@@ -5,8 +5,8 @@ import org.motechproject.event.MotechEvent;
 import org.motechproject.event.aggregation.model.event.AggregatedEventRecord;
 import org.motechproject.event.aggregation.model.rule.domain.AggregationRuleRecord;
 import org.motechproject.event.aggregation.model.rule.AggregationState;
-import org.motechproject.event.aggregation.repository.AllAggregatedEvents;
-import org.motechproject.event.aggregation.repository.AllAggregationRules;
+import org.motechproject.event.aggregation.service.AggregatedEventRecordService;
+import org.motechproject.event.aggregation.service.AggregationRuleRecordService;
 import org.motechproject.event.listener.EventListener;
 
 import java.util.HashMap;
@@ -16,19 +16,20 @@ import java.util.TreeMap;
 
 public class EventAggregator implements EventListener {
 
-    private AllAggregatedEvents allAggregatedEvents;
+    private AggregatedEventRecordService aggregatedEventRecordService;
+    private AggregationRuleRecordService aggregationRuleRecordService;
 
     private String aggregationRuleName;
     private List<String> fields;
-    private AllAggregationRules allAggregationRules;
 
     private Logger logger = Logger.getLogger(EventAggregator.class);
 
-    public EventAggregator(String aggregationRuleName, List<String> fields, AllAggregatedEvents allAggregatedEvents, AllAggregationRules allAggregationRules) {
+    public EventAggregator(String aggregationRuleName, List<String> fields, AggregatedEventRecordService aggregatedEventRecordService,
+                           AggregationRuleRecordService aggregationRuleRecordService) {
         this.aggregationRuleName = aggregationRuleName;
         this.fields = fields;
-        this.allAggregatedEvents = allAggregatedEvents;
-        this.allAggregationRules = allAggregationRules;
+        this.aggregatedEventRecordService = aggregatedEventRecordService;
+        this.aggregationRuleRecordService = aggregationRuleRecordService;
     }
 
     @Override
@@ -41,7 +42,7 @@ public class EventAggregator implements EventListener {
         if (logger.isDebugEnabled()) {
             logger.debug("aggregating: " + event);
         }
-        AggregationRuleRecord rule = allAggregationRules.findByName(aggregationRuleName);
+        AggregationRuleRecord rule = aggregationRuleRecordService.findByName(aggregationRuleName);
         if (rule.getState().equals(AggregationState.Paused)) {
             if (logger.isDebugEnabled()) {
                 logger.debug("aggregation[" + aggregationRuleName + "] is paused, ignoring events.");
@@ -58,9 +59,10 @@ public class EventAggregator implements EventListener {
                 nonAggregationParameters.put(key, event.getParameters().get(key));
             }
         }
-        AggregatedEventRecord aggregatedEvent = new AggregatedEventRecord(aggregationRuleName, aggregationParameters, nonAggregationParameters, hasFieldMissing(event));
+        AggregatedEventRecord aggregatedEvent = new AggregatedEventRecord(aggregationRuleName, aggregationParameters,
+                nonAggregationParameters, hasFieldMissing(event));
 
-        allAggregatedEvents.add(aggregatedEvent);
+        aggregatedEventRecordService.create(aggregatedEvent);
     }
 
     private boolean hasFieldMissing(MotechEvent event) {
