@@ -4,11 +4,12 @@
 <!DOCTYPE html>
 <html ng-app="crud">
 <head>
-    <title>  ${model.displayName} - Admin </title>
+    <title>  ${model.displayName} - Admin </title>wiki
 
     <script type="text/javascript" src="<@spring.url '/motech-crud/js/jquery/jquery-1.8.2.min.js'/>"></script>
     <script type="text/javascript" src="<@spring.url '/motech-crud/js/bootstrap/bootstrap.min.js'/>"></script>
-
+    
+    <link rel="stylesheet" type="text/css" href="<@spring.url '/motech-crud/css/ng-cloak.css'/>"/>
     <link rel="stylesheet" type="text/css" href="<@spring.url '/motech-crud/css/bootstrap.min.css'/>"/>
     <link rel="stylesheet" type="text/css" href="<@spring.url '/motech-crud/css/motech-paginator-pagination.css'/>"/>
     <link rel="stylesheet" type="text/css" href="<@spring.url '/motech-crud/css/crud.css'/>"/>
@@ -30,7 +31,7 @@
 
                             <div class="controls">
                                 <input type="text" name="${filterField}" id="${filterField}"
-                                       value="{{searchCriteria.${filterField}}}"/>
+                                       value="{{searchCriteria.${filterField}}}" ng-cloak class="ng-cloak"/>
                             </div>
                         </div>
 
@@ -170,15 +171,43 @@
     }
 
     function submitValues(values){
-        $.ajax("<@spring.url '/crud/${entity}/save/'/>", {
-            data:JSON.stringify(trimmed(values)),
-            contentType:'application/json',
-            type:'POST'
-        }).done(function () {
-                    reloadPage();
-                    $('#createOrEditEntityModal').modal('hide');
-                });
+       if(validate(values)== true) {
+	        $.ajax("<@spring.url '/crud/${entity}/save/'/>", {
+	            data:JSON.stringify(trimmed(values)),
+	            contentType:'application/json',
+	            type:'POST'
+	        }).done(function () {
+	                    reloadPage();
+	                    $('#createOrEditEntityModal').modal('hide');
+	                });
+       }
     }
+    
+    function validate(values) {
+        var validate = values;
+        var flag = true;
+        var check = validate.mobileNumber;
+        if(!isEmpty(check)) {
+             if(check.match(/^[0-9]+$/) == null) {
+	        		flag = false;
+	           		alert("Please enter digits Only.");
+	        } else if(check.length < 10) {
+	                flag = false;
+	                alert("Number of digits cannot less than ten.");
+	        } else if(check.length > 12) {
+	           		flag = false;
+	           		alert("Number of digits cannot exceed twelve.");
+	        }
+	        else {
+	            flag = true;
+	        }
+        }
+        return flag;
+    }
+    
+    function isEmpty(value){
+ 		 return (value == null || value.length === 0);
+	}
 
     var jsonSchema;
     $(document).ready(function(){
