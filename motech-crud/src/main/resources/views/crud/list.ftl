@@ -4,7 +4,7 @@
 <!DOCTYPE html>
 <html ng-app="crud">
 <head>
-    <title>  ${model.displayName} - Admin </title>wiki
+    <title>  ${model.displayName} - Admin </title>
 
     <script type="text/javascript" src="<@spring.url '/motech-crud/js/jquery/jquery-1.8.2.min.js'/>"></script>
     <script type="text/javascript" src="<@spring.url '/motech-crud/js/bootstrap/bootstrap.min.js'/>"></script>
@@ -103,7 +103,8 @@
     </div>
     <div class="modal-body">
         <form id = "jsonForm"></form>
-    </div>
+    </div >
+    <div id="validation" class="validation"></div>
 </div>
 
 </div>
@@ -138,6 +139,7 @@
 
     function editEntity(elem){
         $('#jsonForm').contents().remove();
+        $('#validation').html("");
 
         $.getJSON("<@spring.url '/crud/${entity}/get/'/>" +  $(elem).attr('entityId'), function (json) {
             $('#jsonForm').jsonForm({
@@ -157,6 +159,7 @@
 
     function newEntity(elem){
         $('#jsonForm').contents().remove();
+        $('#validation').html("");
         $('#jsonForm').jsonForm({
             "schema":jsonSchema.properties,
             "form":[
@@ -184,19 +187,20 @@
     }
     
     function validate(values) {
+        $('#validation').html("");
         var validate = values;
         var flag = true;
         var check = validate.mobileNumber;
         if(!isEmpty(check)) {
              if(check.match(/^[0-9]+$/) == null) {
 	        		flag = false;
-	           		alert("Please enter digits Only.");
+	           		$('#validation').html("Please enter digits Only.");
 	        } else if(check.length < 10) {
 	                flag = false;
-	                alert("Number of digits cannot less than ten.");
+	                $('#validation').html("Number of digits cannot less than ten.");
 	        } else if(check.length > 12) {
 	           		flag = false;
-	           		alert("Number of digits cannot exceed twelve.");
+	           		$('#validation').html("Number of digits cannot exceed twelve.");
 	        }
 	        else {
 	            flag = true;

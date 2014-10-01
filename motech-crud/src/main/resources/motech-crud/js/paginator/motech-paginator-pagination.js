@@ -17,6 +17,11 @@ function PaginationCtrl($scope, $http, $rootScope, $location) {
             }
 
             setPaginationLinkUrls();
+            /**
+             * @author atish
+             * enablePaginationView which make pagination ui components visible
+             */
+            enablePaginationView();
         });
     }
     function setPaginationLinkUrls() {
@@ -35,6 +40,20 @@ function PaginationCtrl($scope, $http, $rootScope, $location) {
         $('#' + $scope.id + " [link-type=lastPage]").attr('href', urlPart + $scope.numberOfPages());
     }
 
+    /**
+     * @author atish
+     * Created a enablePaginationView which make pagination ui components visible
+     */
+    function enablePaginationView() {
+        $('#'+$scope.id).css('visibility','visible');
+	}
+    /**
+     * @author atish
+     * Created a disablePaginationView which make pagination ui components invisible
+     */
+    function disablePaginationView() {
+        $('#'+$scope.id).css('visibility','hidden');
+	}		
 
     $scope.prevPage = function () {
         $scope.currentPage--;
@@ -166,6 +185,12 @@ function PaginationCtrl($scope, $http, $rootScope, $location) {
 
 
     $rootScope.$on('filterUpdated', function (evt) {
+    	/**
+    	 * @author atish
+    	 * calling disablePaginationView to which make pagination ui components invisible 
+    	 */
+    	disablePaginationView();
+    	
         var searchString = JSON.stringify($rootScope.searchCriteria);
         var sortString = JSON.stringify($rootScope.sortCriteria);
 

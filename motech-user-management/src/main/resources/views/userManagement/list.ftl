@@ -11,6 +11,8 @@
     <link rel="stylesheet" type="text/css" href="<@spring.url '/motech-user-management/css/jquery-ui-1.9.1.custom.min.css'/>"/>
     <link rel="stylesheet" type="text/css" href="<@spring.url '/motech-user-management/css/motech-paginator-pagination.css'/>"/>
     <link rel="stylesheet" type="text/css" href="<@spring.url '/motech-user-management/css/userManagement.css'/>"/>
+    <link rel="stylesheet" type="text/css" href="<@spring.url '/motech-crud/css/ng-cloak.css'/>"/>
+     
     <script type="text/javascript"  src="<@spring.url '/motech-user-management/js/jquery/jquery-1.8.2.min.js'/>"></script>
     <script type="text/javascript" src="<@spring.url '/motech-user-management/js/jquery/jquery.validate.js'/>"></script>
     <script type="text/javascript" src="<@spring.url '/motech-user-management/js/jquery/jquery-ui-1.9.1.custom.min.js'/>"></script>
@@ -32,7 +34,7 @@
                             <label class="control-label">User Name</label>
 
                             <div class="controls">
-                                <input type="text" name="userName" id="userName" value="{{searchCriteria.userName}}"/>
+                                <input type="text" name="userName" id="userName" value="{{searchCriteria.userName}}" ng-cloak class="ng-cloak"/>
                             </div>
                         </div>
                         <div class="control-group span2">

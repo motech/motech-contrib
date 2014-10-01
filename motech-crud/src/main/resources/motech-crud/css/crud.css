@@ -53,3 +53,8 @@ body:after {
     color: chocolate;
     display: inline-block;
 }
+.validation {
+	padding-left:10px;
+	display: inline-block;
+    color: red;
+}

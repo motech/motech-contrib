@@ -1,7 +1,7 @@
 <#macro paginate id entity contextRoot filterSectionId rowsPerPage="10" stylePath="" currentPage=1>
 
 <div id="${id}"
-     ng-init="entity='${entity}';contextRoot='${contextRoot}';rowsPerPage='${rowsPerPage}';id='${id}';filterSectionId='${filterSectionId}'">
+     ng-init="entity='${entity}';contextRoot='${contextRoot}';rowsPerPage='${rowsPerPage}';id='${id}';filterSectionId='${filterSectionId}'" style="visibility:hidden">
     <div class="paginator" ng-controller="PaginationCtrl">
         <div>
             <div class="result-count-info pull-left">
