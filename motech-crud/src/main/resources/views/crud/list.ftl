@@ -104,7 +104,8 @@
     <div class="modal-body">
         <form id = "jsonForm"></form>
     </div >
-    <div id="validation" class="validation"></div>
+    <div id="validationPatientId" class="validation"></div>
+    <div id="validationMobileNumber" class="validation"></div>
 </div>
 
 </div>
@@ -139,7 +140,8 @@
 
     function editEntity(elem){
         $('#jsonForm').contents().remove();
-        $('#validation').html("");
+        $('#validationPatientId').html("");
+        $('#validationMobileNumber').html("");
 
         $.getJSON("<@spring.url '/crud/${entity}/get/'/>" +  $(elem).attr('entityId'), function (json) {
             $('#jsonForm').jsonForm({
@@ -159,7 +161,8 @@
 
     function newEntity(elem){
         $('#jsonForm').contents().remove();
-        $('#validation').html("");
+        $('#validationPatientId').html("");
+        $('#validationMobileNumber').html("");
         $('#jsonForm').jsonForm({
             "schema":jsonSchema.properties,
             "form":[
@@ -187,30 +190,58 @@
     }
     
     function validate(values) {
-        $('#validation').html("");
+        $('#validationPatientId').html("");
+        $('#validationMobileNumber').html("");
+        
         var validate = values;
         var flag = true;
-        var check = validate.mobileNumber;
-        if(!isEmpty(check)) {
-             if(check.match(/^[0-9]+$/) == null) {
-	        		flag = false;
-	           		$('#validation').html("Please enter digits Only.");
-	        } else if(check.length < 10) {
-	                flag = false;
-	                $('#validation').html("Number of digits cannot less than ten.");
-	        } else if(check.length > 12) {
-	           		flag = false;
-	           		$('#validation').html("Number of digits cannot exceed twelve.");
-	        }
-	        else {
-	            flag = true;
-	        }
+        
+        if(isDoNotCallEntryEntity()) {
+             var checkPatientIdIsEmpty = validate.entityId;
+             
+            if(checkPatientIdIsEmpty ==null) {
+                	flag = false;
+	           		$('#validationPatientId').html("Patient Id cannot be empty.");
+            }else {
+              var checkPatientId = checkPatientIdIsEmpty.replace(/\s/g,'');
+              if(checkPatientId.length === 0) {
+                	flag = false;
+	           		$('#validationPatientId').html("Entity Id cannot be empty.");
+            	}
+            }
         }
+            
+        
+        if(isDoNotCallEntryEntity()) {
+             var checkMobileIsEmpty = validate.mobileNumber; 
+            if(checkMobileIsEmpty == null) {
+                	flag = false;
+	           		$('#validationMobileNumber').html("Mobile Number cannot be empty.");
+            } else {
+             		var checkMobile = checkMobileIsEmpty.replace(/\s/g,'');
+		            if(checkMobile.length === 0) {
+		                	flag = false;
+			           		$('#validationMobileNumber').html("Mobile Number cannot be empty.");
+		            } else if(checkMobile.match(/^[0-9]+$/) == null) {
+			        		flag = false;
+			           		$('#validationMobileNumber').html("Please enter digits Only.");
+			        } else if(checkMobile.length < 10) {
+			                flag = false;
+			                $('#validationMobileNumber').html("Number of digits cannot less than ten.");
+			        } else if(checkMobile.length > 12) {
+			           		flag = false;
+			           		$('#validationMobileNumber').html("Number of digits cannot exceed twelve.");
+			        }
+	        }
+	        
+        }
+        
         return flag;
     }
     
-    function isEmpty(value){
- 		 return (value == null || value.length === 0);
+    function isDoNotCallEntryEntity(){
+         value = "${entity}";
+ 		 return (value == "DoNotCallEntry");
 	}
 
     var jsonSchema;
